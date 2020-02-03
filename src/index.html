@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Seu Projeto de Vida na palma da mão.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Mais Futuro - Previdência privada</title>
+  <link rel="shortcut icon" href="/images/favicon.png">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://firebasestorage.googleapis.com">
+  <link rel="preconnect" href="https://lh1.googleusercontent.com">
+  <link rel="preconnect" href="https://lh2.googleusercontent.com">
+  <link rel="preconnect" href="https://lh3.googleusercontent.com">
+  <link rel="preconnect" href="https://lh4.googleusercontent.com">
+  <link rel="preconnect" href="https://lh5.googleusercontent.com">
+  <link rel="preconnect" href="https://lh6.googleusercontent.com">
+  <link rel="preconnect" href="https://lh7.googleusercontent.com">
+  <link rel="preconnect" href="https://lh8.googleusercontent.com">
+  <link rel="preconnect" href="https://lh9.googleusercontent.com">
+
+  <!-- Disable tap highlight on IE -->
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="/manifest.json">
+
+  <!-- Add to home screen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Portal Mais Futuro">
+  <meta name="theme-color" content="#303F9F">
+  <link rel="icon" sizes="192x192" href="/images/icon-192x192.png">
+  <link rel="icon" sizes="128x128" href="/images/icon-128x128.png">
+
+  <!-- Add to home screen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Portal Mais Futuro">
+  <link rel="apple-touch-icon" href="/images/icon-180x180.png">
+  <link rel="apple-touch-icon-precomposed" href="/images/icon-180x180.png">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+
+  <!-- Tile icon for Win8 -->
+  <meta name="msapplication-TileImage" content="/images/icon-144x144.png"> 
+  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-navbutton-color" content="#303F9F">
+</head>
+
+<body class="fp-auth-state-unknown">
+
+<!-- Theatre mode viewer -->
+<div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div>
+
+<!-- Splash screen -->
+<section id="page-splash">
+  <h3 class="fp-logo"><img src="../public/images/icon-128x128.png" alt="Mais Futuro Logo"> Portal Mais Futuro</h3>
+  <div style="max-width: 500px; text-align: center;">
+    <div class="fp-caption">A melhor forma de gerenciar seu projeto de vida.</div>
+    <!--div class="fp-caption" id="div-continue" style="display: none;">O aplicativo do Portal Mais Futuro foi instalado e está pronto para uso. </div-->
+    <div>
+      <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="display: none; margin: 0 auto;">
+        <span class="mdl-color-text--white">Instalar o aplicativo</span>
+      </button>
+    </div>
+    <div id="div-continue" class="fp-signed-out-only fp-initially-hidden" style="display: none; text-align: center;">
+      <div class="fp-caption">Parabéns!</div> 
+      <div class="fp-caption2">O portal foi instalado e está pronto para uso.<br> A partir de agora acesse o portal através do aplicativo instalado em seu dispositivo.</div>
+      <!--button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-continue">
+        <span class="mdl-color-text--white"></span>
+      </button-->
+    </div>
+    <div class="fp-signed-out-only fp-initially-hidden" id="div-prevdigi" style="display: none; text-align: center;">
+      <div id="firebaseui-auth-container" class="fp-non-eu fp-signed-out-only fp-initially-hidden"></div>
+      <a class="fp-non-eu fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
+    </div>
+    <div class="fp-non-eu fp-note fp-signed-out-only fp-initially-hidden" id="div-termouso" style="display: none; text-align: center;">  
+      <label class="mdl-checkbox mdl-js-checkbox" for="fp-pre-consent">
+        <input type="checkbox" id="fp-pre-consent" class="mdl-checkbox__input" checked>
+        <span class="mdl-checkbox__label">Eu li e concordo com os <a href="https://fundoparana.com.br">termos de serviço</a> do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.</span>
+      </label>
+    </div>
+  </div>
+  <a class="fp-eu fp-initially-hidden" href="/recent">
+    <button class="fp-view-posts-button mdl-button mdl-js-button mdl-button--raised mdl-color--green-800 mdl-color-text--white">
+      View posts
+    </button>
+  </a>
+  <div class="fp-eu fp-note fp-signed-out-only fp-initially-hidden">
+    <a href="https://github.com/firebase/friendlypix-web">FriendlyPix</a> is an application aimed at showcasing the <a href="https://firebase.google.com/docs">Firebase</a> platform capabilities, and should not be used with private or sensitive information. All FriendlyPix data and inactive accounts are regularly removed. By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="https://www.google.com/policies/privacy/">Privacy Policy</a>.
+  </div>
+  <div class="fp-eu fp-note fp-signed-out-only fp-initially-hidden">
+    Unfortunately, this hosted version of the FriendlyPix sample app is not fully available in your location (based on your IP address). You can view a limited version of the sample app, or to experience all the features, deploy your own instance. Instructions can be found on the <a href="https://github.com/firebase/friendlypix-web">GitHub repository</a>.
+  </div>
+</section>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+  <!-- Header section containing logo and menu -->
+  <header class="fp-header mdl-layout__header mdl-color--white">
+    <div class="mdl-layout__header-row fp-titlebar">
+
+      <!-- Signed-in User Info -->
+      <div style="float:left; width: 80%;">
+        <a class="fp-non-eu" href="/"><button class="fp-disabled-when-offline fp-sign-in-button fp-signed-out-only mdl-button mdl-js-button"><i class="material-icons">account_circle</i> Sign in</button></a>
+        <div class="fp-signed-in-user-container fp-signed-in-only">
+          <a class="fp-usernamelink mdl-button mdl-js-button">
+            <div class="fp-avatar"></div>
+          </a>
+        </div>
+      </div>
+
+      <div style="float:right; width: 20%;">
+        <div class="fp-logo" style="text-align: right;">
+          <img src="../public/images/icon-120x120.png" alt="Portal Mais Futuro">
+        </div>
+      </div>
+
+      <!-- Drop Down Menu -->
+      <!-- Retirado para não aparecer mais o menu de 3 pontos
+        
+        button class="mdl-button mdl-js-button mdl-button--icon mdl-cell--hide-phone" id="fp-menu">
+        <i class="material-icons">more_vert</i>
+      </!--button>
+      <ul class="fp-menu-list mdl-menu mdl-js-menu mdl-menu--bottom-right" for="fp-menu">
+        <a href="/about">
+          <li class="mdl-menu__item"><i class="material-icons">perm_contact_calendar</i> Fale conosco</li>
+        </a>
+        <a href="/terms">
+          <li class="mdl-menu__item"><i class="material-icons">format_list_numbered</i> Termos de Serviço</li>
+        </a>
+        <li class="fp-sign-out mdl-menu__item fp-signed-in-only"><i class="material-icons">exit_to_app</i> Sair</li>
+        <li class="fp-disabled-when-offline fp-delete-account mdl-menu__item fp-signed-in-only"><i class="material-icons">cancel</i> Excluir meu acesso</li>
+
+        <li class="fp-update-privacy mdl-menu__item fp-signed-in-only privacy-dialog-link"><i class="material-icons">https</i> Privacidade<li>
+      </ul-->
+      
+      <!-- Logo -->
+      <div class="mdl-layout-spacer"></div>
+
+      <!-- Search bar -->
+      <div class="fp-searchcontainer mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+        <label class="mdl-button mdl-js-button mdl-button--icon" for="searchQuery">
+          <i class="material-icons">search</i>
+        </label>
+        <div class="mdl-textfield__expandable-holder">
+          <input class="mdl-textfield__input" type="text" id="searchQuery">
+        </div>
+        <div id="fp-searchResults" class="mdl-card mdl-shadow--2dp"></div>
+      </div>
+
+    </div>
+
+    <!-- Navigation Bar -->
+    <!-- Comentado para não aparecer mais a barra de navegação qdo for tablet ou desktop
+        *** Verificar uso no futuro....
+      div class="fp-tab mdl-layout__header-row mdl-cell--hide-phone mdl-color--light-blue-700">
+      <div class="mdl-tab">
+        <a href="/home" id="fp-menu-home" class="mdl-layout__tab fp-signed-in-only is-active mdl-button mdl-js-button"><i class="material-icons">home</i> Home</a>
+        <input id="fp-mediacapture" type="file" accept="image/*" capture="camera">
+        <label id="fp-mediacapture-label" for="fp-mediacapture">Upload an image</label>
+        <button class="fp-disabled-when-offline fp-signed-in-only mdl-button mdl-js-button mdl-button--fab mdl-cell--hide-tablet mdl-color--amber-400 mdl-shadow--4dp" id="add" disabled>
+          <i class="material-icons">file_upload</i>
+        </button>
+      </div>
+    </div -->
+    <button class="fp-disabled-when-offline fp-signed-in-only mdl-cell--hide-desktop mdl-button mdl-js-button mdl-button--fab mdl-color--amber-400 mdl-shadow--4dp" id="add-floating" disabled>
+      <i class="material-icons">photo_camera</i>
+    </button>
+  </header>
+
+  <!-- Drawer menu -->
+  <!-- Retirado da DIV abaixo para sempre mostrar o menu em qqr device: mdl-cell--hide-desktop mdl-cell--hide-tablet -->
+  <div class="mdl-layout__drawer">
+    <a href="/" class="fp-non-eu fp-signed-out-only"><button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button"><i class="material-icons">account_circle</i> Sign in</button></a>
+    <!-- HEADER DO MENU -->
+    <div class="fp-signed-in-user-container mdl-color--light-blue-700 fp-signed-in-only">
+      <a class="fp-usernamelink">
+        <div class="fp-avatar"></div>
+        <div class="fp-username mdl-color-text--white"></div>
+      </a>
+    </div>
+    <nav class="mdl-navigation">
+      <a class="mdl-navigation__link is-active fp-signed-in-only" href="/home"><i class="material-icons">home</i> Home</a>
+      <!--<a class="mdl-navigation__link" href="/recent"><i class="material-icons">trending_up</i> Recent</a>-->
+      <hr />
+      <a class="mdl-navigation__link" href="/about"><i class="material-icons">perm_contact_calendar</i> Fale Conosco</a>
+      <hr />
+      <a class="mdl-navigation__link" href="/terms"><i class="material-icons">format_list_numbered</i> Termos de Serviço</a>
+      <hr class="fp-signed-in-only"/>
+      <a class="fp-sign-out mdl-navigation__link fp-signed-in-only"><i class="material-icons">exit_to_app</i> Sair</a>
+      <a class="fp-disabled-when-offline fp-delete-account mdl-navigation__link fp-signed-in-only"><i class="material-icons">cancel</i> Excluir meu acesso</a>
+      <a class="fp-update-privacy mdl-navigation__link fp-signed-in-only privacy-dialog-link"><i class="material-icons">https</i> Privacidade<a>
+    </nav>
+  </div>
+
+  <dialog id="privacy-dialog" class="mdl-dialog">
+    <h4 class="mdl-dialog__title">Nós protegemos sua privacidade!</h4>
+    <div class="mdl-dialog__content">
+      <p> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
+      <form class="col s12">
+        <p>
+          <input type="checkbox" name="allow-data" id="allow-data"/>
+          <label for="allow-data">
+            Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
+          </label>
+        </p>
+        <input type="checkbox" name="allow-content" id="allow-content" style="display: none;" checked />
+        <input type="checkbox" name="allow-social" id="allow-social" style="display: none;" checked/>
+      </form>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 privacy-save" disabled>Continuar</button>
+    </div>
+  </dialog>
+
+  <main class="mdl-layout__content mdl-color--white">
+
+    <!-- Show a feed of posts -->
+    <section id="page-feed" class="mdl-grid fp-content" style="display: none;">
+      <a></a>
+      <div class="fp-new-posts-button">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400">
+          Show new posts...
+        </button>
+      </div>
+      <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+        <div class="fp-no-posts fp-help mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+                    mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing">
+           <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+             <i class="fp-info material-icons">help</i>
+             <div>
+               <p>Start following people to see their posts!</p>
+               <p>
+                 Use the <strong><i class="material-icons">search</i> search bar</strong> to find people you know and have
+                 a look at the feed of <a href="/recent"><i class="material-icons">trending_up</i> Recent</a> posts to discover
+                 interesting people.
+               </p>
+               <p>Then <i class="material-icons">favorite</i> like and comment their posts!</p>
+               </div>
+           </div>
+        </div>
+      </div>
+      <div class="fp-next-page-button">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+          <i class="material-icons">expand_more</i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Show a single post with comments -->
+    <section id="page-post" class="mdl-grid fp-content" style="display: none;">
+      <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid"></div>
+    </section>
+
+    <!-- About & Contact page -->
+    <section id="page-about" class="mdl-grid fp-content" style="display: none;">
+      <div class="fp-help mdl-card mdl-shadow--2dp mdl-cell
+                  mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <i class="fp-info material-icons">contacts</i>
+          <div>
+            <p>Para entrar em contato com nosso time, envie um email para contato@maisfuturo.com.br</p>
+
+            <p>Para outras informações, acesse nosso site institucional <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terms of Services -->
+    <section id="page-terms" class="mdl-grid fp-content" style="display: none;">
+      <div class="mdl-card mdl-shadow--2dp mdl-cell
+                  mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <div class="mdl-card__title mdl-color--light-blue-700 mdl-color-text--white">
+          <h2 class="mdl-card__title-text"> Termos de Serviço</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <div>
+            <p>1. Você aceita que: <br>
+              <br>
+              Ao usar o Portal Fundo Paraná e/ou contratar quaisquer produtos e serviços através do mesmo você declara que concorda (1) com estes termos e condições (os "Termos de Serviço") e (2) Política de Privacidade do Mais Futuro previdência privada, encontrada em <a href="https://www.maisfuturo.com.br">https://www.maisfuturo.com.br</a>. Se você não concordar com algum desses termos ou com a Política de Privacidade não use o Portal.<br>
+              <br>
+              2. Sobre o Mais Futuro Previdencia privada <br>
+              <br>
+              Para maiores informações sobre o Mais Futuro previdência privada, acesso nosso site: <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a><br>
+              <br>
+           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- User Profile page -->
+    <section id="page-user-info" class="mdl-grid fp-content" style="display: none;">
+      <div class="fp-user-container mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+        <div class="fp-user-avatar"></div>
+        <div class="fp-name-follow-container mdl-cell mdl-cell--8-col">
+          <div class="fp-user-username"></div>
+          <div class="fp-signed-in-only">
+            <label class="fp-follow mdl-switch mdl-js-switch" for="follow">
+              <input type="checkbox" id="follow" class="mdl-switch__input" value="true">
+              <span class="mdl-switch__label">Follow</span>
+            </label>
+            <label class="fp-block mdl-switch mdl-js-switch" for="block">
+              <input type="checkbox" id="block" class="mdl-switch__input" value="true">
+              <span class="mdl-switch__label">Block</span>
+            </label>
+            <label class="fp-notifications mdl-switch mdl-js-switch" for="notifications">
+              <input type="checkbox" id="notifications" class="mdl-switch__input" value="true">
+              <span class="mdl-switch__label">Habilitar notificações</span>
+            </label>
+          </div>
+          <div class="fp-user-detail-container">
+            <div class="fp-user-detail"><span class="fp-user-nbposts">0</span> posts</div>
+            <div class="fp-user-detail"><span class="fp-user-nbfollowers">0</span> followers</div>
+            <div class="fp-user-detail fp-user-nbfollowing-container"><span class="fp-user-nbfollowing">0</span> following</div>
+          </div>
+        </div>
+      </div>
+      <div class="fp-user-following mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+        <button class="fp-close-following  mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+          <i class="material-icons">expand_less</i>
+        </button>
+      </div>
+      <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+        <div class="fp-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
+          <div class="mdl-card mdl-shadow--2dp mdl-cell
+                  mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+            No posts yet.
+          </div>
+        </div>
+      </div>
+      <div class="fp-next-page-button">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+          <i class="material-icons">expand_more</i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Hashtags Search page -->
+    <section id="page-search" class="mdl-grid fp-content" style="display: none;">
+      <div class="fp-user-container mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+        <div class="fp-name-follow-container mdl-cell mdl-cell--8-col">
+          <div class="fp-hashtag"></div>
+        </div>
+      </div>
+      <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+        <div class="fp-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
+          <div class="mdl-card mdl-shadow--2dp mdl-cell
+                  mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+            No posts found.
+          </div>
+        </div>
+      </div>
+      <div class="fp-next-page-button">
+        <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+          <i class="material-icons">expand_more</i>
+        </button>
+      </div>
+    </section>
+
+    <!-- Post new pic page -->
+    <section id="page-add" class="mdl-grid fp-content" style="display: none;">
+      <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid mdl-grid--no-spacing">
+        <div class="fp-addcontainer mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+          <div class="fp-overlay">
+            <i class="material-icons">hourglass_full</i>
+          </div>
+          <img id="newPictureContainer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" alt="New Picture to Upload">
+          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+            <form id="uploadPicForm" action="#">
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="imageCaptionInput">
+                <label class="mdl-textfield__label" for="imageCaptionInput">Image caption...</label>
+              </div>
+              <br />
+              <button type="submit" class="fp-upload mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400">
+                Upload this pic!
+              </button>
+            </form>
+            <div class="fp-legalese-add">
+              All uploaded pictures will be publicly viewable, and must adhere to the <a href="/terms">Terms of Service</a>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast -->
+    <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button type="button" class="mdl-snackbar__action"></button>
+    </div>
+  </main>
+</div>
+</body>
+</html>
