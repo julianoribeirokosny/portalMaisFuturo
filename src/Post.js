@@ -500,11 +500,33 @@ export default class Post {
             </div> -->
           </div>
         </div>
+        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+          mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="font-family: 'MaisFuturo-Thin'; font-size: 35px; letter-spacing: -1.4px; color: #3B3C3E">
+          Olá Leandro!
+        </div>
+        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+          mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="font-family: 'MaisFuturo-Regular'; font-size: 15px; letter-spacing: -0.24px; color: #3B3C3E padding-top: 8px;">
+          Seu Projeto de Vida está de vento em popa!
+        </div>
+
+        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+          mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="padding: 15px 5px 15px 5px; align-items: center; justify-content: center;">
+          <div style="text-align: left; min-width: 65%; padding-bottom: 5px;">
+            <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 11px;">Reserva total atual</span>
+          </div>
+          <div style="text-align: left; min-width: 65%;">
+            <span style="letter-spacing: 0; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 16px; float:left; ">R$</span>
+            <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo-Medium'; font-size: 33px; font-weight: bold; float:right;">34.628,10</span>            
+          </div>
+        </div>
+
         <div id="canvas-wrap" class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
             mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" 
-            style="position:relative; width:100%; height: 300px; display: flex; align-items: center; justify-content: center;">
+            style="position:relative; width:100%; min-height: 300px; display: flex; align-items: center; justify-content: center;">
           <canvas id="chart-area" style="width:100%; height: 100%;" class="chartjs-render-monitor"></canvas>
-          <div id="doughnutOverlay" style="position:absolute; width: 40%; height: 35%; background-color: transparent;"></div>
+          <div id="doughnutOverlay" style="position:absolute; width: 45%; height: 45%;
+              background-color: transparent; margin: 0; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+          </div>
         </div>   
         `;
   }
@@ -561,28 +583,28 @@ export default class Post {
     var doughnutOverlay = document.getElementById('doughnutOverlay');
     doughnutOverlay.innerHTML = `
           <div style="text-align: left;">
-            <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo'; font-size: 17px;">Saldo total</span>
+            <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 17px;">Saldo total</span>
           </div>
           <div style"text-align: left; ">
-            <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo'; font-size: 11px; float:left; ">R$</span>
-            <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo'; font-size: 27px; font-weight: bold; float:right;">34.628,10</span>            
+            <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo-Medium'; font-size: 11px; float:left; ">R$</span>
+            <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo-Medium'; font-size: 27px; font-weight: bold; float:right;">34.628,10</span>            
           </div>
           <div style="text-align: center;  padding-top:25px;">
             <div style="width: 85%; display: inline-block; text-align: left; line-height:0;">
-              <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo'; font-size: 12px;">Funcional</span>
+              <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 12px;">Funcional</span>
             </div>
             <div style="width: 85%; display: inline-block; ">
-              <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo'; font-size: 11px; float:left; ">R$</span>
-              <span style="letter-spacing: 0; color: #8ACE7B; font-family: 'MaisFuturo'; font-size: 19px; font-weight: bold; float:right; ">28.523,30</span>            
+              <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo-Medium'; font-size: 11px; float:left; ">R$</span>
+              <span style="letter-spacing: 0; color: #8ACE7B; font-family: 'MaisFuturo-Medium'; font-size: 19px; font-weight: bold; float:right; ">28.523,30</span>            
             </div>          
           </div>
           <div style="text-align: center;">
             <div style="width: 85%; display: inline-block; text-align: left; line-height:0;">
-              <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo'; font-size: 12px;">Patronal</span>
+              <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 12px;">Patronal</span>
             </div>
             <div style="width: 85%; display: inline-block;">
-              <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo'; font-size: 11px; float:left;">R$</span>
-              <span style="letter-spacing: 0; color: #1779C6; font-family: 'MaisFuturo'; font-size: 19px; font-weight: bold; float:right; ">6.104,80</span>            
+              <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo-Medium'; font-size: 11px; float:left;">R$</span>
+              <span style="letter-spacing: 0; color: #1779C6; font-family: 'MaisFuturo-Medium'; font-size: 19px; font-weight: bold; float:right; ">6.104,80</span>            
             </div>          
           </div>
 
