@@ -500,14 +500,7 @@ export default class Post {
             </div> -->
           </div>
         </div>
-        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
-          mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="font-family: 'MaisFuturo-Thin'; font-size: 35px; letter-spacing: -1.4px; color: #3B3C3E">
-          Olá Leandro!
-        </div>
-        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
-          mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="font-family: 'MaisFuturo-Regular'; font-size: 15px; letter-spacing: -0.24px; color: #3B3C3E padding-top: 8px;">
-          Seu Projeto de Vida está de vento em popa!
-        </div>
+
 
         <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
           mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="padding: 15px 5px 15px 5px; align-items: center; justify-content: center;">

@@ -214,15 +214,83 @@
 
   <main class="mdl-layout__content mdl-color--white">
 
+<<<<<<< HEAD
     <!-- Show a feed of posts -->
     <section id="page-home" class="mdl-grid fp-content" style="display: none;">
+=======
+
+
+    <!--Home Vuejs-->
+
+    <div id="app">
+
+      <!--Campanha-->
+      <template v-for="campanha in home.campanhas" v-if="campanha.ativo">
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto; padding: 25px 15px 10px 15px;">
+          <div class="mdl-card mdl-shadow--2dp mdl-card--campanha grad_azul border_radius">
+            <div id="CampanhaIcon" class="mdl-card__media mdl-text mdl-grid center-items">
+              <i class="material-icons icon-campanha">{{ campanha.icone }}</i>
+            </div>            
+            <div id="CampanhaDesc" class="mdl-card__supporting-text  text-left-items">
+              {{ campanha.titulo }}
+            </div>
+            <div id="CampanhaValor" class="mdl-card__supporting-text  text-left-items">
+              {{ campanha.descricao }}
+            </div>            
+          </div>
+        </div>
+      </template>
+
+    </div>
+
+    <!-- Show a feed of posts -->    
+    <section id="page-home" class="mdl-grid fp-content" style="display: none;">
+
+>>>>>>> f2ad2516af85b88bc37e9eaac604960114ec8125
       <a></a>
+      
+      <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+
+          <!--Campanha-->
+          <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
+            <div class="mdl-card mdl-shadow--2dp mdl-card--campanha grad_azul border_radius">
+              <div id="CampanhaIcon" class="mdl-card__media mdl-text mdl-grid center-items">
+                <i class="material-icons icon-campanha">attach_money</i>
+              </div>            
+              <div id="CampanhaDesc" class="mdl-card__supporting-text  text-left-items">
+                Há uma oportunidade especial disponível para você.
+              </div>
+              <div id="CampanhaValor" class="mdl-card__supporting-text  text-left-items">                
+                Você tem R$ 8.500,00 pré aprovado para emprestimo consiente.
+              </div>            
+            </div>
+          </div>
+
+
+        </div>
+
+
+      <!--Saudação Usuário-->
+      <div>
+          <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+            mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="font-family: 'MaisFuturo-Thin'; font-size: 35px; letter-spacing: -1.4px; color: #3B3C3E">
+            Olá Leandro!
+          </div>
+          <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
+            mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="font-family: 'MaisFuturo-Regular'; font-size: 15px; letter-spacing: -0.24px; color: #3B3C3E padding-top: 8px;">
+            Seu Projeto de Vida está de vento em popa!
+          </div>
+      </div>
+
       <div class="fp-new-posts-button">
         <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400">
           Show new posts...
         </button>
       </div>
-      <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+
+
+
+      
         <div class="fp-no-posts fp-help mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
                     mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing">
            <div class="mdl-card__supporting-text mdl-color-text--grey-600">
@@ -244,6 +312,9 @@
           <i class="material-icons">expand_more</i>
         </button>
       </div>
+
+    
+    
     </section>
 
     <!-- Show a single post with comments -->
@@ -391,5 +462,139 @@
     </div>
   </main>
 </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+    <script>
+    
+    const data_Home = {
+	"usuarioId": "02405789965",
+	"nome": "JULIANO RIBEIRO KOSNY",
+	"campanhas": [{
+			"nome": "Emprestimos",
+			"icone": "face",
+			"titulo": "Há uma oportunidade especial disponível para você.",
+			"descricao": "Você tem R$ 8.500,00 pré aprovado para emprestimo consiente.",
+			"ativo": true,
+			"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
+		},
+		{
+			"nome": "Aporte",
+			"icone": "attach_money",
+			"titulo": "As taxas de aporte estão mais vantajosas esse mês.",
+			"descricao": "Aumentando o valor do seu aporte a taxa será de 0,5%.",
+			"ativo": false,
+			"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
+		}
+	],
+	"saldo_reserva": {
+		"grafico": [{
+			"data": [
+				28523.30,
+				6104.80
+			],
+			"backgroundColor": ["#8ACE7B", "#1779C6"],
+			"borderWidth": 6,
+			"borderColor": "#FFFFFF",
+			"label": "Dataset 1"
+		}],
+		"total": "R$ 34.628.10",
+		"patronal": "R$ 28.523,30",
+		"funcional": "R$ 6.104,80"
+	},
+	"projeto_vida": {
+		"grafico": {
+			"labels": ["Jan", "Fev", "Mar", "Hoje", "Mai", "65 anos"],
+			"datasets": [{
+					"data": [281690.10, 281690.10, 281690.10, 281690.10, 281690.10, 281690.10],
+					"label": "Cobertura por morte",
+					"borderColor": "#3e95cd",
+					"fill": false
+				},
+				{
+					"data": [402415.26, 402415.26, 402415.26, 402415.26, 402415.26, 402415.26],
+					"label": "Cobertura por invalidez",
+					"borderColor": "#8e5ea2",
+					"fill": false
+				},
+				{
+					"data": [0, 7000.45, 14780.90, 22500.45, 29000.32, 45321.56],
+					"label": "Reserva",
+					"borderColor": "#3cba9f",
+					"fill": false
+				}
+			]
+		}
+	},
+	"cobertura_atual": "R$ 535.789,92",
+	"renda_projetada": "R$ 2.115,45",
+	"reserva_projetada": "R$ 835 mil",
+	"acao_renda": {
+		"renda_potencial": "R$ 3.000,00",
+		"reserva_potencial": "R$ 1 mi",
+		"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
+	},
+	"coberturas": {
+		"minhas_coberturas": [{
+			"nome": "Cobertura por morte",
+			"valor": "R$ 281.690,10"
+		}, {
+			"nome": "Cobertura por invalidez",
+			"valor": "R$ 402.415,26"
+		}],
+		"acao_cobertura": {
+			"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);",
+			"descricao": "Expanda sua cobertura para R$ 1mi"
+		}
+	},
+	"contribuicao": {
+		"grafico": [{
+			"data": [178.70, 40.96, 47.56, 32.78],
+			"backgroundColor": ["#033166", "#1779c6", "#ffec74", "#8ace7b"],
+			"borderWidth": 6,
+			"borderColor": "#FFFFFF",
+			"label": "Dataset 1"
+		}],
+		"minha_contribuicao": [{
+				"nome": "Contribuição total",
+				"valor": "R$ 300,00"
+			},
+			{
+				"nome": "maisfuturo previdência",
+				"valor": "R$ 178,70"
+			},
+			{
+				"nome": "Cobertura | morte",
+				"valor": "R$ 40,96"
+			},
+			{
+				"nome": "Cobertura | invalidez",
+				"valor": "R$ 47,56"
+			},
+			{
+				"nome": "maisfuturo reserva",
+				"valor": "R$ 32,76"
+			}
+		],
+		"acao_contribuicao": {
+			"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);",
+			"descricao": "Com mais R$ 25,00 por mês você pode deduzir R$ 450,00 do seu IR"
+		}
+	},
+	"mais_amigos": {
+		"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
+	},
+	"educacao_financeira": {}
+};
+
+    console.log('data_Home',data_Home);
+    
+    var app = new Vue({
+        el: '#app',
+        data: {
+          message: 'Hello Vue!',
+          home: data_Home
+        }
+      })
+    </script>
 </body>
 </html>

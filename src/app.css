@@ -1022,3 +1022,56 @@ dialog + .backdrop { /* polyfill */
 .fp-hashtag {
   font-size: 30px;
 }
+
+/* css Campanha */
+  .grad_azul {
+      background-image: linear-gradient(-90deg, #136cb5, #033166);    
+  }
+
+  .icon-campanha {
+      font-size: 56px;
+      color: #0c77c1;
+      font-style: italic    
+  }
+
+  .border_radius {
+      border-radius: 25px;
+  }
+
+  .center-items {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .text-left-items {
+      display: flex;
+      align-items: center;
+      justify-content: left;
+  }
+
+  .mdl-card + .mdl-card {
+      margin-top: 40px;
+  }
+
+  .mdl-card--campanha {
+      flex-direction: column;
+      height: 1vh;
+    /* 1 */
+      padding-left: 120px;
+      width: 100%;
+      display: flex; 
+      justify-content: space-evenly;
+  }
+
+  .mdl-card--campanha .mdl-card__media {
+      left: 0;
+      position: absolute;
+      width: 120px;
+      background-color: transparent;
+  }
+
+  .mdl-card--campanha .mdl-card__supporting-text {
+      flex: 1 1 auto;
+      width: auto;
+  }
