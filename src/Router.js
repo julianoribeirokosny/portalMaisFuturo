@@ -1,18 +1,3 @@
-/**
- * Copyright 2015 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 'use strict';
 
 import $ from 'jquery';
@@ -26,7 +11,7 @@ import page from 'page';
  */
 export default class Router {
   /**
-   * Initializes the Friendly Pix controller/router.
+   * Inicializa o controller/router do Portal MaisFuturo.
    * @constructor
    */
   constructor(auth) {
@@ -40,48 +25,41 @@ export default class Router {
 
     // Shortcuts to async loaded components.
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
-    const searchHashtag = async (hashtag) => (await loadComponents).searchPage.loadHashtag(hashtag);
-    const showHomeFeed = async () => (await loadComponents).feed.showHomeFeed();
-    const showGeneralFeed = async () => (await loadComponents).feed.showGeneralFeed();
+    const showHome = async () => (await loadComponents).home.showHome();
     const clearFeed = async () => (await loadComponents).feed.clear();
-    const showPost = async (postId) => (await loadComponents).post.loadPost(postId);
 
     // Configuring middlwares.
     page(Router.setLinkAsActive);
 
     // Configuring routes.
     page('/', () => {this.redirectHomeIfSignedIn(); this.displayPage('splash');});
-    //page('/home', () => {showHomeFeed(); this.displayPage('feed', true);});
-    page('/home', () => {showGeneralFeed(); this.displayPage('feed', true);});    
-    page('/recent', () => {showGeneralFeed(); this.displayPage('feed');});
-    page('/post/:postId', (context) => {showPost(context.params.postId); this.displayPage('post');});
-    page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
-    page('/search/:hashtag', (context) => {searchHashtag(context.params.hashtag); this.displayPage('search');});
+    page('/home', () => {showHome(); this.displayPage('home', true);});    
     page('/about', () => {clearFeed(); this.displayPage('about');});
     page('/terms', () => {clearFeed(); this.displayPage('terms');});
-    page('/add', () => {this.displayPage('add', true);});
+    page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
     page('*', () => page('/'));
+    //page('/home', () => {showGeneralFeed(); this.displayPage('feed', true);});    
+    //page('/post/:postId', (context) => {showPost(context.params.postId); this.displayPage('post');});
+    //page('/search/:hashtag', (context) => {searchHashtag(context.params.hashtag); this.displayPage('search');});
 
     // Start routing.
     page();
   }
 
   /**
-   * Displays the given page and hides the other ones.
-   * if `onlyAuthed` is set to true then the splash page will be displayed instead of the page if
-   * the user is not signed-in.
-   * A "page" is the element with ID "page-<id>" in the DOM.
+   * Faz o display da página
+   * if `onlyAuthed` for setado como true a splash page será demonstrada ao invés da página 
+   * (para o caso do usuário não estar logado)
+   * A "page" é o elemento com o ID "page-<id>" na DOM.
    */
   async displayPage(pageId, onlyAuthed) {
     if (onlyAuthed) {
-      // If the page can only be displayed if the user is authenticated then we wait or the auth state.
       await this.auth.waitForAuth;
       if (!firebase.auth().currentUser) {
         return page('/');
       }
     }
 
-    // Display the right page and hide the other ones.
     this.pagesElements.each((index, element) => {
       if (element.id === 'page-' + pageId) {
         console.log('Página:', element);
@@ -93,7 +71,6 @@ export default class Router {
       }
     });
 
-    // Force close the Drawer if opened.
     MaterialUtils.closeDrawer();
 
     // Scroll to top.
@@ -101,7 +78,7 @@ export default class Router {
   }
 
   /**
-   * Redirect to the home feed if the user is already signed in.
+   * Redireciona para o home caso o usuário esteja logado.
    */
   redirectHomeIfSignedIn() {
     if (firebase.auth().currentUser) {
@@ -124,7 +101,7 @@ export default class Router {
   }
 
   /**
-   * Reloads the current page.
+   * Reload da página atual
    */
   static reloadPage() {
     let path = window.location.pathname;
