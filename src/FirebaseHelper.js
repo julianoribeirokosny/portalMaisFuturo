@@ -64,10 +64,10 @@ export default class FirebaseHelper {
     this.firebaseRefs = [];
   }
 
-  
+  /*
   ********************************************
   *********************************************
-  *********************************************
+  *********************************************/
 
   /**
    * Subscribes to receive updates from a post's comments. The given `callback` function gets

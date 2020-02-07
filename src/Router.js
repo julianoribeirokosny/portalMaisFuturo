@@ -53,7 +53,7 @@ export default class Router {
    * A "page" é o elemento com o ID "page-<id>" na DOM.
    */
   async displayPage(pageId, onlyAuthed) {
-    if (onlyAuthed) {
+    if (onlyAuthed) { 
       await this.auth.waitForAuth;
       if (!firebase.auth().currentUser) {
         return page('/');
