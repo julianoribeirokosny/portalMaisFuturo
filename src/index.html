@@ -222,17 +222,25 @@
 
       <!--Campanha-->
       <template v-for="campanha in home.campanhas" v-if="campanha.ativo">
-        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto; padding: 25px 15px 10px 15px;">
-          <div class="mdl-card mdl-shadow--2dp mdl-card--campanha grad_azul border_radius">
-            <div id="CampanhaIcon" class="mdl-card__media mdl-text mdl-grid center-items">
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">          
+          <div class="mdl-card mdl-shadow--1dp mdl-card--campanha" v-bind:style="campanha.card_background">
+            <div class="mdl-card__media mdl-text mdl-grid center-items">
               <i class="material-icons icon-campanha">{{ campanha.icone }}</i>
             </div>            
-            <div id="CampanhaDesc" class="mdl-card__supporting-text  text-left-items">
-              {{ campanha.titulo }}
+            <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
+              <span>{{ campanha.titulo }}</span>              
             </div>
-            <div id="CampanhaValor" class="mdl-card__supporting-text  text-left-items">
-              {{ campanha.descricao }}
-            </div>            
+            <div class="mdl-card__supporting-text card-campanha-desc text-left-items">
+              <span>{{ campanha.descricao }}</span>
+            </div>                      
+          </div>
+          <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing row" style="padding: 5px 15px;">
+            <button class="mdl-button mdl-button--icon">
+              <i class="material-icons">backup</i>
+            </button>
+          </div>
+          <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing row" style="padding: 5px 15px;">                      <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 privacy-save" style="margin: 2px; border-radius: 20px;">Não Obrigado</button>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 privacy-dialog" style="margin: 2px; border-radius: 20px;">Contratar</button>
           </div>
         </div>
       </template>
@@ -477,7 +485,7 @@
 			"icone": "attach_money",
 			"titulo": "As taxas de aporte estão mais vantajosas esse mês.",
 			"descricao": "Aumentando o valor do seu aporte a taxa será de 0,5%.",
-			"ativo": false,
+			"ativo": true,
 			"card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
 		}
 	],

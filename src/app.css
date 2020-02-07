@@ -19,7 +19,7 @@ html, body, p {
   font-size: 16px;
 }
 a {
-  text-decoration: underline;
+  /*text-decoration: underline;*/
   color: #0070a7;
 }
 .mdl-menu a {
@@ -1024,18 +1024,35 @@ dialog + .backdrop { /* polyfill */
 }
 
 /* css Campanha */
-  .grad_azul {
-      background-image: linear-gradient(-90deg, #136cb5, #033166);    
+  .mdl-card {
+      min-height: 100px;
+      margin: 20px 15px 0px 15px;
   }
 
+  .mdl-card--campanha {
+      flex-direction: column;
+      border-radius: 25px;      
+      padding-left: 65px;
+      width: 100%;
+      display: flex; 
+      justify-content: space-evenly;
+  }  
   .icon-campanha {
-      font-size: 56px;
+      font-size: 40px;
       color: #0c77c1;
       font-style: italic    
   }
+  
+  .card-campanha-titulo {
+      font-size: 12px;
+      color: #75bad3;
+      font-weight: 600;
+  }
 
-  .border_radius {
-      border-radius: 25px;
+  .card-campanha-desc {
+      font-size: 12px;
+      color: white;
+      font-weight: 600;
   }
 
   .center-items {
@@ -1048,30 +1065,20 @@ dialog + .backdrop { /* polyfill */
       display: flex;
       align-items: center;
       justify-content: left;
-  }
-
-  .mdl-card + .mdl-card {
-      margin-top: 40px;
-  }
-
-  .mdl-card--campanha {
-      flex-direction: column;
-      height: 1vh;
-    /* 1 */
-      padding-left: 120px;
-      width: 100%;
-      display: flex; 
-      justify-content: space-evenly;
-  }
+  }  
 
   .mdl-card--campanha .mdl-card__media {
       left: 0;
       position: absolute;
-      width: 120px;
+      width: 65px;
       background-color: transparent;
   }
 
+  .mdl-card__supporting-text {
+    padding: 5px !important;
+  }
+
   .mdl-card--campanha .mdl-card__supporting-text {
-      flex: 1 1 auto;
+      background-color: transparent;      
       width: auto;
   }
