@@ -193,4 +193,21 @@ export class Utils {
     return false;
   }
 
+  static timestampDifDays(timestamp1, timestamp2) {
+    var difference = timestamp1 - timestamp2;
+    var daysDifference = Math.floor(difference/1000/60/60/24);
+
+    return daysDifference;
+  }
+
+  static dateFormat(x) {
+    var x = new Date();
+    var y = x.getFullYear().toString();
+    var m = (x.getMonth() + 1).toString();
+    var d = x.getDate().toString();
+    (d.length == 1) && (d = '0' + d);
+    (m.length == 1) && (m = '0' + m);
+    return y + m + d;;
+  }
+
 }

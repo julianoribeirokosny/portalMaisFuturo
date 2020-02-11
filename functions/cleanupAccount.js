@@ -1,18 +1,3 @@
-/**
- * Copyright 2016 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for t`he specific language governing permissions and
- * limitations under the License.
- */
 'use strict';
 
 const functions = require('firebase-functions');
@@ -43,14 +28,6 @@ exports.cleanupAccount = functions.runWith({memory: '2GB', timeoutSeconds: 540})
 
   // The profile.
   personalPaths[`/people/${deletedUid}`] = null;
-
-  // Find all posts to delete.
-  const findPosts = admin.database().ref('/posts/').orderByChild('author/uid').equalTo(deletedUid).once('value')
-      .then((snap) => {
-        snap.forEach((post) => {
-          personalPaths[`/posts/${post.key}`] = null;
-        });
-      });
 
   // Find all likes to delete.
   const findLikes = admin.database().ref('/likes/').orderByChild(deletedUid).startAt(0).once('value')
@@ -125,44 +102,6 @@ async function deleteOldPosts() {
   const promisePool = new PromisePool(() => deletePost(oldPosts), MAX_CONCURRENT);
   await promisePool.start();
   return oldPosts.length;
-}
-
-function deletePost(oldPosts) {
-  if (oldPosts.length === 0) {
-    return null;
-  }
-
-  const oldPost = oldPosts.pop();
-
-  const postId = oldPost.postId;
-  const picStorageUri = oldPost.picStorageUri;
-  const thumbStorageUri = oldPost.thumbStorageUri;
-  const authorUid = oldPost.authorUid;
-
-  console.log(`Deleting ${postId}`);
-  const updateObj = {};
-  updateObj[`/people/${authorUid}/posts/${postId}`] = null;
-  updateObj[`/comments/${postId}`] = null;
-  updateObj[`/likes/${postId}`] = null;
-  updateObj[`/posts/${postId}`] = null;
-  updateObj[`/feed/${authorUid}/${postId}`] = null;
-  const deleteFromDatabase = admin.database().ref().update(updateObj);
-
-  if (picStorageUri) {
-    const picFileName = picStorageUri;
-    const thumbFileName = thumbStorageUri;
-    if (picStorageUr.startsWith('gs:/')) {
-      picFileName = picStorageUri.split('appspot.com/')[1];
-      thumbFileName = thumbStorageUri.split('appspot.com/')[1];
-    }
-    const deletePicFromStorage = admin.storage().bucket().file(picFileName).delete();
-    const deleteThumbFromStorage = admin.storage().bucket().file(thumbFileName).delete();
-    return Promise.all([deleteFromDatabase, deletePicFromStorage, deleteThumbFromStorage]);
-  }
-  return deleteFromDatabase.catch((error) => {
-    console.error('Deletion of old post', postId, 'failed:', error);
-    return null;
-  });
 }
 
 /**
