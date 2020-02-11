@@ -4,6 +4,9 @@ import $ from 'jquery';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import {MaterialUtils} from './Utils';
+import '../node_modules/chart.js';
+import VueCharts from 'vue-chartjs';
+import { Bar, Line, Doughnut } from 'vue-chartjs';
 
 /**
  * Handles the Home UI.
@@ -37,41 +40,41 @@ export default class Home {
     this.firebaseHelper.subscribeToGeneralFeed(
         (postId, postValue) => this.addNewPost(postId, postValue), latestPostId);
 
-    // Adds fetched posts and next page button if necessary.
-    //this.addPosts(data.entries);
-    //this.toggleNextPageButton(data.nextPage);
-    
+    //VUE.JS Configurações
     const data_Home = {
                         "usuarioId": "02405789965",
                         "nome": "JULIANO RIBEIRO KOSNY",
+                        "apelido": "Juliano",
+                        "mensagem": "Seu projeto de vida está de vento em popa!",
                         "campanhas": [{
                             "nome": "Emprestimos",
                             "icone": "face",
                             "titulo": "Há uma oportunidade especial disponível para você!",
                             "descricao": "Você tem R$ 8.500,00 pré aprovado para emprestimo consiente.",
                             "ativo": true,
-                            "card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
+                            "card_background": "background-image: linear-gradient(114deg, #033166 0%, #1779C6 100%);",                            
+                            "card_button_left": "background-color: #D3D3D3; color:white;",
+                            "card_button_right": "background-color: #1865AF; color:white;"
                           },
                           {
                             "nome": "Aporte",
                             "icone": "attach_money",
                             "titulo": "As taxas de aporte estão mais vantajosas esse mês.",
                             "descricao": "Aumentando o valor do seu aporte a taxa será de 0,5%.",
-                            "ativo": true,
-                            "card_background": "background-image: linear-gradient(-90deg, #136cb5, #033166);"
+                            "ativo": false,
+                            "card_background": "background-image: linear-gradient(114deg, #033166 0%, #1779C6 100%);",
+                            "card_button_left": "background-color: #D3D3D3; color:white;",
+                            "card_button_right": "background-color: #1865AF; color:white;"
                           }
                         ],
                         "saldo_reserva": {
-                          "grafico": [{
-                            "data": [
-                              28523.30,
-                              6104.80
-                            ],
+                          "grafico": {
+                            "labels": ["Patronal", "Funcional"],
+                            "data": [ 28523.30, 6104.80 ],
                             "backgroundColor": ["#8ACE7B", "#1779C6"],
                             "borderWidth": 6,
-                            "borderColor": "#FFFFFF",
-                            "label": "Dataset 1"
-                          }],
+                            "borderColor": "#FFFFFF",                            
+                          },
                           "total": "R$ 34.628.10",
                           "patronal": "R$ 28.523,30",
                           "funcional": "R$ 6.104,80"
@@ -161,13 +164,67 @@ export default class Home {
                         "educacao_financeira": {}
                       };
 
-    console.log('data_Home',data_Home);    
-    var app = new Vue({
-        el: '#app',
-        data: {      
-          home: data_Home
+    console.log('data_Home',data_Home);
+
+    Vue.component('grafico-reserva', {
+        extends: VueCharts.Doughnut,        
+        template: '#grafico-reserva',
+        mounted () {
+            this.renderChart({              
+                              labels: data_Home.saldo_reserva.grafico.labels,
+                              datasets: [{
+                                  data: data_Home.saldo_reserva.grafico.data,
+                                  backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
+                                  borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
+                                  borderColor: data_Home.saldo_reserva.grafico.borderColor,
+                              }]
+                            },
+                            {
+                                cutoutPercentage: 88,
+                                responsive: true,
+                                legend: {
+                                          position: 'top',
+                                        }
+                            }
+              )
         }
-    })    
+    });
+
+    var app = new Vue({
+        el: '#app',        
+        data: {      
+          home: data_Home,
+          toggle: false,          
+          provider: {           
+            context: null
+          }
+        },
+        methods: {          
+          toggleCategory: function() {
+            this.toggle = !this.toggle;            
+            this.createChart("planet-chart", this.chartData)
+          },
+          removerCampanha: function(campanha) {
+              campanha.ativo = false;
+          },
+          contratarCampanha: function(campanha) {
+              console.log("Contratar Campanha", campanha);
+          },
+          createChart: function(chartId, chartData) {              
+            
+
+            const ctx =  this.$refs['my-canvas'];
+            if(ctx) {
+              console.log("Entrou","entrou");
+              const myChart = new Chart(ctx, {
+                type: chartData.type,
+                data: chartData.data,
+                options: chartData.options,
+              });
+            }
+          }
+        }
+    });
   }
 }
 
