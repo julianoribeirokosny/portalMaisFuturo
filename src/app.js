@@ -25,11 +25,14 @@ import 'material-design-lite';
 import {Utils} from './Utils';
 import page from 'page';
 
+//import Mdl-ext from 'mdl-ext/lib';
+
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-amaranth/index.css';
 import './fonts/maisfuturo/maisfuturo-font.css';
 import 'material-design-lite/material.min.css';
+import 'mdl-ext/lib/mdl-ext.min.css';
 import 'firebaseui/dist/firebaseui.css';
 import './app.css';
 
@@ -106,6 +109,10 @@ console.log("Setando beforeinstallprompt");
 window.addEventListener('beforeinstallprompt', e => {
   // this event does not fire if the application is already installed
   // then your button still hidden ;)
+  var accordion = document.querySelector('#my-accordion');
+  accordion.addEventListener('toggle', function(e) {
+    console.log('Accordion toggled. State:', e.detail.state, 'Source:', e.detail.tab);
+  });
 
   div_continue.style.display = 'none';
   div_prevdigi.style.display = 'none';
@@ -160,6 +167,13 @@ window.addEventListener('beforeinstallprompt', e => {
 
 
 });
+
+// window.addEventListener('load', function() {  
+//   var accordion = document.querySelector('#my-accordion');
+//   accordion.addEventListener('toggle', function(e) {
+//     console.log('Accordion toggled. State:', e.detail.state, 'Source:', e.detail.tab);
+//   });
+// });
 
 // if are standalone android OR safari
 //if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
