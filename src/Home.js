@@ -75,9 +75,9 @@ export default class Home {
                             "borderWidth": 6,
                             "borderColor": "#FFFFFF",                            
                           },
-                          "total": "R$ 34.628.10",
-                          "patronal": "R$ 28.523,30",
-                          "funcional": "R$ 6.104,80"
+                          "total": "34.628.10",
+                          "patronal": "28.523,30",
+                          "funcional": "6.104,80"
                         },
                         "projeto_vida": {
                           "grafico": {
@@ -182,9 +182,7 @@ export default class Home {
                             {
                                 cutoutPercentage: 88,
                                 responsive: true,
-                                legend: {
-                                          position: 'top',
-                                        }
+                                legend: false
                             }
               )
         }
@@ -201,28 +199,14 @@ export default class Home {
         },
         methods: {          
           toggleCategory: function() {
-            this.toggle = !this.toggle;            
-            this.createChart("planet-chart", this.chartData)
+            this.toggle = !this.toggle;
           },
           removerCampanha: function(campanha) {
               campanha.ativo = false;
           },
           contratarCampanha: function(campanha) {
               console.log("Contratar Campanha", campanha);
-          },
-          createChart: function(chartId, chartData) {              
-            
-
-            const ctx =  this.$refs['my-canvas'];
-            if(ctx) {
-              console.log("Entrou","entrou");
-              const myChart = new Chart(ctx, {
-                type: chartData.type,
-                data: chartData.data,
-                options: chartData.options,
-              });
-            }
-          }
+          }          
         }
     });
   }
