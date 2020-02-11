@@ -5,6 +5,7 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 import latinize from 'latinize';
+import {Utils} from './Utils';
 
 /**
  * Handles all Firebase interactions.
@@ -77,6 +78,47 @@ export default class FirebaseHelper {
    */
   subscribeToComments(postId, callback, latestCommentId) {
     return this._subscribeToFeed(`/comments/${postId}`, callback, latestCommentId, false);
+  }
+
+  getHome() {
+    let ref = this.database.ref('home');
+    return ref.once('value').then((data) => {
+      if (!data.val()) {
+        return null;
+      }
+      //exclui campanhas fora de vigência
+      if (data.campanhas && JSON.Object(data.campanhas).length > 0) {
+        let campanhas = data.campanhas
+        campanhas.forEach((campanha) => {
+          let dataHoje = Utils.dateFormat(new Date());
+          if (dataHoje < campanhas.data_inicio || dataHoje > campanhas.data_fim) {
+            delete data.campanhas[campanha];
+          }
+        })
+      }
+      data.forEach((card) => {
+        if (!card.vigente) { //exclui Cards desligados (vigente != true)
+          delete data[card]
+        } else if (card.hasOwnProperty("acao")) { //exclui cards de acao se desligados  
+          if (!card.acao.vigente) {
+            delete data[card].acao
+          }
+        }
+      })
+      return data.val();
+    });
+
+  }
+
+  getUser(uid) {
+    let ref = this.database.ref('usuarios/'+uid);
+    return ref.once('value').then((data) => {
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
   }
 
   /**

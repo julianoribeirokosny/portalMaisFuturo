@@ -12,6 +12,19 @@
         }
       }
     },
+    // estrutura básica da home
+    "home": {
+      ".read": "auth.uid !== null || auth.token.admin === true",
+      ".write": "false"
+    },    
+    // dados do usuário
+    "usuarios": {
+      "$uid": {
+        //".read": "auth.uid === $uid || auth.token.admin === true",
+        ".read": "true",
+        ".write": "auth.uid === $uid"
+      }
+    },        
     // User's personnal feeds.
     "feed": {
       "$uid": {

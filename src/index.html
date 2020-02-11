@@ -277,11 +277,12 @@
         <template v-if="home.saldo_reserva">
           <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
             <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
-
-                <label for="reserva">Reserva total atual</label>
+                <div style="width: 65%; text-align: center;">
+                  Reserva total atual
+                </div>
                 <div @click.prevent="toggleCategory()" id="reserva" class="mdl-card__supporting-text div_reserva_text_1" style="cursor: pointer; margin:0px; text-align: center;">                  
                     <span style="vertical-align: top; font-size: 16px; font-family: 'MaisFuturo-Medium'; color: black;">R$</span>
-                    <span style="font-size: 35px; font-weight: 700; color: black; margin-right: 20px;">{{ home.saldo_reserva.total }}</span>
+                    <span style="font-size: 35px; font-weight: 700; color: black; margin-right: 20px;">{{ home.saldo_reserva.valores[0].valor }}</span>
                     <span><i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i></span>                  
                 </div>
                 <div class="mdl-card__supporting-text div_reserva_text_2">
