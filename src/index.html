@@ -276,32 +276,26 @@
 
         <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
           <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-            <div class="mdl-card__supporting-text mdl-card-container">
-
-              <p>Reserva atual total</p>              
-              <p @click.prevent="toggleCategory()" style="cursor: pointer;" >
-                  {{ home.saldo_reserva.total }}
-                  &nbsp; <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>
-              </p>
-              <p>maisfuturo previdência</p>
-
-              <div v-if="toggle" transition="expand">
-                <div>                     
-                     <grafico-reserva></grafico-reserva>
-                  <div style="background-color: red; margin-top: 10%;"> asdf
-                  </div>
+            <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
+                <div style="width: 65%; text-align: center;">
+                  Reserva total atual
                 </div>
-                
-                <!-- <div id="canvas-wrap" class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
-                  mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" 
-                  style="position:relative; width:100%; min-height: 300px; display: flex; align-items: center; justify-content: center;">
-                  <canvas id="chart-area" style="width:100%; height: 100%;" class="chartjs-render-monitor"></canvas>
-                  <div id="doughnutOverlay" style="position:absolute; width: 45%; height: 45%;
-                    background-color: transparent; margin: 0; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                  </div>
-                </div>   -->
-              </div>
+                <div @click.prevent="toggleCategory()" id="reserva" class="mdl-card__supporting-text div_reserva_text_1" style="cursor: pointer; margin:0px; text-align: center;">                  
+                    <span style="vertical-align: top; font-size: 16px; font-family: 'MaisFuturo-Medium'; color: black;">R$</span>
+                    <span style="font-size: 35px; font-weight: 700; color: black; margin-right: 20px;">{{ home.saldo_reserva.valores[0].valor }}</span>
+                    <span><i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i></span>                  
+                </div>
+                <div class="mdl-card__supporting-text div_reserva_text_2">
+                    maisfuturo previdência
+                </div>
 
+                <div v-if="toggle">                                  
+                  <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico_reserva">
+                       <grafico-reserva class="canvas_grafico"></grafico-reserva>
+                       <div class="div_grafico_reserva_legenda">
+                       </div>
+                  </div>
+              </div>
             </div>
           </div>
         </template>
@@ -480,7 +474,8 @@
 </div>
 
     <!--Template grafico Reserva-->
-    <template id="grafico-reserva"></template>
+    <template id="grafico-reserva">         
+    </template>
 
     <!--script vuejs-->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    

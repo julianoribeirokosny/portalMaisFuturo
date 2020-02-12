@@ -1174,3 +1174,66 @@ dialog + .backdrop { /* polyfill */
     transform: rotate(180deg);
     /* transition-duration: 0.3s; */
   }
+
+  .div_reserva_total {
+      margin-top: 20px;    
+  }
+
+  .div_reserva_text_1 {
+      cursor: pointer;
+      font-family: 'MaisFuturo-Medium';
+      font-size: 11px;
+      text-align: center;
+      margin: auto;
+  }
+
+  .div_reserva_text_2 {
+    font-family: 'MaisFuturo-Regular';
+    font-size: 13px;
+    text-align: center;
+  }
+
+  
+
+  
+
+  .div_grafico_reserva {
+      position:relative; 
+      width:100%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+  }
+
+  .div_grafico_reserva_legenda {
+      position:absolute; 
+      width: 280px;
+      height: 60%;      
+      background-color: red; 
+      margin: 0;
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%);
+  }
+
+  .canvas_grafico {
+      width: 500px;
+  }
+
+  @media screen and (max-width: 625px) and (min-width: 426px) {
+      .canvas_grafico {
+          width: 400px;
+      }
+      .div_grafico_reserva_legenda {
+          width: 220px; 
+      }
+  }
+
+  @media screen and (max-width: 425px) {
+      .canvas_grafico {
+          width: 280px;
+      }
+      .div_grafico_reserva_legenda {
+          width: 160px; 
+      }
+  }

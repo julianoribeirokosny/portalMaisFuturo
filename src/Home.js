@@ -37,39 +37,36 @@ export default class Home {
         extends: VueCharts.Doughnut,        
         template: '#grafico-reserva',
         mounted () {
-          this.renderChart(
-            {              
-              labels: this.data_Home.saldo_reserva.grafico.labels,
-              datasets: [{
-                data: this.data_Home.saldo_reserva.grafico.data,
-                backgroundColor: this.data_Home.saldo_reserva.grafico.backgroundColor,
-                borderWidth: this.data_Home.saldo_reserva.grafico.borderWidth,
-                borderColor: this.data_Home.saldo_reserva.grafico.borderColor
-              }]
-            },
-            {
-              cutoutPercentage: 88,
-              responsive: true,
-              legend: {
-                position: 'top',
-              }
-            }
-          )
+            this.renderChart({              
+                              labels: data_Home.saldo_reserva.grafico.labels,
+                              datasets: [{
+                                  data: data_Home.saldo_reserva.grafico.data,
+                                  backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
+                                  borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
+                                  borderColor: data_Home.saldo_reserva.grafico.borderColor,
+                              }]
+                            },
+                            {
+                                cutoutPercentage: 88,
+                                responsive: true,
+                                legend: false
+                            }
+              )
         }
     });
 
     var app = new Vue({
       el: '#app',        
       data: {      
-        home: this.data_Home,
-        toggle: false,          
-        provider: {           
-          context: null
-        }
+        home: data_Home,
+        toggle: false
       },
       methods: {          
         toggleCategory: function() {
-          this.toggle = !this.toggle;            
+          this.toggle = !this.toggle;
+        },
+        removerCampanha: function(campanha) {
+            campanha.ativo = false;
         }
       }
     });
