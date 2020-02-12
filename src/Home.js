@@ -21,17 +21,17 @@ export default class Home {
 
     // Firebase SDK.
     this.auth = firebase.auth();
+    this.uid = '1234567890'
+    this.home = null
+    this.data_Home = null
   }
 
   async showHome() {
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //TODO: ABAIXO, CRIAR TRIGGER PARA MUDANÇA NOS CARDS!!!!!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //Listen for posts deletions.
-    //this.firebaseHelper.registerForPostsDeletion((postId) => this.onPostDeleted(postId));
-      
-    const data_Home = await this.dadosHome('1234567890')
+    let retDadosHome = await this.dadosHome(this.uid)
+    if (!retDadosHome) {
+      return 
+    }
 
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,        
@@ -39,12 +39,12 @@ export default class Home {
         mounted () {
           this.renderChart(
             {              
-              labels: data_Home.saldo_reserva.grafico.labels,
+              labels: this.data_Home.saldo_reserva.grafico.labels,
               datasets: [{
-                data: data_Home.saldo_reserva.grafico.data,
-                backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
-                borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
-                borderColor: data_Home.saldo_reserva.grafico.borderColor
+                data: this.data_Home.saldo_reserva.grafico.data,
+                backgroundColor: this.data_Home.saldo_reserva.grafico.backgroundColor,
+                borderWidth: this.data_Home.saldo_reserva.grafico.borderWidth,
+                borderColor: this.data_Home.saldo_reserva.grafico.borderColor
               }]
             },
             {
@@ -61,7 +61,7 @@ export default class Home {
     var app = new Vue({
       el: '#app',        
       data: {      
-        home: data_Home,
+        home: this.data_Home,
         toggle: false,          
         provider: {           
           context: null
@@ -70,52 +70,48 @@ export default class Home {
       methods: {          
         toggleCategory: function() {
           this.toggle = !this.toggle;            
-          this.createChart("planet-chart", this.chartData)
-        },
-        removerCampanha: function(campanha) {
-            campanha.ativo = false;
-        },
-        contratarCampanha: function(campanha) {
-            console.log("Contratar Campanha", campanha);
-        },
-        createChart: function(chartId, chartData) {              
-          const ctx =  this.$refs['my-canvas'];
-          if(ctx) {
-            console.log("Entrou","entrou");
-            const myChart = new Chart(ctx, {
-              type: chartData.type,
-              data: chartData.data,
-              options: chartData.options,
-            });
-          }
         }
       }
     });
+
+    //Escuta por alterações na home ou no usuario
+    this.firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))
+    this.firebaseHelper.registerForUserUpdate(this.uid, (item, vigente) => this.refreshHome(item, vigente, 'usuarios'))
   }
 
   dadosHome(uid) {
-    let home = null
+    let homeAux = {}
     return this.firebaseHelper.getHome().then((data) => {
+      console.log('data', data)
       if (data) {
-        home = data
+        this.home = data
+        homeAux = data
         return this.firebaseHelper.getUser(uid)
       } else {
-        return null;
+        return false;
       }
     }).then((user) => {
       if (user===null) {
-        return null
+        return false
       }
+
+      //Verifica se há chaves "não vigentes" para o usuário específico
+      for (let u in user) {
+        if (user[u].hasOwnProperty('vigente') && !user[u].vigente) {
+          if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
+            homeAux[u].vigente = false
+          }
+        }
+      } 
+
+      let stringHome = JSON.stringify(homeAux)
+
       // MERGE HOME e DADOS USUÁRIOS
-      let stringHome = JSON.stringify(home)
       while (stringHome.indexOf('<<') >= 0) {
-        console.log('JSON.parse(stringHome)', JSON.parse(stringHome))
         let posIni = stringHome.indexOf('<<')
         let posFim = stringHome.indexOf('>>')
         let chave = stringHome.substring(posIni+2, posFim)
         let caminho = chave.split('.')
-        console.log('chave', chave)
-        console.log('caminho', caminho)
         let valor = user
         for (let i in caminho) {
           if (valor[caminho[i]]) {
@@ -132,9 +128,39 @@ export default class Home {
           stringHome = stringHome.replace('<<'+ chave + '>>', valor)           
         }
       }
-      console.log('stringHome final', JSON.parse(stringHome)) 
-      return JSON.parse(stringHome)
+      this.data_Home = JSON.parse(stringHome)
+      return true
     });
   }
+
+  refreshHome(item, vigente, origem) {
+    return this.firebaseHelper.getUser(this.uid).then((usuario) => {
+      console.log('refreshHome - ', item, vigente, origem, this.home[item].vigente)
+      console.log('usuario', usuario)
+      this.home[item].vigente = origem==='home' ? vigente : this.home[item].vigente
+      if (!vigente) { //se for para desligar, não precisa avaliar critério
+        this.data_Home[item].vigente = vigente 
+      } else {
+        if (this.data_Home[item]) {
+          console.log('1')
+          if (usuario[item] && usuario[item].vigente !== undefined) {
+            console.log('2')
+            if (origem==='home' && usuario[item].vigente) {
+              console.log('3')
+              this.data_Home[item].vigente = vigente 
+            } else if (origem==='usuarios' && this.home[item].vigente) {
+              console.log('4')
+              this.data_Home[item].vigente = vigente 
+            }
+          } else {
+            console.log('5')
+            this.data_Home[item].vigente = vigente 
+          }
+        }  
+  
+      }
+    })
+  }
+
 }
 

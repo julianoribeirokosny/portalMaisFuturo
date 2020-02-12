@@ -96,23 +96,14 @@ export default class FirebaseHelper {
           }
         })
       }
-      data.forEach((card) => {
-        if (!card.vigente) { //exclui Cards desligados (vigente != true)
-          delete data[card]
-        } else if (card.hasOwnProperty("acao")) { //exclui cards de acao se desligados  
-          if (!card.acao.vigente) {
-            delete data[card].acao
-          }
-        }
-      })
-      return data.val();
+      return data.val()
     });
 
   }
 
   getUser(uid) {
     let ref = this.database.ref('usuarios/'+uid);
-    return ref.once('value').then((data) => {
+    return ref.once('value').then((data) => {    
       if (data.val()) {
         return data.val()
       } else {
@@ -869,4 +860,42 @@ export default class FirebaseHelper {
     postsRef.on('child_removed', (data) => deletionCallback(data.key));
     this.firebaseRefs.push(postsRef);
   }
+
+    /**
+   * Escuta por alterações na Home
+   */
+  registerForHomeUpdate(updateCallback) {
+    console.log('registerForHomeUpdate')
+    let ref = this.database.ref('home');
+    return ref.once('value').then((home) => {
+      home.forEach((itemHome) => {
+        if (itemHome.val().hasOwnProperty('vigente')) {
+          ref = this.database.ref('home/'+itemHome.key+'/vigente');
+          //liga listener do Firebase
+          ref.on('value', (vigente) => updateCallback(itemHome.key, vigente.val()))
+          this.firebaseRefs.push(ref);
+        }
+      })
+      return home
+    })
+  }
+
+  /**
+   * Escuta por alterações na Home
+  */
+  registerForUserUpdate(uid, updateCallback) {
+    console.log('registerForUserUpdate - ', uid)
+    let ref = this.database.ref('usuarios/'+uid)  
+    return ref.once('value').then((usr) => {
+      usr.forEach((itemUsr) => {
+        if (itemUsr.val().hasOwnProperty('vigente')) {
+          ref = this.database.ref(`usuarios/${uid}/${itemUsr.key}/vigente`);
+          //liga listener do Firebase
+          ref.on('value', (vigente) => updateCallback(itemUsr.key, vigente.val()))
+          this.firebaseRefs.push(ref);
+        }
+      })
+    })
+  }
+
 };

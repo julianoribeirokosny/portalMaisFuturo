@@ -225,7 +225,7 @@
 
         <!--Campanha-->
 
-        <template v-for="campanha in home.campanhas" v-if="campanha.ativo">
+        <template v-for="campanha in home.campanhas" v-if="home.campanhas.vigente && campanha.ativo">
             <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                 <div class="mdl-card__supporting-text mdl-card-container">
                     <div class="mdl-card mdl-shadow--1dp mdl-card--campanha" v-bind:style="campanha.card_background">
@@ -274,7 +274,7 @@
 
         <!--Reserva Total Atual-->
 
-        <template v-if="home.saldo_reserva">
+        <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
           <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
             <div class="mdl-card__supporting-text mdl-card-container">
 
