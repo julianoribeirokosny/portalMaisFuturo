@@ -28,6 +28,8 @@ export default class Router {
     const showHome = async () => (await loadComponents).home.showHome();
     const clearFeed = async () => (await loadComponents).feed.clear();
 
+    console.log('Router - showHome', showHome)
+
     // Configuring middlwares.
     page(Router.setLinkAsActive);
 
