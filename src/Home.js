@@ -28,8 +28,8 @@ export default class Home {
 
   async showHome() {
 
-    let retDadosHome = await this.dadosHome(this.uid)
-    if (!retDadosHome) {
+    let data_Home = await this.dadosHome(this.uid)
+    if (data_Home===null) {
       return 
     }
 
@@ -58,7 +58,7 @@ export default class Home {
     var app = new Vue({
       el: '#app',        
       data: {      
-        home: data_Home,
+        home: this.data_Home,
         toggle: false
       },
       methods: {          
@@ -79,17 +79,16 @@ export default class Home {
   dadosHome(uid) {
     let homeAux = {}
     return this.firebaseHelper.getHome().then((data) => {
-      console.log('data', data)
       if (data) {
         this.home = data
         homeAux = data
         return this.firebaseHelper.getUser(uid)
       } else {
-        return false;
+        return null;
       }
     }).then((user) => {
       if (user===null) {
-        return false
+        return null
       }
 
       //Verifica se há chaves "não vigentes" para o usuário específico
@@ -126,31 +125,24 @@ export default class Home {
         }
       }
       this.data_Home = JSON.parse(stringHome)
-      return true
+      return this.data_Home
     });
   }
 
   refreshHome(item, vigente, origem) {
     return this.firebaseHelper.getUser(this.uid).then((usuario) => {
-      console.log('refreshHome - ', item, vigente, origem, this.home[item].vigente)
-      console.log('usuario', usuario)
       this.home[item].vigente = origem==='home' ? vigente : this.home[item].vigente
       if (!vigente) { //se for para desligar, não precisa avaliar critério
         this.data_Home[item].vigente = vigente 
       } else {
         if (this.data_Home[item]) {
-          console.log('1')
           if (usuario[item] && usuario[item].vigente !== undefined) {
-            console.log('2')
             if (origem==='home' && usuario[item].vigente) {
-              console.log('3')
               this.data_Home[item].vigente = vigente 
             } else if (origem==='usuarios' && this.home[item].vigente) {
-              console.log('4')
               this.data_Home[item].vigente = vigente 
             }
           } else {
-            console.log('5')
             this.data_Home[item].vigente = vigente 
           }
         }  
