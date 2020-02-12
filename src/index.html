@@ -215,131 +215,137 @@
   <main class="mdl-layout__content mdl-color--white">
 
     <!--Home Vuejs-->
-
     <div id="app">
-
-      <!-- Show home -->
-
-      <section id="page-home" class="mdl-grid fp-content" style="display: none;">
-        <a></a>
-
-        <!--Campanha-->
-
-        <template v-for="campanha in home.campanhas" v-if="campanha.ativo">
-            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                <div class="mdl-card__supporting-text mdl-card-container">
-                    <div class="mdl-card mdl-shadow--1dp mdl-card--campanha" v-bind:style="campanha.card_background">
-                        <div class="mdl-card__media mdl-text mdl-grid center-items">
-                            <i class="material-icons icon-campanha">{{ campanha.icone }}</i>
-                        </div>            
-                        <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
-                            <span class="span-campanha-titulo">{{ campanha.titulo }}</span>
-                        </div>
-                        <div class="mdl-card__supporting-text card-campanha-desc text-left-items">
-                            <span class="span-campanha-desc">{{ campanha.descricao }}</span>
-                        </div>                      
-                    </div>
-                </div>
-                <div class="mdl-card__supporting-text mdl-card-container">
-                    <div class="mdl-card-campanha-button-left" @click.prevent="removerCampanha(campanha)" v-bind:style="campanha.card_button_left">
-                        &nbsp;&nbsp;&nbsp;Não, obrigado
-                        <div>
-                            <i class="material-icons icon-button">close</i>&nbsp;&nbsp;&nbsp;
+        <!-- Show home -->
+        <section id="page-home" class="mdl-grid fp-content" style="display: none;">
+            <a></a>
+            <!--Campanha-->
+            <template v-for="campanha in home.campanhas" v-if="campanha.ativo">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                    <div class="mdl-card__supporting-text mdl-card-container">
+                        <div class="mdl-card mdl-shadow--1dp mdl-card--campanha" v-bind:style="campanha.card_background">
+                            <div class="mdl-card__media mdl-text mdl-grid center-items">
+                                <i class="material-icons icon-campanha">{{ campanha.icone }}</i>
+                            </div>            
+                            <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
+                                <span class="span-campanha-titulo">{{ campanha.titulo }}</span>
+                            </div>
+                            <div class="mdl-card__supporting-text card-campanha-desc text-left-items">
+                                <span class="span-campanha-desc">{{ campanha.descricao }}</span>
+                            </div>                      
                         </div>
                     </div>
-                    <div class="mdl-card-campanha-button-right" @click.prevent="contratarCampanha(campanha)" v-bind:style="campanha.card_button_right">
-                        &nbsp;&nbsp;&nbsp;Contratar
-                        <div>
-                            <i class="material-icons icon-button">arrow_forward</i>&nbsp;&nbsp;&nbsp;
+                    <div class="mdl-card__supporting-text mdl-card-container">
+                        <div class="mdl-card-campanha-button-left" @click.prevent="removerCampanha(campanha)" v-bind:style="campanha.card_button_left">
+                            &nbsp;&nbsp;&nbsp;Não, obrigado
+                            <div>
+                                <i class="material-icons icon-button">close</i>&nbsp;&nbsp;&nbsp;
+                            </div>
                         </div>
-                    </div>              
+                        <div class="mdl-card-campanha-button-right" @click.prevent="contratarCampanha(campanha)" v-bind:style="campanha.card_button_right">
+                            &nbsp;&nbsp;&nbsp;Contratar
+                            <div>
+                                <i class="material-icons icon-button">arrow_forward</i>&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>              
+                    </div>
                 </div>
-            </div>
-        </template>
-
-        <!--Saudação Usuário-->
-
-        <template v-if="home.apelido">          
-            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-              <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-                  <div class="mdl-card__supporting-text div_titulo_card">
-                    Olá {{ home.apelido }}!
-                  </div>                  
-                  <div class="mdl-card__supporting-text div_mensagem">
-                    {{ home.mensagem }}
+            </template>
+            <!--Saudação Usuário-->
+            <template v-if="home.apelido">          
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                  <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                      <div class="mdl-card__supporting-text div_titulo_card">
+                        Olá {{ home.apelido }}!
+                      </div>                  
+                      <div class="mdl-card__supporting-text div_mensagem">
+                        {{ home.mensagem }}
+                      </div>
                   </div>
-              </div>
-            </div>
-        </template>
-
-        <!--Reserva Total Atual-->
-
-        <template v-if="home.saldo_reserva">
-            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
-                    <div class="div_reserva_text_1">
-                        <dl class="dl_reserva_text">
-                            <dt class="dt_reserva_text">Reserva total atual</dt>
-                            <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
-                                <span class="span_reserva_text_1">R$</span>
-                                <span class="span_reserva_text_2">{{ home.saldo_reserva.valores[0].valor }}</span>
-                                <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
-                            </dd>
-                        </dl>
-                    </div>
-                    <div class="mdl-card__supporting-text div_reserva_text_2">
-                        maisfuturo previdência
-                    </div>
-                    <div v-if="toggle">                                  
-                        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
-                            <grafico-reserva class="canvas_grafico"></grafico-reserva>
-                            <div class="div_grafico_reserva_legenda">
-                              <template>
-                                <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.valores">
-                                    <template v-if="conta.nome === 'Total'">
-                                      <dl class="dl_reserva_legenda">
-                                          <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
-                                          <dd class=" dd_reserva_text">
-                                              <span class="span_reserva_legenda_1_total" v-bind:style="conta.cor">R$</span>
-                                              <span class="span_reserva_legenda_2_total" v-bind:style="conta.cor">{{ conta.valor }}</span>                                            
-                                          </dd>
-                                      </dl>
-                                    </template>
-                                    <template v-else>
-                                      <dl class="dl_reserva_legenda">
-                                          <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
-                                          <dd class="dd_reserva_text">
-                                              <span class="span_reserva_legenda_1" v-bind:style="conta.cor">R$</span>
-                                              <span class="span_reserva_legenda_2" v-bind:style="conta.cor">{{ conta.valor }}</span>
-                                          </dd>
-                                      </dl>
-                                    </template>
+                </div>
+            </template>
+            <!--Reserva Total Atual-->
+            <template v-if="home.saldo_reserva">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                    <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
+                        <div class="div_reserva_text_1">
+                            <dl class="dl_reserva_text">
+                                <dt class="dt_reserva_text">Reserva total atual</dt>
+                                <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
+                                    <span class="span_reserva_text_1">R$</span>
+                                    <span class="span_reserva_text_2">{{ home.saldo_reserva.valores[0].valor }}</span>
+                                    <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="mdl-card__supporting-text div_reserva_text_2">
+                            maisfuturo previdência
+                        </div>
+                        <div v-if="toggle">                                  
+                            <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+                                <grafico-reserva class="canvas_grafico"></grafico-reserva>
+                                <div class="div_grafico_reserva_legenda">
+                                  <template>
+                                    <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.valores">
+                                        <template v-if="conta.nome === 'Total'">
+                                          <dl class="dl_reserva_legenda">
+                                              <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
+                                              <dd class=" dd_reserva_text">
+                                                  <span class="span_reserva_legenda_1_total" v-bind:style="conta.cor">R$</span>
+                                                  <span class="span_reserva_legenda_2_total" v-bind:style="conta.cor">{{ conta.valor }}</span>                                            
+                                              </dd>
+                                          </dl>
+                                        </template>
+                                        <template v-else>
+                                          <dl class="dl_reserva_legenda">
+                                              <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
+                                              <dd class="dd_reserva_text">
+                                                  <span class="span_reserva_legenda_1" v-bind:style="conta.cor">R$</span>
+                                                  <span class="span_reserva_legenda_2" v-bind:style="conta.cor">{{ conta.valor }}</span>
+                                              </dd>
+                                          </dl>
+                                        </template>
+                                    </div>
+                                  </template>
                                 </div>
-                              </template>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </template>
-
-        <!--Projeto de Vida-->
-
-        <template v-if="home.projeto_vida">          
-            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-                    <div class="mdl-card__supporting-text div_titulo_card">
-                        Projeto de <br>Vida
+            </template>
+            <!--Projeto de Vida-->
+            <template v-if="home.projeto_vida">          
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                        <div class="mdl-card__supporting-text div_titulo_card">
+                            Projeto de <br>Vida
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
-              <grafico-reserva class="canvas_grafico"></grafico-reserva>
-              <projeto-vida class="canvas_grafico"></projeto-vida>
-          </div>
-        </template>
-
-      </section>
+                <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+                    <grafico-reserva class="canvas_grafico"></grafico-reserva>
+                    <projeto-vida class="canvas_grafico"></projeto-vida>
+                </div>
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                  <div class="mdl-card__supporting-text mdl-card-container">                      
+                      <div class="mdl-shadow--1dp" style="background-color: blue; border-radius: 25px; height: 100px;">
+                          <div class="mdl-card__supporting-text">
+                              <div class="mdl-card-campanha-button-left">
+                                left
+                              </div>
+                              <div class="mdl-card-campanha-button-right">                             
+                                right
+                              </div>
+                          </div>                                 
+                          <div class="mdl-card__supporting-text">
+                            botton
+                          </div>
+                      </div>                        
+                    </div>
+                  </div>
+                </div>
+            </template>
+        </section>
 
       <!-- Show a single post with comments -->
       <section id="page-post" class="mdl-grid fp-content" style="display: none;">
