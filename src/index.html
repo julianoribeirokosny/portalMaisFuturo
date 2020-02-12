@@ -261,8 +261,8 @@
 
         <template v-if="home.apelido">          
             <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-              <div class="mdl-card__supporting-text mdl-card-container div_saudacao">
-                  <div class="mdl-card__supporting-text div_apelido">
+              <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                  <div class="mdl-card__supporting-text div_titulo_card">
                     Olá {{ home.apelido }}!
                   </div>                  
                   <div class="mdl-card__supporting-text div_mensagem">
@@ -275,54 +275,70 @@
         <!--Reserva Total Atual-->
 
         <template v-if="home.saldo_reserva">
-          <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-            <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
-                <div style="width: 65%; text-align: center;">
-                  Reserva total atual
+            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
+                    <div class="div_reserva_text_1">
+                        <dl class="dl_reserva_text">
+                            <dt class="dt_reserva_text">Reserva total atual</dt>
+                            <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
+                                <span class="span_reserva_text_1">R$</span>
+                                <span class="span_reserva_text_2">{{ home.saldo_reserva.valores[0].valor }}</span>
+                                <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="mdl-card__supporting-text div_reserva_text_2">
+                        maisfuturo previdência
+                    </div>
+                    <div v-if="toggle">                                  
+                        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+                            <grafico-reserva class="canvas_grafico"></grafico-reserva>
+                            <div class="div_grafico_reserva_legenda">
+                              <template>
+                                <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.valores">
+                                    <template v-if="conta.nome === 'Total'">
+                                      <dl class="dl_reserva_legenda">
+                                          <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
+                                          <dd class=" dd_reserva_text">
+                                              <span class="span_reserva_legenda_1_total" v-bind:style="conta.cor">R$</span>
+                                              <span class="span_reserva_legenda_2_total" v-bind:style="conta.cor">{{ conta.valor }}</span>                                            
+                                          </dd>
+                                      </dl>
+                                    </template>
+                                    <template v-else>
+                                      <dl class="dl_reserva_legenda">
+                                          <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
+                                          <dd class="dd_reserva_text">
+                                              <span class="span_reserva_legenda_1" v-bind:style="conta.cor">R$</span>
+                                              <span class="span_reserva_legenda_2" v-bind:style="conta.cor">{{ conta.valor }}</span>
+                                          </dd>
+                                      </dl>
+                                    </template>
+                                </div>
+                              </template>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div @click.prevent="toggleCategory()" id="reserva" class="mdl-card__supporting-text div_reserva_text_1" style="cursor: pointer; margin:0px; text-align: center;">                  
-                    <span style="vertical-align: top; font-size: 16px; font-family: 'MaisFuturo-Medium'; color: black;">R$</span>
-                    <span style="font-size: 35px; font-weight: 700; color: black; margin-right: 20px;">{{ home.saldo_reserva.valores[0].valor }}</span>
-                    <span><i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i></span>                  
-                </div>
-                <div class="mdl-card__supporting-text div_reserva_text_2">
-                    maisfuturo previdência
-                </div>
-
-                <div v-if="toggle">                                  
-                  <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico_reserva">
-                       <grafico-reserva class="canvas_grafico"></grafico-reserva>
-                       <div class="div_grafico_reserva_legenda">
-                       </div>
-                  </div>
-              </div>
             </div>
+        </template>
+
+        <!--Projeto de Vida-->
+
+        <template v-if="home.projeto_vida">          
+            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                    <div class="mdl-card__supporting-text div_titulo_card">
+                        Projeto de <br>Vida
+                    </div>
+                </div>
+            </div>
+            <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+              <grafico-reserva class="canvas_grafico"></grafico-reserva>
+              <projeto-vida class="canvas_grafico"></projeto-vida>
           </div>
         </template>
 
-
-
-        <div class="fp-no-posts fp-help mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet
-                    mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing">
-          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-            <i class="fp-info material-icons">help</i>
-            <div>
-              <p>Start following people to see their posts!</p>
-              <p>
-                Use the <strong><i class="material-icons">search</i> search bar</strong> to find people you know and have
-                a look at the feed of <a href="/recent"><i class="material-icons">trending_up</i> Recent</a> posts to discover
-                interesting people.
-              </p>
-              <p>Then <i class="material-icons">favorite</i> like and comment their posts!</p>
-              </div>
-          </div>
-        </div>
-        <div class="fp-next-page-button">
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
-            <i class="material-icons">expand_more</i>
-          </button>
-        </div>
-      
       </section>
 
       <!-- Show a single post with comments -->
@@ -475,6 +491,10 @@
 
     <!--Template grafico Reserva-->
     <template id="grafico-reserva">         
+    </template>
+
+    <!--Template grafico Projeto de vida-->
+    <template id="projeto-vida">         
     </template>
 
     <!--script vuejs-->

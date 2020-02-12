@@ -21,4 +21,12 @@
   src:
     url('./Objectivity-Regular.woff2') format('woff2'), 
   }
+
+@font-face {
+  font-family: 'MaisFuturo-Bold';
+  font-style: medium;
+  font-weight: medium;
+  src:
+    url('./Objectivity-Bold.woff2') format('woff2'), 
+  }  
   

@@ -1149,11 +1149,11 @@ dialog + .backdrop { /* polyfill */
       }
   }
 
-  .div_saudacao {
+  .div_margem_card {
     margin-top: 30px;    
   }
 
-  .div_apelido {
+  .div_titulo_card {
       font-family: 'MaisFuturo-Thin'; 
       font-size: 35px; 
       letter-spacing: -1.4px; 
@@ -1180,24 +1180,97 @@ dialog + .backdrop { /* polyfill */
   }
 
   .div_reserva_text_1 {
-      cursor: pointer;
+      display: flex; 
+      justify-content: center;
+  }
+
+  .dl_reserva_text {
+    margin-bottom: 0px;
+  }
+
+  .dl_reserva_legenda {
+    margin-top: 0px;
+    margin-bottom: 8px;
+  }
+
+  .dt_reserva_text {      
       font-family: 'MaisFuturo-Medium';
-      font-size: 11px;
+      font-size: 11px;    
+      font-weight: 300;  
+      padding-bottom: 0px !important;
+  }
+
+  .dt_reserva_legenda {      
+      font-family: 'MaisFuturo-Medium';
+      line-height: 12px;
+      font-size: 11px;    
+      font-weight: 300;  
+      padding-bottom: 0px !important;
+  }
+
+  .dd_reserva_text {
+      cursor: pointer; 
+      margin: auto; 
       text-align: center;
-      margin: auto;
+      padding-bottom: 0px !important;
+      width: auto; 
+      margin-inline-start: 0px !important;
+  }
+
+  .span_reserva_text_1 {      
+      vertical-align: top;
+      font-size: 16px; 
+      font-family: 'MaisFuturo-Bold';
+      color: black;
+  }
+
+  .span_reserva_text_2 {      
+      font-size: 44px; 
+      line-height: 45px;
+      font-weight: 700; 
+      color: black; 
+      margin-right: 15px;
+      font-family: 'MaisFuturo-Bold';
+  }
+
+  .span_reserva_legenda_1_total {
+      vertical-align: top; 
+      font-size: 16px; 
+      font-family: 'MaisFuturo-Bold';
+  }
+
+  .span_reserva_legenda_2_total {      
+      font-size: 40px; 
+      line-height: 50px;
+      font-weight: 700;   
+      font-family: 'MaisFuturo-Bold';
+      letter-spacing: -1px;
+      
+  }
+
+  .span_reserva_legenda_1 {
+      vertical-align: top; 
+      font-size: 14px; 
+      font-family: 'MaisFuturo-Bold';
+  }
+
+  .span_reserva_legenda_2 {      
+      font-size: 30px;
+      font-weight: 600;
+      font-family: 'MaisFuturo-Bold';
+      letter-spacing: 0px;
+      line-height: 40px;
   }
 
   .div_reserva_text_2 {
-    font-family: 'MaisFuturo-Regular';
-    font-size: 13px;
-    text-align: center;
+      vertical-align: top; 
+      margin: auto;
+      font-family: 'MaisFuturo-Regular';
+      font-size: 13px;
+      text-align: center;
   }
 
-  
-
-  
-
-  .div_grafico_reserva {
+  .div_grafico {
       position:relative; 
       width:100%; 
       display: flex; 
@@ -1209,8 +1282,8 @@ dialog + .backdrop { /* polyfill */
       position:absolute; 
       width: 280px;
       height: 60%;      
-      background-color: red; 
-      margin: 0;
+      background-color: transparent; 
+      margin: 60px 0px 0px 0px;
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%);
@@ -1226,6 +1299,27 @@ dialog + .backdrop { /* polyfill */
       }
       .div_grafico_reserva_legenda {
           width: 220px; 
+          margin: 40px 0px 0px 0px;
+      }
+      .span_reserva_text_2 {
+          font-size: 39px; 
+          line-height: 40px;
+      }      
+      .span_reserva_legenda_1_total {       
+          font-size: 14px;           
+      }  
+      .span_reserva_legenda_2_total {      
+          font-size: 35px; 
+          letter-spacing: 0px;
+          line-height: 36px;
+      }
+      .span_reserva_legenda_1 {       
+          font-size: 12px;           
+      }  
+      .span_reserva_legenda_2 {      
+          font-size: 29px; 
+          letter-spacing: 0px;
+          line-height: 30px;
       }
   }
 
@@ -1235,5 +1329,26 @@ dialog + .backdrop { /* polyfill */
       }
       .div_grafico_reserva_legenda {
           width: 160px; 
+          margin: 20px 0px 0px 0px;
+      }
+      .span_reserva_text_2 {
+          font-size: 30px; 
+          line-height: 31px;
+      }      
+      .span_reserva_legenda_1_total {       
+          font-size: 11px;           
+      }  
+      .span_reserva_legenda_2_total {      
+          font-size: 26px; 
+          letter-spacing: 0px;
+          line-height: 27px;
+      }
+      .span_reserva_legenda_1 {       
+          font-size: 11px;           
+      }  
+      .span_reserva_legenda_2 {      
+          font-size: 20px; 
+          letter-spacing: 0px;
+          line-height: 21px;
       }
   }
