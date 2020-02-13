@@ -329,7 +329,7 @@
                   <div class="mdl-card__supporting-text mdl-card-container">
                       <div class="mdl-card-left">
                         <dl>
-                          <template v-for="projecao in projeto.valores.projecao" v-if="projeto.valores.projecao">
+                          <template v-for="projecao in home.projeto_vida.valores.projecao" v-if="home.projeto_vida.valores.projecao">
                               <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
                               <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ projecao.valor }}</dd>
                           </template>                        
@@ -337,7 +337,7 @@
                       </div>
                       <div class="mdl-card-right">
                         <dl>
-                          <template v-for="coberturas in projeto.valores.coberturas" v-if="projeto.valores.coberturas">                          
+                          <template v-for="coberturas in home.projeto_vida.valores.coberturas" v-if="home.projeto_vida.valores.coberturas">                          
                             <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
                             <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ coberturas.valor }}</dd>
                           </template>                                           
