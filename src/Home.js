@@ -33,6 +33,8 @@ export default class Home {
       return 
     }
 
+    console.log('data_Home',data_Home);
+
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,        
         template: '#grafico-reserva',
@@ -55,11 +57,85 @@ export default class Home {
         }
     });
 
+    Vue.component('projeto-vida', {
+        extends: VueCharts.Line,        
+        template: '#projeto-vida',        
+        mounted () {
+
+            var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
+            gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
+            gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
+            gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
+
+            this.renderChart({
+                labels: ['Início', ' ', ' ', 'Hoje', ' ', '65 anos'],
+                datasets: [{
+                    label: 'Cobertura por morte',
+                    borderColor: '#3e95cd',
+                    backgroundColor: 'transparent',
+                    data: [281690.1, 281690.1, 281690.1, 281690.1, 281690.1, 281690.1],                    
+                    lineTension: 0, 
+                    borderWidth: 2
+                  },{
+                    label: 'Cobertura por invalidez',
+                    borderColor: '#8ACE7B',
+                    backgroundColor: 'transparent',
+                    data: [402415.26, 402415.26, 402415.26, 402415.26, 402415.26, 402415.26, 402415.26],
+                    lineTension: 0, 
+                    borderWidth: 2                    
+                  },{
+                    label: 'Reserva',
+                    borderColor: '#003366',
+                    backgroundColor: 'transparent',
+                    data: [0, 20000.45, 52780.9, 112500.45, 200000.32, 405321.56],
+                    lineTension: 0, 
+                    borderWidth: 2                    
+                  },{                    
+                    label: 'Reserva',
+                    borderColor: 'transparent',
+                    backgroundColor: gradient,                    
+                    data: [0, 20000.45, 52780.9, 112500.45],
+                    lineTension: 0,
+                    borderWidth: 2
+                  }
+                ]}, {                  
+                    responsive: true, 
+                    maintainAspectRatio: false,                    
+                    legend: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                callback: function(value) {
+                                    return value/1000 + ' k';
+                                }                                
+                            }
+                        }]
+                    }
+                }
+            )
+        }
+    });
+
+
+    let projeto_vida = {
+      valores: {
+        projecao: [
+                      { nome:"Renda projetada", valor:"R$ 2.158,54", cor:"color: #033166;" },
+                      { nome:"Reserva projetada", valor:"R$ 450.321,56", cor:"color: #033166;" }],
+        coberturas: [ { nome:"Cobertura por Invalidez", valor:"R$ 402.415,26", cor:"color: #3e95cd;" },
+                      { nome:"Cobertura por Morte", valor:"R$ 281.690,10", cor:"color: #8ACE7B;" }]
+      }
+    };
+
     var app = new Vue({
       el: '#app',        
       data: {      
         home: this.data_Home,
-        toggle: false
+        toggle: false,
+        projeto: projeto_vida,
+      },
+      created() {
+        console.log("projeto", this.projeto);
       },
       methods: {          
         toggleCategory: function() {

@@ -1133,6 +1133,22 @@ dialog + .backdrop { /* polyfill */
       font-size: 14px;            
   }
 
+  .mdl-card-left { 
+      float: left;   
+      display: flex;
+      align-items: center;
+      justify-content: space-between;      
+      width: 49%;      
+  } 
+
+  .mdl-card-right { 
+      float: right; 
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 49%;      
+  }
+
   .icon-button {
       background-color: #FFFFFF; 
       color: #003366; 
@@ -1289,13 +1305,78 @@ dialog + .backdrop { /* polyfill */
       transform: translate(-50%, -50%);
   }
 
-  .canvas_grafico {
+  .canvas_grafico_doughnut {
       width: 500px;
   }
 
+  .canvas_grafico_line {
+      width: 500px;
+      height: 450px;
+  }
+
+  .dt_projeto_vida {
+      color: #3B3C3E;
+      font-family: 'MaisFuturo-Medium';
+      line-height: 10px;
+      font-size: 9px;
+      font-weight: 300;
+      padding-left: 20px;
+  }
+
+  .dd_projeto_vida { 
+      font-family: 'MaisFuturo-Bold';      
+      font-weight: 700;
+      padding-left: 20px;
+      margin: auto;
+      margin-inline-start: 0px !important;
+      padding-bottom: 5px;
+      font-size: 21px;
+      line-height: 25px;
+  }
+
+  .dt-card-projeto-vida {
+      margin-left: 8px;
+      font-size: 10px;
+      opacity: 0.7;
+      font-family: 'MaisFuturo-Medium';
+      color: #FFFFFF
+  }
+
+  .dd-card-projeto-vida {
+      margin-left: 8px;
+      font-size: 17px; 
+      font-family: 'MaisFuturo-Bold';
+      color: #88CFFF 
+  }
+
+  .mdl-card_projeto-vida {
+    border-radius: 25px; 
+    /*height: 100px;*/
+  }
+
+  .div-card-botton-projeto-vida {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;      
+      line-height: 15px;
+      padding-bottom: 10px !important;
+  }
+
+  .span-card-botton-projeto-vida {
+      margin-left: 8px;      
+      font-size: 13px;
+      font-family: 'MaisFuturo-Medium';
+      color: #FFFFFF;
+      opacity: 1;
+  }
+
   @media screen and (max-width: 625px) and (min-width: 426px) {
-      .canvas_grafico {
+      .canvas_grafico_doughnut {
           width: 400px;
+      }
+      .canvas_grafico_line {
+          width: 400px;
+          height: 350px;
       }
       .div_grafico_reserva_legenda {
           width: 220px; 
@@ -1321,11 +1402,19 @@ dialog + .backdrop { /* polyfill */
           letter-spacing: 0px;
           line-height: 30px;
       }
+      .dd_projeto_vida {      
+          font-size: 17px;
+          line-height: 19px;
+      }
   }
 
   @media screen and (max-width: 425px) {
-      .canvas_grafico {
+      .canvas_grafico_doughnut {
           width: 280px;
+      }
+      .canvas_grafico_line {
+          width: 300px;
+          height: 300px;
       }
       .div_grafico_reserva_legenda {
           width: 160px; 
@@ -1351,4 +1440,8 @@ dialog + .backdrop { /* polyfill */
           letter-spacing: 0px;
           line-height: 21px;
       }
+      .dd_projeto_vida {      
+        font-size: 14px;
+        line-height: 16px;
+    }
   }

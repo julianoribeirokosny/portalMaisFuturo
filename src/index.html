@@ -283,7 +283,7 @@
                         </div>
                         <div v-if="toggle">                                  
                             <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
-                                <grafico-reserva class="canvas_grafico"></grafico-reserva>
+                                <grafico-reserva class="canvas_grafico_doughnut"></grafico-reserva>
                                 <div class="div_grafico_reserva_legenda">
                                   <template>
                                     <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.valores">
@@ -322,29 +322,55 @@
                         </div>
                     </div>
                 </div>
-                <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
-                    <grafico-reserva class="canvas_grafico"></grafico-reserva>
-                    <projeto-vida class="canvas_grafico"></projeto-vida>
+                <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">                    
+                    <projeto-vida class="canvas_grafico_line"></projeto-vida>
                 </div>
                 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                  <div class="mdl-card__supporting-text mdl-card-container">                      
-                      <div class="mdl-shadow--1dp" style="background-color: blue; border-radius: 25px; height: 100px;">
-                          <div class="mdl-card__supporting-text">
+                  <div class="mdl-card__supporting-text mdl-card-container">
+                      <div class="mdl-card-left">
+                        <dl>
+                          <template v-for="projecao in projeto.valores.projecao" v-if="projeto.valores.projecao">
+                              <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
+                              <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ projecao.valor }}</dd>
+                          </template>                        
+                        </dl>
+                      </div>
+                      <div class="mdl-card-right">
+                        <dl>
+                          <template v-for="coberturas in projeto.valores.coberturas" v-if="projeto.valores.coberturas">                          
+                            <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
+                            <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ coberturas.valor }}</dd>
+                          </template>                                           
+                        </dl> 
+                      </div>
+                  </div>
+                </div>
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                  <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                      
+                      <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background">
+                          <div class="mdl-card__supporting-text margin_auto">
                               <div class="mdl-card-campanha-button-left">
-                                left
+                                  <dl>
+                                      <dt class="dt-card-projeto-vida">Potencial de reserva</dt>
+                                      <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.reserva_potencial }}</dd>
+                                  </dl>
                               </div>
                               <div class="mdl-card-campanha-button-right">                             
-                                right
+                                <dl>
+                                    <dt class="dt-card-projeto-vida">Potencial de renda</dt>
+                                    <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.renda_potencial }}</dd>
+                                </dl>
                               </div>
                           </div>                                 
-                          <div class="mdl-card__supporting-text">
-                            botton
+                          <div class="mdl-card__supporting-text margin_auto div-card-botton-projeto-vida">
+                              <span class="span-card-botton-projeto-vida">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
+                              <i class="material-icons icon-button">arrow_forward</i>
                           </div>
                       </div>                        
                     </div>
-                  </div>
-                </div>
+                </div>                
             </template>
+            
         </section>
 
       <!-- Show a single post with comments -->
