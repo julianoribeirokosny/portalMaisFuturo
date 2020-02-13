@@ -80,38 +80,6 @@ export default class FirebaseHelper {
     return this._subscribeToFeed(`/comments/${postId}`, callback, latestCommentId, false);
   }
 
-  getHome() {
-    let ref = this.database.ref('home');
-    return ref.once('value').then((data) => {
-      if (!data.val()) {
-        return null;
-      }
-      //exclui campanhas fora de vigência
-      if (data.campanhas && JSON.Object(data.campanhas).length > 0) {
-        let campanhas = data.campanhas
-        campanhas.forEach((campanha) => {
-          let dataHoje = Utils.dateFormat(new Date());
-          if (dataHoje < campanhas.data_inicio || dataHoje > campanhas.data_fim) {
-            delete data.campanhas[campanha];
-          }
-        })
-      }
-      return data.val()
-    });
-
-  }
-
-  getUser(uid) {
-    let ref = this.database.ref('usuarios/'+uid);
-    return ref.once('value').then((data) => {    
-      if (data.val()) {
-        return data.val()
-      } else {
-        return null
-      }
-    })
-  }
-
   /**
    * Paginates comments from the post with ID `postId`.
    *
@@ -896,6 +864,43 @@ export default class FirebaseHelper {
         }
       })
     })
+  }
+
+  getHome() {
+    let ref = this.database.ref('home');
+    return ref.once('value').then((data) => {
+      if (!data.val()) {
+        return null;
+      }
+      //exclui campanhas fora de vigência
+      if (data.campanhas && JSON.Object(data.campanhas).length > 0) {
+        let campanhas = data.campanhas
+        campanhas.forEach((campanha) => {
+          let dataHoje = Utils.dateFormat(new Date());
+          if (dataHoje < campanhas.data_inicio || dataHoje > campanhas.data_fim) {
+            delete data.campanhas[campanha];
+          }
+        })
+      }
+      return data.val()
+    });
+
+  }
+
+  getUser(uid) {
+    let ref = this.database.ref('usuarios/'+uid);
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
+  removerCampanha(uid, nome) {
+    let ref = this.database.ref(`usuarios/${uid}/campanhas/${nome}`)
+    ref.update({ativo: false})
   }
 
 };

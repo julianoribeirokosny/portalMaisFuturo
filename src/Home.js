@@ -28,7 +28,9 @@ export default class Home {
 
   async showHome() {
 
-    let data_Home = await this.dadosHome(this.uid)
+    let uid = this.uid
+    let data_Home = await this.dadosHome(uid)
+    let firebaseHelper = this.firebaseHelper
     if (data_Home===null) {
       return 
     }
@@ -40,19 +42,19 @@ export default class Home {
         template: '#grafico-reserva',
         mounted () {
             this.renderChart({              
-                              labels: data_Home.saldo_reserva.grafico.labels,
-                              datasets: [{
-                                  data: data_Home.saldo_reserva.grafico.data,
-                                  backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
-                                  borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
-                                  borderColor: data_Home.saldo_reserva.grafico.borderColor,
-                              }]
-                            },
-                            {
-                                cutoutPercentage: 88,
-                                responsive: true,
-                                legend: false
-                            }
+                  labels: data_Home.saldo_reserva.grafico.labels,
+                  datasets: [{
+                      data: data_Home.saldo_reserva.grafico.data,
+                      backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
+                      borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
+                      borderColor: data_Home.saldo_reserva.grafico.borderColor,
+                  }]
+                },
+                {
+                    cutoutPercentage: 88,
+                    responsive: true,
+                    legend: false
+                }
               )
         }
     });
@@ -142,14 +144,15 @@ export default class Home {
           this.toggle = !this.toggle;
         },
         removerCampanha: function(campanha) {
-            campanha.ativo = false;
+            campanha.ativo = false
+            firebaseHelper.removerCampanha(uid, campanha.nome)
         }
       }
     });
 
     //Escuta por alterações na home ou no usuario
-    this.firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))
-    this.firebaseHelper.registerForUserUpdate(this.uid, (item, vigente) => this.refreshHome(item, vigente, 'usuarios'))
+    firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))
+    firebaseHelper.registerForUserUpdate(uid, (item, vigente) => this.refreshHome(item, vigente, 'usuarios'))
   }
 
   dadosHome(uid) {
@@ -167,7 +170,7 @@ export default class Home {
         return null
       }
 
-      //Verifica se há chaves "não vigentes" para o usuário específico
+      //Verifica se há chaves "não vigentes" ou "para o usuário específico
       for (let u in user) {
         if (user[u].hasOwnProperty('vigente') && !user[u].vigente) {
           if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
@@ -186,14 +189,13 @@ export default class Home {
         let caminho = chave.split('.')
         let valor = user
         for (let i in caminho) {
-          if (valor[caminho[i]]) {
+          if (valor[caminho[i]]!==undefined) {
             valor = valor[caminho[i]]
           }
         }
-
         if (stringHome.indexOf('<<'+ chave + '>>') < 0) {
           stringHome = stringHome.replace('"<<'+ chave + '>>"', 0)
-        } else if (typeof valor === "object") {
+        } else if (typeof valor === "object" || valor === true || valor === false) {
           valor = JSON.stringify(valor)
           stringHome = stringHome.replace('"<<'+ chave + '>>"', valor)     
         } else {
@@ -201,6 +203,7 @@ export default class Home {
         }
       }
       this.data_Home = JSON.parse(stringHome)
+      console.log('this.data_Home', this.data_Home)
       return this.data_Home
     });
   }
