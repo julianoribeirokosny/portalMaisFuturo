@@ -276,7 +276,7 @@
                                 <dt class="dt_reserva_text">Reserva total atual</dt>
                                 <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
                                     <span class="span_reserva_text_1">R$</span>
-                                    <span class="span_reserva_text_2">{{ home.saldo_reserva.itens.valor }}</span>
+                                    <span class="span_reserva_text_2">{{ home.saldo_reserva.total.valor }}</span>
                                     <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
                                 </dd>
                             </dl>
@@ -460,39 +460,39 @@
                             <div style="display: contents;">
                                 <div class="mdl-card__supporting-text margin_auto div-mais_amigos-top">
                                     <div class="mdl-card-campanha-button-left">                                        
-                                        <img src="../public/images/Component 37 ÔÇô 2@2x.png" alt="maisAmigosLogo" style="width: 200px;">
+                                        <img class="img-mais-amigos-1" src="../public/images/Component 37 ÔÇô 2@2x.png" alt="maisAmigosLogo">
                                     </div>
                                     <div class="mdl-card-campanha-button-right" style="display: flex; justify-content: flex-end;">
-                                      <img src="../public/images/Component 38 ÔÇô 2@2x.png" alt="maisAmigosRedes" style="width:70px;">
+                                        <img class="img-mais-amigos-2" src="../public/images/Component 38 ÔÇô 2@2x.png" alt="maisAmigosRedes">
                                     </div>                                
                                 </div>
                                 <div class="mdl-card__supporting-text margin_auto">
                                     <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">                                        
-                                        <span class="span-mais_amigos">1</span>
+                                        <span class="span-mais_amigos-numero">1</span>
                                         <div class="div-mais_amigos">
-                                          <span style="line-height: 30px; font-family: MaisFuturo-Regular; color: #FFFFFF; font-size: 20px;">
+                                          <span class="span-mais_amigos-texto">
                                                 Indique alguém para fazer uma previdência maisfuturo.  
                                           </span>
                                         </div>
                                     </div>
                                 </div>
-                                <p style="border: 0.5px solid #FFFFFF; margin:0px 30px !important;"></p>
+                                <p class="p-mais_amigos-linha"></p>
                                 <div class="mdl-card__supporting-text margin_auto">
                                     <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">                                      
-                                        <span class="span-mais_amigos">2</span>
+                                        <span class="span-mais_amigos-numero">2</span>
                                         <div class="div-mais_amigos">
-                                            <span style="line-height: 30px; font-family: MaisFuturo-Regular; color: #FFFFFF; font-size: 20px;">
+                                          <span class="span-mais_amigos-texto">
                                                 Construa uma rede para multiplicar futuro e seu $$.
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                                <p style="border: 0.5px solid #FFFFFF;opacity: 1; margin:0px 30px !important;"></p>
+                                <p class="p-mais_amigos-linha"></p>
                                 <div class="mdl-card__supporting-text margin_auto" style="padding-bottom: 15px !important;">
                                     <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
-                                      <span class="span-mais_amigos">3</span>
+                                      <span class="span-mais_amigos-numero">3</span>
                                       <div class="div-mais_amigos">
-                                        <span style="line-height: 30px; font-family: MaisFuturo-Regular; color: #FFFFFF; font-size: 20px;">
+                                        <span class="span-mais_amigos-texto">
                                             Quantos mais amigos, maisfuturo você tem.
                                         </span>
                                       </div>
@@ -502,6 +502,11 @@
                         </div>
                     </div>
                 </div>
+            </template>
+
+            <!--Educação Financeira-->
+            <template>
+
             </template>
             
         </section>
