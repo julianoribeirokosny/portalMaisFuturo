@@ -898,6 +898,17 @@ export default class FirebaseHelper {
     })
   }
 
+  getSegmento(segmento) {
+    let ref = this.database.ref('segmento/'+segmento);
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
   removerCampanha(uid, nome) {
     let ref = this.database.ref(`usuarios/${uid}/campanhas/${nome}`)
     ref.update({ativo: false})
