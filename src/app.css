@@ -1478,7 +1478,7 @@ dialog + .backdrop { /* polyfill */
   .mdl-card_mais_amigos {      
       margin-top: 30px;
       border-radius: 25px;      
-      padding: 0px 15px;
+      padding: 0px !important;
   }
 
   .div-mais_amigos-top {
@@ -1488,6 +1488,24 @@ dialog + .backdrop { /* polyfill */
       align-items: center;
       padding-top: 20px !important;
       padding-bottom: 20px !important;
+  }
+
+  .span-mais_amigos {
+      line-height: 60px; 
+      font-family: 'MaisFuturo-Bold'; 
+      color: #FFFFFF;
+      font-size: 50px;
+      display: block;
+      width: 35px;
+  }
+
+  .div-mais_amigos {
+      flex-direction: column;
+      border-radius: 25px;
+      padding-left: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
   }
 
 
