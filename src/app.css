@@ -1528,6 +1528,44 @@ dialog + .backdrop { /* polyfill */
       margin:10px 30px !important;
   }
 
+  .div-educacao_financeira-titulo {      
+      font-family: 'MaisFuturo-Regular';
+      font-size: 20px;
+      line-height: 26px;
+      letter-spacing: -0.8px;
+      color: #3B3C3E;
+      opacity: 1;
+  }
+
+  .div-educacao-financeira-button {
+      background-color: #FFFFFF; 
+      width: 190px; 
+      padding: 0px 15px;
+      font-size: 14px;
+  }
+
+  .icon-button-add {
+      background-color: #FFFFFF;
+      color: #0C7BC6;
+      border-radius: 20px;
+      font-weight: bold;
+  }
+
+  .div-footer-text {
+      font-family: 'MaisFuturo-Regular' !important;       
+      font-size: 24px !important;
+      color: #6F6F6F !important;
+      opacity: 1;
+  }
+
+  .img-logo-footer {
+      height: 52px;
+  }
+
+  .img-redes-footer {
+      height:44px;
+  }
+
   @media screen and (max-width: 625px) and (min-width: 425px) {
       .canvas_grafico_doughnut {
           width: 400px;
@@ -1608,6 +1646,24 @@ dialog + .backdrop { /* polyfill */
       }
       .p-mais_amigos-linha {          
           margin:5px 25px !important;
+      }
+      .div-educacao_financeira-titulo {           
+          font-size: 18px;
+          line-height: 22px;        
+      }
+      .div-educacao-financeira-button {      
+          width: 150px; 
+          padding: 0px 10px;
+          font-size: 12px;
+      }
+      .div-footer-text {     
+          font-size: 18px !important;          
+      }    
+      .img-logo-footer {
+          height: 38px;
+      }    
+      .img-redes-footer {
+          height:30px;
       }
   }
 
@@ -1692,5 +1748,23 @@ dialog + .backdrop { /* polyfill */
       }
       .div-mais_amigos {     
           padding-left: 10px;          
+      }
+      .div-educacao_financeira-titulo {           
+          font-size: 16px;
+          line-height: 20px;        
+      }
+      .div-educacao-financeira-button {      
+          width: 120px; 
+          padding: 0px 10px;
+          font-size: 11px;
+      }
+      .div-footer-text {     
+          font-size: 14px !important;            
+      }    
+      .img-logo-footer {
+          height: 28px;
+      }    
+      .img-redes-footer {
+          height:22px;
       }
   }
