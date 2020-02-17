@@ -121,7 +121,7 @@ export default class Home {
         toggle: false,    
       },
       created() {
-        console.log("projeto", this.projeto);
+        //console.log("projeto", this.projeto);
       },
       methods: {          
         toggleCategory: function() {
@@ -147,7 +147,6 @@ export default class Home {
     let p1 = new Promise((resolve, reject) => {
       resolve(this.firebaseHelper.getHome().then((data) => {
         if (data) {
-          console.log('home===>', data)
           this.home = data
           homeAux = data
           return true
@@ -159,7 +158,6 @@ export default class Home {
 
     let p2 = new Promise((resolve, reject) => {
       resolve(this.firebaseHelper.getUser(uid).then((u) => {
-        console.log('user===>', u)
         if (u===null) {
           return false
         } else {
@@ -175,11 +173,6 @@ export default class Home {
       } else {
 
         let segmentoUsuario = await this.firebaseHelper.getSegmento(user.segmento)
-
-
-        console.log('home===>', homeAux)
-        console.log('user===>', user)
-        console.log('segm===>', segmentoUsuario)
 
         //Verifica se há chaves "não vigentes" ou "para o usuário específico
         for (let u in user) {
@@ -200,32 +193,22 @@ export default class Home {
           let caminho = chave.split('.')
           let valor
 
-          console.log('chave:', chave)
-          console.log('tipochave:', chave.substring(0,3))
-          console.log('caminho:', caminho)
-
           // busca chave em usuario
           if (chave.substring(0,4) !== 'seg_') {
             valor = user
             for (let i in caminho) {
               if (valor[caminho[i]]!==undefined) {
                 valor = valor[caminho[i]]
-                console.log('--> caminho:', caminho[i])
-                console.log('valor de user:', valor)
               }
             }  
           }
 
           // busca chave em segmento
           if (chave.substring(0,4) === 'seg_') {
-            console.log('ENTREI!')
             valor = segmentoUsuario
             for (let i in caminho) {
-              console.log('=======> caminho:', caminho[i])
-              console.log('=======> valor[caminho[i]', valor[caminho[i]])
               if (valor[caminho[i]]!==undefined) {
                 valor = valor[caminho[i]]
-                console.log('valor de segmento:', valor)
               }
             }  
           }
