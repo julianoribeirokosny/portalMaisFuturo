@@ -22,7 +22,8 @@
       "$uid": {
         //".read": "auth.uid === $uid || auth.token.admin === true",
         ".read": "true",
-        ".write": "auth.uid === $uid"
+        //".write": "auth.uid === $uid"
+        ".write": "true"
       }
     },        
     // User's personnal feeds.

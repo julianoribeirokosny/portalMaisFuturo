@@ -117,58 +117,109 @@ export default class Home {
     firebaseHelper.registerForUserUpdate(uid, (item, vigente) => this.refreshHome(item, vigente, 'usuarios'))
   }
 
-  dadosHome(uid) {
+  async dadosHome(uid) {
     //debugger;
     let homeAux = {}
-    return this.firebaseHelper.getHome().then((data) => {
-      if (data) {
-        this.home = data
-        homeAux = data
-        return this.firebaseHelper.getUser(uid)
-      } else {
-        return null;
-      }
-    }).then((user) => {
-      if (user===null) {
-        return null
-      }
+    let user = {}
 
-      //Verifica se há chaves "não vigentes" ou "para o usuário específico
-      for (let u in user) {
-        if (user[u].hasOwnProperty('vigente') && !user[u].vigente) {
-          if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
-            homeAux[u].vigente = false
-          }
-        }
-      } 
-
-      let stringHome = JSON.stringify(homeAux)
-
-      // MERGE HOME e DADOS USUÁRIOS
-      while (stringHome.indexOf('<<') >= 0) {
-        let posIni = stringHome.indexOf('<<')
-        let posFim = stringHome.indexOf('>>')
-        let chave = stringHome.substring(posIni+2, posFim)
-        let caminho = chave.split('.')
-        let valor = user
-        for (let i in caminho) {
-          if (valor[caminho[i]]!==undefined) {
-            valor = valor[caminho[i]]
-          }
-        }
-        if (stringHome.indexOf('<<'+ chave + '>>') < 0) {
-          stringHome = stringHome.replace('"<<'+ chave + '>>"', 0)
-        } else if (typeof valor === "object" || valor === true || valor === false) {
-          valor = JSON.stringify(valor)
-          stringHome = stringHome.replace('"<<'+ chave + '>>"', valor)     
+    let p1 = new Promise((resolve, reject) => {
+      resolve(this.firebaseHelper.getHome().then((data) => {
+        if (data) {
+          console.log('home===>', data)
+          this.home = data
+          homeAux = data
+          return true
         } else {
-          stringHome = stringHome.replace('<<'+ chave + '>>', valor)           
+          return false
         }
+      }))
+    })
+
+    let p2 = new Promise((resolve, reject) => {
+      resolve(this.firebaseHelper.getUser(uid).then((u) => {
+        console.log('user===>', u)
+        if (u===null) {
+          return false
+        } else {
+          user = u
+          return true
+        }
+      }))
+    })
+
+    return Promise.all([p1, p2]).then(async (retPromises) => {
+      if (!retPromises[0] || !retPromises[1]) {
+        return null
+      } else {
+
+        let segmentoUsuario = await this.firebaseHelper.getSegmento(user.segmento)
+
+
+        console.log('home===>', homeAux)
+        console.log('user===>', user)
+        console.log('segm===>', segmentoUsuario)
+
+        //Verifica se há chaves "não vigentes" ou "para o usuário específico
+        for (let u in user) {
+          if (user[u].hasOwnProperty('vigente') && !user[u].vigente) {
+            if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
+              homeAux[u].vigente = false
+            }
+          }
+        } 
+
+        let stringHome = JSON.stringify(homeAux)
+
+        // MERGE HOME + DADOS USUÁRIOS + SEGMENTO
+        while (stringHome.indexOf('<<') >= 0) {
+          let posIni = stringHome.indexOf('<<')
+          let posFim = stringHome.indexOf('>>')
+          let chave = stringHome.substring(posIni+2, posFim)
+          let caminho = chave.split('.')
+          let valor
+
+          console.log('chave:', chave)
+          console.log('tipochave:', chave.substring(0,3))
+          console.log('caminho:', caminho)
+
+          // busca chave em usuario
+          if (chave.substring(0,4) !== 'seg_') {
+            valor = user
+            for (let i in caminho) {
+              if (valor[caminho[i]]!==undefined) {
+                valor = valor[caminho[i]]
+                console.log('--> caminho:', caminho[i])
+                console.log('valor de user:', valor)
+              }
+            }  
+          }
+
+          // busca chave em segmento
+          if (chave.substring(0,4) === 'seg_') {
+            console.log('ENTREI!')
+            valor = segmentoUsuario
+            for (let i in caminho) {
+              if (valor[caminho[i]]!==undefined) {
+                valor = valor[caminho[i]]
+                console.log('valor de segmento:', valor)
+              }
+            }  
+          }
+
+          if (stringHome.indexOf('<<'+ chave + '>>') < 0) {
+            stringHome = stringHome.replace('"<<'+ chave + '>>"', 0)
+          } else if (typeof valor === "object" || valor === true || valor === false) {
+            valor = JSON.stringify(valor)
+            stringHome = stringHome.replace('"<<'+ chave + '>>"', valor)     
+          } else {
+            stringHome = stringHome.replace('<<'+ chave + '>>', valor)           
+          }
+        }
+        this.data_Home = JSON.parse(stringHome)
+        console.log('this.data_Home', this.data_Home)
+        return this.data_Home
       }
-      this.data_Home = JSON.parse(stringHome)
-      console.log('this.data_Home', this.data_Home)
-      return this.data_Home
-    });
+    })
   }
 
   refreshHome(item, vigente, origem) {
