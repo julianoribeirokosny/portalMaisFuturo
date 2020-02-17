@@ -1478,7 +1478,15 @@ dialog + .backdrop { /* polyfill */
   .mdl-card_mais_amigos {      
       margin-top: 30px;
       border-radius: 25px;      
-      padding: 0px 15px;
+      padding: 0px !important;
+  }
+
+  .img-mais-amigos-1 {
+      width: 200px;
+  }
+
+  .img-mais-amigos-2 {
+      width:70px;
   }
 
   .div-mais_amigos-top {
@@ -1490,7 +1498,73 @@ dialog + .backdrop { /* polyfill */
       padding-bottom: 20px !important;
   }
 
+  .span-mais_amigos-numero {
+      line-height: 60px; 
+      font-family: 'MaisFuturo-Bold'; 
+      color: #FFFFFF;
+      font-size: 50px;
+      display: block;
+      width: 35px;
+  }
 
+  .div-mais_amigos {
+      flex-direction: column;
+      border-radius: 25px;
+      padding-left: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+  }
+
+  .span-mais_amigos-texto {
+      line-height: 30px; 
+      font-family: 'MaisFuturo-Regular'; 
+      color: #FFFFFF; 
+      font-size: 20px;
+  }
+
+  .p-mais_amigos-linha {
+      border: 0.5px solid #FFFFFF; 
+      margin:10px 30px !important;
+  }
+
+  .div-educacao_financeira-titulo {      
+      font-family: 'MaisFuturo-Regular';
+      font-size: 20px;
+      line-height: 26px;
+      letter-spacing: -0.8px;
+      color: #3B3C3E;
+      opacity: 1;
+  }
+
+  .div-educacao-financeira-button {
+      background-color: #FFFFFF; 
+      width: 190px; 
+      padding: 0px 15px;
+      font-size: 14px;
+  }
+
+  .icon-button-add {
+      background-color: #FFFFFF;
+      color: #0C7BC6;
+      border-radius: 20px;
+      font-weight: bold;
+  }
+
+  .div-footer-text {
+      font-family: 'MaisFuturo-Regular' !important;       
+      font-size: 24px !important;
+      color: #6F6F6F !important;
+      opacity: 1;
+  }
+
+  .img-logo-footer {
+      height: 52px;
+  }
+
+  .img-redes-footer {
+      height:44px;
+  }
 
   @media screen and (max-width: 625px) and (min-width: 425px) {
       .canvas_grafico_doughnut {
@@ -1552,6 +1626,44 @@ dialog + .backdrop { /* polyfill */
       }
       .span-contribuicao-4 {        
           font-size: 15px;
+      }    
+      .img-mais-amigos-1 {
+        width: 170px;
+      }      
+      .img-mais-amigos-2 {
+          width:60px;
+      }
+      .div-mais_amigos {     
+          padding-left: 15px;          
+      }
+      .span-mais_amigos-numero {
+          line-height: 55px; 
+          font-size: 45px;                 
+      }
+      .span-mais_amigos-texto {
+        line-height: 25px;         
+        font-size: 16px;
+      }
+      .p-mais_amigos-linha {          
+          margin:5px 25px !important;
+      }
+      .div-educacao_financeira-titulo {           
+          font-size: 18px;
+          line-height: 22px;        
+      }
+      .div-educacao-financeira-button {      
+          width: 150px; 
+          padding: 0px 10px;
+          font-size: 12px;
+      }
+      .div-footer-text {     
+          font-size: 18px !important;          
+      }    
+      .img-logo-footer {
+          height: 38px;
+      }    
+      .img-redes-footer {
+          height:30px;
       }
   }
 
@@ -1616,5 +1728,43 @@ dialog + .backdrop { /* polyfill */
       }
       .span-contribuicao-4 {        
           font-size: 12px;
+      }
+      .img-mais-amigos-1 {
+        width: 140px;
+      }      
+      .img-mais-amigos-2 {
+          width:45px;
+      }
+      .span-mais_amigos-numero {
+          line-height: 45px; 
+          font-size: 38px;
+      }
+      .span-mais_amigos-texto {
+        line-height: 20px;         
+        font-size: 12px;
+      }
+      .p-mais_amigos-linha {          
+          margin:0px 20px !important;
+      }
+      .div-mais_amigos {     
+          padding-left: 10px;          
+      }
+      .div-educacao_financeira-titulo {           
+          font-size: 16px;
+          line-height: 20px;        
+      }
+      .div-educacao-financeira-button {      
+          width: 120px; 
+          padding: 0px 10px;
+          font-size: 11px;
+      }
+      .div-footer-text {     
+          font-size: 14px !important;            
+      }    
+      .img-logo-footer {
+          height: 28px;
+      }    
+      .img-redes-footer {
+          height:22px;
       }
   }
