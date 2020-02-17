@@ -276,7 +276,7 @@
                                 <dt class="dt_reserva_text">Reserva total atual</dt>
                                 <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
                                     <span class="span_reserva_text_1">R$</span>
-                                    <span class="span_reserva_text_2">{{ home.saldo_reserva.itens.valor }}</span>
+                                    <span class="span_reserva_text_2">{{ home.saldo_reserva.total.valor }}</span>
                                     <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
                                 </dd>
                             </dl>
@@ -343,7 +343,7 @@
                         <dl>
                           <template v-for="coberturas in home.projeto_vida.itens.coberturas" v-if="home.projeto_vida.itens.coberturas">                          
                             <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
-                            <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ coberturas.itens }}</dd>
+                            <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ coberturas.valor }}</dd>
                           </template>                                           
                         </dl> 
                       </div>

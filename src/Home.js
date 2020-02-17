@@ -221,6 +221,8 @@ export default class Home {
             console.log('ENTREI!')
             valor = segmentoUsuario
             for (let i in caminho) {
+              console.log('=======> caminho:', caminho[i])
+              console.log('=======> valor[caminho[i]', valor[caminho[i]])
               if (valor[caminho[i]]!==undefined) {
                 valor = valor[caminho[i]]
                 console.log('valor de segmento:', valor)
