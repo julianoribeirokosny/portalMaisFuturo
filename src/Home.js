@@ -35,8 +35,6 @@ export default class Home {
       return 
     }
 
-    console.log('data_Home',data_Home);
-
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,        
         template: '#grafico-reserva',
@@ -89,6 +87,30 @@ export default class Home {
                     }
                 }
             )
+        }
+    });
+
+    Vue.component('contribuicao', {
+        extends: VueCharts.Doughnut,        
+        template: '#contribuicao',
+        mounted () {
+            this.renderChart({              
+                  labels: data_Home.contribuicao.grafico.label,
+                  datasets: [{
+                      data: data_Home.contribuicao.grafico.data,
+                      backgroundColor: data_Home.contribuicao.grafico.backgroundColor,
+                      borderWidth: data_Home.contribuicao.grafico.borderWidth,
+                      borderColor: data_Home.contribuicao.grafico.borderColor,
+                  }]
+                },
+                {
+                    cutoutPercentage: 88,
+                    responsive: true,
+                    legend: false,
+                    rotation: 1 * Math.PI,
+                    circumference: 1 * Math.PI
+                }
+              )
         }
     });
 

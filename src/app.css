@@ -1166,7 +1166,7 @@ dialog + .backdrop { /* polyfill */
   }
 
   .div_margem_card {
-    margin-top: 30px;    
+    margin-top: 15px;
   }
 
   .div_titulo_card {
@@ -1195,7 +1195,7 @@ dialog + .backdrop { /* polyfill */
       margin-top: 20px;    
   }
 
-  .div_reserva_text_1 {
+  .div_reserva_text_1, .div_contribuicao_text_1 {
       display: flex; 
       justify-content: center;
   }
@@ -1204,7 +1204,7 @@ dialog + .backdrop { /* polyfill */
     margin-bottom: 0px;
   }
 
-  .dl_reserva_legenda {
+  .dl_reserva_legenda, .dl_contribuicao_legenda {
     margin-top: 0px;
     margin-bottom: 8px;
   }
@@ -1216,7 +1216,7 @@ dialog + .backdrop { /* polyfill */
       padding-bottom: 0px !important;
   }
 
-  .dt_reserva_legenda {      
+  .dt_reserva_legenda, .dt_contribuicao_legenda {      
       font-family: 'MaisFuturo-Medium';
       line-height: 12px;
       font-size: 11px;    
@@ -1224,7 +1224,7 @@ dialog + .backdrop { /* polyfill */
       padding-bottom: 0px !important;
   }
 
-  .dd_reserva_text {
+  .dd_reserva_text, .dd_contribuicao_text {
       cursor: pointer; 
       margin: auto; 
       text-align: center;
@@ -1233,14 +1233,14 @@ dialog + .backdrop { /* polyfill */
       margin-inline-start: 0px !important;
   }
 
-  .span_reserva_text_1 {      
+  .span_reserva_text_1, .span_contribuicao_text_1 {      
       vertical-align: top;
       font-size: 16px; 
       font-family: 'MaisFuturo-Bold';
       color: black;
   }
 
-  .span_reserva_text_2 {      
+  .span_reserva_text_2, .span_contribuicao_text_2 {
       font-size: 44px; 
       line-height: 45px;
       font-weight: 700; 
@@ -1249,19 +1249,55 @@ dialog + .backdrop { /* polyfill */
       font-family: 'MaisFuturo-Bold';
   }
 
-  .span_reserva_legenda_1_total {
+  .span_reserva_legenda_1_total, .span_contribuicao_legenda_1_total {
       vertical-align: top; 
       font-size: 16px; 
       font-family: 'MaisFuturo-Bold';
   }
 
-  .span_reserva_legenda_2_total {      
+  .span_reserva_legenda_2_total, .span_contribuicao_legenda_2_total {      
       font-size: 40px; 
       line-height: 50px;
       font-weight: 700;   
       font-family: 'MaisFuturo-Bold';
       letter-spacing: -1px;
       
+  }
+
+  .p-contribuicao-lista {          
+      margin-left: 25px;
+      margin-bottom: 10px;
+  }
+  .dot {
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      display: inline-block;
+  }
+  .span-contribuicao-2 {
+      font-family: 'MaisFuturo-Regular';
+      margin-right: 1px;
+      margin-left: 5px;
+      font-size: 14px;
+      vertical-align: super;
+      letter-spacing: 0;
+      color: #0F0F0F;
+      opacity: 1;
+  }
+  .span-contribuicao-3 {
+      font-family: 'MaisFuturo-Regular';
+      margin-right: 5px;      
+      font-size: 25px;
+      letter-spacing: 0;
+      color: #0F0F0F;
+      opacity: 1;
+  }
+  .span-contribuicao-4 {
+      font-family: 'MaisFuturo-Medium';      
+      font-size: 18px;      
+      letter-spacing: -0.19px;
+      color: #3B3C3E;
+      opacity: 0.7;
   }
 
   .span_reserva_legenda_1 {
@@ -1305,6 +1341,17 @@ dialog + .backdrop { /* polyfill */
       transform: translate(-50%, -50%);
   }
 
+  .div_grafico_contribuicao_legenda {
+      position:absolute; 
+      width: 280px;
+      height: 60%;      
+      background-color: transparent; 
+      margin: 90px 0px 0px 0px;
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%);
+  }
+
   .canvas_grafico_doughnut {
       width: 500px;
   }
@@ -1312,6 +1359,13 @@ dialog + .backdrop { /* polyfill */
   .canvas_grafico_line {
       width: 500px;
       height: 450px;
+  }
+
+  .canvas_grafico_semi_circle {
+      width: 500px;
+      height: 300px;
+      display: flex;
+      align-items: center;
   }
 
   .dt_projeto_vida {
@@ -1351,7 +1405,16 @@ dialog + .backdrop { /* polyfill */
 
   .mdl-card_projeto-vida {
     border-radius: 25px; 
-    /*height: 100px;*/
+    min-height: 95px;
+  }
+
+  .mdl-card_coberturas {
+      border-radius: 25px; 
+      min-height: 95px;
+      display: flex;
+      justify-content: space-between;       
+      align-items: center;
+      padding: 0px 15px;
   }
 
   .div-card-botton-projeto-vida {
@@ -1370,13 +1433,80 @@ dialog + .backdrop { /* polyfill */
       opacity: 1;
   }
 
-  @media screen and (max-width: 625px) and (min-width: 426px) {
+  .div_coberturas_label {
+      margin-top:0px !important;
+  } 
+
+  .dl-coberturas-label {
+      margin-top: 0px !important;
+  }
+
+  .dt-coberturas-label {
+      margin-left: 25px; 
+      font-size: 16px; 
+      font-family: 'MaisFuturo-Regular'; 
+      color: #3B3C3E; 
+      font-weight: 200;
+  }
+
+  .dd-coberturas-label {
+      margin-left: 25px;
+      font-size: 24px;
+      line-height: 26px;
+      font-family: 'MaisFuturo-Bold';      
+      letter-spacing: -0.32px;      
+      opacity: 1;
+  }
+
+  .p-coberturas-label-separador {
+      border-bottom: #707070 solid 0.5px; 
+      margin-top: 10px; 
+      margin-bottom: 10px !important;
+      margin-left: 25px;
+      margin-right: 25px;
+  }
+
+  .mdl-card_contribuicao {
+      border-radius: 25px; 
+      min-height: 70px;
+      display: flex;
+      justify-content: space-between;       
+      align-items: center;
+      padding: 0px 15px;
+  }
+
+  .mdl-card_mais_amigos {      
+      margin-top: 30px;
+      border-radius: 25px;      
+      padding: 0px 15px;
+  }
+
+  .div-mais_amigos-top {
+      line-height: 100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px !important;
+      padding-bottom: 20px !important;
+  }
+
+
+
+  @media screen and (max-width: 625px) and (min-width: 425px) {
       .canvas_grafico_doughnut {
           width: 400px;
       }
       .canvas_grafico_line {
           width: 400px;
           height: 350px;
+      }
+      .canvas_grafico_semi_circle {
+          width: 400px !important;       
+          height: 240px !important;   
+      }
+      .div_grafico_contribuicao_legenda {
+          width: 220px; 
+          margin: 70px 0px 0px 0px;
       }
       .div_grafico_reserva_legenda {
           width: 220px; 
@@ -1386,10 +1516,10 @@ dialog + .backdrop { /* polyfill */
           font-size: 39px; 
           line-height: 40px;
       }      
-      .span_reserva_legenda_1_total {       
+      .span_reserva_legenda_1_total, .span_contribuicao_legenda_1_total {       
           font-size: 14px;           
       }  
-      .span_reserva_legenda_2_total {      
+      .span_reserva_legenda_2_total, .span_contribuicao_legenda_2_total {      
           font-size: 35px; 
           letter-spacing: 0px;
           line-height: 36px;
@@ -1406,6 +1536,23 @@ dialog + .backdrop { /* polyfill */
           font-size: 17px;
           line-height: 19px;
       }
+      .p-contribuicao-lista {
+          margin-left: 12px;
+          margin-bottom: 8px;
+      }
+      .dot {
+          height: 20px;
+          width: 20px;          
+      }
+      .span-contribuicao-2 {        
+          font-size: 12px;        
+      }
+      .span-contribuicao-3 {        
+          font-size: 21px;        
+      }
+      .span-contribuicao-4 {        
+          font-size: 15px;
+      }
   }
 
   @media screen and (max-width: 425px) {
@@ -1416,22 +1563,31 @@ dialog + .backdrop { /* polyfill */
           width: 300px;
           height: 300px;
       }
+      .canvas_grafico_semi_circle {
+          width: 300px !important;      
+          height: 180px !important;    
+      }
       .div_grafico_reserva_legenda {
           width: 160px; 
           margin: 20px 0px 0px 0px;
+      }
+      .div_grafico_contribuicao_legenda {
+          width: 150px; 
+          margin: 55px 0px 0px 0px;
       }
       .span_reserva_text_2 {
           font-size: 30px; 
           line-height: 31px;
       }      
-      .span_reserva_legenda_1_total {       
+      .span_reserva_legenda_1_total, .span_contribuicao_legenda_1_total {       
           font-size: 11px;           
       }  
-      .span_reserva_legenda_2_total {      
+      .span_reserva_legenda_2_total, .span_contribuicao_legenda_2_total {      
           font-size: 26px; 
           letter-spacing: 0px;
           line-height: 27px;
       }
+
       .span_reserva_legenda_1 {       
           font-size: 11px;           
       }  
@@ -1441,7 +1597,24 @@ dialog + .backdrop { /* polyfill */
           line-height: 21px;
       }
       .dd_projeto_vida {      
-        font-size: 14px;
-        line-height: 16px;
-    }
+          font-size: 14px;
+          line-height: 16px;
+      }
+      .p-contribuicao-lista {
+          margin-left: 8px;
+          margin-bottom: 5px;
+      }
+      .dot {
+          height: 16px;
+          width: 16px;          
+      }
+      .span-contribuicao-2 {        
+          font-size: 10px;        
+      }
+      .span-contribuicao-3 {        
+          font-size: 17px;        
+      }
+      .span-contribuicao-4 {        
+          font-size: 12px;
+      }
   }
