@@ -833,7 +833,6 @@ export default class FirebaseHelper {
    * Escuta por alterações na Home
    */
   registerForHomeUpdate(updateCallback) {
-    console.log('registerForHomeUpdate')
     let ref = this.database.ref('home');
     return ref.once('value').then((home) => {
       home.forEach((itemHome) => {
@@ -852,7 +851,6 @@ export default class FirebaseHelper {
    * Escuta por alterações na Home
   */
   registerForUserUpdate(uid, updateCallback) {
-    console.log('registerForUserUpdate - ', uid)
     let ref = this.database.ref('usuarios/'+uid)  
     return ref.once('value').then((usr) => {
       usr.forEach((itemUsr) => {
