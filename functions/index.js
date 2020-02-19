@@ -115,3 +115,10 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'deleteInactiveA
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'deleteOldPosts') {
   exports.deleteOldPosts = require('./cleanupAccount').deleteOldPosts;
 }
+
+/**
+ * Conecta com SQL
+ */
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'sqlConnect') {
+  exports.sqlConnect = require('./sqlConnect').default;
+}

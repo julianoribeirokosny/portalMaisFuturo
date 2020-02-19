@@ -46,6 +46,7 @@
     "eq.js": "^1.9.0",
     "file-loader": "^1.1.11",
     "firebase": "^6.3.4",
+    "firebase-admin": "^8.9.2",
     "firebaseui": "^4.3.0",
     "jquery": "^3.3.1",
     "latinize": "^0.4.0",
