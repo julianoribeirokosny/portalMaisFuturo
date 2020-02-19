@@ -7,6 +7,7 @@ import 'firebase/auth';
 import '../node_modules/chart.js';
 import VueCharts from 'vue-chartjs';
 import { Bar, Line, Doughnut } from 'vue-chartjs';
+import './component/bar.js';
 
 /**
  * Handles the Home UI.
@@ -16,52 +17,47 @@ export default class Home {
    * Inicializa a Home do POrtal MaisFuturo
    * @constructor
    */
-  constructor(firebaseHelper) {
-    this.firebaseHelper = firebaseHelper;
 
+    
+  constructor(firebaseHelper) {
+    this.firebaseHelper = firebaseHelper;    
     // Firebase SDK.
     this.auth = firebase.auth();
     this.uid = '1234567890'
     this.home = null
-    this.data_Home = null
+    this.data_Home = null   
+    
   }
 
   async showHome() {
-
+    
     let uid = this.uid    
     let data_Home = await this.dadosHome(uid)
     let firebaseHelper = this.firebaseHelper
     if (data_Home===null) {
       return 
-    }
+    }    
 
+    
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,        
-        template: '#grafico-reserva',
-        mounted () {
-            this.renderChart({              
-                  labels: data_Home.saldo_reserva.grafico.labels,
-                  datasets: [{
-                      data: data_Home.saldo_reserva.grafico.data,
-                      backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
-                      borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
-                      borderColor: data_Home.saldo_reserva.grafico.borderColor,
-                  }]
-                },
-                {
-                    cutoutPercentage: 88,
-                    responsive: true,
-                    legend: false
-                }
-              )
+        //template: '#grafico-reserva',
+        mounted () {            
+            this.renderChart({labels: data_Home.saldo_reserva.grafico.labels,
+              datasets: [{
+                  data: data_Home.saldo_reserva.grafico.data,
+                  backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
+                  borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
+                  borderColor: data_Home.saldo_reserva.grafico.borderColor,
+              }]}, {cutoutPercentage: 88,              
+                legend: false});
         }
     });
 
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,        
-        template: '#projeto-vida',        
+        //template: '#projeto-vida',        
         mounted () {
-
             var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
             gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
             gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
@@ -92,8 +88,9 @@ export default class Home {
 
     Vue.component('contribuicao', {
         extends: VueCharts.Doughnut,        
-        template: '#contribuicao',
+        //template: '#contribuicao',
         mounted () {
+            
             this.renderChart({              
                   labels: data_Home.contribuicao.grafico.label,
                   datasets: [{
@@ -117,11 +114,14 @@ export default class Home {
     var app = new Vue({
       el: '#app',        
       data: {      
-        home: this.data_Home,
-        toggle: false,    
+        home: data_Home,
+        toggle: false        
       },
       created() {
-        //console.log("projeto", this.projeto);
+        setInterval(() => {
+          this.counter++
+        }, 1000);
+        console.log('Vue Created', this);
       },
       methods: {          
         toggleCategory: function() {
@@ -133,7 +133,7 @@ export default class Home {
         }
       }
     });
-
+    
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))
     firebaseHelper.registerForUserUpdate(uid, (item, vigente) => this.refreshHome(item, vigente, 'usuarios'))
@@ -228,8 +228,8 @@ export default class Home {
       }
     })
   }
-
-  refreshHome(item, vigente, origem) {
+  
+  'refreshHome'(item, vigente, origem) {
     return this.firebaseHelper.getUser(this.uid).then((usuario) => {
       this.home[item].vigente = origem==='home' ? vigente : this.home[item].vigente
       if (!vigente) { //se for para desligar, não precisa avaliar critério
