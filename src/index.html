@@ -97,7 +97,7 @@
 
   <!-- Header section containing logo and menu -->
   <header class="fp-header mdl-layout__header mdl-color--white">
-    <div class="mdl-layout__header-row fp-titlebar">
+    <div class="mdl-layout__header-row fp-titlebar" >
 
       <!-- Signed-in User Info -->
       <div style="float:left; width: 80%;">
@@ -106,7 +106,7 @@
           <a class="fp-usernamelink mdl-button mdl-js-button">
             <div class="fp-avatar"></div>
           </a>
-        </div>
+        </div>        
       </div>
 
       <div style="float:right; width: 20%;">
@@ -148,6 +148,8 @@
         <div id="fp-searchResults" class="mdl-card mdl-shadow--2dp"></div>
       </div>
 
+      
+
     </div>
 
     <!-- Navigation Bar -->
@@ -171,26 +173,53 @@
 
   <!-- Drawer menu -->
   <!-- Retirado da DIV abaixo para sempre mostrar o menu em qqr device: mdl-cell--hide-desktop mdl-cell--hide-tablet -->
-  <div class="mdl-layout__drawer">
-    <a href="/" class="fp-non-eu fp-signed-out-only"><button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button"><i class="material-icons">account_circle</i> Sign in</button></a>
+  <div  class="mdl-layout__drawer div-menu-background">
+    <a href="/" class="fp-non-eu fp-signed-out-only">
+      <button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button">
+        <i class="material-icons">account_circle</i> Sign in
+      </button>
+    </a>
     <!-- HEADER DO MENU -->
-    <div class="fp-signed-in-user-container mdl-color--light-blue-700 fp-signed-in-only">
+    <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 170px;">
       <a class="fp-usernamelink">
-        <div class="fp-avatar"></div>
-        <div class="fp-username mdl-color-text--white"></div>
+        <img class="img-mais-amigos-1" src="../public/images/Component 44 ÔÇô 2@2x.png" alt="voltar" style="height: 60px; width: 60px; transform: rotate(180deg);"><br><br>
+        <img class="img-mais-amigos-1" src="../public/images/Component 54 1de2 2@2x.png" alt="maisAmigosLogo" style="height: 40px; width: 60px;"><br>
+        <img class="img-mais-amigos-1" src="../public/images/Component 54 2de2 2@2x.png" alt="maisAmigosLogo" style="height: 60px; width: 90px;">
+        <!-- <div class="fp-avatar"></div>
+        <div class="fp-username mdl-color-text--white"></div> -->
       </a>
     </div>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link is-active fp-signed-in-only" href="/home"><i class="material-icons">home</i> Home</a>
+      
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Home</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Meu Cadastro</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Minha Família</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Rentabilidade</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Serviços</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Educação Financeira</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Comunicados</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Documentos</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Indique um Amigo</a>
+      <hr class="hr-menu-nav"/>
+      <!-- <a class="fp-sign-out mdl-navigation__link fp-signed-in-only a-menu-nav" style="cursor: pointer;">Sair</a>
+      <hr class="hr-menu-nav"/> -->
       <!--<a class="mdl-navigation__link" href="/recent"><i class="material-icons">trending_up</i> Recent</a>-->
-      <hr />
+      <!-- <hr />
       <a class="mdl-navigation__link" href="/about"><i class="material-icons">perm_contact_calendar</i> Fale Conosco</a>
       <hr />
       <a class="mdl-navigation__link" href="/terms"><i class="material-icons">format_list_numbered</i> Termos de Serviço</a>
       <hr class="fp-signed-in-only"/>
       <a class="fp-sign-out mdl-navigation__link fp-signed-in-only"><i class="material-icons">exit_to_app</i> Sair</a>
       <a class="fp-disabled-when-offline fp-delete-account mdl-navigation__link fp-signed-in-only"><i class="material-icons">cancel</i> Excluir meu acesso</a>
-      <a class="fp-update-privacy mdl-navigation__link fp-signed-in-only privacy-dialog-link"><i class="material-icons">https</i> Privacidade<a>
+      <a class="fp-update-privacy mdl-navigation__link fp-signed-in-only privacy-dialog-link"><i class="material-icons">https</i> Privacidade<a> -->
     </nav>
   </div>
 
@@ -260,7 +289,10 @@
                     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
                         <div class="mdl-card__supporting-text div_titulo_card">
                           Olá {{ home.apelido }}!
-                        </div>                  
+                        </div>  
+                        <div class="mdl-card__supporting-text">
+                            <bar></bar>
+                        </div>                        
                         <div class="mdl-card__supporting-text div_mensagem">
                           {{ home.mensagem }}
                         </div>
@@ -704,17 +736,16 @@
 </div>
 
 <!--Template grafico Reserva-->
-<template id="grafico-reserva">
-</template>
+
 
 <!--Template grafico Projeto de vida-->
-<template id="projeto-vida">
+<!-- <template id="projeto-vida">
 </template>
 
 <template id="contribuicao">
-</template>
+</template> -->
 
     <!--script vuejs-->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>       
 </body>
 </html>
