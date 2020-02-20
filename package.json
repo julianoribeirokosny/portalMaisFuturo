@@ -57,7 +57,9 @@
     "typeface-amaranth": "0.0.54",
     "universal-ga": "^1.2.0",
     "vue": "^2.6.11",
-    "vue-chartjs": "^3.5.0"
+    "vue-chartjs": "^3.5.0",
+    "vue-range-component": "^1.0.3",
+    "vue-range-slider": "^0.6.0"
   },
   "private": true
 }

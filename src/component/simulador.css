@@ -1,0 +1,17 @@
+.div_descricao {
+    font-family: 'MaisFuturo-Regular';
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 100;
+    letter-spacing: -0.56px;
+    color: #3B3C3E;
+    opacity: 1;
+}
+
+.app-content {
+    padding:40px 15px;
+}
+
+.p_valor-simulado {
+    color: #0C7BC6;
+}

@@ -7,7 +7,8 @@ import 'firebase/auth';
 import '../node_modules/chart.js';
 import VueCharts from 'vue-chartjs';
 import { Bar, Line, Doughnut } from 'vue-chartjs';
-import './component/bar.js';
+import bar from './component/bar';
+import simulador from './component/simulador';
 
 /**
  * Handles the Home UI.
@@ -111,17 +112,40 @@ export default class Home {
         }
     });
 
+    var data_Set = {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        datasets: [
+          {
+            label: 'GitHub Commits',
+            backgroundColor: '#f87979',
+            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
+          }
+        ]
+      }
+
     var app = new Vue({
       el: '#app',        
       data: {      
         home: data_Home,
-        toggle: false        
+        toggle: false,
+        dataSetBar: data_Set,
+        dataSimulador: {
+                          titulo: "Simulador </br>de Empréstimo",
+                          descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
+                          slider: {  
+                                    min: 12,
+                                    max: 60,
+                                    value: 24,
+                                    step: 1
+                                  }
+                        }
       },
-      created() {
-        setInterval(() => {
-          this.counter++
-        }, 1000);
-        console.log('Vue Created', this);
+      components: {
+        bar: bar,
+        simulador: simulador
+       },
+      created() {        
+        console.log('dataSetBar', this.dataSetBar);
       },
       methods: {          
         toggleCategory: function() {
