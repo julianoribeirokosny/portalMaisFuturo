@@ -1,0 +1,25 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
+        <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
+        <!-- Slider with Starting Value -->
+        <div style="display: flex; align-items: baseline;">
+            <p class="p_valor-simulado" style="line-height: 30px;">
+                <span style="font-size: 14px; vertical-align: text-bottom; line-height: 30px;">R$</span>
+                <span style="font-size: 30px;">{{ valor }}</span>                
+                <input v-model="principal" type="number" step="10" min="100" max="8500">
+                <input type="text" step="10" min="100" max="8500">
+            </p>
+        </div>
+
+        <div class="app-content">
+            <vue-range-slider v-model="valor" :min="dados.slider.min" :max="dados.slider.max" :step="dados.slider.step"></vue-range-slider>
+        </div>
+        
+        <p>min = {{ dados.slider.min }}</p>
+        <p>max = {{ dados.slider.max }}</p>        
+        <p>step = {{ dados.slider.step }}</p>       
+
+
+    </div>
+</div>

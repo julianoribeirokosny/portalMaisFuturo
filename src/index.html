@@ -97,7 +97,7 @@
 
   <!-- Header section containing logo and menu -->
   <header class="fp-header mdl-layout__header mdl-color--white">
-    <div class="mdl-layout__header-row fp-titlebar">
+    <div class="mdl-layout__header-row fp-titlebar" >
 
       <!-- Signed-in User Info -->
       <div style="float:left; width: 80%;">
@@ -106,7 +106,7 @@
           <a class="fp-usernamelink mdl-button mdl-js-button">
             <div class="fp-avatar"></div>
           </a>
-        </div>
+        </div>        
       </div>
 
       <div style="float:right; width: 20%;">
@@ -148,6 +148,8 @@
         <div id="fp-searchResults" class="mdl-card mdl-shadow--2dp"></div>
       </div>
 
+      
+
     </div>
 
     <!-- Navigation Bar -->
@@ -171,26 +173,55 @@
 
   <!-- Drawer menu -->
   <!-- Retirado da DIV abaixo para sempre mostrar o menu em qqr device: mdl-cell--hide-desktop mdl-cell--hide-tablet -->
-  <div class="mdl-layout__drawer">
-    <a href="/" class="fp-non-eu fp-signed-out-only"><button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button"><i class="material-icons">account_circle</i> Sign in</button></a>
+  <div  class="mdl-layout__drawer div-menu-background">
+    <a href="/" class="fp-non-eu fp-signed-out-only">
+      <button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button">
+        <i class="material-icons">account_circle</i> Sign in
+      </button>
+    </a>
     <!-- HEADER DO MENU -->
-    <div class="fp-signed-in-user-container mdl-color--light-blue-700 fp-signed-in-only">
+    <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 170px;">
       <a class="fp-usernamelink">
-        <div class="fp-avatar"></div>
-        <div class="fp-username mdl-color-text--white"></div>
+        <img class="img-mais-amigos-1" src="../public/images/Component 44 ÔÇô 2@2x.png" alt="voltar" style="height: 60px; width: 60px; transform: rotate(180deg);"><br><br>
+        <img class="img-mais-amigos-1" src="../public/images/Component 54 1de2 2@2x.png" alt="maisAmigosLogo" style="height: 40px; width: 60px;"><br>
+        <img class="img-mais-amigos-1" src="../public/images/Component 54 2de2 2@2x.png" alt="maisAmigosLogo" style="height: 60px; width: 90px;">
+        <!-- <div class="fp-avatar"></div>
+        <div class="fp-username mdl-color-text--white"></div> -->
       </a>
     </div>
     <nav class="mdl-navigation">
-      <a class="mdl-navigation__link is-active fp-signed-in-only" href="/home"><i class="material-icons">home</i> Home</a>
+      
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/home">Home</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-post">Meu Cadastro</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link a-menu-nav" href="/simulador">Simulador</a>
+
+      <!-- <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/terms">Minha Família</a> -->
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Rentabilidade</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Serviços</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Educação Financeira</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Comunicados</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Documentos</a>
+      <hr class="hr-menu-nav"/>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Indique um Amigo</a>
+      <hr class="hr-menu-nav"/>
+      <!-- <a class="fp-sign-out mdl-navigation__link fp-signed-in-only a-menu-nav" style="cursor: pointer;">Sair</a>
+      <hr class="hr-menu-nav"/> -->
       <!--<a class="mdl-navigation__link" href="/recent"><i class="material-icons">trending_up</i> Recent</a>-->
-      <hr />
+      <!-- <hr />
       <a class="mdl-navigation__link" href="/about"><i class="material-icons">perm_contact_calendar</i> Fale Conosco</a>
       <hr />
       <a class="mdl-navigation__link" href="/terms"><i class="material-icons">format_list_numbered</i> Termos de Serviço</a>
       <hr class="fp-signed-in-only"/>
       <a class="fp-sign-out mdl-navigation__link fp-signed-in-only"><i class="material-icons">exit_to_app</i> Sair</a>
       <a class="fp-disabled-when-offline fp-delete-account mdl-navigation__link fp-signed-in-only"><i class="material-icons">cancel</i> Excluir meu acesso</a>
-      <a class="fp-update-privacy mdl-navigation__link fp-signed-in-only privacy-dialog-link"><i class="material-icons">https</i> Privacidade<a>
+      <a class="fp-update-privacy mdl-navigation__link fp-signed-in-only privacy-dialog-link"><i class="material-icons">https</i> Privacidade<a> -->
     </nav>
   </div>
 
@@ -214,302 +245,474 @@
 
   <main class="mdl-layout__content mdl-color--white">
 
-    <!--Home Vuejs-->
-    <div id="app">
-        <!-- Show home -->
-        <section id="page-home" class="mdl-grid fp-content" style="display: none;">
-            <a></a>
-            <!--Campanha-->
-            <template v-for="campanha in home.campanhas" v-if="home.campanhas.vigente && campanha.ativo">
-                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                    <div class="mdl-card__supporting-text mdl-card-container">
-                        <div class="mdl-card mdl-shadow--1dp mdl-card--campanha" v-bind:style="campanha.card_background">
-                            <div class="mdl-card__media mdl-text mdl-grid center-items">
-                                <i class="material-icons icon-campanha">{{ campanha.icone }}</i>
-                            </div>            
-                            <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
-                                <span class="span-campanha-titulo">{{ campanha.titulo }}</span>
-                            </div>
-                            <div class="mdl-card__supporting-text card-campanha-desc text-left-items">
-                                <span class="span-campanha-desc">{{ campanha.descricao }}</span>
-                            </div>                      
-                        </div>
-                    </div>
-                    <div class="mdl-card__supporting-text mdl-card-container">
-                        <div class="mdl-card-campanha-button-left" @click.prevent="removerCampanha(campanha)" v-bind:style="campanha.card_button_left">
-                            &nbsp;&nbsp;&nbsp;Não, obrigado
-                            <div>
-                                <i class="material-icons icon-button">close</i>&nbsp;&nbsp;&nbsp;
-                            </div>
-                        </div>
-                        <div class="mdl-card-campanha-button-right" @click.prevent="contratarCampanha(campanha)" v-bind:style="campanha.card_button_right">
-                            &nbsp;&nbsp;&nbsp;Contratar
-                            <div>
-                                <i class="material-icons icon-button">arrow_forward</i>&nbsp;&nbsp;&nbsp;
-                            </div>
-                        </div>              
-                    </div>
-                </div>
-            </template>
-            <!--Saudação Usuário-->
-            <template v-if="home.apelido">          
-                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                  <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-                      <div class="mdl-card__supporting-text div_titulo_card">
-                        Olá {{ home.apelido }}!
-                      </div>                  
-                      <div class="mdl-card__supporting-text div_mensagem">
-                        {{ home.mensagem }}
+      <!--Home Vuejs-->
+      <div id="app">
+
+          <!-- Show home -->
+          <section id="page-home" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+
+              <!--Simulador-->              
+              <simulador :dados="dataSimulador"></simulador>
+
+              <!--Campanha-->
+              <template v-for="campanha in home.campanhas" v-if="home.campanhas.vigente && campanha.ativo">
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container">
+                          <div class="mdl-card mdl-shadow--1dp mdl-card--campanha" v-bind:style="campanha.card_background">
+                              <div class="mdl-card__media mdl-text mdl-grid center-items">
+                                  <i class="material-icons icon-campanha">{{ campanha.icone }}</i>
+                              </div>            
+                              <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
+                                  <span class="span-campanha-titulo">{{ campanha.titulo }}</span>
+                              </div>
+                              <div class="mdl-card__supporting-text card-campanha-desc text-left-items">
+                                  <span class="span-campanha-desc">{{ campanha.descricao }}</span>
+                              </div>                      
+                          </div>
+                      </div>
+                      <div class="mdl-card__supporting-text mdl-card-container">
+                          <div class="mdl-card-campanha-button-left" @click.prevent="removerCampanha(campanha)" v-bind:style="campanha.card_button_left">
+                              &nbsp;&nbsp;&nbsp;Não, obrigado
+                              <div>
+                                  <i class="material-icons icon-button">close</i>&nbsp;&nbsp;&nbsp;
+                              </div>
+                          </div>
+                          <div class="mdl-card-campanha-button-right" @click.prevent="contratarCampanha(campanha)" v-bind:style="campanha.card_button_right">
+                              &nbsp;&nbsp;&nbsp;Contratar
+                              <div>
+                                  <i class="material-icons icon-button">arrow_forward</i>&nbsp;&nbsp;&nbsp;
+                              </div>
+                          </div>              
                       </div>
                   </div>
-                </div>
-            </template>
-            <!--Reserva Total Atual-->
-            <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
-                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                    <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
-                        <div class="div_reserva_text_1">
-                            <dl class="dl_reserva_text">
-                                <dt class="dt_reserva_text">Reserva total atual</dt>
-                                <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
-                                    <span class="span_reserva_text_1">R$</span>
-                                    <span class="span_reserva_text_2">{{ home.saldo_reserva.valores[0].valor }}</span>
-                                    <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
-                                </dd>
-                            </dl>
-                        </div>
-                        <div class="mdl-card__supporting-text div_reserva_text_2">
-                            maisfuturo previdência
-                        </div>
-                        <div v-if="toggle">                                  
-                            <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
-                                <grafico-reserva class="canvas_grafico_doughnut"></grafico-reserva>
-                                <div class="div_grafico_reserva_legenda">
-                                  <template>
-                                    <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.valores">
-                                        <template v-if="conta.nome === 'Total'">
-                                          <dl class="dl_reserva_legenda">
-                                              <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
-                                              <dd class=" dd_reserva_text">
-                                                  <span class="span_reserva_legenda_1_total" v-bind:style="conta.cor">R$</span>
-                                                  <span class="span_reserva_legenda_2_total" v-bind:style="conta.cor">{{ conta.valor }}</span>                                            
-                                              </dd>
-                                          </dl>
-                                        </template>
-                                        <template v-else>
-                                          <dl class="dl_reserva_legenda">
-                                              <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
-                                              <dd class="dd_reserva_text">
-                                                  <span class="span_reserva_legenda_1" v-bind:style="conta.cor">R$</span>
-                                                  <span class="span_reserva_legenda_2" v-bind:style="conta.cor">{{ conta.valor }}</span>
-                                              </dd>
-                                          </dl>
-                                        </template>
-                                    </div>
-                                  </template>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </template>
-            <!--Projeto de Vida-->
-            <template v-if="home.projeto_vida">          
-                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+              </template>
+
+              <!--Saudação Usuário-->
+              <template v-if="home.apelido">          
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
                         <div class="mdl-card__supporting-text div_titulo_card">
-                            Projeto de <br>Vida
+                          Olá {{ home.apelido }}!
+                        </div>  
+                        <!-- <div class="mdl-card__supporting-text">
+                            <bar :chartdata="dataSetBar"></bar>
+                        </div>                         -->
+                        <div class="mdl-card__supporting-text div_mensagem">
+                          {{ home.mensagem }}
                         </div>
                     </div>
-                </div>
-                <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">                    
-                    <projeto-vida class="canvas_grafico_line"></projeto-vida>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                  <div class="mdl-card__supporting-text mdl-card-container">
-                      <div class="mdl-card-left">
-                        <dl>
-                          <template v-for="projecao in home.projeto_vida.valores.projecao" v-if="home.projeto_vida.valores.projecao">
-                              <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
-                              <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ projecao.valor }}</dd>
-                          </template>                        
-                        </dl>
-                      </div>
-                      <div class="mdl-card-right">
-                        <dl>
-                          <template v-for="coberturas in home.projeto_vida.valores.coberturas" v-if="home.projeto_vida.valores.coberturas">                          
-                            <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
-                            <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ coberturas.valor }}</dd>
-                          </template>                                           
-                        </dl> 
+                  </div>
+              </template>
+
+              <!--Reserva Total Atual-->
+              <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
+                          <div class="div_reserva_text_1">
+                              <dl class="dl_reserva_text">
+                                  <dt class="dt_reserva_text">Reserva total atual</dt>
+                                  <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
+                                      <span class="span_reserva_text_1">R$</span>
+                                      <span class="span_reserva_text_2">{{ home.saldo_reserva.total.valor }}</span>
+                                      <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
+                                  </dd>
+                              </dl>
+                          </div>
+                          <div class="mdl-card__supporting-text div_reserva_text_2">
+                              maisfuturo previdência
+                          </div>
+                          <div v-if="toggle">                                  
+                              <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+                                  <grafico-reserva class="canvas_grafico_doughnut"></grafico-reserva>
+                                  <div class="div_grafico_reserva_legenda">
+                                    <template>
+                                      <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.itens">
+                                          <template v-if="conta.nome === 'Total'">
+                                            <dl class="dl_reserva_legenda">
+                                                <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
+                                                <dd class=" dd_reserva_text">
+                                                    <span class="span_reserva_legenda_1_total" v-bind:style="conta.cor">R$</span>
+                                                    <span class="span_reserva_legenda_2_total" v-bind:style="conta.cor">{{ conta.valor }}</span>                                            
+                                                </dd>
+                                            </dl>
+                                          </template>
+                                          <template v-else>
+                                            <dl class="dl_reserva_legenda">
+                                                <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
+                                                <dd class="dd_reserva_text">
+                                                    <span class="span_reserva_legenda_1" v-bind:style="conta.cor">R$</span>
+                                                    <span class="span_reserva_legenda_2" v-bind:style="conta.cor">{{ conta.valor }}</span>
+                                                </dd>
+                                            </dl>
+                                          </template>
+                                      </div>
+                                    </template>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
                   </div>
-                </div>
-                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                  <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                      
-                      <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background">
-                          <div class="mdl-card__supporting-text margin_auto">
-                              <div class="mdl-card-campanha-button-left">
+              </template>
+
+              <!--Projeto de Vida-->
+              <template v-if="home.projeto_vida && home.projeto_vida.vigente">          
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                          <div class="mdl-card__supporting-text div_titulo_card">
+                              Projeto de <br>Vida
+                          </div>
+                      </div>
+                  </div>
+                  <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">                    
+                      <projeto-vida class="canvas_grafico_line"></projeto-vida>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                    <div class="mdl-card__supporting-text mdl-card-container">
+                        <div class="mdl-card-left">
+                          <dl>
+                            <template v-for="projecao in home.projeto_vida.itens.projecao" v-if="home.projeto_vida.itens.projecao">
+                                <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
+                                <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ projecao.valor }}</dd>
+                            </template>                        
+                          </dl>
+                        </div>
+                        <div class="mdl-card-right">
+                          <dl>
+                            <template v-for="coberturas in home.projeto_vida.itens.coberturas" v-if="home.projeto_vida.itens.coberturas">                          
+                              <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
+                              <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ coberturas.valor }}</dd>
+                            </template>                                           
+                          </dl> 
+                        </div>
+                    </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                    <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                      
+                        <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background">
+                            <div class="mdl-card__supporting-text margin_auto">
+                                <div class="mdl-card-campanha-button-left">
+                                    <dl>
+                                        <dt class="dt-card-projeto-vida">Potencial de reserva</dt>
+                                        <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.reserva_potencial }}</dd>
+                                    </dl>
+                                </div>
+                                <div class="mdl-card-campanha-button-right">                             
                                   <dl>
-                                      <dt class="dt-card-projeto-vida">Potencial de reserva</dt>
-                                      <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.reserva_potencial }}</dd>
+                                      <dt class="dt-card-projeto-vida">Potencial de renda</dt>
+                                      <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.renda_potencial }}</dd>
                                   </dl>
-                              </div>
-                              <div class="mdl-card-campanha-button-right">                             
-                                <dl>
-                                    <dt class="dt-card-projeto-vida">Potencial de renda</dt>
-                                    <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.renda_potencial }}</dd>
+                                </div>
+                            </div>                                 
+                            <div class="mdl-card__supporting-text margin_auto div-card-botton-projeto-vida">
+                                <span class="span-card-botton-projeto-vida">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
+                                <i class="material-icons icon-button">arrow_forward</i>
+                            </div>
+                        </div>                        
+                      </div>
+                  </div>                
+              </template>
+
+              <!--Minhas Coberturas-->
+              <template v-if="home.coberturas && home.coberturas.vigente">
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                          <div class="mdl-card__supporting-text div_titulo_card">
+                              Minhas <br>Coberturas
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container div_coberturas_label">
+                          <dl class="dl-coberturas-label" style="margin-top: 0px !important;">
+                              <template v-for="(coberturas, index) in home.coberturas.itens">
+                                  <dt class="dt-coberturas-label">{{ coberturas.nome }}</dt>
+                                  <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">{{ coberturas.valor }}</dd>
+                                  <p class="p-coberturas-label-separador" v-if="index < (home.coberturas.itens.length - 1)"></p>
+                              </template>
+                          </dl> 
+                      </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                    <div class="mdl-card__supporting-text  margin_auto mdl-card-container">
+                        <div class="mdl-shadow--1dp mdl-card_coberturas" v-bind:style="home.coberturas.acao.card_background">
+                            <span class="span-card-botton-projeto-vida">{{ home.coberturas.acao.descricao }}</span>&nbsp;
+                            <i class="material-icons icon-button">arrow_forward</i>
+                        </div>
+                      </div>
+                  </div>
+              </template>
+
+              <!--Minhas Contribuição-->
+              <template v-if="home.contribuicao && home.contribuicao.vigente">
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                          <div class="mdl-card__supporting-text div_titulo_card">
+                              Minha <br>Contribuição
+                          </div>
+                      </div>
+                  </div>
+                  <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+                      <contribuicao class="canvas_grafico_semi_circle"></contribuicao>
+                      <div class="div_grafico_contribuicao_legenda">                    
+                          <div class="div_contribuicao_text_1">
+                              <template>
+                                <dl class="dl_contribuicao_legenda">
+                                    <dt class="dt_contribuicao_legenda">{{ home.contribuicao.total.nome }}</dt>
+                                    <dd class="dd_contribuicao_text">
+                                        <span class="span_contribuicao_legenda_1_total" v-bind:style="home.contribuicao.total.color">R$</span>
+                                        <span class="span_contribuicao_legenda_2_total" v-bind:style="home.contribuicao.total.color">{{ home.contribuicao.total.valor }}</span> 
+                                    </dd>
                                 </dl>
-                              </div>
-                          </div>                                 
-                          <div class="mdl-card__supporting-text margin_auto div-card-botton-projeto-vida">
-                              <span class="span-card-botton-projeto-vida">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
+                              </template>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container" style="display: table;">
+                          <template v-for="contribuicao in home.contribuicao.itens">
+                              <p class="p-contribuicao-lista">
+                                  <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
+                                  <span class="span-contribuicao-2">R$</span>
+                                  <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
+                                  <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
+                              </p>
+                          </template>
+                      </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                          <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
+                              <span class="span-card-botton-projeto-vida">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
                               <i class="material-icons icon-button">arrow_forward</i>
                           </div>
-                      </div>                        
-                    </div>
-                </div>                
-            </template>
-            
-        </section>
+                      </div>
+                  </div>
+              </template>
 
-      <!-- Show a single post with comments -->
-      <section id="page-post" class="mdl-grid fp-content" style="display: none;">
-        <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid"></div>
-      </section>
+              <!--Mais Amigos-->
+              <template v-if="home.mais_amigos.vigente">
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                          <div class="mdl-shadow--1dp mdl-card_mais_amigos" v-bind:style="home.mais_amigos.background">
+                              <div style="display: contents;">
+                                  <div class="mdl-card__supporting-text margin_auto div-mais_amigos-top">
+                                      <div class="mdl-card-campanha-button-left">                                        
+                                          <img class="img-mais-amigos-1" src="../public/images/Component 37 ÔÇô 2@2x.png" alt="maisAmigosLogo">
+                                      </div>
+                                      <div class="mdl-card-campanha-button-right" style="display: flex; justify-content: flex-end;">
+                                          <img class="img-mais-amigos-2" src="../public/images/Component 38 ÔÇô 2@2x.png" alt="maisAmigosRedes">
+                                      </div>                                
+                                  </div>
+                                  <div class="mdl-card__supporting-text margin_auto">
+                                      <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">                                        
+                                          <span class="span-mais_amigos-numero">1</span>
+                                          <div class="div-mais_amigos">
+                                            <span class="span-mais_amigos-texto">
+                                                  Indique alguém para fazer uma previdência maisfuturo.  
+                                            </span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <p class="p-mais_amigos-linha"></p>
+                                  <div class="mdl-card__supporting-text margin_auto">
+                                      <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">                                      
+                                          <span class="span-mais_amigos-numero">2</span>
+                                          <div class="div-mais_amigos">
+                                            <span class="span-mais_amigos-texto">
+                                                  Construa uma rede para multiplicar futuro e seu $$.
+                                              </span>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <p class="p-mais_amigos-linha"></p>
+                                  <div class="mdl-card__supporting-text margin_auto" style="padding-bottom: 15px !important;">
+                                      <div class="mdl-card__supporting-text card-campanha-titulo text-left-items">
+                                        <span class="span-mais_amigos-numero">3</span>
+                                        <div class="div-mais_amigos">
+                                          <span class="span-mais_amigos-texto">
+                                              Quantos mais amigos, maisfuturo você tem.
+                                          </span>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </template>
 
-      <!-- About & Contact page -->
-      <section id="page-about" class="mdl-grid fp-content" style="display: none;">
-        <div class="fp-help mdl-card mdl-shadow--2dp mdl-cell
-                    mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
-          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-            <i class="fp-info material-icons">contacts</i>
-            <div>
-              <p>Para entrar em contato com nosso time, envie um email para contato@maisfuturo.com.br</p>
+              <!--Educação Financeira-->
+              <template v-if="home.educacao_financeira.vigente">
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                          <div class="mdl-card__supporting-text div_titulo_card">
+                              Educação <br>Financeira
+                          </div>
+                      </div>
+                  </div>
+                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-card__supporting-text mdl-card-container">
+                          <video controls :src="home.educacao_financeira.url_video" width="100%"></video>    
+                      </div>
+                      <div class="mdl-card__supporting-text mdl-card-container div-educacao_financeira-titulo">
+                          {{ home.educacao_financeira.titulo }}
+                          A Nova Previcência - Renato Follador e Thiago Nieweglowski
+                      </div>
+                      <div class="mdl-card__supporting-text mdl-card-container ">                      
+                        <div class="mdl-card-campanha-button-right mdl-shadow--4dp div-educacao-financeira-button" @click.prevent="">
+                          Ver mais vídeos &nbsp;&nbsp;
+                          <div>
+                              <i class="material-icons icon-button-add">add</i>
+                          </div>
+                      </div>              
+                      </div>
+                  </div>
+              </template>  
+          </section>
 
-              <p>Para outras informações, acesse nosso site institucional <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a></p>
-            </div>
-          </div>
-        </div>
-      </section>
+          <!-- Show a single post with comments -->
+          <section id="page-post" class="mdl-grid fp-content" style="display: none;">
+            <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">Post</div>
+          </section>
 
-      <!-- Terms of Services -->
-      <section id="page-terms" class="mdl-grid fp-content" style="display: none;">
-        <div class="mdl-card mdl-shadow--2dp mdl-cell
-                    mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-          <div class="mdl-card__title mdl-color--light-blue-700 mdl-color-text--white">
-            <h2 class="mdl-card__title-text"> Termos de Serviço</h2>
-          </div>
-          <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-            <div>
-              <p>1. Você aceita que: <br>
-                <br>
-                Ao usar o Portal Fundo Paraná e/ou contratar quaisquer produtos e serviços através do mesmo você declara que concorda (1) com estes termos e condições (os "Termos de Serviço") e (2) Política de Privacidade do Mais Futuro previdência privada, encontrada em <a href="https://www.maisfuturo.com.br">https://www.maisfuturo.com.br</a>. Se você não concordar com algum desses termos ou com a Política de Privacidade não use o Portal.<br>
-                <br>
-                2. Sobre o Mais Futuro Previdencia privada <br>
-                <br>
-                Para maiores informações sobre o Mais Futuro previdência privada, acesso nosso site: <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a><br>
-                <br>
-            </div>
-          </div>
-        </div>
-      </section>
+          <!-- About & Contact page -->
+          <section id="page-about" class="mdl-grid fp-content" style="display: none;">
+            <div class="fp-help mdl-card mdl-shadow--2dp mdl-cell
+                        mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+              <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                <i class="fp-info material-icons">contacts</i>
+                <div>
+                  <p>Para entrar em contato com nosso time, envie um email para contato@maisfuturo.com.br</p>
 
-      <!-- User Profile page -->
-      <section id="page-user-info" class="mdl-grid fp-content" style="display: none;">
-        <div class="fp-user-container mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-          <div class="fp-user-avatar"></div>
-          <div class="fp-name-follow-container mdl-cell mdl-cell--8-col">
-            <div class="fp-user-username"></div>
-            <div class="fp-signed-in-only">
-              <label class="fp-follow mdl-switch mdl-js-switch" for="follow">
-                <input type="checkbox" id="follow" class="mdl-switch__input" value="true">
-                <span class="mdl-switch__label">Follow</span>
-              </label>
-              <label class="fp-block mdl-switch mdl-js-switch" for="block">
-                <input type="checkbox" id="block" class="mdl-switch__input" value="true">
-                <span class="mdl-switch__label">Block</span>
-              </label>
-              <label class="fp-notifications mdl-switch mdl-js-switch" for="notifications">
-                <input type="checkbox" id="notifications" class="mdl-switch__input" value="true">
-                <span class="mdl-switch__label">Habilitar notificações</span>
-              </label>
-            </div>
-            <div class="fp-user-detail-container">
-              <div class="fp-user-detail"><span class="fp-user-nbposts">0</span> posts</div>
-              <div class="fp-user-detail"><span class="fp-user-nbfollowers">0</span> followers</div>
-              <div class="fp-user-detail fp-user-nbfollowing-container"><span class="fp-user-nbfollowing">0</span> following</div>
-            </div>
-          </div>
-        </div>
-        <div class="fp-user-following mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-          <button class="fp-close-following  mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
-            <i class="material-icons">expand_less</i>
-          </button>
-        </div>
-        <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
-          <div class="fp-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-card mdl-shadow--2dp mdl-cell
-                    mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
-              No posts yet.
-            </div>
-          </div>
-        </div>
-        <div class="fp-next-page-button">
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
-            <i class="material-icons">expand_more</i>
-          </button>
-        </div>
-      </section>
-
-      <!-- Hashtags Search page -->
-      <section id="page-search" class="mdl-grid fp-content" style="display: none;">
-        <div class="fp-user-container mdl-shadow--2dp mdl-cell mdl-cell--12-col">
-          <div class="fp-name-follow-container mdl-cell mdl-cell--8-col">
-            <div class="fp-hashtag"></div>
-          </div>
-        </div>
-        <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
-          <div class="fp-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
-            <div class="mdl-card mdl-shadow--2dp mdl-cell
-                    mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
-              No posts found.
-            </div>
-          </div>
-        </div>
-        <div class="fp-next-page-button">
-          <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
-            <i class="material-icons">expand_more</i>
-          </button>
-        </div>
-      </section>
-
-      <!-- Post new pic page -->
-      <section id="page-add" class="mdl-grid fp-content" style="display: none;">
-        <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid mdl-grid--no-spacing">
-          <div class="fp-addcontainer mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
-            <div class="fp-overlay">
-              <i class="material-icons">hourglass_full</i>
-            </div>
-            <img id="newPictureContainer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" alt="New Picture to Upload">
-            <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-              <form id="uploadPicForm" action="#">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input class="mdl-textfield__input" type="text" id="imageCaptionInput">
-                  <label class="mdl-textfield__label" for="imageCaptionInput">Image caption...</label>
+                  <p>Para outras informações, acesse nosso site institucional <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a></p>
                 </div>
-                <br />
-                <button type="submit" class="fp-upload mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400">
-                  Upload this pic!
-                </button>
-              </form>
-              <div class="fp-legalese-add">
-                All uploaded pictures will be publicly viewable, and must adhere to the <a href="/terms">Terms of Service</a>.
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+
+          <!-- Terms of Services -->
+          <section id="page-terms" class="mdl-grid fp-content" style="display: none;">
+            <div class="mdl-card mdl-shadow--2dp mdl-cell
+                        mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+              <div class="mdl-card__title mdl-color--light-blue-700 mdl-color-text--white">
+                <h2 class="mdl-card__title-text"> Termos de Serviço</h2>
+              </div>
+              <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                <div>
+                  <p>1. Você aceita que: <br>
+                    <br>
+                    Ao usar o Portal Fundo Paraná e/ou contratar quaisquer produtos e serviços através do mesmo você declara que concorda (1) com estes termos e condições (os "Termos de Serviço") e (2) Política de Privacidade do Mais Futuro previdência privada, encontrada em <a href="https://www.maisfuturo.com.br">https://www.maisfuturo.com.br</a>. Se você não concordar com algum desses termos ou com a Política de Privacidade não use o Portal.<br>
+                    <br>
+                    2. Sobre o Mais Futuro Previdencia privada <br>
+                    <br>
+                    Para maiores informações sobre o Mais Futuro previdência privada, acesso nosso site: <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a><br>
+                    <br>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- User Profile page -->
+          <section id="page-user-info" class="mdl-grid fp-content" style="display: none;">
+            <div class="fp-user-container mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+              <div class="fp-user-avatar"></div>
+              <div class="fp-name-follow-container mdl-cell mdl-cell--8-col">
+                <div class="fp-user-username"></div>
+                <div class="fp-signed-in-only">
+                  <label class="fp-follow mdl-switch mdl-js-switch" for="follow">
+                    <input type="checkbox" id="follow" class="mdl-switch__input" value="true">
+                    <span class="mdl-switch__label">Follow</span>
+                  </label>
+                  <label class="fp-block mdl-switch mdl-js-switch" for="block">
+                    <input type="checkbox" id="block" class="mdl-switch__input" value="true">
+                    <span class="mdl-switch__label">Block</span>
+                  </label>
+                  <label class="fp-notifications mdl-switch mdl-js-switch" for="notifications">
+                    <input type="checkbox" id="notifications" class="mdl-switch__input" value="true">
+                    <span class="mdl-switch__label">Habilitar notificações</span>
+                  </label>
+                </div>
+                <div class="fp-user-detail-container">
+                  <div class="fp-user-detail"><span class="fp-user-nbposts">0</span> posts</div>
+                  <div class="fp-user-detail"><span class="fp-user-nbfollowers">0</span> followers</div>
+                  <div class="fp-user-detail fp-user-nbfollowing-container"><span class="fp-user-nbfollowing">0</span> following</div>
+                </div>
+              </div>
+            </div>
+            <div class="fp-user-following mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+              <button class="fp-close-following  mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+                <i class="material-icons">expand_less</i>
+              </button>
+            </div>
+            <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+              <div class="fp-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-card mdl-shadow--2dp mdl-cell
+                        mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+                  No posts yet.
+                </div>
+              </div>
+            </div>
+            <div class="fp-next-page-button">
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+                <i class="material-icons">expand_more</i>
+              </button>
+            </div>
+          </section>
+
+          <!-- Hashtags Search page -->
+          <section id="page-search" class="mdl-grid fp-content" style="display: none;">
+            <div class="fp-user-container mdl-shadow--2dp mdl-cell mdl-cell--12-col">
+              <div class="fp-name-follow-container mdl-cell mdl-cell--8-col">
+                <div class="fp-hashtag"></div>
+              </div>
+            </div>
+            <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">
+              <div class="fp-no-posts mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop mdl-grid mdl-grid--no-spacing">
+                <div class="mdl-card mdl-shadow--2dp mdl-cell
+                        mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--8-col-desktop">
+                  No posts found.
+                </div>
+              </div>
+            </div>
+            <div class="fp-next-page-button">
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--fab">
+                <i class="material-icons">expand_more</i>
+              </button>
+            </div>
+          </section>
+
+          <!-- Post new pic page -->
+          <section id="page-add" class="mdl-grid fp-content" style="display: none;">
+            <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid mdl-grid--no-spacing">
+              <div class="fp-addcontainer mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+                <div class="fp-overlay">
+                  <i class="material-icons">hourglass_full</i>
+                </div>
+                <img id="newPictureContainer" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==" alt="New Picture to Upload">
+                <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+                  <form id="uploadPicForm" action="#">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input class="mdl-textfield__input" type="text" id="imageCaptionInput">
+                      <label class="mdl-textfield__label" for="imageCaptionInput">Image caption...</label>
+                    </div>
+                    <br />
+                    <button type="submit" class="fp-upload mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400">
+                      Upload this pic!
+                    </button>
+                  </form>
+                  <div class="fp-legalese-add">
+                    All uploaded pictures will be publicly viewable, and must adhere to the <a href="/terms">Terms of Service</a>.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="page-simulador" class="mdl-grid fp-content" style="display: none;">
+            <p>Simulador</p>
+          </section> 
+
     </div>
 
     <!-- Toast -->
@@ -518,18 +721,29 @@
       <button type="button" class="mdl-snackbar__action"></button>
     </div>
 
+    <!--Rodapé-->
+    <footer class = "mdl-mini-footer" style="margin-top: 40px;">      
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">        
+            <div class="mdl-card__supporting-text mdl-card-container">
+                <div class="mdl-logo div-footer-text" style="margin-bottom: 3px !important;">Política de Privacidade</div>
+                <div class="mdl-logo div-footer-text" style="margin-bottom: 10px !important;">Informações de Suporte</div>            
+            </div>
+            <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: space-between;">
+                <div class="mdl-mini-footer__left-section">
+                    <a href="#"><img class="img-logo-footer" src="../public/images/Component 41 ÔÇô 2@2x.png"></a>
+                </div>
+                <div class="mdl-mini-footer__right-section" style="display: flex; justify-content: flex-end;">
+                    <a href="#"><img class="img-redes-footer" src="../public/images/Component 42 ÔÇô 2@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><img class="img-redes-footer" src="../public/images/WA Logo@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><img class="img-redes-footer" src="../public/images/Component 43 ÔÇô 2@2x.png"/></a>
+                </div>
+            </div>      
+        </div>      
+    </footer>
+
   </main>
 </div>
-
-    <!--Template grafico Reserva-->
-    <template id="grafico-reserva">         
-    </template>
-
-    <!--Template grafico Projeto de vida-->
-    <template id="projeto-vida">         
-    </template>
-
-    <!--script vuejs-->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+  <!--script vuejs-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </body>
 </html>
