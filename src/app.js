@@ -109,10 +109,10 @@ console.log("Setando beforeinstallprompt");
 window.addEventListener('beforeinstallprompt', e => {
   // this event does not fire if the application is already installed
   // then your button still hidden ;)
-  var accordion = document.querySelector('#my-accordion');
-  accordion.addEventListener('toggle', function(e) {
-    console.log('Accordion toggled. State:', e.detail.state, 'Source:', e.detail.tab);
-  });
+  // var accordion = document.querySelector('#my-accordion');
+  // accordion.addEventListener('toggle', function(e) {
+  //   console.log('Accordion toggled. State:', e.detail.state, 'Source:', e.detail.tab);
+  // });
 
   div_continue.style.display = 'none';
   div_prevdigi.style.display = 'none';

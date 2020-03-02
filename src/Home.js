@@ -1,14 +1,22 @@
 'use strict';
 
-//import $ from 'jquery';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-//import {MaterialUtils} from './Utils';
-import '../node_modules/chart.js';
+import Vue from 'vue/dist/vue.esm.js';
+//import Vue from 'vue';
+//import store from './store';
+//import router from './router';
 import VueCharts from 'vue-chartjs';
-import { Bar, Line, Doughnut } from 'vue-chartjs';
-import bar from './component/bar';
+import money from 'v-money'
+//import $ from 'jquery';
+//import {MaterialUtils} from './Utils';
+//import VueMask from 'v-mask';
+
 import simulador from './component/simulador';
+
+// register directive v-money and component <money>
+Vue.use(money, {precision: 4})
+//Vue.use(VueMask);
 
 /**
  * Handles the Home UI.
@@ -38,11 +46,9 @@ export default class Home {
     if (data_Home===null) {
       return 
     }    
-
     
     Vue.component('grafico-reserva', {
-        extends: VueCharts.Doughnut,        
-        //template: '#grafico-reserva',
+        extends: VueCharts.Doughnut,
         mounted () {            
             this.renderChart({labels: data_Home.saldo_reserva.grafico.labels,
               datasets: [{
@@ -57,7 +63,6 @@ export default class Home {
 
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,        
-        //template: '#projeto-vida',        
         mounted () {
             var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
             gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
@@ -111,42 +116,26 @@ export default class Home {
               )
         }
     });
-
-    var data_Set = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [
-          {
-            label: 'GitHub Commits',
-            backgroundColor: '#f87979',
-            data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-          }
-        ]
-      }
-
-    var app = new Vue({
-      el: '#app',        
+    
+    new Vue({       
+      //render: store, router,
       data: {      
         home: data_Home,
-        toggle: false,
-        dataSetBar: data_Set,
+        toggle: false,        
         dataSimulador: {
-                          titulo: "Simulador </br>de Empréstimo",
-                          descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
-                          slider: {  
-                                    min: 12,
-                                    max: 60,
-                                    value: 24,
-                                    step: 1
-                                  }
+          titulo: "Simulador </br>de Empréstimo",
+          descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
+          slider: {  
+                    min: 12,
+                    max: 60,
+                    value: 24,
+                    step: 1
+                  }
                         }
       },
-      components: {
-        bar: bar,
-        simulador: simulador
-       },
-      created() {        
-        console.log('dataSetBar', this.dataSetBar);
-      },
+      components: {      
+        simulador
+      },      
       methods: {          
         toggleCategory: function() {
           this.toggle = !this.toggle;
@@ -156,7 +145,7 @@ export default class Home {
             firebaseHelper.removerCampanha(uid, campanha.nome)
         }
       }
-    });
+    }).$mount('#app');
     
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))

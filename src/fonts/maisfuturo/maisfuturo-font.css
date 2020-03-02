@@ -2,31 +2,33 @@
   font-family: 'MaisFuturo-Medium';
   font-style: medium;
   font-weight: medium;
-  src:
-    url('./Objectivity-Medium.woff2') format('woff2'), 
-  }
+  src: url('./Objectivity-Medium.woff2') format('woff2'), 
+}
 
 @font-face {
   font-family: 'MaisFuturo-Thin';
   font-style: medium;
   font-weight: medium;
-  src:
-    url('./Objectivity-Thin.woff2') format('woff2'), 
-  }
+  src: url('./Objectivity-Thin.woff2') format('woff2'), 
+}
 
 @font-face {
   font-family: 'MaisFuturo-Regular';
   font-style: medium;
   font-weight: medium;
-  src:
-    url('./Objectivity-Regular.woff2') format('woff2'), 
-  }
+  src: url('./Objectivity-Regular.woff2') format('woff2'), 
+}
 
 @font-face {
   font-family: 'MaisFuturo-Bold';
   font-style: medium;
   font-weight: medium;
-  src:
-    url('./Objectivity-Bold.woff2') format('woff2'), 
-  }  
+  src: url('./Objectivity-Bold.woff2') format('woff2'), 
+}  
   
+@font-face {
+  font-family: 'MaisFuturo-Black';
+  font-style: medium;
+  font-weight: medium;
+  src: url('./Objectivity-Black.woff2') format('woff2'), 
+}

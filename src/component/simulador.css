@@ -8,8 +8,10 @@
     opacity: 1;
 }
 
-.app-content {
-    padding:40px 15px;
+.slider-content {
+    padding:10px;
+    display: flex; 
+    justify-content: flex-end;
 }
 
 .p_valor-simulado {
