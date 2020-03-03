@@ -191,11 +191,13 @@
     </div>
     <nav class="mdl-navigation">
       
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Home</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/home">Home</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-about">Meu Cadastro</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Minha Família</a>
+      <a class="mdl-navigation__link a-menu-nav" href="/simulador">Simulador</a>
+
+      <!-- <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/terms">Minha Família</a> -->
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Rentabilidade</a>
       <hr class="hr-menu-nav"/>
@@ -250,6 +252,9 @@
           <section id="page-home" class="mdl-grid fp-content" style="display: none;">
               <a></a>
 
+              <!--Simulador-->              
+              <simulador ></simulador>
+
               <!--Campanha-->
               <template v-for="campanha in home.campanhas" v-if="home.campanhas.vigente && campanha.ativo">
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
@@ -290,8 +295,9 @@
                         <div class="mdl-card__supporting-text div_titulo_card">
                           Olá {{ home.apelido }}!
                         </div>  
-                        <div class="mdl-card__supporting-text">
-                        </div>                        
+                        <!-- <div class="mdl-card__supporting-text">
+                            <bar :chartdata="dataSetBar"></bar>
+                        </div>                         -->
                         <div class="mdl-card__supporting-text div_mensagem">
                           {{ home.mensagem }}
                         </div>
@@ -567,7 +573,7 @@
 
           <!-- Show a single post with comments -->
           <section id="page-post" class="mdl-grid fp-content" style="display: none;">
-            <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid"></div>
+            <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">Post</div>
           </section>
 
           <!-- About & Contact page -->
@@ -703,6 +709,10 @@
             </div>
           </section>
 
+          <section id="page-simulador" class="mdl-grid fp-content" style="display: none;">
+            <p>Simulador</p>
+          </section> 
+
     </div>
 
     <!-- Toast -->
@@ -732,19 +742,6 @@
     </footer>
 
   </main>
-</div>
-
-<!--Template grafico Reserva-->
-
-
-<!--Template grafico Projeto de vida-->
-<!-- <template id="projeto-vida">
-</template>
-
-<template id="contribuicao">
-</template> -->
-
-    <!--script vuejs-->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>       
+</div>  
 </body>
 </html>

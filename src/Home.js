@@ -1,13 +1,23 @@
 'use strict';
 
-//import $ from 'jquery';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-//import {MaterialUtils} from './Utils';
-import '../node_modules/chart.js';
+import Vue from 'vue/dist/vue.esm.js';
+//import Vue from 'vue';
+//import store from './store';
+//import router from './router';
 import VueCharts from 'vue-chartjs';
-import { Bar, Line, Doughnut } from 'vue-chartjs';
-import './component/bar.js';
+import money from 'v-money'
+//import $ from 'jquery';
+//import {MaterialUtils} from './Utils';
+//import VueMask from 'v-mask';
+
+import simulador from './component/simulador';
+
+// register directive v-money and component <money>
+Vue.use(money, {precision: 4})
+//Vue.use(VueMask);
+
 /**
  * Handles the Home UI.
  */
@@ -35,10 +45,10 @@ export default class Home {
     if (data_Home===null) {
       return 
     }    
+    
     Vue.component('grafico-reserva', {
-        extends: VueCharts.Doughnut,        
-        //template: '#grafico-reserva',
-        mounted () {         
+        extends: VueCharts.Doughnut,
+        mounted () {            
             this.renderChart({labels: data_Home.saldo_reserva.grafico.labels,
               datasets: [{
                   data: data_Home.saldo_reserva.grafico.data,
@@ -52,7 +62,6 @@ export default class Home {
 
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,        
-        //template: '#projeto-vida',        
         mounted () {
             console.log(0)           
             var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
@@ -136,19 +145,26 @@ export default class Home {
               )
         }
     });
-
-    var app = new Vue({
-      el: '#app',        
+    
+    new Vue({       
+      //render: store, router,
       data: {      
         home: data_Home,
-        toggle: false        
+        toggle: false,        
+        dataSimulador: {
+          titulo: "Simulador </br>de Empréstimo",
+          descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
+          slider: {  
+                    min: 12,
+                    max: 60,
+                    value: 24,
+                    step: 1
+                  }
+                        }
       },
-      created() {
-        setInterval(() => {
-          this.counter++
-        }, 1000);
-        console.log('Vue Created', this);
-      },
+      components: {      
+        simulador
+      },      
       methods: {          
         toggleCategory: function() {
           this.toggle = !this.toggle;
@@ -158,7 +174,7 @@ export default class Home {
             firebaseHelper.removerCampanha(uid, campanha.nome)
         }
       }
-    });
+    }).$mount('#app');
     
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))

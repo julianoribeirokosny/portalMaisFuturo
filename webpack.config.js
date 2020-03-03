@@ -26,13 +26,11 @@ const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
 
 module.exports = (env, argv) => {
-
-  mode: argv.mode
+  mode: argv.mode  
 
   console.log('========================> argv.mode', argv.mode, '<====================')
   const devMode = argv.mode !== 'production';
-
-  return {
+  return {    
     entry: {
       app: './src/app.js',
       sw: './src/firebase-messaging-sw.js',
@@ -115,7 +113,7 @@ module.exports = (env, argv) => {
             replace: '@font-face {font-display: fallback;',
           },
         },
-      ],
+      ]  
     },
     optimization: {
       minimizer: devMode ? [] : [
@@ -167,6 +165,6 @@ module.exports = (env, argv) => {
         importWorkboxFrom: 'local',
         importsDirectory: 'workbox',
       }),
-    ],
+    ]    
   };
 };
