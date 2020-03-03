@@ -26,18 +26,32 @@ export default class Router {
     // Shortcuts to async loaded components.
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
-    const clearFeed = async () => (await loadComponents).feed.clear();
+    //const clearFeed = async () => (await loadComponents).feed.clear();
 
-    console.log('Router - showHome', showHome)
+    //console.log('Router - showHome', showHome)
 
     // Configuring middlwares.
     page(Router.setLinkAsActive);
 
+
     // Configuring routes.
-    page('/', () => {this.redirectHomeIfSignedIn(); this.displayPage('splash');});
-    page('/home', () => {showHome(); this.displayPage('home', true);});    
-    page('/about', () => {clearFeed(); this.displayPage('about');});
-    page('/terms', () => {clearFeed(); this.displayPage('terms');});
+    page('/', () => {
+      console.log('===> indo para Splash')      
+      this.redirectHomeIfSignedIn(); this.displayPage('splash');
+    });
+    page('/home', () => {
+      console.log('===> indo para Home')
+      showHome();       
+      this.displayPage('home', true);      
+      /*if (window.location.pathname !== '/home') {
+        Router.reloadPage()
+      }*/
+    });    
+    page('/about', () => {
+      console.log('===> indo para About')
+      this.displayPage('about');
+    });
+    page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
     page('*', () => page('/'));
     //page('/home', () => {showGeneralFeed(); this.displayPage('feed', true);});    
@@ -58,23 +72,29 @@ export default class Router {
     if (onlyAuthed) { 
       await this.auth.waitForAuth;
       if (!firebase.auth().currentUser) {
+
+
+        AQUI?????????????
+
         return page('/');
       }
     }
 
     this.pagesElements.each((index, element) => {
       if (element.id === 'page-' + pageId) {
-        console.log('Página:', element);
-        $(element).show();
+        console.log('Página:', element);       
+        //$(element).show();
+        $('#'+element.id).show()
       } else if (element.id === 'page-splash' && onlyAuthed) {
         $(element).fadeOut(1000);
+        $('#'+element.id).fadeOut(1000);
       } else {
-        $(element).hide();
+        //$(element).hide();
+        $('#'+element.id).hide()
       }
     });
 
     MaterialUtils.closeDrawer();
-
     // Scroll to top.
     Router.scrollToTop();
   }

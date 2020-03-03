@@ -8,7 +8,6 @@ import '../node_modules/chart.js';
 import VueCharts from 'vue-chartjs';
 import { Bar, Line, Doughnut } from 'vue-chartjs';
 import './component/bar.js';
-
 /**
  * Handles the Home UI.
  */
@@ -25,8 +24,7 @@ export default class Home {
     this.auth = firebase.auth();
     this.uid = '1234567890'
     this.home = null
-    this.data_Home = null   
-    
+    this.data_Home = null    
   }
 
   async showHome() {
@@ -37,12 +35,10 @@ export default class Home {
     if (data_Home===null) {
       return 
     }    
-
-    
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,        
         //template: '#grafico-reserva',
-        mounted () {            
+        mounted () {         
             this.renderChart({labels: data_Home.saldo_reserva.grafico.labels,
               datasets: [{
                   data: data_Home.saldo_reserva.grafico.data,
@@ -58,6 +54,7 @@ export default class Home {
         extends: VueCharts.Line,        
         //template: '#projeto-vida',        
         mounted () {
+            console.log(0)           
             var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
             gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
             gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
@@ -65,6 +62,7 @@ export default class Home {
 
             data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
             
+            console.log('====> rendering chart', this.$data._chart)
             this.renderChart({
                 labels: data_Home.projeto_vida.grafico.labels,
                 datasets: data_Home.projeto_vida.grafico.datasets
@@ -76,6 +74,7 @@ export default class Home {
                         yAxes: [{
                             ticks: {
                                 callback: function(value) {
+                                  console.log('===> value', value)
                                     return value/1000 + ' k';
                                 }                                
                             }
@@ -83,6 +82,33 @@ export default class Home {
                     }
                 }
             )
+        },
+        beforeCreate () {
+          console.log(1)
+        },
+        created () {
+          console.log(2)
+        },
+        beforeMount () {
+          console.log(3)
+        },
+        beforeUpdate () {
+          console.log(4)
+        },
+        updated () {
+          console.log(5)
+        },
+        beforeDestroy () {
+          console.log(6)
+        },
+        destroyed () {
+          console.log(7)
+        },
+        activated () {
+          console.log(8)
+        },
+        deactivated () {
+          console.log(9)
         }
     });
 
@@ -252,4 +278,3 @@ export default class Home {
   }
 
 }
-

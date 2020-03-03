@@ -142,6 +142,7 @@ export default class Auth {
     } else {
       console.log('Push NÃO suportado!')
     }
+    //************************************************************ */
     // Reload the page unless this is the first time being loaded and no signed-in user.
     if (this._waitForAuthPromiseResolver.state() !== 'pending' || user) {
       Router.reloadPage();
