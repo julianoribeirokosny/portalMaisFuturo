@@ -147,6 +147,7 @@ export default class Auth {
     if (this._waitForAuthPromiseResolver.state() !== 'pending' || user) {
       Router.reloadPage();
     }
+
     const isIos = () => {
       const userAgent = window.navigator.userAgent.toLowerCase();
       return /iphone|ipad|ipod/.test( userAgent );

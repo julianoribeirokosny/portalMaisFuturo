@@ -28,36 +28,24 @@ export default class Router {
     const showHome = async () => (await loadComponents).home.showHome();
     //const clearFeed = async () => (await loadComponents).feed.clear();
 
-    //console.log('Router - showHome', showHome)
-
     // Configuring middlwares.
     page(Router.setLinkAsActive);
 
-
     // Configuring routes.
     page('/', () => {
-      console.log('===> indo para Splash')      
-      this.redirectHomeIfSignedIn(); this.displayPage('splash');
+      this.displayPage('splash');
+      this.redirectHomeIfSignedIn(); 
     });
     page('/home', () => {
-      console.log('===> indo para Home')
       showHome();       
       this.displayPage('home', true);      
-      /*if (window.location.pathname !== '/home') {
-        Router.reloadPage()
-      }*/
     });    
     page('/about', () => {
-      console.log('===> indo para About')
       this.displayPage('about');
     });
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
     page('*', () => page('/'));
-    //page('/home', () => {showGeneralFeed(); this.displayPage('feed', true);});    
-    //page('/post/:postId', (context) => {showPost(context.params.postId); this.displayPage('post');});
-    //page('/search/:hashtag', (context) => {searchHashtag(context.params.hashtag); this.displayPage('search');});
-
     // Start routing.
     page();
   }
@@ -72,24 +60,17 @@ export default class Router {
     if (onlyAuthed) { 
       await this.auth.waitForAuth;
       if (!firebase.auth().currentUser) {
-
-
-//        AQUI?????????????
-
         return page('/');
       }
     }
 
     this.pagesElements.each((index, element) => {
-      if (element.id === 'page-' + pageId) {
-        console.log('Página:', element);       
-        //$(element).show();
+      if (element.id === 'page-' + pageId) {  
         $('#'+element.id).show()
       } else if (element.id === 'page-splash' && onlyAuthed) {
         $(element).fadeOut(1000);
         $('#'+element.id).fadeOut(1000);
       } else {
-        //$(element).hide();
         $('#'+element.id).hide()
       }
     });

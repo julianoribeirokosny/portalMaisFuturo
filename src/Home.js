@@ -35,17 +35,19 @@ export default class Home {
     this.uid = '1234567890'
     this.home = null
     this.data_Home = null    
+    this.vueObj = null
   }
 
   async showHome() {
     
     let uid = this.uid    
-    let data_Home = await this.dadosHome(uid)
     let firebaseHelper = this.firebaseHelper
+    
+    let data_Home = await this.dadosHome(uid)
     if (data_Home===null) {
       return 
     }    
-    
+
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
         mounted () {            
@@ -91,33 +93,6 @@ export default class Home {
                     }
                 }
             )
-        },
-        beforeCreate () {
-          console.log(1)
-        },
-        created () {
-          console.log(2)
-        },
-        beforeMount () {
-          console.log(3)
-        },
-        beforeUpdate () {
-          console.log(4)
-        },
-        updated () {
-          console.log(5)
-        },
-        beforeDestroy () {
-          console.log(6)
-        },
-        destroyed () {
-          console.log(7)
-        },
-        activated () {
-          console.log(8)
-        },
-        deactivated () {
-          console.log(9)
         }
     });
 
@@ -146,35 +121,40 @@ export default class Home {
         }
     });
     
-    new Vue({       
-      //render: store, router,
-      data: {      
-        home: data_Home,
-        toggle: false,        
-        dataSimulador: {
-          titulo: "Simulador </br>de Empréstimo",
-          descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
-          slider: {  
-                    min: 12,
-                    max: 60,
-                    value: 24,
-                    step: 1
-                  }
-                        }
-      },
-      components: {      
-        simulador
-      },      
-      methods: {          
-        toggleCategory: function() {
-          this.toggle = !this.toggle;
+    if (!this.vueObj) {
+      this.vueObj = new Vue({       
+        //render: store, router,
+        data: {      
+          home: this.data_Home,
+          toggle: false,        
+          dataSimulador: {
+            titulo: "Simulador </br>de Empréstimo",
+            descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
+            slider: {  
+                      min: 12,
+                      max: 60,
+                      value: 24,
+                      step: 1
+                    }
+          }
         },
-        removerCampanha: function(campanha) {
-            campanha.ativo = false
-            firebaseHelper.removerCampanha(uid, campanha.nome)
+        components: {      
+          simulador
+        },      
+        methods: {          
+          toggleCategory: function() {
+            this.toggle = !this.toggle;
+          },
+          removerCampanha: function(campanha) {
+              campanha.ativo = false
+              firebaseHelper.removerCampanha(uid, campanha.nome)
+          }      
         }
-      }
-    }).$mount('#app');
+      })
+      this.vueObj.$mount('#app'); 
+    } else {
+      this.vueObj.$forceUpdate(); 
+    }
     
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))
