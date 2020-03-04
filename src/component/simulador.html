@@ -2,55 +2,64 @@
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
         <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>        
             <!-- Slider with Starting Value -->                
-            <div style="margin-top: 20px;">
-                <div class="mdl-card-left" style="width: 80% !important;">
-                    <div style="height: 420px; width: 100%;">
-                        <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
-                        <p style="margin-top: 100px;">
-                            <!-- <span style="font-family: MaisFuturo-Medium; color: #0C7BC6; font-size: 16px; vertical-align: top; ">R$</span> -->
-                            <input inputmode="numeric"
-                                   v-money="money"
-                                     style="width: 100% !important;
-                                            font-family: MaisFuturo-Black;
-                                            font-size: 40px;
-                                            color: #0C7BC6;                                            
-                                            text-align: justify;
-                                            padding-top: 10px;
-                                            padding-left: 10px;"
-                                    v-model="principal">
-                        </p>
-                        <br>
-                        <p style="margin-bottom: 0px; font-size: 12px;">Parcelamento</p>
-                        <p class="p_valor-simulado" style="line-height: 30px;">                            
-                            <span style="font-size: 30px;">{{ quantidade }} x</span> 
-                        </p>     
-
-                        
-                        <p class="p_valor-simulado" style="line-height: 30px;">                            
-                            <span style="font-size: 30px;">de R$ {{ parcela }}</span> 
-                        </p>  
-                        <!-- <p>principal = {{ principal }}</p>
-                        <p>min = {{ dados.slider.min }}</p>
-                        <p>max = {{ dados.slider.max }}</p>        
-                        <p>step = {{ dados.slider.step }}</p>        -->
-                    </div>                   
-                </div>
-                <div class="mdl-card-right"  style="width: 20% !important; justify-content: flex-end !important;">
-                    <div class="slider-content">
-                        <vue-slider v-model="quantidade" ref="slider" v-bind="sliderOptions" :tooltip-formatter="formatter1"></vue-slider>                
-                    </div>
-                </div> 
-                <div class="mdl-card__supporting-text" 
-                style="height: 35px;
-                background-color: rgb(12, 123, 198);
-                color: #FFFFFF;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 25px;">
-                    Contratar
-                </div>       
+            <div style="margin-top: 20px;">                    
+                <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
+                <p style="margin-top: 100px;"></p>                
+                <p style="margin-bottom: 0px; 
+                            margin-left: 20px;
+                            font-size: 14px;
+                            font-family: MaisFuturo-Medium;
+                            color: #3B3C3E;
+                            letter-spacing: -0.19px;
+                            opacity: 0.7;">Altere o valor do empréstimo</p>  
+                <div style="margin-left: 20px;margin-right: 20px;display: flex;">
+                    <span style="font-family: MaisFuturo-Black; 
+                                 letter-spacing: -3px;
+                                 color: #0C7BC6; 
+                                 font-size: 22px; 
+                                 padding-top: 15px;
+                                 padding-right: 5px;">R$</span>
+                    <input  inputmode="numeric"                            
+                            ref="inputprincipal"
+                            v-money="money"
+                            style="width: 80% !important;
+                                font-family: MaisFuturo-Black;
+                                font-size: 44px;
+                                color: #0C7BC6;
+                                padding-top: 10px;                                
+                                letter-spacing: -3px;
+                                text-align: end;"
+                            v-model="principal"
+                            v-on:change="alteraPrincipal"
+                            @click="selectAll"
+                            type="text">
+                    <span style="font-family: MaisFuturo-Black; 
+                        letter-spacing: -3px;
+                        color: #0C7BC6; 
+                        font-size: 24px; 
+                        padding-top: 30px;
+                        padding-right: 5px;">,00</span>    
+                </div>                  
+                <p v-show="validacao" style="text-align: center; color: red;" >Valor excede o máximo permitido!</p>
+                <br>
+                <p class="p_label">Parcelamento</p>                
+                <p style="margin: 35px 20px;">
+                    <vue-slider v-model="quantidade" ref="slider" v-bind="sliderOptions" :tooltip-formatter="formatter1"></vue-slider>
+                </p>
+                <p class="p_valor-simulado">
+                    <span>{{ quantidade }} x de R$ {{ parcela }}</span> 
+                </p>
+                <div ref="botao"
+                     style="height: 40px;
+                     margin: 10px 20px;
+                     cursor: pointer;
+                     background-color: rgb(12, 123, 198);
+                     color: #FFFFFF;
+                     text-align: center;
+                     display: flex;
+                     align-items: center;
+                     justify-content: center;
+                     border-radius: 25px;">Contratar</div>
             </div>
         </div>
     </div>

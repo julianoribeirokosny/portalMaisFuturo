@@ -19,12 +19,12 @@ export default {
                     descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
                     slider: {  
                         min: 12,
-                        max: 60,
-                        value: 24,
+                        max: 60,                        
                         step: 1
                     },
-                    quantidade: 20,
-                    principal: 790000
+                    quantidade: 36,
+                    principal: 8400,
+                    maximo: 8500,
                 }
             }
         }
@@ -32,23 +32,23 @@ export default {
     data: function() {
         return {   
             formatter1: '{value} x',
-            quantidade: 0,
-            principal: 0,
+            quantidade: this.dados.quantidade,
+            principal: this.dados.principal,   
+            maximo: this.dados.maximo, 
+            validacao: false,  
             parcela: 0,
             money: {
-                decimal: ',',
+                decimal: '',
                 thousands: '.',
-                prefix: 'R$ ',
-                //suffix: ' #',
-                precision: 2,
+                prefix: '',
+                suffix: ' ',
+                precision: 0,
                 masked: false /* doesn't work with directive */
             },            
             sliderOptions: {
-                dotSize: 14,
-                width: 5,
-                height: 400,
-                contained: false,
-                direction: 'btt',
+                dotSize: 14,                
+                height: 10,
+                contained: false,                
                 data: null,
                 min: 12,
                 max: 60,
@@ -59,7 +59,7 @@ export default {
                 adsorb: false,
                 lazy: false,
                 tooltip: 'always',                
-                tooltipPlacement: 'left',
+                tooltipPlacement: 'top',
                 tooltipFormatter: void 0,
                 useKeyboard: false,
                 keydownHook: null,
@@ -92,26 +92,30 @@ export default {
                 },
             }
         }
-    },        
-    created() {
-        this.quantidade = this.dados.quantidade;
-        this.principal = this.dados.principal;
-        //this.calcularParcela();        
     },    
-    watch: {    
-        quantidade: function (newvalue, oldvalue) {            
-            if(newvalue !== oldvalue)
-                this.calcularParcela();
-        },
-        principal: function (newvalue, oldvalue) {
-            if(newvalue !== oldvalue)
-                this.calcularParcela();
-        }
-    },
     methods: {      
-        calcularParcela(){
-            this.principal = this.principal.toString().replace('R$','').replace('.','').replace(',','');                        
-            this.parcela = ((parseFloat(this.principal/100)/this.quantidade)).toFixed(2).toString().replace(".",",");            
-        }  
+        calcularParcela(){    
+            if(parseFloat(this.principal.toString().replace(/\./g,'')) > this.maximo) {
+                this.validacao = true;
+                //this.$refs.botao.disabled('disabled');
+                console.log('botao',this.$refs.botao);
+
+            } else {
+                //this.$refs.botao.remove('disabled');
+                this.validacao = false;
+                this.parcela = this.thousands_separators((parseFloat(this.principal.toString().replace(/\./g,''))/this.quantidade).toFixed(2));
+            }
+        },
+        alteraPrincipal(){
+            this.calcularParcela();
+        },
+        thousands_separators(num) {
+            var num_parts = num.toString().split(".");
+            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            return num_parts.join(",");
+        },
+        selectAll() {
+            this.$refs.inputprincipal.select();
+        }
     },
 }
