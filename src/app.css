@@ -283,8 +283,8 @@ a {
 }
 .mdl-layout__drawer .mdl-navigation .mdl-navigation__link.is-active,
 .is-active .mdl-menu__item {
-  color: black;
-  background-color: #EBEBEB;
+  color: black;  
+  /* background-color: rgba(50, 91, 182, 0.726);  */
 }
 .mdl-layout__drawer {
   border-right-width: 0;
@@ -1163,6 +1163,7 @@ dialog + .backdrop { /* polyfill */
   }
 
   .icon-button {
+      margin-top: 4px;
       background-color: #FFFFFF; 
       color: #003366; 
       border-radius: 20px;

@@ -3,16 +3,10 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import Vue from 'vue/dist/vue.esm.js';
-//import Vue from 'vue';
-//import store from './store';
-//import router from './router';
 import VueCharts from 'vue-chartjs';
 import money from 'v-money'
-//import $ from 'jquery';
-//import {MaterialUtils} from './Utils';
-//import VueMask from 'v-mask';
-
-import simulador from './component/simulador';
+import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo';
+import page from 'page';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -139,7 +133,7 @@ export default class Home {
           }
         },
         components: {      
-          simulador
+          simuladorEmprestimo
         },      
         methods: {          
           toggleCategory: function() {
@@ -148,6 +142,9 @@ export default class Home {
           removerCampanha: function(campanha) {
               campanha.ativo = false
               firebaseHelper.removerCampanha(uid, campanha.nome)
+          },
+          contratarCampanha(link) {
+              page(`/${link}`);
           }      
         }
       })

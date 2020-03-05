@@ -1,0 +1,124 @@
+.div_descricao {
+    font-family: 'MaisFuturo-Regular';
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 100;
+    letter-spacing: -0.56px;
+    color: #3B3C3E;
+    opacity: 1;
+    margin-left: 20px;
+}
+
+.slider-content {
+    padding:10px;
+    display: flex; 
+    justify-content: flex-end;
+}
+
+.p_espaco_100 {
+    margin-top: 100px;
+}
+
+.p_espaco_30 {
+    margin-top: 30px;
+}
+
+.p_label {
+    margin-bottom: 2px; 
+    margin-left: 20px;
+    font-size: 14px;
+    font-family: 'MaisFuturo-Medium';
+    color: #3B3C3E;
+    letter-spacing: -0.19px;
+    opacity: 0.7;
+}
+
+.span_input_prefixo {
+    font-family: 'MaisFuturo-Black'; 
+    letter-spacing: -3px;
+    color: #0C7BC6; 
+    font-size: 22px; 
+    padding-top: 15px;
+    padding-right: 5px;
+}
+
+.input_principal {
+    width: 80% !important;
+    font-family: 'MaisFuturo-Black';
+    font-size: 44px;
+    color: #0C7BC6;
+    padding-top: 10px;
+    letter-spacing: -3px;
+    text-align: end;
+}
+
+.span_input_sufixo {
+    font-family: 'MaisFuturo-Black'; 
+    letter-spacing: -3px;
+    color: #0C7BC6; 
+    font-size: 24px; 
+    padding-top: 30px;
+    padding-right: 5px;
+}
+
+.p_mensagem_invalido {
+    text-align: center; 
+    font-size: 14px;
+    color: rgb(219, 52, 52);
+    font-family: 'MaisFuturo-Medium';
+    margin-top: 5px !important;
+    margin-bottom: 2px !important;
+}
+
+.p_valor-simulado {
+    font-family: 'MaisFuturo-Bold';
+    line-height: 32px;
+    font-size: 30px;
+    letter-spacing: -0.39px;
+    color: #0C7BC6;
+    opacity: 1;
+    letter-spacing: -2px;
+    margin-left: 20px !important;    
+    margin-bottom: 2px !important;
+}
+
+.p_slider {
+    margin: 35px 20px 15px 20px;
+}
+
+.div_btn_contratar {
+    height: 40px;
+    margin: 20px;
+    cursor: pointer;
+    background-color: rgb(12, 123, 198);
+    color: #FFFFFF;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+}
+
+@media screen and (max-width: 425px) {
+    .p_label {        
+        font-size: 12px;        
+    }
+    .span_input_prefixo {        
+        font-size: 16px; 
+        padding-top: 15px;        
+    }
+    .input_principal {                
+        font-size: 34px;
+        padding-top: 12px;        
+    }
+    .span_input_sufixo {        
+        font-size: 18px; 
+        padding-top: 22px;        
+    }
+    .p_mensagem_invalido {     
+        font-size: 12px;        
+    }
+    .p_valor-simulado {     
+        font-size: 20px;
+    }
+}
