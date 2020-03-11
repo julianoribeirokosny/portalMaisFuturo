@@ -1,0 +1,74 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
+    </div>
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="div_dflex_center">
+            <span class="span_reserva_text_2 span_text_perfil">Perfil Agressivo</span>
+        </div>
+    </div>
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_top_zero">
+        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+            <grafico-perfil class="canvas_grafico_doughnut"></grafico-perfil>
+            <div class="div_grafico_reserva_legenda">
+                <div class="div_titulo_legenda">
+                    Composição do perfil
+                </div>
+                <div>
+                    <template v-for="legenda in dados.legenda_perfil">
+                        <dl class="dl_reserva_legenda">
+                            <dt class="dt_reserva_legenda dt_perfil">{{ legenda.nome }}</dt>
+                            <dd class="dd_reserva_text">                        
+                                <span class="span_reserva_legenda_2" v-bind:style="legenda.cor">{{ legenda.valor }}</span>
+                            </dd>
+                        </dl>
+                    </template>
+                </div>
+            </div>
+        </div>        
+    </div>    
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <p class="p_margin_30"></p>
+        <div class="div_titulo_card margin-auto" style="margin-bottom: 15px;">
+            Benchmark
+        </div>
+        <div style="display:flex; justify-content: flex-end; margin-bottom: 10px;">
+            <v-select v-model="quantidade_meses" :options="lista_quantidade_meses"></v-select>
+        </div>
+        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+            <grafico-benchmark class="canvas_grafico_benchmark" :chartdata="grafico_benchmark"></grafico-benchmark>
+        </div>        
+        <p class="p_margin_30"></p>
+        <div class="div_titulo_card margin-auto" style="margin-bottom: 20px;">
+            Rentabilidade
+        </div>        
+        <div class="mdl-card-left" style="display: table !important;">            
+            <div class="mdl-card-left" style="justify-content: center !important; letter-spacing: -0.21px;
+            color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; margin-bottom: 5px;">
+                Ano/Mês
+            </div>            
+            <div class="mdl-card-right" style="justify-content: center !important; letter-spacing: -0.21px;
+            color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; margin-bottom: 5px;">
+                Valor
+            </div>
+            <div style="margin-left: 15px;" v-for="indice in indices">                
+                <div class="mdl-card-left" style="line-height: 20px; width: 50% !important; border-bottom: #a3a0a0 solid 1px; justify-content: left !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
+                    color: #818181; opacity: 1; font-size: 11px;">
+                    {{ indice.anomes }}
+                </div>
+                <div class="mdl-card-right" style="line-height: 20px; width: 50% !important; border-bottom: #a3a0a0 solid 1px; justify-content: center !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
+                    color: #818181; opacity: 1;font-size: 11px;">
+                    {{ indice.valor }}
+                </div>                
+            </div>
+        </div>        
+        <div class="mdl-card-right"  style="display: table !important; text-align: center; letter-spacing: -0.21px;
+        color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; margin-bottom: 5px;">
+            Acumulado {{ quantidade_meses }}
+            <p> {{acumulado}} %</p>
+        </div>        
+        
+    </div>
+</div>
+
+

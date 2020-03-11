@@ -3,12 +3,13 @@
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
 
-require('./simuladorEmprestimo.css');
+import simuladorEmprestimo from './simuladorEmprestimo.html';
+import './simuladorEmprestimo.css';
 
-export default {      
-    template: require('./simuladorEmprestimo.html'),
+export default {
+    template: simuladorEmprestimo,
     components: { 
-                    VueSlider
+        VueSlider
     },
     props: { 
         dados: {

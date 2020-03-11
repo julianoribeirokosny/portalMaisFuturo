@@ -4,8 +4,9 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import Vue from 'vue/dist/vue.esm.js';
 import VueCharts from 'vue-chartjs';
-import money from 'v-money'
+import money from 'v-money';
 import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo';
+import rentabilidade from './component/rentabilidade/rentabilidade';
 import page from 'page';
 
 // register directive v-money and component <money>
@@ -44,7 +45,11 @@ export default class Home {
 
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
-        mounted () {            
+        mounted () {
+
+            console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
+            console.log('Doughnut', data_Home.saldo_reserva.grafico);
+
             this.renderChart({labels: data_Home.saldo_reserva.grafico.labels,
               datasets: [{
                   data: data_Home.saldo_reserva.grafico.data,
@@ -57,17 +62,16 @@ export default class Home {
     });
 
     Vue.component('projeto-vida', {
-        extends: VueCharts.Line,        
-        mounted () {
-            console.log(0)           
+        extends: VueCharts.Line,
+        mounted () {            
             var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
             gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
             gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
             gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
-
             data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
-            
-            console.log('====> rendering chart', this.$data._chart)
+
+            console.log('Projeto de vida:',data_Home.projeto_vida.grafico.datasets);
+
             this.renderChart({
                 labels: data_Home.projeto_vida.grafico.labels,
                 datasets: data_Home.projeto_vida.grafico.datasets
@@ -78,8 +82,7 @@ export default class Home {
                     scales: {
                         yAxes: [{
                             ticks: {
-                                callback: function(value) {
-                                  console.log('===> value', value)
+                                callback: function(value) {                                  
                                     return value/1000 + ' k';
                                 }                                
                             }
@@ -93,8 +96,7 @@ export default class Home {
     Vue.component('contribuicao', {
         extends: VueCharts.Doughnut,        
         //template: '#contribuicao',
-        mounted () {
-            
+        mounted () {            
             this.renderChart({              
                   labels: data_Home.contribuicao.grafico.label,
                   datasets: [{
@@ -133,7 +135,8 @@ export default class Home {
           }
         },
         components: {      
-          simuladorEmprestimo
+          simuladorEmprestimo,
+          rentabilidade
         },      
         methods: {          
           toggleCategory: function() {

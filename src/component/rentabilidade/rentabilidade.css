@@ -1,0 +1,105 @@
+.div_dflex_center {
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+.span_text_perfil {
+    font-size: 32px; 
+    line-height: 34px; 
+    margin: 25px;
+}
+.margin_top_zero {
+    margin-top: 0px !important;
+}
+.div_titulo_legenda {
+    text-align: center;
+    margin-bottom: 15px;
+    font-family: 'MaisFuturo-Medium';
+    font-size: 22px;
+    letter-spacing: -0.24px;
+    color: #3B3C3E;
+    opacity: 0.7;
+}
+.dt_perfil {
+    text-align:center;
+    line-height:17px;
+    font-size:15px;
+}
+.p_margin_30 {
+    margin-top: 30px;
+}
+.vs__clear {
+    display: none !important;
+}
+.vs__dropdown-toggle {
+    border-radius: 20px;    
+    height: 40px;
+    width: 180px;
+}
+.vs__dropdown-menu {
+    width: 180px;
+    border-radius: 0 0 20px 20px;
+    font-size: 11px;
+    font-family: 'MaisFuturo-Medium';
+    letter-spacing: -0.21px;
+    font-weight: 100 !important;
+    color: rgb(80, 81, 83);    
+}
+.canvas_grafico_benchmark {
+    width: 580px;
+    height: 340px;
+}
+.vs__selected {
+    font-size: 11px;
+    font-family: 'MaisFuturo-Medium';
+    letter-spacing: -0.21px;
+    font-weight: 100 !important;
+    color: rgb(80, 81, 83);
+    
+}
+
+
+@media screen and (max-width: 625px) and (min-width: 425px) {    
+    .span_text_perfil {
+        font-size: 20px; 
+        line-height: 22px; 
+        margin: 20px;
+    }    
+    .div_titulo_legenda {     
+        margin-bottom: 15px;        
+        font-size: 20px;
+    }
+    .dt_perfil {        
+        line-height:13px;
+        font-size:12px;
+    }
+    .span_reserva_legenda_2 {
+        font-size: 24px !important;    
+        line-height: 24px !important;
+    }
+    .canvas_grafico_benchmark {
+        width: 400px;
+        height: 270px;
+    }
+}
+
+
+@media screen and (max-width: 425px) {
+    .span_text_perfil {
+        font-size: 20px; 
+        line-height: 22px; 
+        margin: 16px;
+    }    
+    .div_titulo_legenda {     
+        margin-bottom: 12px;        
+        font-size: 14px;
+    }
+    .dt_perfil {        
+        line-height:10px;
+        font-size:9px;
+    }    
+    .canvas_grafico_benchmark {
+        width: 300px;
+        height: 180px;
+    }
+}

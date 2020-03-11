@@ -1582,14 +1582,14 @@ dialog + .backdrop { /* polyfill */
 
   @media screen and (max-width: 625px) and (min-width: 425px) {
       .canvas_grafico_doughnut {
-          width: 400px;
+          width: 370px;
       }
       .canvas_grafico_line {
           width: 400px;
           height: 350px;
       }
       .canvas_grafico_semi_circle {
-          width: 400px !important;       
+          width: 370px !important;       
           height: 240px !important;   
       }
       .div_grafico_contribuicao_legenda {
