@@ -32,7 +32,7 @@
         <div class="div_titulo_card margin-auto" style="margin-bottom: 15px;">
             Benchmark
         </div>
-        <div style="display:flex; justify-content: flex-end; margin-bottom: 10px;">
+        <div class="div_select_right">
             <v-select v-model="quantidade_meses" :options="lista_quantidade_meses"></v-select>
         </div>
         <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
@@ -43,33 +43,32 @@
             Rentabilidade
         </div>        
         <div class="mdl-card-left" style="display: table !important;">            
-            <div class="mdl-card-left" style="justify-content: center !important; letter-spacing: -0.21px;
-            color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; margin-bottom: 5px;">
+            <div class="mdl-card-left div_tabela_titulo">
                 Ano/Mês
             </div>            
-            <div class="mdl-card-right" style="justify-content: center !important; letter-spacing: -0.21px;
-            color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; margin-bottom: 5px;">
+            <div class="mdl-card-right div_tabela_titulo">
                 Valor
             </div>
-            <div style="margin-left: 15px;" v-for="indice in indices">                
-                <div class="mdl-card-left" style="line-height: 14px; width: 50% !important; border-bottom: silver solid 1px; justify-content: left !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
-                    color: #818181; opacity: 1; font-size: 11px;">
+            <div v-for="indice in indices" style="margin-left: 15px;">
+                <div class="mdl-card-left div_tabela_item justify-content_left">
                     {{ indice.anomes }}
                 </div>
-                <div class="mdl-card-right" style="line-height: 14px; width: 50% !important; border-bottom: silver solid 1px; justify-content: center !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
-                    color: #818181; opacity: 1;font-size: 11px;">
+                <div class="mdl-card-right div_tabela_item justify-content_center">
                     {{ indice.valor }}
                 </div>                
             </div>
         </div>        
-        <div class="mdl-card-right"  style="display: table !important; text-align: center; margin-bottom: 5px;">
-            <span style="letter-spacing: -0.21px;
-            color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; ">Acumulado {{ quantidade_meses }}</span>            
+        <div class="mdl-card-right div_titulo_acumulado">
+            <span class="span_titulo_acumulado">Acumulado {{ quantidade_meses }}</span>
             <p>
-                <span style="font-size: 34px; font-family: MaisFuturo-Black;line-height: 40px;color: #1E77C6 !important; opacity: 1 !important; letter-spacing: -2;">
+                <span class="span_indice_acumulado">
                     {{ acumulado }}%
                 </span>
             </p>
+        </div>     
+        
+        <div class="mdl-card__supporting-text mdl-card-container" style="padding-top:20px !important;">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar, justo non dictum hendrerit, tortor erat iaculis turpis, ac varius leo augue at felis. Mauris rutrum purus suscipit nunc condimentum elementum. Fusce eget mi augue. Fusce vestibulum sapien sit amet orci dignissim euismod. Mauris finibus lectus ac Leo fringilla bibendum. Praesent quis aliquam dui. Aliquam eu condimentum enim. Etiam viverra lacus magna, eu commodo lorem ultrices varius. Maecenas et vestibulum urna, sit amet posuere libero. Maecenas quis enim massa. Nam elementum rhoncus ligula, ac ullamcorper sapien semper accumsan. Sed non laoreet sapien. Aliquam ut vulputate nulla. Maecenas lectus metus, lacinia nec commodo vel, elementum quis felis. Maecenas eu dolor rhoncus risus molestie faucibus. Donec efficitur scelerisque commodo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar, justo non dictum hendrerit, tortor erat iaculis turpis, ac varius leo augue at felis. Mauris rutrum purus suscipit nunc condimentum elementum. Fusce eget mi augue. Fusce vestibulum sapien sit amet orci dignissim euismod. Mauris finibus lectus ac Leo fringilla bibendum. Praesent quis aliquam dui. Aliquam eu condimentum enim. Etiam viverra lacus magna, eu commodo lorem ultrices varius. Maecenas et vestibulum urna, sit amet posuere libero. Maecenas quis enim massa. Nam elementum rhoncus ligula, ac ullamcorper sapien semper accumsan. Sed non laoreet sapien. Aliquam ut vulputate nulla. Maecenas lectus metus, lacinia nec commodo vel, elementum quis felis. Maecenas eu dolor rhoncus risus molestie faucibus. Donec efficitur scelerisque commodo.
         </div>        
         
     </div>
