@@ -238,50 +238,50 @@ export default {
                 }
             }
         }
-    },    
+    },
     data() {
-        return {            
-            grafico_benchmark: {"labels":'', 'dataset':''}, 
+        return {
+            grafico_benchmark: {"labels":'', 'dataset':''},
             size: 12,
             indices:'',
             acumulado:'',
-            quantidade_meses: 'Ult. 12 meses',            
+            quantidade_meses: 'Ult. 12 meses',
             lista_quantidade_meses: ['Ult. 12 meses','Ult. 24 meses','Ult. 36 meses','Ult. 48 meses','Ult. 60 meses']
         }
-    },    
+    },
     watch: {
-        quantidade_meses(val) {            
-            this.size = parseInt(val.replace('Ult. ', '').replace(' meses', ''));
-            this.alteraQuantidadeMeses();
-        }      
+        quantidade_meses(val) {
+            this.size = parseInt(val.replace('Ult. ', '').replace(' meses', ''))
+            this.alteraQuantidadeMeses()
+        }
     },
     mounted() {
-        this.alteraQuantidadeMeses();        
+        this.alteraQuantidadeMeses()
     },
-    methods: {      
-        alteraQuantidadeMeses(){
-            this.indices = this.dados.indices[0].valores.slice(0,this.size);                    
-            this.calcularIndiceAcumulado();            
-            this.graficoBenchmark();
+    methods: {
+        alteraQuantidadeMeses() {
+            this.indices = this.dados.indices[0].valores.slice(0,this.size)
+            this.calcularIndiceAcumulado()
+            this.graficoBenchmark()
         },
-        calcularIndiceAcumulado(){            
-            var res = 1;
-            var aux = 1;
+        calcularIndiceAcumulado(){
+            var res = 1
+            var aux = 1
             for(var i = 0; i < this.indices.length; i++) {
-                aux = this.indices[i].indice / 100 + 1;
-                res *= aux;
+                aux = this.indices[i].indice / 100 + 1
+                res *= aux
             }
-            this.acumulado = parseFloat((res -1)*100).toFixed(2).toString().replace('.',',');            
+            this.acumulado = parseFloat((res -1)*100).toFixed(2).toString().replace('.',',')
         },
         graficoBenchmark() {
-            let grafico = new Object();
-            let arr = new Array();
-            let labels = new Array();            
-            for(var i = 0; i <= this.dados.indices.length - 1; i++) {                
-                let auxReg = this.dados.indices[i].valores.slice(0, this.size);
+            let grafico = new Object()
+            let arr = new Array()
+            let labels = new Array()
+            for(var i = 0; i <= this.dados.indices.length - 1; i++) {
+                let auxReg = this.dados.indices[i].valores.slice(0, this.size)
                 if(i == 0) {
                     for(var j = auxReg.length - 1; j >= 0; j--) {
-                        labels.push(auxReg[j].anomes);
+                        labels.push(auxReg[j].anomes)
                     }
                 }
                 let auxData = new Object()
@@ -291,7 +291,7 @@ export default {
                 auxData.borderWidth = '1.5'
                 auxData.lineTension = '0'
                 auxData.pointRadius = '0'
-                auxData.fill = false                
+                auxData.fill = false
                 let valores = new Array()
                 let acumulado = 0
                 for(var k = auxReg.length - 1; k >= 0; k--) {
@@ -301,15 +301,15 @@ export default {
                     } else {
                         indice = auxReg[k].indice/100+1
                         acumulado = (((acumulado/100 + 1) * indice)-1)*100
-                    }                    
+                    }
                     valores.push(acumulado)
                 }
                 auxData.data = valores;
-                arr.push(auxData);                          
+                arr.push(auxData);
             }
             grafico.dataset = arr;
-            grafico.labels = labels;                       
-            this.grafico_benchmark = grafico;            
+            grafico.labels = labels;
+            this.grafico_benchmark = grafico;
         }
-    },    
+    },
 }

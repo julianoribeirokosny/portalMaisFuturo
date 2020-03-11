@@ -52,20 +52,24 @@
                 Valor
             </div>
             <div style="margin-left: 15px;" v-for="indice in indices">                
-                <div class="mdl-card-left" style="line-height: 20px; width: 50% !important; border-bottom: #a3a0a0 solid 1px; justify-content: left !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
+                <div class="mdl-card-left" style="line-height: 14px; width: 50% !important; border-bottom: silver solid 1px; justify-content: left !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
                     color: #818181; opacity: 1; font-size: 11px;">
                     {{ indice.anomes }}
                 </div>
-                <div class="mdl-card-right" style="line-height: 20px; width: 50% !important; border-bottom: #a3a0a0 solid 1px; justify-content: center !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
+                <div class="mdl-card-right" style="line-height: 14px; width: 50% !important; border-bottom: silver solid 1px; justify-content: center !important; font-family: MaisFuturo-Medium;letter-spacing: -0.18px;
                     color: #818181; opacity: 1;font-size: 11px;">
                     {{ indice.valor }}
                 </div>                
             </div>
         </div>        
-        <div class="mdl-card-right"  style="display: table !important; text-align: center; letter-spacing: -0.21px;
-        color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; margin-bottom: 5px;">
-            Acumulado {{ quantidade_meses }}
-            <p> {{acumulado}} %</p>
+        <div class="mdl-card-right"  style="display: table !important; text-align: center; margin-bottom: 5px;">
+            <span style="letter-spacing: -0.21px;
+            color: #3B3C3E; opacity: 0.7; font-family: MaisFuturo-Medium; font-size: 13px; ">Acumulado {{ quantidade_meses }}</span>            
+            <p>
+                <span style="font-size: 34px; font-family: MaisFuturo-Black;line-height: 40px;color: #1E77C6 !important; opacity: 1 !important; letter-spacing: -2;">
+                    {{ acumulado }}%
+                </span>
+            </p>
         </div>        
         
     </div>
