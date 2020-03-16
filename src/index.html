@@ -143,7 +143,7 @@
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/about">Meu Cadastro</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/simulador-emprestimo">Simulador Empréstimo</a>
-      <hr class="hr-menu-nav"/>
+      <hr class="hr-menu-nav"/>      
       <!-- <a class="mdl-navigation__link a-menu-nav" href="/simulador">Simulador</a>
       <hr class="hr-menu-nav"/> -->
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/rentabilidade">Rentabilidade</a>
@@ -370,7 +370,7 @@
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                     <div class="mdl-card__supporting-text  margin_auto mdl-card-container">
-                        <div class="mdl-shadow--1dp mdl-card_coberturas" v-bind:style="home.coberturas.acao.card_background">
+                        <div class="mdl-shadow--1dp mdl-card_coberturas" v-bind:style="home.coberturas.acao.card_background" @click.prevent="simuladorSeguro('simulador-seguro')" style="cursor: pointer;">
                             <span class="span-card-botton-projeto-vida">{{ home.coberturas.acao.descricao }}</span>&nbsp;
                             <i class="material-icons icon-button">arrow_forward</i>
                         </div>
@@ -492,7 +492,7 @@
                       </div>
                       <div class="mdl-card__supporting-text mdl-card-container div-educacao_financeira-titulo">
                           {{ home.educacao_financeira.titulo }}
-                          A Nova Previcência - Renato Follador e Thiago Nieweglowski
+                          A Nova Previdência - Renato Follador e Thiago Nieweglowski
                       </div>
                       <div class="mdl-card__supporting-text mdl-card-container ">                      
                         <div class="mdl-card-campanha-button-right mdl-shadow--4dp div-educacao-financeira-button" @click.prevent="">
@@ -508,14 +508,20 @@
 
           <!--Simulador Emprestimo-->
           <section id="page-simulador-emprestimo" class="mdl-grid fp-content" style="display: none;">
-            <a></a>              
-            <simulador-emprestimo></simulador-emprestimo>
+              <a></a>
+              <simulador-emprestimo></simulador-emprestimo>
           </section>
 
           <!--Rentabilidade-->
           <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
-              <a></a>              
+              <a></a>
               <rentabilidade></rentabilidade>
+          </section>
+
+          <!--Simulador Seguro-->
+          <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+              <simulador-seguro></simulador-seguro>
           </section>
           
 

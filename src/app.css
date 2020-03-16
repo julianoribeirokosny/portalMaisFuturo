@@ -1382,6 +1382,11 @@ dialog + .backdrop { /* polyfill */
       align-items: center;
   }
 
+  .canvas_grafico_simulador {
+    width: 400px;
+    height: 350px;
+  }
+
   .dt_projeto_vida {
       color: #3B3C3E;
       font-family: 'MaisFuturo-Medium';
@@ -1592,6 +1597,10 @@ dialog + .backdrop { /* polyfill */
           width: 370px !important;       
           height: 240px !important;   
       }
+      .canvas_grafico_simulador {
+        width: 300px;
+        height: 250px;
+      }
       .div_grafico_contribuicao_legenda {
           width: 220px; 
           margin: 70px 0px 0px 0px;
@@ -1692,6 +1701,10 @@ dialog + .backdrop { /* polyfill */
       .canvas_grafico_semi_circle {
           width: 300px !important;      
           height: 180px !important;    
+      }
+      .canvas_grafico_simulador {
+          width: 250px;
+          height: 200px;
       }
       .div_grafico_reserva_legenda {
           width: 160px; 

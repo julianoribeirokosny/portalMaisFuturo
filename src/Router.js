@@ -49,7 +49,9 @@ export default class Router {
     page('/rentabilidade', () => {
       this.displayPage('rentabilidade');
     });
-
+    page('/simulador-seguro', () => {
+      this.displayPage('simulador-seguro');
+    });
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
     page('*', () => page('/'));

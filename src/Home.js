@@ -7,6 +7,7 @@ import VueCharts from 'vue-chartjs';
 import money from 'v-money';
 import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo';
 import rentabilidade from './component/rentabilidade/rentabilidade';
+import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
 import page from 'page';
 
 // register directive v-money and component <money>
@@ -118,26 +119,26 @@ export default class Home {
     });
     
     if (!this.vueObj) {
-      this.vueObj = new Vue({       
-        //render: store, router,
-        data: {      
-          home: this.data_Home,
-          toggle: false,        
-          dataSimulador: {
-            titulo: "Simulador </br>de Empréstimo",
-            descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.", 
-            slider: {  
-                      min: 12,
-                      max: 60,
-                      value: 24,
-                      step: 1
-                    }
-          }
+      this.vueObj = new Vue({
+        components: {
+            simuladorEmprestimo,
+            rentabilidade,
+            simuladorSeguro
         },
-        components: {      
-          simuladorEmprestimo,
-          rentabilidade
-        },      
+        data: {
+            home: this.data_Home,
+            toggle: false,
+            dataSimulador: {
+                titulo: "Simulador </br>de Empréstimo",
+                descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
+                slider: { 
+                          min: 12,
+                          max: 60,
+                          value: 24,
+                          step: 1
+                        }
+            }
+        },        
         methods: {          
           toggleCategory: function() {
             this.toggle = !this.toggle;
@@ -147,8 +148,11 @@ export default class Home {
               firebaseHelper.removerCampanha(uid, campanha.nome)
           },
           contratarCampanha(link) {
-              page(`/${link}`);
-          }      
+              page(`/${link}`)
+          },
+          simuladorSeguro(link) {
+              page(`/${link}`)
+          }
         }
       })
       this.vueObj.$mount('#app'); 
