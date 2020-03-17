@@ -26,6 +26,7 @@ export default class Router {
     // Shortcuts to async loaded components.
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
+    const verificaPrimeiroLogin = async () => (await loadComponents).home.verificaPrimeiroLogin();
     //const clearFeed = async () => (await loadComponents).feed.clear();
 
     // Configuring middlwares.
@@ -36,9 +37,13 @@ export default class Router {
       this.displayPage('splash');
       this.redirectHomeIfSignedIn(); 
     });
-    page('/home', () => {
-      showHome();       
-      this.displayPage('home', true);      
+    page('/home', async () => {
+      if (await verificaPrimeiroLogin()) {
+        this.displayPage('primeiroLogin');       
+      } else {
+        showHome();       
+        this.displayPage('home', true);        
+      }
     });    
     page('/about', () => {
       this.displayPage('about');
@@ -142,4 +147,6 @@ export default class Router {
     $(`[href="${canonicalPath}"]`).addClass('is-active');
     next();
   }
+
+
 };
