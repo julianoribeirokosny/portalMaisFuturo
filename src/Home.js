@@ -29,6 +29,7 @@ export default class Home {
     // Firebase SDK.
     this.auth = firebase.auth();
     this.uid = '1234567890'
+    this.user = {}
     this.home = null
     this.data_Home = null    
     this.vueObj = null
@@ -168,7 +169,6 @@ export default class Home {
   async dadosHome(uid) {
     //debugger;
     let homeAux = {}
-    let user = {}
 
     let p1 = new Promise((resolve, reject) => {
       resolve(this.firebaseHelper.getHome().then((data) => {
@@ -183,14 +183,19 @@ export default class Home {
     })
 
     let p2 = new Promise((resolve, reject) => {
-      resolve(this.firebaseHelper.getUser(uid).then((u) => {
-        if (u===null) {
-          return false
-        } else {
-          user = u
-          return true
-        }
-      }))
+      if (Object.keys(this.user).length === 0) {
+        resolve(this.firebaseHelper.getUser(uid).then((u) => {
+          if (u===null) {
+            return false
+          } else {
+                this.user = u
+            return true
+          }
+        }))  
+      } else {
+        resolve(this.user)
+        return true
+      }
     })
 
     return Promise.all([p1, p2]).then(async (retPromises) => {
@@ -198,6 +203,7 @@ export default class Home {
         return null
       } else {
 
+        let user = this.user
         let segmentoUsuario = await this.firebaseHelper.getSegmento(user.segmento)
 
         //Verifica se há chaves "não vigentes" ou "para o usuário específico
@@ -276,5 +282,17 @@ export default class Home {
       }
     })
   }
+
+  async verificaPrimeiroLogin() {
+    if (Object.keys(this.user).length === 0) { //empty
+      let usr = await this.firebaseHelper.getUser(this.uid)
+      if (usr!==null) {
+        this.user = usr
+      } else {
+        return null
+      }
+    }
+    return  !(this.user.hasOwnProperty('primeiro_login') && this.user.primeiro_login !== "")
+  }  
 
 }
