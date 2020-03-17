@@ -55,7 +55,7 @@
 <section id="page-splash">
   <h3 class="fp-logo"><img src="../public/images/icon-128x128.png" alt="Mais Futuro Logo"> Portal Mais Futuro</h3>
   <div style="max-width: 500px; text-align: center;">
-    <div class="fp-caption">A melhor forma de gerenciar seu projeto de vida.</div>
+    <div class="fp-caption">A melhor forma de gerenciar seu projeto de vida.</div>    
     <!--div class="fp-caption" id="div-continue" style="display: none;">O aplicativo do Portal Mais Futuro foi instalado e está pronto para uso. </div-->
     <div>
       <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="display: none; margin: 0 auto;">
@@ -148,15 +148,17 @@
       <hr class="hr-menu-nav"/> -->
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/rentabilidade">Rentabilidade</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Serviços</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Serviços</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Educação Financeira</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Educação Financeira</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Comunicados</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Comunicados</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Documentos</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Documentos</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/page-home">Indique um Amigo</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Indique um Amigo</a>
+      <hr class="hr-menu-nav"/>    
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav fp-sign-out">Sair</a>
       <hr class="hr-menu-nav"/>      
     </nav>
   </div>
@@ -184,7 +186,7 @@
   <main class="mdl-layout__content mdl-color--white">
 
       <!--Home Vuejs-->
-      <div id="app">          
+      <div id="app">
 
           <!-- Show home -->
           <section id="page-home" class="mdl-grid fp-content" style="display: none;">
@@ -522,8 +524,7 @@
           <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-seguro></simulador-seguro>
-          </section>
-          
+          </section>          
 
           <!-- Show a single post with comments -->
           <section id="page-post" class="mdl-grid fp-content" style="display: none;">
@@ -665,9 +666,7 @@
 
           <section id="page-simulador" class="mdl-grid fp-content" style="display: none;">
             <p>Simulador</p>
-          </section> 
-
-    </div>
+          </section>
 
     <!-- Toast -->
     <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar">
@@ -676,7 +675,7 @@
     </div>
 
     <!--Rodapé-->
-    <footer class = "mdl-mini-footer" style="margin-top: 40px;">      
+    <footer id="home_rodape" class="mdl-mini-footer" style="margin-top: 40px;">      
         <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">        
             <div class="mdl-card__supporting-text mdl-card-container">
                 <div class="mdl-logo div-footer-text" style="margin-bottom: 3px !important;">Política de Privacidade</div>
@@ -695,6 +694,7 @@
         </div>      
     </footer>
 
+    </div>
   </main>
 </div>  
 </body>
