@@ -18,7 +18,7 @@
 import $ from 'jquery';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import * as firebaseui from 'firebaseui';
+//import * as firebaseui from 'firebaseui';
 import Router from './Router';
 import page from 'page';
 import {Utils} from './Utils';
@@ -98,24 +98,17 @@ export default class Auth {
       'callbacks': {
         'uiShown': function() {
           const intervalId = setInterval(() => {
-            const IDPButtons = $('.firebaseui-idp-button');
-            //TODO: ajustar texto dos botões em português...
+            const IDPButtons = $('.firebaseui-idp-button');           
+            //ajustar cor dos botões em português...
             for (var i = 0; i < IDPButtons.length; i++) {
               var button = IDPButtons[i];
               var text = button.innerText;
               console.log('text', text, 'style', button.style);
-              if (text.indexOf('Sign in with email') >= 0) {
+              if (text.indexOf('Fazer login com o e-mail') >= 0) {
                 console.log('mudando cor');
                 button.style.cssText= "background-color: rgba(240,248,255, 0.2);"
-                //button.style.backgroundColor = "blue";
-                console.log('text', text, 'style', button.style);
               }
-              
-              //button.innerText = "	Sign2 in with Google";
-              //console.log('text', button.innerText);
-              // ...
             }
-            //var googleButton = $('button[data-provider-id="google.com"]'); 
 
             const nbIDPButtonDisplayed = IDPButtons.length;
             if (nbIDPButtonDisplayed > 0) {
