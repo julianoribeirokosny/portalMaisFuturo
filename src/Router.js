@@ -39,7 +39,7 @@ export default class Router {
     });
     page('/home', async () => {
       if (await verificaPrimeiroLogin()) {
-        this.displayPage('primeiroLogin');       
+        this.displayPage('primeiro-login');
       } else {
         showHome();       
         this.displayPage('home', true);        

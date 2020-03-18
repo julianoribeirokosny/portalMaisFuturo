@@ -819,6 +819,21 @@ a {
   opacity: 0.8;
 }
 
+#page-primeiro-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;  
+  background-image: linear-gradient(#062f66, #1a6bb6);  
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  flex-direction: column;
+}
+
 #page-splash .fp-skip {  
   font-size: 13px;
   letter-spacing: 0;
