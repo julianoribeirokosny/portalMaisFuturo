@@ -56,9 +56,9 @@ export default class Router {
     });
     page('/simulador-seguro', () => {
       this.displayPage('simulador-seguro');
-    });
+    });    
     page('/confirmacao-dados', () => {
-      this.displayPage('confirmacao-dados');
+      this.displayPage('confirmacao-dados');      
     });
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});

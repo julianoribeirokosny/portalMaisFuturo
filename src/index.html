@@ -76,10 +76,23 @@
 </section>
 
 <section id="page-confirmacao-dados">
-  <p>
-    Confirmação de dados
-  </p>
-
+  <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+  <br><br><br>
+  <div class="mdl-card__supporting-text">
+    <div style="max-width: 500px; text-align: center; margin: auto;">
+      <form class="form-confirm">
+        <div style="margin-bottom: 20px;">
+            <input class="fp-input-celular" id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;" pattern="-?[0-9]*(\.[0-9]+)?">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <input class="fp-input-email" id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
+        </div>
+        <div>
+          <button class="fp-confirm">Confirmar</button>
+        </div>
+      </form>
+    </div>      
+  </div>
 </section>
 
 

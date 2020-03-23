@@ -248,8 +248,7 @@ export default class Auth {
     page('/');
   } 
 
-  confirmEmailFone() {    
-    debugger
+  confirmEmailFone() {
     if(this.formConfirm[0].elements.celular.validity.valid && this.formConfirm[0].elements.email.validity.valid) {
       let celular = this.formConfirm[0].elements.celular.value      
       let email = this.formConfirm[0].elements.email.value
