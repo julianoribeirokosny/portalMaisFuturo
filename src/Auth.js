@@ -57,6 +57,8 @@ export default class Auth {
     this.uploadButton = $('button#add');
     this.mobileUploadButton = $('button#add-floating');
     this.preConsentCheckbox = $('#fp-pre-consent');
+    this.formConfirm = $('.form-confirm')
+    this.confirmButton = $('.fp-confirm')
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -76,6 +78,8 @@ export default class Auth {
     this.updateAll.click(() => this.updateAllAccounts());
 
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
+
+    this.confirmButton.click(() => this.confirmEmailFone());
   }
 
   configureFirebaseUi() {
@@ -155,6 +159,7 @@ export default class Auth {
 
     const install_button = document.querySelector('#bt-install');
     const div_prevdigi = document.querySelector('#div-prevdigi');
+
     //const div_termouso = document.querySelector('#div-termouso');    
 
     this._waitForAuthPromiseResolver.resolve();
@@ -241,5 +246,30 @@ export default class Auth {
   signOut() {
     this.auth.signOut();
     page('/');
+  } 
+
+  confirmEmailFone() {    
+    debugger
+    if(this.formConfirm[0].elements.celular.validity.valid && this.formConfirm[0].elements.email.validity.valid) {
+      let celular = this.formConfirm[0].elements.celular.value      
+      let email = this.formConfirm[0].elements.email.value
+      if(this.validaCelular(celular)) {
+        page('/home');
+      } else if (this.validaEmail(email)) {
+        page('/home');
+      } else {
+        page('/confirmacao-dados');
+      }
+    }      
+  }  
+
+  validaCelular(celular) {
+    //implemetar metodo firebase
+    return false
+  }
+
+  validaEmail(email) {
+    //implemetar metodo firebase
+    return false
   }
 };

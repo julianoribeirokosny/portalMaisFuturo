@@ -14,6 +14,119 @@
  * limitations under the License.
  */
 
+input::-webkit-input-placeholder {
+  font: inherit;
+  transition: transform 0.3s ease-in-out, font-size 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+input {
+  font: inherit;
+  font-size: 0.8em;
+  /*margin: 28px 25px 10px;*/
+  width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  padding: 20px 0 10px;
+  border-bottom: solid 1px #03a9f4;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #03a9f4 4%);
+  background-position: -400px 0;
+  background-size: 400px 100%;
+  background-repeat: no-repeat;
+  transition: background 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+  resize: none;
+  overflow: hidden;
+}
+input:focus::-webkit-input-placeholder {
+  color: #03a9f4;
+}
+input:focus, input:valid {
+  box-shadow: none;
+  outline: none;
+  background-position: 0 0;
+}
+input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder, input:valid::-webkit-input-placeholder, textarea:valid::-webkit-input-placeholder {
+  font-size: 0.8em;
+  transform: translateY(-20px);
+  visibility: visible !important;
+  opacity: 1;
+}
+input[type="email"] {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #03a9f4 4%);
+  background-position: -400px 0;
+  background-repeat: no-repeat;
+  transition: border-bottom 0.3s ease, background 0.3s ease;
+}
+input[type="email"] ~ span.validation-text {
+  position: absolute;
+  visibility: hidden;
+  font-family: 'roboto', sans-serif;
+  font-size: 0.6em;
+  width: 400px;
+  margin-left: 25px;
+  margin-top: -5px;
+  color: white;
+  transition: color 0.3s ease-in-out;
+}
+input[type="email"]:not([value=""])::-webkit-input-placeholder {
+  font-size: 0.8em;
+  transform: translateY(-20px);
+  visibility: visible !important;
+  opacity: 1;
+}
+input[type="email"]:not([value=""]):focus::-webkit-input-placeholder {
+  color: #03a9f4;
+}
+input[type="email"]:not([value=""]):focus:not(:valid)::-webkit-input-placeholder {
+  color: #e91e63;
+}
+input[type="email"]:focus {
+  background-position: 0 0;
+}
+input[type="email"]:focus:not(:valid):not([value=""]) {
+  border-bottom: solid 1px #e91e63;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #e91e63 4%);
+}
+input[type="email"]:not(:focus):not(:valid):not([value=""]) {
+  border-bottom: solid 1px #e91e63;
+  background-position: 0 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #e91e63 4%);
+}
+input[type="email"]:not(:focus):not(:valid):not([value=""])::-webkit-input-placeholder {
+  color: #e91e63;
+}
+input[type="email"]:not(:focus):not(:valid):not([value=""]) ~ span.validation-text {
+  visibility: visible;
+  color: #e91e63;
+}
+
+button {
+  /*font-family: 'roboto', sans-serif;*/
+  transition: transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), box-shadow 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+  border: none;
+  border-radius: 25px !important;
+  height: 40px;
+  background: #03a9f4;
+  cursor: pointer;  
+  min-width: initial;
+  width: 400px;
+  color: white;
+  margin: 15px;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+}
+button:hover {
+  border-radius: 25px !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.2);
+}
+button:checked {
+  border-radius: 25px !important;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+
 html, body, p {
   font-family: 'Roboto', 'Helvetica', sans-serif;
   font-size: 16px;
