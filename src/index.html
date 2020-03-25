@@ -48,9 +48,35 @@
   <meta name="msapplication-TileImage" content="/images/icon-144x144.png"> 
   <meta name="msapplication-TileColor" content="#3372DF">
   <meta name="msapplication-navbutton-color" content="#303F9F">  
+  <script type="text/javascript">
+      function startTime() {
+          let today = new Date();
+          let dia = today.getDate();
+          let mes = today.getUTCMonth();
+          let ano = today.getFullYear();
+          let hora = today.getHours();
+          let minuto = today.getMinutes();
+      
+          // adicione um zero na frente de números<10
+          dia = checkTime(dia);
+          mes = checkTime(mes+1);
+          ano = checkTime(ano);
+          hora = checkTime(hora);
+          minuto = checkTime(minuto);      
+          document.getElementById('datetimenow').innerHTML=dia+"/"+mes+"/"+ano+" "+hora+":"+minuto;
+          t = setTimeout('startTime()',5000);
+      }
+
+      function checkTime(i) {
+          if ( i < 10 ) {
+              i = "0" + i;
+          }
+          return i;
+      }
+  </script>
 </head>
 
-<body class="fp-auth-state-unknown">
+<body class="fp-auth-state-unknown" onload="startTime()">
 
 <!-- Theatre mode viewer -->
 <div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div>
@@ -62,10 +88,10 @@
     <div style="max-width: 500px; text-align: center; margin: auto;">
       <form class="form-confirm">
         <div style="margin-bottom: 20px;">
-            <input class="fp-input-celular" id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;" pattern="-?[0-9]*(\.[0-9]+)?">
+            <input id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;">
         </div>
         <div style="margin-bottom: 20px;">
-            <input class="fp-input-email" id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
+            <input id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
         </div>
         <div>
           <button class="fp-confirm">Confirmar</button>
@@ -82,10 +108,10 @@
     <div style="max-width: 500px; text-align: center; margin: auto;">
       <form class="form-confirm">
         <div style="margin-bottom: 20px;">
-            <input class="fp-input-celular" id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;" pattern="-?[0-9]*(\.[0-9]+)?">
+            <input id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;"> <!--   pattern="-?[0-9]*(\.[0-9]+)?"> -->
         </div>
         <div style="margin-bottom: 20px;">
-            <input class="fp-input-email" id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
+            <input id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
         </div>
         <div>
           <button class="fp-confirm">Confirmar</button>
@@ -570,7 +596,42 @@
           <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-seguro></simulador-seguro>
-          </section>          
+          </section>     
+          
+          <section id="page-erro" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+              <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                  <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                      <br>
+                      <div class="mdl-card__supporting-text div_titulo_card">
+                          Ops...
+                      </div>                      
+                      <br>
+                      <div class="mdl-card__supporting-text div_mensagem">
+                        <p class="div_mensagem">Parece que houve um problema na identificação de seus dados.</p>
+                        <p class="div_mensagem">Mas não se preocupe!</p>
+                        <p class="div_mensagem">Por favor envie um e-mail para <b>contato@maisfuturo.com.br</b>, informe o erro e aguarde que resolveremos tudo rapidinho para você!</p>
+                        <p class="div_mensagem"><div id="datetimenow"></div></p>                        
+                        <p class="div_mensagem">Login: {{ email logado }}</p>
+                      </div>                      
+                      <!-- <div class="mdl-card__supporting-text div_mensagem">
+                          Houve um problema na identificação de seus dados pelo aplicativo.
+                      </div>
+                      <div class="mdl-card__supporting-text div_mensagem">
+                          Mas não se preocupe!
+                      </div>
+                      <div class="mdl-card__supporting-text div_mensagem">
+                          Por favor envie um e-mail para contato@contato.com.br, informe o erro abaixo e aguarde que resolveremos tudo rapidinho para você!
+                      </div>
+                      <div class="mdl-card__supporting-text div_mensagem">
+                          Data/Hora: __________
+                      </div>
+                      <div class="mdl-card__supporting-text div_mensagem">
+                          Login: xxxxx@xxxx.com.br
+                      </div>                     -->
+                  </div>
+              </div>
+          </section>
 
           <!-- Show a single post with comments -->
           <section id="page-post" class="mdl-grid fp-content" style="display: none;">
@@ -708,10 +769,6 @@
                 </div>
               </div>
             </div>
-          </section>
-
-          <section id="page-simulador" class="mdl-grid fp-content" style="display: none;">
-            <p>Simulador</p>
           </section>
 
     <!-- Toast -->

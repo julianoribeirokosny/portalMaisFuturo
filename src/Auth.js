@@ -22,6 +22,7 @@ import 'firebase/auth';
 import Router from './Router';
 import page from 'page';
 import {Utils} from './Utils';
+import VMasker from 'vanilla-masker';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -60,6 +61,11 @@ export default class Auth {
     this.formConfirm = $('.form-confirm')
     this.confirmButton = $('.fp-confirm')
 
+    let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+    var celular = document.querySelector('#celular');    
+    VMasker(celular).maskPattern(celularMask[0]);
+    celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
+
     // Configure Firebase UI.
     this.configureFirebaseUi();
 
@@ -78,7 +84,7 @@ export default class Auth {
     this.updateAll.click(() => this.updateAllAccounts());
 
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
-
+    
     this.confirmButton.click(() => this.confirmEmailFone());
   }
 
@@ -249,6 +255,8 @@ export default class Auth {
   } 
 
   confirmEmailFone() {
+    console.log('celular',this.formConfirm[0].elements.celular)
+
     if(this.formConfirm[0].elements.celular.validity.valid && this.formConfirm[0].elements.email.validity.valid) {
       let celular = this.formConfirm[0].elements.celular.value      
       let email = this.formConfirm[0].elements.email.value
@@ -270,5 +278,14 @@ export default class Auth {
   validaEmail(email) {
     //implemetar metodo firebase
     return false
+  }
+
+  inputHandler(masks, max, event) {
+    var c = event.target;
+    var v = c.value.replace(/\D/g, '');
+    var m = c.value.length > max ? 1 : 0;
+    VMasker(c).unMask();
+    VMasker(c).maskPattern(masks[m]);
+    c.value = VMasker.toPattern(v, masks[m]);
   }
 };

@@ -39,7 +39,8 @@ export default class Router {
     });
     page('/home', async () => {
       if (await verificaPrimeiroLogin()) {
-        this.displayPage('primeiro-login');
+        //this.displayPage('primeiro-login');
+        this.displayPage('erro');
       } else {
         showHome();       
         this.displayPage('home', true);        
@@ -59,6 +60,9 @@ export default class Router {
     });    
     page('/confirmacao-dados', () => {
       this.displayPage('confirmacao-dados');      
+    });
+    page('/erro', () => {
+      this.displayPage('erro');
     });
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
