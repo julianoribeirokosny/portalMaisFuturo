@@ -20,7 +20,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 
 /**
- * Handles saving the user's data to the store and displaying privacy settings to new users.
+ * Handles saving the user's data to the store and displaying TermoServico settings to new users.
  */
 export default class AuthData {
   /**
@@ -28,9 +28,9 @@ export default class AuthData {
    * Binds the auth related UI components and handles the auth flow.
    * @constructor
    */
-  constructor(firebaseHelper, privacySettings) {
+  constructor(firebaseHelper, termoServicoSettings) {
     this.firebaseHelper = firebaseHelper;
-    this.privacySettings = privacySettings;
+    this.termoServicoSettings = termoServicoSettings;
 
     // Firebase SDK
     this.auth = firebase.auth();
@@ -49,11 +49,11 @@ export default class AuthData {
   async onAuthStateChanged(user) {
     if (user) {
       this.firebaseHelper.updatePublicProfile();
-      const snapshot = await this.firebaseHelper.getPrivacySettings(user.uid);
+      const snapshot = await this.firebaseHelper.getTermoServicoSettings(user.uid);
       const settings = snapshot.val();
-      // display privacy modal if there are no privacy preferences
+      // display TermoServico modal if there are no TermoServico preferences
       if (!settings) {
-        this.privacySettings.showPrivacyDialog();
+        this.termoServicoSettings.showTermoServicoDialog();
       } else if (settings.content === true) {
         // enable upload buttons
         this.uploadButton.prop('disabled', false);

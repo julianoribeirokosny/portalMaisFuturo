@@ -22,6 +22,7 @@ import 'firebase/auth';
 import Router from './Router';
 import page from 'page';
 import {Utils} from './Utils';
+import FirebaseHelper from './FirebaseHelper';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -43,8 +44,9 @@ export default class Auth {
   constructor() {
     // Firebase SDK
     this.auth = firebase.auth();
-        this.auth.languageCode = 'pt-BR';
+    this.auth.languageCode = 'pt-BR';
     this._waitForAuthPromiseResolver = new $.Deferred();
+    this.firebaseHelper = new FirebaseHelper();
 
     // Pointers to DOM Elements
     const signedInUserContainer = $('.fp-signed-in-user-container');
@@ -58,7 +60,8 @@ export default class Auth {
     this.mobileUploadButton = $('button#add-floating');
     this.preConsentCheckbox = $('#fp-pre-consent');
     this.formConfirm = $('.form-confirm')
-    this.confirmButton = $('.fp-confirm')
+    this.confirmDadosButton = $('.fp-confirm-dados')
+    this.avisoValidacaoButton = $('.fp-aviso-validacao')
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -76,10 +79,15 @@ export default class Auth {
     this.signOutButton.click(() => this.signOut());
     this.deleteAccountButton.click(() => this.deleteAccount());
     this.updateAll.click(() => this.updateAllAccounts());
-
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
 
-    this.confirmButton.click(() => this.confirmEmailFone());
+    this.confirmDadosButton.click(() => this.confirmEmailFone());
+
+    this.avisoValidacaoButton.click(() => {
+      this.firebaseHelper.enviarEmailLinkValidacao()
+      page('/aviso-validacao')  
+    })
+    
   }
 
   configureFirebaseUi() {
@@ -93,11 +101,13 @@ export default class Auth {
 
     // FirebaseUI config.
     this.uiConfig = {
+      'signInSuccessUrl': '/',
       'signInFlow': signInFlow,
       'signInOptions': [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.FacebookAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        firebase.auth.PhoneAuthProvider.PROVIDER_ID
       ],
       'callbacks': {
         'uiShown': function() {
@@ -107,9 +117,7 @@ export default class Auth {
             for (var i = 0; i < IDPButtons.length; i++) {
               var button = IDPButtons[i];
               var text = button.innerText;
-              console.log('text', text, 'style', button.style);
               if (text.indexOf('Fazer login com o e-mail') >= 0) {
-                console.log('mudando cor');
                 button.style.cssText= "background-color: rgba(240,248,255, 0.2);"
               }
             }
@@ -133,7 +141,6 @@ export default class Auth {
    * "Sign-In" button if the user isn't signed-in.
    */
   onAuthStateChanged(user) {
-
     if (Utils.isSupportedNotification()) {
       console.log('Push suportado!');
     } else {
@@ -145,34 +152,19 @@ export default class Auth {
       Router.reloadPage();
     }
 
-    const isIos = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      return /iphone|ipad|ipod/.test( userAgent );
-    }
-    // Detects if device is in standalone mode
-    let isInStandaloneMode
-    if (isIos()) {
-      isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+    //verifica se App já está instalado
+    let appInstalado = Utils.validaAppInstalado()
+
+    const div_install = document.querySelector('#div-install');
+    if (!appInstalado) {
+      div_install.style.display = 'block';   
     } else {
-      isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+      div_install.style.display = 'none';   
     }
-
-    const install_button = document.querySelector('#bt-install');
-    const div_prevdigi = document.querySelector('#div-prevdigi');
-
-    //const div_termouso = document.querySelector('#div-termouso');    
 
     this._waitForAuthPromiseResolver.resolve();
     document.body.classList.remove('fp-auth-state-unknown');
     if (!user) {
-      //if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-      if (isInStandaloneMode) {
-        install_button.style.display = 'none';   
-        div_prevdigi.style.display = 'block';
-        //div_termouso.style.display = 'block';              
-      } else {
-        install_button.style.display = 'block';  
-      }
       this.userId = null;
       this.signedInUserAvatar.css('background-image', '');
       this.firebaseUi.start('#firebaseui-auth-container', this.uiConfig);
@@ -180,20 +172,14 @@ export default class Auth {
       document.body.classList.add('fp-signed-out');
       Auth.disableAdminMode();
     } else {
-      //if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {      
-      if (isInStandaloneMode) {  
-        this.toggleAdminMode();
-        install_button.style.display = 'none';
-        document.body.classList.remove('fp-signed-out');
-        document.body.classList.add('fp-signed-in');
-        this.userId = user.uid;
-        this.signedInUserAvatar.css('background-image',
-            `url("${Utils.addSizeToGoogleProfilePic(user.photoURL) || '/images/silhouette.jpg'}")`);
-        this.signedInUsername.text(user.displayName || 'Anonymous');
-        this.usernameLink.attr('href', `/user/${user.uid}`);        
-      } else {
-        install_button.style.display = 'block';        
-      }
+      this.toggleAdminMode();
+      document.body.classList.remove('fp-signed-out');
+      document.body.classList.add('fp-signed-in');
+      this.userId = user.uid;
+      this.signedInUserAvatar.css('background-image',
+          `url("${Utils.addSizeToGoogleProfilePic(user.photoURL) || '/images/silhouette.jpg'}")`);
+      this.signedInUsername.text(user.displayName || 'Anonymous');
+      this.usernameLink.attr('href', `/user/${user.uid}`);   
     }
   }
 
@@ -244,31 +230,22 @@ export default class Auth {
   }
 
   signOut() {
-    this.auth.signOut();
-    page('/');
+    this.auth.signOut(); 
+    page('/signout');
   } 
 
-  confirmEmailFone() {
-    if(this.formConfirm[0].elements.celular.validity.valid && this.formConfirm[0].elements.email.validity.valid) {
-      let celular = this.formConfirm[0].elements.celular.value      
-      let email = this.formConfirm[0].elements.email.value
-      if(this.validaCelular(celular)) {
-        page('/home');
-      } else if (this.validaEmail(email)) {
-        page('/home');
-      } else {
-        page('/confirmacao-dados');
-      }
-    }      
+  async confirmEmailFone() {
+    let celular = $('.fp-input-celular').val()
+    let emailAlternativo = $('.fp-input-email').val()
+    if (emailAlternativo === firebase.auth().currentUser.email) {
+      alert('O e-mail alternativo não pode ser igual ao e-mail de login do aplicativo.')
+    } else { 
+      //um usuário criado pode ter 1 ou mais participações!
+      let listaChaves = await this.firebaseHelper.getUsuarioListaParticipantes(firebase.auth().currentUser)
+      this.firebaseHelper.gravaDadosPrimeiroLogin(firebase.auth().currentUser.uid, celular, emailAlternativo, listaChaves, firebase.auth().currentUser.email)
+      this.firebaseHelper.enviarEmailLinkValidacao()
+      page('/aviso-validacao')  
+    }
   }  
 
-  validaCelular(celular) {
-    //implemetar metodo firebase
-    return false
-  }
-
-  validaEmail(email) {
-    //implemetar metodo firebase
-    return false
-  }
 };

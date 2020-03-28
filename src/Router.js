@@ -4,6 +4,7 @@ import $ from 'jquery';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import {MaterialUtils} from './Utils';
+import {Utils} from './Utils';
 import page from 'page';
 
 /**
@@ -15,7 +16,8 @@ export default class Router {
    * @constructor
    */
   constructor(auth) {
-    this.auth = auth;
+    this.authCl = auth
+    this.auth = firebase.auth()
 
     // Dom elements.
     this.pagesElements = $('[id^=page-]');
@@ -27,6 +29,7 @@ export default class Router {
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
     const verificaPrimeiroLogin = async () => (await loadComponents).home.verificaPrimeiroLogin();
+    const aguardaValidaLinkPrimeiroLogin = async () => (await loadComponents).home.aguardaValidaLinkPrimeiroLogin();
     //const clearFeed = async () => (await loadComponents).feed.clear();
 
     // Configuring middlwares.
@@ -34,8 +37,12 @@ export default class Router {
 
     // Configuring routes.
     page('/', () => {
-      this.displayPage('splash');
-      this.redirectHomeIfSignedIn(); 
+      if (Utils.validaAppInstalado()) {
+        this.displayPage('splash-login');
+        this.redirectHomeIfSignedIn();  
+      } else { 
+        this.displayPage('splash-instalacao');
+      }
     });
     page('/home', async () => {
       if (await verificaPrimeiroLogin()) {
@@ -45,6 +52,9 @@ export default class Router {
         this.displayPage('home', true);        
       }
     });    
+    page('/signout', () => {
+      this.displayPage('splash-login');
+    });
     page('/about', () => {
       this.displayPage('about');
     });
@@ -57,12 +67,21 @@ export default class Router {
     page('/simulador-seguro', () => {
       this.displayPage('simulador-seguro');
     });    
-    page('/confirmacao-dados', () => {
-      this.displayPage('confirmacao-dados');      
+    page('/aviso-validacao', () => {
+      this.displayPage('aviso-validacao')
+      let time = new Date().getTime()
+      aguardaValidaLinkPrimeiroLogin()
     });
+    
+    page('/erro', () => {
+      this.displayPage('erro');
+    })
+    
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
-    page('*', () => page('/'));
+    page('*', () => {
+      page('/')
+    });
     // Start routing.
     page();
   }
@@ -73,18 +92,11 @@ export default class Router {
    * (para o caso do usuário não estar logado)
    * A "page" é o elemento com o ID "page-<id>" na DOM.
    */
-  async displayPage(pageId, onlyAuthed) {
-    if (onlyAuthed) { 
-      await this.auth.waitForAuth;
-      if (!firebase.auth().currentUser) {
-        return page('/');
-      }
-    }
-
+  async displayPage(pageId) {
     this.pagesElements.each((index, element) => {
       if (element.id === 'page-' + pageId) {  
         $('#'+element.id).show()
-      } else if (element.id === 'page-splash' && onlyAuthed) {
+      } else if (element.id === 'page-splash-login') {
         $(element).fadeOut(1000);
         $('#'+element.id).fadeOut(1000);
       } else {
@@ -102,21 +114,7 @@ export default class Router {
    */
   redirectHomeIfSignedIn() {
     if (firebase.auth().currentUser) {
-      const isIos = () => {
-        const userAgent = window.navigator.userAgent.toLowerCase();
-        return /iphone|ipad|ipod/.test( userAgent );
-      }
-      // Detects if device is in standalone mode
-      let isInStandaloneMode
-      if (isIos()) {
-        isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-      } else {
-        isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
-      }
-      //if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {      
-      if (isInStandaloneMode) {
         page('/home');
-      }
     }
   }
 
@@ -150,6 +148,5 @@ export default class Router {
     $(`[href="${canonicalPath}"]`).addClass('is-active');
     next();
   }
-
 
 };

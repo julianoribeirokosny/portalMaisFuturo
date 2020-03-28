@@ -108,7 +108,7 @@ async function removeBadTokens(response, tokens) {
       if (error.code === 'messaging/invalid-registration-token' ||
           error.code === 'messaging/registration-token-not-registered') {
         console.log('The following token is not registered anymore', tokens[index]);
-        tokensToRemove[`/people/${followedUid}/notificationTokens/${tokens[index]}`] = null;
+        tokensToRemove[`/login/${followedUid}/notificationTokens/${tokens[index]}`] = null;
       } else {
         console.error('Failure sending notification to', tokens[index], error);
       }

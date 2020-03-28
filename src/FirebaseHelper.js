@@ -146,7 +146,7 @@ export default class FirebaseHelper {
    * If provided we'll only listen to posts that were posted after `latestPostId`.
    */
   subscribeToUserFeed(uid, callback, latestPostId) {
-    return this._subscribeToFeed(`/people/${uid}/posts`, callback,
+    return this._subscribeToFeed(`/login/${uid}/posts`, callback,
         latestPostId, true);
   }
 
@@ -170,7 +170,7 @@ export default class FirebaseHelper {
    * `null` if there is no next page.
    */
   getUserFeedPosts(uid) {
-    return this._getPaginatedFeed(`/people/${uid}/posts`,
+    return this._getPaginatedFeed(`/login/${uid}/posts`,
         FirebaseHelper.USER_PAGE_POSTS_PAGE_SIZE, null, true);
   }
 
@@ -282,12 +282,12 @@ export default class FirebaseHelper {
    */
   startHomeFeedLiveUpdaters() {
     // Make sure we listen on each followed people's posts.
-    const followingRef = this.database.ref(`/people/${this.auth.currentUser.uid}/following`);
+    const followingRef = this.database.ref(`/login/${this.auth.currentUser.uid}/following`);
     this.firebaseRefs.push(followingRef);
     followingRef.on('child_added', (followingData) => {
       // Start listening the followed user's posts to populate the home feed.
       const followedUid = followingData.key;
-      let followedUserPostsRef = this.database.ref(`/people/${followedUid}/posts`);
+      let followedUserPostsRef = this.database.ref(`/login/${followedUid}/posts`);
       if (followingData.val() instanceof String) {
         followedUserPostsRef = followedUserPostsRef.orderByKey().startAt(followingData.val());
       }
@@ -296,7 +296,7 @@ export default class FirebaseHelper {
         if (postData.key !== followingData.val()) {
           const updates = {};
           updates[`/feed/${this.auth.currentUser.uid}/${postData.key}`] = true;
-          updates[`/people/${this.auth.currentUser.uid}/following/${followedUid}`] = postData.key;
+          updates[`/login/${this.auth.currentUser.uid}/following/${followedUid}`] = postData.key;
           this.database.ref().update(updates);
         }
       });
@@ -305,7 +305,7 @@ export default class FirebaseHelper {
     followingRef.on('child_removed', (followingData) => {
       // Stop listening the followed user's posts to populate the home feed.
       const followedUserId = followingData.key;
-      this.database.ref(`/people/${followedUserId}/posts`).off();
+      this.database.ref(`/login/${followedUserId}/posts`).off();
     });
   }
 
@@ -314,7 +314,7 @@ export default class FirebaseHelper {
    */
   updateHomeFeeds() {
     // Make sure we listen on each followed people's posts.
-    const followingRef = this.database.ref(`/people/${this.auth.currentUser.uid}/following`);
+    const followingRef = this.database.ref(`/login/${this.auth.currentUser.uid}/following`);
     return followingRef.once('value').then((followingData) => {
       // Start listening the followed user's posts to populate the home feed.
       const following = followingData.val();
@@ -322,7 +322,7 @@ export default class FirebaseHelper {
         return;
       }
       const updateOperations = Object.keys(following).map((followedUid) => {
-        let followedUserPostsRef = this.database.ref(`/people/${followedUid}/posts`);
+        let followedUserPostsRef = this.database.ref(`/login/${followedUid}/posts`);
         const lastSyncedPostId = following[followedUid];
         if (lastSyncedPostId instanceof String) {
           followedUserPostsRef = followedUserPostsRef.orderByKey().startAt(lastSyncedPostId);
@@ -335,7 +335,7 @@ export default class FirebaseHelper {
           Object.keys(postData.val()).forEach((postId) => {
             if (postId !== lastSyncedPostId) {
               updates[`/feed/${this.auth.currentUser.uid}/${postId}`] = true;
-              updates[`/people/${this.auth.currentUser.uid}/following/${followedUid}`] = postId;
+              updates[`/login/${this.auth.currentUser.uid}/following/${followedUid}`] = postId;
             }
           });
           return this.database.ref().update(updates);
@@ -374,10 +374,10 @@ export default class FirebaseHelper {
    */
   searchUsers(searchString, maxResults) {
     searchString = latinize(searchString).toLowerCase();
-    const query = this.database.ref('/people')
+    const query = this.database.ref('/login')
         .orderByChild('_search_index/full_name').startAt(searchString)
         .limitToFirst(maxResults).once('value');
-    const reversedQuery = this.database.ref('/people')
+    const reversedQuery = this.database.ref('/login')
         .orderByChild('_search_index/reversed_full_name').startAt(searchString)
         .limitToFirst(maxResults).once('value');
     return Promise.all([query, reversedQuery]).then((results) => {
@@ -430,24 +430,16 @@ export default class FirebaseHelper {
       console.error(e);
     }
 
-    this.getPrivacySettings(user.uid).then((snapshot) => {
-      let socialEnabled = false;
-      if (snapshot.val() !== null) {
-        socialEnabled = snapshot.val().social;
-      }
-
+    this.getTermoServicoSettings(user.uid).then((snapshot) => {
       const updateData = {
         profile_picture: imageUrl || null,
         full_name: displayName,
       };
-
-      if (socialEnabled) {
-        updateData._search_index = {
-          full_name: searchFullName,
-          reversed_full_name: searchReversedFullName,
-        };
+      updateData._search_index = {
+        full_name: searchFullName,
+        reversed_full_name: searchReversedFullName,
       };
-      return this.database.ref(`/people/${user.uid}`).update(updateData).then(() => {
+      return this.database.ref(`/login/${user.uid}`).update(updateData).then(() => {
         console.log('Public profile updated.');
       });
     });
@@ -461,19 +453,19 @@ export default class FirebaseHelper {
   }
 
   /**
-   * Fetches the user's privacy settings.
+   * Fetches the user's TermoServico settings.
    */
-  getPrivacySettings(uid) {
-    return this.database.ref(`/privacy/${uid}`).once('value');
+  getTermoServicoSettings(uid) {
+    return this.database.ref(`/login/termo_servico/${uid}`).once('value');
   }
 
-  setPrivacySettings(uid, settings) {
-    const uri = `/privacy/${uid}`;
+  setTermoServicoSettings(uid, settings) {
+    const uri = `/login/termo_servico/${uid}`;
     this.database.ref(uri).set(settings);
   }
 
   removeFromSearch(uid) {
-    this.database.ref(`people/${uid}/_search_index`).remove();
+    this.database.ref(`login/${uid}/_search_index`).remove();
   }
 
   /**
@@ -589,7 +581,7 @@ export default class FirebaseHelper {
           profile_picture: this.auth.currentUser.photoURL || null,
         },
       };
-      update[`/people/${this.auth.currentUser.uid}/posts/${newPostKey}`] = true;
+      update[`/login/${this.auth.currentUser.uid}/posts/${newPostKey}`] = true;
       update[`/feed/${this.auth.currentUser.uid}/${newPostKey}`] = true;
       return this.database.ref().update(update).then(() => newPostKey);
     });
@@ -603,7 +595,7 @@ export default class FirebaseHelper {
    */
   toggleFollowUser(followedUserId, follow) {
     // Add or remove posts to the user's home feed.
-    return this.database.ref(`/people/${followedUserId}/posts`).once('value').then(
+    return this.database.ref(`/login/${followedUserId}/posts`).once('value').then(
         (data) => {
           const updateData = {};
           let lastPostId = true;
@@ -615,7 +607,7 @@ export default class FirebaseHelper {
           });
 
           // Add/remove followed user to the 'following' list.
-          updateData[`/people/${this.auth.currentUser.uid}/following/${followedUserId}`] =
+          updateData[`/login/${this.auth.currentUser.uid}/following/${followedUserId}`] =
               follow ? lastPostId : null;
 
           // Add/remove signed-in user to the list of followers.
@@ -642,7 +634,7 @@ export default class FirebaseHelper {
    */
   registerToFollowStatusUpdate(userId, callback) {
     const followStatusRef =
-        this.database.ref(`/people/${this.auth.currentUser.uid}/following/${userId}`);
+        this.database.ref(`/login/${this.auth.currentUser.uid}/following/${userId}`);
     followStatusRef.on('value', callback);
     this.firebaseRefs.push(followStatusRef);
   }
@@ -661,7 +653,7 @@ export default class FirebaseHelper {
    * Enables or disables the notifications for that user.
    */
   toggleNotificationEnabled(checked) {
-    return this.database.ref(`/people/${this.auth.currentUser.uid}/notificationEnabled`)
+    return this.database.ref(`/login/${this.auth.currentUser.uid}/notificationEnabled`)
         .set(checked ? checked : null);
   }
 
@@ -669,7 +661,7 @@ export default class FirebaseHelper {
    * Saves the given notification token.
    */
   saveNotificationToken(token) {
-    return this.database.ref(`/people/${this.auth.currentUser.uid}/notificationTokens/${token}`)
+    return this.database.ref(`/login/${this.auth.currentUser.uid}/notificationTokens/${token}`)
         .set(true);
   }
 
@@ -678,7 +670,7 @@ export default class FirebaseHelper {
    */
   registerToNotificationEnabledStatusUpdate(callback) {
     const followStatusRef =
-        this.database.ref(`/people/${this.auth.currentUser.uid}/notificationEnabled`);
+        this.database.ref(`/login/${this.auth.currentUser.uid}/notificationEnabled`);
     followStatusRef.on('value', callback);
     this.firebaseRefs.push(followStatusRef);
   }
@@ -687,7 +679,7 @@ export default class FirebaseHelper {
    * Load a single user profile information
    */
   loadUserProfile(uid) {
-    return this.database.ref(`/people/${uid}`).once('value');
+    return this.database.ref(`/login/${uid}`).once('value');
   }
 
   /**
@@ -725,7 +717,7 @@ export default class FirebaseHelper {
    * Listens to updates on the followed people of a person and calls the callback with its count.
    */
   registerForFollowingCount(uid, followingCallback) {
-    const followingRef = this.database.ref(`/people/${uid}/following`);
+    const followingRef = this.database.ref(`/login/${uid}/following`);
     followingRef.on('value', (data) => followingCallback(data.numChildren()));
     this.firebaseRefs.push(followingRef);
   }
@@ -743,7 +735,7 @@ export default class FirebaseHelper {
    * Fetch the list of followed people's profile.
    */
   getFollowingProfiles(uid) {
-    return this.database.ref(`/people/${uid}/following`).once('value').then((data) => {
+    return this.database.ref(`/login/${uid}/following`).once('value').then((data) => {
       if (data.val()) {
         const followingUids = Object.keys(data.val());
         const fetchProfileDetailsOperations = followingUids.map(
@@ -766,7 +758,7 @@ export default class FirebaseHelper {
    * Listens to updates on the user's posts and calls the callback with user posts counts.
    */
   registerForPostsCount(uid, postsCallback) {
-    const userPostsRef = this.database.ref(`/people/${uid}/posts`);
+    const userPostsRef = this.database.ref(`/login/${uid}/posts`);
     userPostsRef.on('value', (data) => postsCallback(data.numChildren()));
     this.firebaseRefs.push(userPostsRef);
   }
@@ -778,7 +770,7 @@ export default class FirebaseHelper {
   deletePost(postId, picStorageUri, thumbStorageUri) {
     console.log(`Deleting ${postId}`);
     const updateObj = {};
-    updateObj[`/people/${this.auth.currentUser.uid}/posts/${postId}`] = null;
+    updateObj[`/login/${this.auth.currentUser.uid}/posts/${postId}`] = null;
     updateObj[`/comments/${postId}`] = null;
     updateObj[`/likes/${postId}`] = null;
     updateObj[`/posts/${postId}`] = null;
@@ -833,13 +825,15 @@ export default class FirebaseHelper {
    * Escuta por alterações na Home
    */
   registerForHomeUpdate(updateCallback) {
-    let ref = this.database.ref('home');
+    let ref = this.database.ref('settings/home');
     return ref.once('value').then((home) => {
       home.forEach((itemHome) => {
         if (itemHome.val().hasOwnProperty('vigente')) {
-          ref = this.database.ref('home/'+itemHome.key+'/vigente');
+          ref = this.database.ref('settings/home/'+itemHome.key+'/vigente');
           //liga listener do Firebase
-          ref.on('value', (vigente) => updateCallback(itemHome.key, vigente.val()))
+          ref.on('value', (vigente) => {
+            updateCallback(itemHome.key, vigente.val())
+          })
           this.firebaseRefs.push(ref);
         }
       })
@@ -848,16 +842,18 @@ export default class FirebaseHelper {
   }
 
   /**
-   * Escuta por alterações na Home
+   * Escuta por alterações em usuarios
   */
-  registerForUserUpdate(uid, updateCallback) {
-    let ref = this.database.ref('usuarios/'+uid)  
+  registerForUserUpdate(chave, updateCallback) {
+    let ref = this.database.ref('usuarios/'+chave)  
     return ref.once('value').then((usr) => {
       usr.forEach((itemUsr) => {
         if (itemUsr.val().hasOwnProperty('vigente')) {
-          ref = this.database.ref(`usuarios/${uid}/${itemUsr.key}/vigente`);
+          ref = this.database.ref(`usuarios/${chave}/${itemUsr.key}/vigente`);
           //liga listener do Firebase
-          ref.on('value', (vigente) => updateCallback(itemUsr.key, vigente.val()))
+          ref.on('value', (vigente) => {
+            updateCallback(itemUsr.key, vigente.val())
+          })
           this.firebaseRefs.push(ref);
         }
       })
@@ -865,7 +861,7 @@ export default class FirebaseHelper {
   }
 
   getHome() {
-    let ref = this.database.ref('home');
+    let ref = this.database.ref('settings/home');
     return ref.once('value').then((data) => {
       if (!data.val()) {
         return null;
@@ -873,10 +869,10 @@ export default class FirebaseHelper {
       //exclui campanhas fora de vigência
       if (data.campanhas && JSON.Object(data.campanhas).length > 0) {
         let campanhas = data.campanhas
-        campanhas.forEach((campanha) => {
+        campanhas.forEach((usr_campanha) => {
           let dataHoje = Utils.dateFormat(new Date());
           if (dataHoje < campanhas.data_inicio || dataHoje > campanhas.data_fim) {
-            delete data.campanhas[campanha];
+            delete data.campanhas[usr_campanha];
           }
         })
       }
@@ -885,19 +881,8 @@ export default class FirebaseHelper {
 
   }
 
-  getUser(uid) {
-    let ref = this.database.ref('usuarios/'+uid);
-    return ref.once('value').then((data) => {    
-      if (data.val()) {
-        return data.val()
-      } else {
-        return null
-      }
-    })
-  }
-
   getSegmento(segmento) {
-    let ref = this.database.ref('segmento/'+segmento);
+    let ref = this.database.ref('settings/segmentos/'+segmento);
     return ref.once('value').then((data) => {    
       if (data.val()) {
         return data.val()
@@ -908,8 +893,89 @@ export default class FirebaseHelper {
   }
 
   removerCampanha(uid, nome) {
-    let ref = this.database.ref(`usuarios/${uid}/campanhas/${nome}`)
+    let ref = this.database.ref(`usuarios/${uid}/usr_campanhas/${nome}`)
     ref.update({ativo: false})
   }
 
+  gravaDadosPrimeiroLogin(uid, celular, emailAlternativo, listaChaves, emailPrincipal) {
+    let ref = this.database.ref(`login/${uid}`)
+    let chavePrincipal = Object.keys(listaChaves)[0]  //pega a primeira key com a chave
+    ref.update({celular: celular, emailAlternativo: emailAlternativo, chavePrincipal: chavePrincipal, listaChaves: listaChaves, emailPrincipal: emailPrincipal})
+  }
+
+  gravaEfetivacaoPrimeiroLogin(uid) {
+    let dataHoje = Utils.dateFormat(new Date())
+    let ref = this.database.ref(`login/${uid}`)    
+    ref.update({data_primeiro_login: dataHoje})
+  }
+
+  validaRegistroPrimeiroLogin(uid) {
+    let ref = this.database.ref(`login/${uid}/data_primeiro_login`)
+    return ref.once('value', (data) => {
+      return data.val()!==null
+    })
+  }
+
+  enviarEmailLinkValidacao() {
+    let actionCodeSettings = {
+      url: 'http://localhost:5000/home',
+      handleCodeInApp: true //,
+      // When multiple custom dynamic link domains are defined, specify which
+      // one to use.
+      //dynamicLinkDomain: "example.page.link"
+    };
+    firebase.auth().currentUser.sendEmailVerification(actionCodeSettings).then(()=> console.log('Email Enviado'))
+  }
+
+  async getUsuarioListaParticipantes(user) {
+    //busca se email do usuário está cadastrado como email conhecido de participante
+    let ref = this.database.ref('settings/primeiroLogin/listaEmailValido')
+    return ref.orderByChild('email').equalTo(user.email).once('value')
+    .then((snapshot) => {
+      if (snapshot.val()===null) {
+        return false
+      } else {
+        let listaChaves = {}
+        let i = 0  
+        snapshot.forEach((snap) => {
+          listaChaves[snap.child('chave').val()] = i
+          i++
+        })
+        return listaChaves
+      }
+    })
+  }
+
+  getUserClaims(user) {
+    return user.getIdTokenResult().then((idTokenResult) => {
+      if (!!idTokenResult.claims) {
+        return idTokenResult.claims
+      } else {
+        return null
+      }
+    })
+  }
+
+  getParticipante(chave) {
+    let ref = this.database.ref('usuarios/'+chave);
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
+  async getUsuarioChave(uid) {
+    let ref = this.database.ref(`login/${uid}/listaChaves`)
+    let snapshot = await ref.once('value')
+    let ret = null
+    snapshot.forEach((snap) => {
+      if (snap.val()===0) {
+        ret = snap.key
+      }
+    })
+    return ret
+  }
 };

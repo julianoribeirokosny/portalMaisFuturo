@@ -204,9 +204,7 @@ export default {
             this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(0)
         },
         thousands_separators(num) {
-            console.log('Num',num)
             let numero = String(num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-            console.log('Numero',numero)            
             return numero
         },
         toggleCategory(){

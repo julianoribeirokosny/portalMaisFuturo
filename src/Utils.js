@@ -154,8 +154,10 @@ export class Utils {
    * Adds a size URL query parameter to the Google profile pic URL.
    */
   static addSizeToGoogleProfilePic(url) {
-    if (url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1) {
-      return url + '?sz=150';
+    if (url && url !== '') {
+      if (url.indexOf('googleusercontent.com') !== -1 && url.indexOf('?') === -1) {
+        return url + '?sz=150';
+      }  
     }
     return url;
   }
@@ -208,6 +210,22 @@ export class Utils {
     (d.length == 1) && (d = '0' + d);
     (m.length == 1) && (m = '0' + m);
     return y + m + d;;
+  }
+
+  static validaAppInstalado() {
+    // Detects if device is in standalone mode
+    let isInStandaloneMode
+    const isIos = () => {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      return /iphone|ipad|ipod/.test( userAgent );
+    }    
+    if (isIos()) {
+      isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+    } else {
+      isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+    }
+
+    return isInStandaloneMode
   }
 
 }

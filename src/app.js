@@ -19,7 +19,6 @@ import $ from 'jquery';
 import firebase from 'firebase/app';
 import firebaseConfig from './firebase-config.json';
 import Auth from './Auth';
-import IpFilter from './IpFilter';
 import Router from './Router';
 import 'material-design-lite';
 import {Utils} from './Utils';
@@ -54,8 +53,6 @@ firebase.initializeApp(firebaseConfig.result);
 // Make firebase reachable through the console.
 window.firebase = firebase;
 
-// Starts the IP Filter.
-IpFilter.filterEuCountries();
 
 // Load the app.
 $(document).ready(() => {
@@ -83,40 +80,18 @@ Utils.startOfflineListener();
 
 //------------------------------------------------------------------------------------------------------
 // BLOCO: Instalação do APP
-const isIos = () => {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  return /iphone|ipad|ipod/.test( userAgent );
-}
-// Detects if device is in standalone mode
-let isInStandaloneMode
-if (isIos()) {
-  isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-} else {
-  isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
-}
-
 window.deferredPrompt = {};
 
 // get button with id
 const install_button = document.querySelector('#bt-install');
-//const continue_button = document.querySelector('#bt-continue');
+const continue_button = document.querySelector('#bt-continue');
+const div_install = document.querySelector('#div-install');
 const div_continue = document.querySelector('#div-continue');
-const div_prevdigi = document.querySelector('#div-prevdigi');
-//const div_termouso = document.querySelector('#div-termouso');
 
-console.log("Setando beforeinstallprompt");
 // if the app can be installed emit beforeinstallprompt
 window.addEventListener('beforeinstallprompt', e => {
-  // this event does not fire if the application is already installed
-  // then your button still hidden ;)
-  // var accordion = document.querySelector('#my-accordion');
-  // accordion.addEventListener('toggle', function(e) {
-  //   console.log('Accordion toggled. State:', e.detail.state, 'Source:', e.detail.tab);
-  // });
-
   div_continue.style.display = 'none';
-  div_prevdigi.style.display = 'none';
-  //div_termouso.style.display = 'none';  
+  div_install.style.display = 'block';
 
   // prevent default event
   e.preventDefault();
@@ -130,9 +105,8 @@ window.addEventListener('beforeinstallprompt', e => {
     window.deferredPrompt.userChoice.then(choiceResult => {
       if (choiceResult.outcome === 'accepted') {
         // user accept the prompt
-        install_button.style.display = 'none';
+        div_install.style.display = 'none';
         div_continue.style.display = 'block';
-        //continue_button.style.display = 'block';
       } else {
         console.log('User dismissed the prompt');
       }
@@ -156,31 +130,17 @@ window.addEventListener('beforeinstallprompt', e => {
     });
   });
 
-  // wait for click install button by user
-  /*continue_button.addEventListener('click', e => {
-    install_button.style.display = 'none';
-    div_continue.style.display = 'none';
-    // habilita áreas de login
-    div_prevdigi.style.display = 'block';
-    //div_termouso.style.display = 'block';
-  }); */
+  continue_button.addEventListener('click', e => {
+    page('/')
+  });
 
+  install_button.addEventListener('touchstart', e => {
+    page('/')
+  });
 
 });
 
-// window.addEventListener('load', function() {  
-//   var accordion = document.querySelector('#my-accordion');
-//   accordion.addEventListener('toggle', function(e) {
-//     console.log('Accordion toggled. State:', e.detail.state, 'Source:', e.detail.tab);
-//   });
-// });
-
-// if are standalone android OR safari
-//if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
-if (isInStandaloneMode) {
-  // hidden the button
-  install_button.style.display = 'none';
-}
+install_button.style.display = Utils.validaAppInstalado() ? 'none' : 'block'
 
 // do action when finished install
 window.addEventListener('appinstalled', e => {

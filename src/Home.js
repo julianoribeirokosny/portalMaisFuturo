@@ -9,6 +9,7 @@ import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmpres
 import rentabilidade from './component/rentabilidade/rentabilidade';
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
 import page from 'page';
+import Router from './Router';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -28,8 +29,8 @@ export default class Home {
     this.firebaseHelper = firebaseHelper;    
     // Firebase SDK.
     this.auth = firebase.auth();
-    this.uid = '1234567890'
-    this.user = {}
+    this.uid = ''
+    this.participante = {}
     this.home = null
     this.data_Home = null    
     this.vueObj = null
@@ -37,41 +38,22 @@ export default class Home {
 
   async showHome() {
    
-    function mask(o, f) {
-        setTimeout(function () {
-            var v = mphone(o.value);
-            if (v != o.value) {
-                o.value = v;
-            }
-        }, 1);
+    this.auth = firebase.auth();
+    if (!this.auth.currentUser) {
+      return
     }
 
-    function mphone(v) {
-      var r = v.replace(/\D/g,"");
-      r = r.replace(/^0/,"");
-      if (r.length > 10) {
-          // 11+ digits. Format as 5+4.
-          r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/,"(0XX$1) $2-$3");
-      }
-      else if (r.length > 5) {
-          // 6..10 digits. Format as 4+4
-          r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/,"(0XX$1) $2-$3");
-      }
-      else if (r.length > 2) {
-          // 3..5 digits. Add (0XX..)
-          r = r.replace(/^(\d\d)(\d{0,5})/,"(0XX$1) $2");
-      }
-      else {
-          // 0..2 digits. Just add (0XX
-          r = r.replace(/^(\d*)/, "(0XX$1");
-      }
-      return r;
-    }
-    
-    let uid = this.uid    
     let firebaseHelper = this.firebaseHelper
-    
-    let data_Home = await this.dadosHome(uid)
+    console.log('====> usuário logado:', this.auth.currentUser)    
+
+    let chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid)
+    console.log('=====> CHAVE: ', chave)
+    if (chave===null) {
+      //return page('/erro')
+    }
+
+
+    let data_Home = await this.dadosHome(chave)
     if (data_Home===null) {
       return 
     }    
@@ -177,7 +159,7 @@ export default class Home {
           },
           removerCampanha: function(campanha) {
               campanha.ativo = false
-              firebaseHelper.removerCampanha(uid, campanha.nome)
+              firebaseHelper.removerCampanha(chave, campanha.nome)
           },
           contratarCampanha(link) {
               page(`/${link}`)
@@ -193,11 +175,11 @@ export default class Home {
     }
     
     //Escuta por alterações na home ou no usuario
-    firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home'))
-    firebaseHelper.registerForUserUpdate(uid, (item, vigente) => this.refreshHome(item, vigente, 'usuarios'))
+    firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', chave))
+    firebaseHelper.registerForUserUpdate(chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', chave))
   }
 
-  async dadosHome(uid) {
+  async dadosHome(chave) {
     //debugger;
     let homeAux = {}
 
@@ -214,17 +196,18 @@ export default class Home {
     })
 
     let p2 = new Promise((resolve, reject) => {
-      if (Object.keys(this.user).length === 0) {
-        resolve(this.firebaseHelper.getUser(uid).then((u) => {
-          if (u===null) {
+      if (Object.keys(this.participante).length === 0) {
+        resolve(this.firebaseHelper.getParticipante(chave).then((part) => {
+          console.log('====> part', part)
+          if (part===null) {
             return false
           } else {
-                this.user = u
+            this.participante = part
             return true
           }
         }))  
       } else {
-        resolve(this.user)
+        resolve(this.participante)
         return true
       }
     })
@@ -234,12 +217,15 @@ export default class Home {
         return null
       } else {
 
-        let user = this.user
-        let segmentoUsuario = await this.firebaseHelper.getSegmento(user.segmento)
+        console.log('===> home', this.home)
+        console.log('===> participante', this.participante)
+
+        let part = this.participante
+        let segmentoUsuario = await this.firebaseHelper.getSegmento(part.segmento)
 
         //Verifica se há chaves "não vigentes" ou "para o usuário específico
-        for (let u in user) {
-          if (user[u].hasOwnProperty('vigente') && !user[u].vigente) {
+        for (let u in part) {
+          if (part[u].hasOwnProperty('vigente') && !part[u].vigente) {
             if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
               homeAux[u].vigente = false
             }
@@ -250,15 +236,18 @@ export default class Home {
 
         // MERGE HOME + DADOS USUÁRIOS + SEGMENTO
         while (stringHome.indexOf('<<') >= 0) {
+
           let posIni = stringHome.indexOf('<<')
           let posFim = stringHome.indexOf('>>')
           let chave = stringHome.substring(posIni+2, posFim)
           let caminho = chave.split('.')
           let valor
 
+          console.log('===========> chave', chave)
+
           // busca chave em usuario
-          if (chave.substring(0,4) !== 'seg_') {
-            valor = user
+          if (chave.substring(0,4) === 'usr_') {
+            valor = part
             for (let i in caminho) {
               if (valor[caminho[i]]!==undefined) {
                 valor = valor[caminho[i]]
@@ -274,6 +263,10 @@ export default class Home {
                 valor = valor[caminho[i]]
               }
             }  
+          }
+
+          if (valor===undefined) {
+            valor = ''
           }
 
           if (stringHome.indexOf('<<'+ chave + '>>') < 0) {
@@ -292,15 +285,15 @@ export default class Home {
     })
   }
   
-  'refreshHome'(item, vigente, origem) {
-    return this.firebaseHelper.getUser(this.uid).then((usuario) => {
-      this.home[item].vigente = origem==='home' ? vigente : this.home[item].vigente
+  'refreshHome'(item, vigente, origem, chave) {
+    console.log('====> refreshing home')
+    return this.firebaseHelper.getParticipante(chave).then((part) => {
       if (!vigente) { //se for para desligar, não precisa avaliar critério
         this.data_Home[item].vigente = vigente 
       } else {
         if (this.data_Home[item]) {
-          if (usuario[item] && usuario[item].vigente !== undefined) {
-            if (origem==='home' && usuario[item].vigente) {
+          if (part[item] && part[item].vigente !== undefined) {
+            if (origem==='home' && part[item].vigente) {
               this.data_Home[item].vigente = vigente 
             } else if (origem==='usuarios' && this.home[item].vigente) {
               this.data_Home[item].vigente = vigente 
@@ -315,15 +308,28 @@ export default class Home {
   }
 
   async verificaPrimeiroLogin() {
-    if (Object.keys(this.user).length === 0) { //empty
-      let usr = await this.firebaseHelper.getUser(this.uid)
-      if (usr!==null) {
-        this.user = usr
-      } else {
-        return null
-      }
+    let ret = false
+    if (Object.keys(this.participante).length === 0 && this.auth.currentUser) { //empty
+      console.log('====> emailVerified', this.auth.currentUser.emailVerified)
+      let temRegistroPrimeiroLogin = await this.firebaseHelper.validaRegistroPrimeiroLogin(this.auth.currentUser.uid)
+      ret = !this.auth.currentUser.emailVerified || !temRegistroPrimeiroLogin
     }
-    return  !(this.user.hasOwnProperty('primeiro_login') && this.user.primeiro_login !== "")
+    return ret
+  }  
+
+  async aguardaValidaLinkPrimeiroLogin() {
+    if (this.auth.currentUser) {
+      //console.log('**** Não VERIFICADO')
+      var intervalId = setInterval(() => {  //Aguarda até ter a verificação
+        this.auth.currentUser.reload()
+        if (this.auth.currentUser.emailVerified) {
+          clearInterval(intervalId);
+          console.log('**** VERIFICADO!!!!!')
+          this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
+          return page('/') //joga para splash page para depois ir para a home
+        }  
+      }, 5000)
+    }
   }  
 
 }

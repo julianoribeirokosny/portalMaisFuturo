@@ -1,6 +1,6 @@
 {
   "functions": {
-    "predeploy": "npm install"
+    "predeploy": "" 
   },
   "database": {
     "rules": "database-rules.json"
