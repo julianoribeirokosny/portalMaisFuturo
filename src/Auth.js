@@ -23,6 +23,7 @@ import Router from './Router';
 import page from 'page';
 import {Utils} from './Utils';
 import FirebaseHelper from './FirebaseHelper';
+//import VMasker from 'vanilla-masker';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -62,6 +63,11 @@ export default class Auth {
     this.formConfirm = $('.form-confirm')
     this.confirmDadosButton = $('.fp-confirm-dados')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
+
+    /*let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+    var celular = document.querySelector('#celular');    
+    VMasker(celular).maskPattern(celularMask[0]);
+    celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);*/ 
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -247,5 +253,14 @@ export default class Auth {
       page('/aviso-validacao')  
     }
   }  
+
+  /*inputHandler(masks, max, event) {
+    var c = event.target;
+    var v = c.value.replace(/\D/g, '');
+    var m = c.value.length > max ? 1 : 0;
+    VMasker(c).unMask();
+    VMasker(c).maskPattern(masks[m]);
+    c.value = VMasker.toPattern(v, masks[m]);
+  } */     
 
 };

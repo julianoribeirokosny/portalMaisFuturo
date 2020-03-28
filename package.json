@@ -63,6 +63,7 @@
     "universal-ga": "^1.2.0",
     "v-mask": "^2.0.2",
     "v-money": "^0.8.1",
+    "vanilla-masker": "^1.2.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
     "vue-router": "~ 3.0",

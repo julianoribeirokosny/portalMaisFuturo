@@ -72,11 +72,9 @@ export default class Router {
       let time = new Date().getTime()
       aguardaValidaLinkPrimeiroLogin()
     });
-    
     page('/erro', () => {
       this.displayPage('erro');
     })
-    
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
     page('*', () => {
