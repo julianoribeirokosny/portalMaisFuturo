@@ -12,7 +12,10 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'resetEmailVerif
   exports.resetEmailVerified = require('./resetEmailVerified').default;
 }
 
-if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'setUserClaimsUsuario') {
-  exports.setUserClaimsUsuario = require('./setUserClaimsUsuario').default;
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'setDadosLoginUsuario') {
+  exports.setDadosLoginUsuario = require('./setDadosLoginUsuario').default;
 }
 
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'setUserClaims') {
+  exports.setUserClaims = require('./setUserClaims').default;
+}

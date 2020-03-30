@@ -16,6 +16,17 @@ const runtimeOpts = {
   memory: '2GB'
 }
 
+/*************************************************
+***********
+*********
+******
+CARGA!!!!!!!!!
+
+Carregar Atualizar lista e-mail Valido, com todas as chaves vinculadas ao CPF ou e-mail cadastrado!!!
+
+
+*/
+
 exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{plano}/data_base_carga').onWrite(
   async (change, context) => {
 

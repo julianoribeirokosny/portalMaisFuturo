@@ -28,6 +28,7 @@ export default class Router {
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
     const verificaPrimeiroLogin = async () => (await loadComponents).primeiroLogin.verificaPrimeiroLogin();
+    const telaPrimeiroLoginConfig = async () => (await loadComponents).primeiroLogin.telaPrimeiroLoginConfig();
     const aguardaValidaLinkPrimeiroLogin = async () => (await loadComponents).primeiroLogin.aguardaValidaLinkPrimeiroLogin();
 
     // Configuring middlwares.
@@ -44,6 +45,7 @@ export default class Router {
     });
     page('/home', async () => {
       if (await verificaPrimeiroLogin()) {
+        telaPrimeiroLoginConfig()
         this.displayPage('primeiro-login');
       } else {
         showHome();       
@@ -67,8 +69,10 @@ export default class Router {
     });    
     page('/aviso-validacao', () => {
       this.displayPage('aviso-validacao')
-      let time = new Date().getTime()
       aguardaValidaLinkPrimeiroLogin()
+    });
+    page('/confirmacao-dados', () => {
+      this.displayPage('confirmacao-dados')
     });
     page('/erro', () => {
       this.displayPage('erro');

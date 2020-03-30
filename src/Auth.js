@@ -23,6 +23,7 @@ import Router from './Router';
 import page from 'page';
 import {Utils} from './Utils';
 import FirebaseHelper from './FirebaseHelper';
+import PrimeiroLogin from './PrimeiroLogin';
 //import VMasker from 'vanilla-masker';
 
 /**
@@ -48,6 +49,7 @@ export default class Auth {
     this.auth.languageCode = 'pt-BR';
     this._waitForAuthPromiseResolver = new $.Deferred();
     this.firebaseHelper = new FirebaseHelper();
+    this.primeiroLogin = new PrimeiroLogin(this.firebaseHelper);
 
     // Pointers to DOM Elements
     const signedInUserContainer = $('.fp-signed-in-user-container');
@@ -86,14 +88,17 @@ export default class Auth {
     this.deleteAccountButton.click(() => this.deleteAccount());
     this.updateAll.click(() => this.updateAllAccounts());
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
-
-    this.confirmDadosButton.click(() => this.confirmEmailFone());
-
     this.avisoValidacaoButton.click(() => {
       this.firebaseHelper.enviarEmailLinkValidacao()
       page('/aviso-validacao')  
     })
-    
+    this.confirmDadosButton.click(() => {
+      let celular = $('.fp-input-celular').val()
+      let email = $('.fp-input-email').val()
+      
+      this.primeiroLogin.confirmEmailFone(celular, email);
+    });    
+
   }
 
   configureFirebaseUi() {
@@ -106,14 +111,24 @@ export default class Auth {
     }
 
     // FirebaseUI config.
+    // retirado por Leandro em 30/Mar - implementar depois:      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+
+    /*          recaptchaParameters: {
+            type: 'image', // 'audio'
+            size: 'invisible', // 'invisible' or 'compact'
+            badge: 'bottomright' //' bottomright' or 'inline' applies to invisible.
+          },
+        */
+
     this.uiConfig = {
       'signInSuccessUrl': '/',
       'signInFlow': signInFlow,
       'signInOptions': [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.FacebookAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        firebase.auth.PhoneAuthProvider.PROVIDER_ID
+        {provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+          defaultCountry: 'BR'
+        }
       ],
       'callbacks': {
         'uiShown': function() {
@@ -239,20 +254,6 @@ export default class Auth {
     this.auth.signOut(); 
     page('/signout');
   } 
-
-  async confirmEmailFone() {
-    let celular = $('.fp-input-celular').val()
-    let emailAlternativo = $('.fp-input-email').val()
-    if (emailAlternativo === firebase.auth().currentUser.email) {
-      alert('O e-mail alternativo não pode ser igual ao e-mail de login do aplicativo.')
-    } else { 
-      //um usuário criado pode ter 1 ou mais participações!
-      let listaChaves = await this.firebaseHelper.getUsuarioListaParticipantes(firebase.auth().currentUser)
-      this.firebaseHelper.gravaDadosPrimeiroLogin(firebase.auth().currentUser.uid, celular, emailAlternativo, listaChaves, firebase.auth().currentUser.email)
-      this.firebaseHelper.enviarEmailLinkValidacao()
-      page('/aviso-validacao')  
-    }
-  }  
 
   /*inputHandler(masks, max, event) {
     var c = event.target;

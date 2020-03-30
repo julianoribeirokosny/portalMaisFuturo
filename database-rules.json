@@ -15,17 +15,13 @@
       "$uid": {
         ".read": "auth.uid === $uid || auth.token.admin === true",
         ".write": "auth.uid === $uid || auth.token.admin === true",
-      },
-      // Termo  de serviço settings
-      "termo_servico": {
-        "$uid": {
-          ".write": "auth.uid === $uid || auth.token.admin === true",
-          ".read": "auth.uid === $uid || auth.token.admin === true",
+        // Termo  de serviço settings
+        "termo_servico": {
           "aprovado": {
             ".validate": "newData.isBoolean()"
           }
         }
-      }
+      }      
     },
     "settings" : {
       // estrutura básica da home
@@ -38,13 +34,14 @@
         ".read": "auth.uid !== null || auth.token.admin === true",
         ".write": "false"
       },
-      "primeiroLogin": {
-        "listaEmailValido": {
+      "primeiro_login": {
+        "lista_email_valido": {
           ".indexOn": "email",
           ".read": "auth.uid !== null || auth.token.admin === true",
           ".write": "false"
         },
-        "listaCelularValido": {
+        "lista_celular_valido": {
+          ".indexOn": "celular",
           ".read": "auth.uid !== null || auth.token.admin === true",
           ".write": "false"
         }            
@@ -55,8 +52,8 @@
       ".read": "auth.token.admin === true",
       ".write": "false",
       "$chave": {
-        ".read": "root.child('login/'+auth.uid+'/listaChaves/'+$chave).val() >= 0",
-        ".write": "root.child('login/'+auth.uid+'/listaChaves/'+$chave).val() >= 0"
+        ".read": "root.child('login/'+auth.uid+'/lista_chaves/'+$chave).val() >= 0",
+        ".write": "root.child('login/'+auth.uid+'/lista_chaves/'+$chave).val() >= 0"
       }
     },
     // Disallow all other attributes.
