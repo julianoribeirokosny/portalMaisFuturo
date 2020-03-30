@@ -48,6 +48,26 @@
   <meta name="msapplication-TileImage" content="/images/icon-144x144.png"> 
   <meta name="msapplication-TileColor" content="#3372DF">
   <meta name="msapplication-navbutton-color" content="#303F9F">  
+  <script type="text/javascript">
+      function startTime() {
+          let today = new Date();          
+          let hora = today.getHours();
+          let minuto = today.getMinutes();
+      
+          // adicione um zero na frente de números<10          
+          hora = checkTime(hora);
+          minuto = checkTime(minuto);      
+          document.getElementById('datetimenow').innerHTML= `${today.toLocaleDateString('pt-BR')} ${hora}:${minuto}`;
+          t = setTimeout('startTime()',5000);
+      }
+
+      function checkTime(i) {
+          if ( i < 10 ) {
+              i = "0" + i;
+          }
+          return i;
+      }
+  </script>
 </head>
 
 <body class="fp-auth-state-unknown">

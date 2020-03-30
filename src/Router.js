@@ -57,15 +57,18 @@ export default class Router {
     });
     page('/about', () => {
       this.displayPage('about');
-    });
-    page('/simulador-emprestimo', () => {
-      this.displayPage('simulador-emprestimo');
-    });
+    });    
     page('/rentabilidade', () => {
       this.displayPage('rentabilidade');
     });
     page('/simulador-seguro', () => {
       this.displayPage('simulador-seguro');
+    });
+    page('/simulador-emprestimo', () => {
+      this.displayPage('simulador-emprestimo');
+    });
+    page('/simulador-renda', () => {
+      this.displayPage('simulador-renda');
     });    
     page('/aviso-validacao', () => {
       this.displayPage('aviso-validacao')
