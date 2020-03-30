@@ -70,7 +70,7 @@
   </script>
 </head>
 
-<body class="fp-auth-state-unknown" onload="startTime()">
+<body class="fp-auth-state-unknown">
 
 <!-- Theatre mode viewer -->
 <div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div>
@@ -78,19 +78,41 @@
 <section id="page-primeiro-login">
   <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
   <br><br><br>
+  <div class="fp-caption">Olá, seja bem vindo!</div>
+  <div class="fp-caption3">Para tornar nosso relacionamento ainda melhor,<br> pedimos que preencha os campos abaixo:</div>
   <div class="mdl-card__supporting-text">
     <div style="max-width: 500px; text-align: center; margin: auto;">
-      <form class="form-confirm">
+      <!--form class="form-confirm"--> 
         <div style="margin-bottom: 20px;">
-            <input id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;">
+            <input class="input fp-input-celular" id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;">
         </div>
         <div style="margin-bottom: 20px;">
-            <input id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
+            <input class="input fp-input-email" id="email" name="email" placeholder="Outro e-mail de contato (opcional)" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
         </div>
         <div>
-          <button class="fp-confirm">Confirmar</button>
+          <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados">
+              <span class="mdl-color-text--white">Confirmar</span>
+          </button>
         </div>
-      </form>
+      <!--/form> -->
+    </div>      
+  </div>
+</section>
+
+<section id="page-aviso-validacao">
+  <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+  <br><br><br>
+  <div class="mdl-card__supporting-text">
+    <div style="max-width: 500px; text-align: center; margin: auto;">
+      <div class="fp-caption">Legal! Obrigado!</div> 
+      <div class="fp-caption2">Suas informações foram validadas e você receberá um e-mail de verificação com um link para confirmação do processo.</div>     
+      <div class="fp-caption2"><br>É só seguir com as orientações do e-mail e voltar aqui.</div>     
+      <div class="fp-caption2"><br>Caso não tenha recebido o e-mail de verificação, clique abaixo. Lembre-se de verificar também na caixa de Spam, ok?</div>           
+      <div style="padding-top: 45px;">
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-aviso-validacao"  style="margin: 0 auto;">
+          <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
+        </button>
+      </div>        
     </div>      
   </div>
 </section>
@@ -102,10 +124,10 @@
     <div style="max-width: 500px; text-align: center; margin: auto;">
       <form class="form-confirm">
         <div style="margin-bottom: 20px;">
-            <input id="celular" name="celular" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;"> <!--   pattern="-?[0-9]*(\.[0-9]+)?"> -->
+            <input id="celular2" name="celular2" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;"> <!--   pattern="-?[0-9]*(\.[0-9]+)?"> -->
         </div>
         <div style="margin-bottom: 20px;">
-            <input id="email" name="email" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
+            <input id="email2" name="email2" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
         </div>
         <div>
           <button class="fp-confirm">Confirmar</button>
@@ -115,47 +137,44 @@
   </div>
 </section>
 
+<!-- Splash screen Login-->
+<section id="page-splash-login">
+  <div style="margin: 5px 0 50px 0;">
+    <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+  </div>
+  <div id="firebaseui-auth-container"></div>
+</section>
 
-<!-- Splash screen -->
-<section id="page-splash">
+
+<!-- Splash screen da Instalação -->
+<section id="page-splash-instalacao">
   <div style="margin: 5px 0 50px 0;">
     <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
   </div>
   <div style="max-width: 500px; text-align: center;">    
-    <!--div class="fp-caption" id="div-continue" style="display: none;">O aplicativo do Portal Mais Futuro foi instalado e está pronto para uso. </div-->    
-      <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="display: none; margin: 0 auto;">
+    <div id="div-install" style="display: none; text-align: center;">
+      <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="margin: 0 auto;">
         <span class="mdl-color-text--white">Instalar o aplicativo</span>
       </button>
+      <div id="div-prevdigi" style="padding-top: 20px; text-align: center;">
+        <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
+      </div>  
     </div>
-    <div id="div-continue" class="fp-signed-out-only fp-initially-hidden" style="display: none; text-align: center;">
+    <div id="div-continue" style="display: none; text-align: center;">
       <div class="fp-caption">Parabéns!</div> 
       <div class="fp-caption2">O portal foi instalado e está pronto para uso.<br> A partir de agora acesse o portal através do aplicativo instalado em seu dispositivo.</div>
-      <!--button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-continue">
-        <span class="mdl-color-text--white"></span>
-      </button-->
+      <div style="padding-top: 20px;">
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-continue">
+          <span class="mdl-color-text--white">Abrir o aplicativo</span>
+        </button>  
+      </div>
     </div>
-    <div class="fp-signed-out-only fp-initially-hidden" id="div-prevdigi" style="display: none; text-align: center;">
-      <div id="firebaseui-auth-container" class="fp-non-eu fp-signed-out-only fp-initially-hidden"></div>
-      <a class="fp-non-eu fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
-      
-    </div>
-    <div class="fp-non-eu fp-note fp-signed-out-only fp-initially-hidden" id="div-termouso" style="display: none; text-align: center;">  
+    <div class="fp-note" id="div-termouso" style="display: none; text-align: center;">  
       <label class="mdl-checkbox mdl-js-checkbox" for="fp-pre-consent">
         <input type="checkbox" id="fp-pre-consent" class="mdl-checkbox__input" checked>
         <span class="mdl-checkbox__label">Eu li e concordo com os <a href="https://fundoparana.com.br">termos de serviço</a> do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.</span>
       </label>
     </div>
-  </div>
-  <a class="fp-eu fp-initially-hidden" href="/recent">
-    <button class="fp-view-posts-button mdl-button mdl-js-button mdl-button--raised mdl-color--green-800 mdl-color-text--white">
-      View posts
-    </button>
-  </a>
-  <div class="fp-eu fp-note fp-signed-out-only fp-initially-hidden">
-    <a href="https://github.com/firebase/friendlypix-web">FriendlyPix</a> is an application aimed at showcasing the <a href="https://firebase.google.com/docs">Firebase</a> platform capabilities, and should not be used with private or sensitive information. All FriendlyPix data and inactive accounts are regularly removed. By continuing, you agree to the <a href="/terms">Terms of Service</a> and <a href="https://www.google.com/policies/privacy/">Privacy Policy</a>.
-  </div>
-  <div class="fp-eu fp-note fp-signed-out-only fp-initially-hidden">
-    Unfortunately, this hosted version of the FriendlyPix sample app is not fully available in your location (based on your IP address). You can view a limited version of the sample app, or to experience all the features, deploy your own instance. Instructions can be found on the <a href="https://github.com/firebase/friendlypix-web">GitHub repository</a>.
   </div>
 </section>
 
@@ -189,7 +208,7 @@
     </div>
   </header>
   <div  class="mdl-layout__drawer div-menu-background">
-    <a href="/" class="fp-non-eu fp-signed-out-only">
+    <a href="/" class="fp-signed-out-only">
       <button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button">
         <i class="material-icons">account_circle</i> Sign in
       </button>
@@ -230,21 +249,19 @@
   </div>
 
   <!--Modal dialog-->
-  <dialog id="privacy-dialog" class="mdl-dialog">
+  <dialog id="termo-servico-dialog" class="mdl-dialog">
     <h4 class="mdl-dialog__title">Nós protegemos sua privacidade!</h4>
     <div class="mdl-dialog__content">
       <p> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
       <form class="col s12">
         <p>
-          <input type="checkbox" name="allow-data" id="allow-data"/>
-          <label for="allow-data">
+          <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico"/>
+          <label for="allow-data-termo-servico">
             Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
           </label>
         </p>
-        <input type="checkbox" name="allow-content" id="allow-content" style="display: none;" checked />
-        <input type="checkbox" name="allow-social" id="allow-social" style="display: none;" checked/>
       </form>
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 privacy-save" disabled>Continuar</button>
+      <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled>Continuar</button>
     </div>
   </dialog>
 
@@ -605,24 +622,8 @@
                         <p class="div_mensagem">Parece que houve um problema na identificação de seus dados.</p>
                         <p class="div_mensagem">Mas não se preocupe!</p>
                         <p class="div_mensagem">Por favor envie um e-mail para <b>contato@maisfuturo.com.br</b>, informe o erro e aguarde que resolveremos tudo rapidinho para você!</p>
-                        <p class="div_mensagem"><div id="datetimenow"></div></p>                        
-                        <p class="div_mensagem">Login: {{ email logado }}</p>
+                        <!--p class="div_mensagem">Login: {{ email logado }}</p -->
                       </div>                      
-                      <!-- <div class="mdl-card__supporting-text div_mensagem">
-                          Houve um problema na identificação de seus dados pelo aplicativo.
-                      </div>
-                      <div class="mdl-card__supporting-text div_mensagem">
-                          Mas não se preocupe!
-                      </div>
-                      <div class="mdl-card__supporting-text div_mensagem">
-                          Por favor envie um e-mail para contato@contato.com.br, informe o erro abaixo e aguarde que resolveremos tudo rapidinho para você!
-                      </div>
-                      <div class="mdl-card__supporting-text div_mensagem">
-                          Data/Hora: __________
-                      </div>
-                      <div class="mdl-card__supporting-text div_mensagem">
-                          Login: xxxxx@xxxx.com.br
-                      </div>                     -->
                   </div>
               </div>
           </section>

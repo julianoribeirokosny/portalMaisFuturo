@@ -95,7 +95,6 @@ export default {
     },    
     mounted(){
         this.calcula_taxa_mensal();
-        console.log('Taxa',this.taxa_mensal);
     },
     methods: {      
         calcularParcela(){    

@@ -305,6 +305,7 @@ a {
   margin-left: 10px;
   color: white;
 }
+
 .mdl-layout__drawer .fp-sign-in-button {
   color: black;
 }
@@ -903,7 +904,7 @@ a {
 
 /* Splash Page */
 
-#page-splash {
+#page-splash-instalacao {
   position: fixed;
   top: 0;
   left: 0;
@@ -917,18 +918,53 @@ a {
   color: white;
   flex-direction: column;
 }
-#page-splash .fp-caption {
+#page-splash-instalacao .fp-caption {
   margin: 20px 5px 40px 5px;
-  font-family: 'MaisFuturo';
+  font-family: 'MaisFuturo-Regular';
   font-size: 18px;
   text-align: center;
   opacity: 0.8;
 }
-#page-splash .fp-caption2 {
+#page-splash-instalacao .fp-caption2 {
   margin: 5x 5px 40px 5px;
-  font-family: 'MaisFuturo';
+  font-family: 'MaisFuturo-Thin';
   font-size: 16px;
   text-align: center;
+  opacity: 0.8;
+}
+
+#page-splash-login {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;  
+  background-image: linear-gradient(#062f66, #1a6bb6);  
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  flex-direction: column;
+}
+#page-splash-login .fp-caption {
+  margin: 20px 5px 40px 5px;
+  font-family: 'MaisFuturo-Regular';
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  opacity: 0.8;
+}
+#page-splash-login .fp-caption2 {
+  margin: 5x 5px 40px 5px;
+  color: white;
+  font-family: 'MaisFuturo-Regular';
+  font-size: 16px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
   opacity: 0.8;
 }
 
@@ -947,7 +983,30 @@ a {
   flex-direction: column;
 }
 
-#confirmacao-dados {
+#page-primeiro-login .fp-caption {
+  margin: 5x 5px 40px 5px;
+  color: white;
+  font-family: 'MaisFuturo-Regular';
+  font-size: 18px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  opacity: 0.8;
+}
+
+#page-primeiro-login .fp-caption3 {
+  margin: 5x 5px 40px 5px;
+  color: white;
+  font-family: 'MaisFuturo-Thin';
+  font-size: 14px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 10px;
+  opacity: 0.8;
+}
+
+#page-aviso-validacao {
   position: fixed;
   top: 0;
   left: 0;
@@ -962,10 +1021,33 @@ a {
   flex-direction: column;
 }
 
+#page-aviso-validacao .fp-caption {
+  margin: 20px 5px 40px 5px;
+  font-family: 'MaisFuturo-Regular';
+  color: white;
+  font-size: 18px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  opacity: 0.8;
+}
+
+#page-aviso-validacao .fp-caption2 {
+  margin: 5x 5px 40px 5px;
+  color: white;
+  font-family: 'MaisFuturo-Thin';
+  font-size: 16px;
+  text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
+  opacity: 0.8;
+}
+
+
 #page-splash .fp-skip {  
   font-size: 13px;
   letter-spacing: 0;
-  color: #D6EDFF;
+  color: white;
   opacity: 1;
   font-family: 'MaisFuturo-Medium';
   display: block;

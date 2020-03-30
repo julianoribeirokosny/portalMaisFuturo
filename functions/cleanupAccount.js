@@ -27,7 +27,7 @@ exports.cleanupAccount = functions.runWith({memory: '2GB', timeoutSeconds: 540})
   personalPaths[`/followers/${deletedUid}`] = null;
 
   // The profile.
-  personalPaths[`/people/${deletedUid}`] = null;
+  personalPaths[`/login/${deletedUid}`] = null;
 
   // Find all likes to delete.
   const findLikes = admin.database().ref('/likes/').orderByChild(deletedUid).startAt(0).once('value')

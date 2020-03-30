@@ -1,0 +1,5 @@
+{
+    "Mais Futuro": "select * from dados_portal where cad_plano = 'Mais Futuro' AND datacomp = '--data_base_carga--' order by chave", 
+    "JMalucelli": "select * from dados_portal where cad_plano = 'JMalucelli' AND datacomp = '--data_base_carga--' AND cad_nome = 'Felipe Albert Vidigal dos Santos' order by chave"
+}
+
