@@ -9,7 +9,6 @@ import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmpres
 import rentabilidade from './component/rentabilidade/rentabilidade';
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
 import page from 'page';
-import Router from './Router';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -306,30 +305,4 @@ export default class Home {
       }
     })
   }
-
-  async verificaPrimeiroLogin() {
-    let ret = false
-    if (Object.keys(this.participante).length === 0 && this.auth.currentUser) { //empty
-      console.log('====> emailVerified', this.auth.currentUser.emailVerified)
-      let temRegistroPrimeiroLogin = await this.firebaseHelper.validaRegistroPrimeiroLogin(this.auth.currentUser.uid)
-      ret = !this.auth.currentUser.emailVerified || !temRegistroPrimeiroLogin
-    }
-    return ret
-  }  
-
-  async aguardaValidaLinkPrimeiroLogin() {
-    if (this.auth.currentUser) {
-      //console.log('**** Não VERIFICADO')
-      var intervalId = setInterval(() => {  //Aguarda até ter a verificação
-        this.auth.currentUser.reload()
-        if (this.auth.currentUser.emailVerified) {
-          clearInterval(intervalId);
-          console.log('**** VERIFICADO!!!!!')
-          this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
-          return page('/') //joga para splash page para depois ir para a home
-        }  
-      }, 5000)
-    }
-  }  
-
 }

@@ -22,15 +22,13 @@ export default class Router {
     // Dom elements.
     this.pagesElements = $('[id^=page-]');
 
-    // Load the rest of the app - which is split - asynchroneously to speed up initial load.
+    // Carrega metodos gerais dos JS.
     const loadComponents = import(/* webpackPrefetch: true */ './async-loaded-components');
-
-    // Shortcuts to async loaded components.
+    
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
-    const verificaPrimeiroLogin = async () => (await loadComponents).home.verificaPrimeiroLogin();
-    const aguardaValidaLinkPrimeiroLogin = async () => (await loadComponents).home.aguardaValidaLinkPrimeiroLogin();
-    //const clearFeed = async () => (await loadComponents).feed.clear();
+    const verificaPrimeiroLogin = async () => (await loadComponents).primeiroLogin.verificaPrimeiroLogin();
+    const aguardaValidaLinkPrimeiroLogin = async () => (await loadComponents).primeiroLogin.aguardaValidaLinkPrimeiroLogin();
 
     // Configuring middlwares.
     page(Router.setLinkAsActive);
