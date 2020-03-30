@@ -50,20 +50,14 @@
   <meta name="msapplication-navbutton-color" content="#303F9F">  
   <script type="text/javascript">
       function startTime() {
-          let today = new Date();
-          let dia = today.getDate();
-          let mes = today.getUTCMonth();
-          let ano = today.getFullYear();
+          let today = new Date();          
           let hora = today.getHours();
           let minuto = today.getMinutes();
       
-          // adicione um zero na frente de números<10
-          dia = checkTime(dia);
-          mes = checkTime(mes+1);
-          ano = checkTime(ano);
+          // adicione um zero na frente de números<10          
           hora = checkTime(hora);
           minuto = checkTime(minuto);      
-          document.getElementById('datetimenow').innerHTML=dia+"/"+mes+"/"+ano+" "+hora+":"+minuto;
+          document.getElementById('datetimenow').innerHTML= `${today.toLocaleDateString('pt-BR')} ${hora}:${minuto}`;
           t = setTimeout('startTime()',5000);
       }
 

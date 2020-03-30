@@ -40,7 +40,7 @@ export default class Router {
     page('/home', async () => {
       if (await verificaPrimeiroLogin()) {
         //this.displayPage('primeiro-login');
-        this.displayPage('erro');
+        this.displayPage('simulador-renda');
       } else {
         showHome();       
         this.displayPage('home', true);        
@@ -48,15 +48,18 @@ export default class Router {
     });    
     page('/about', () => {
       this.displayPage('about');
-    });
-    page('/simulador-emprestimo', () => {
-      this.displayPage('simulador-emprestimo');
-    });
+    });    
     page('/rentabilidade', () => {
       this.displayPage('rentabilidade');
     });
     page('/simulador-seguro', () => {
       this.displayPage('simulador-seguro');
+    });
+    page('/simulador-emprestimo', () => {
+      this.displayPage('simulador-emprestimo');
+    });
+    page('/simulador-renda', () => {
+      this.displayPage('simulador-renda');
     });    
     page('/confirmacao-dados', () => {
       this.displayPage('confirmacao-dados');      
