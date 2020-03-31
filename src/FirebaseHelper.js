@@ -6,6 +6,7 @@ import 'firebase/database';
 import 'firebase/storage';
 import latinize from 'latinize';
 import {Utils} from './Utils';
+import $ from 'jquery';
 
 /**
  * Handles all Firebase interactions.
@@ -456,11 +457,11 @@ export default class FirebaseHelper {
    * Fetches the user's TermoServico settings.
    */
   getTermoServicoSettings(uid) {
-    return this.database.ref(`/login/termo_servico/${uid}`).once('value');
+    return this.database.ref(`/login/${uid}/termo_servico`).once('value');
   }
 
   setTermoServicoSettings(uid, settings) {
-    const uri = `/login/termo_servico/${uid}`;
+    const uri = `/login/${uid}/termo_servico`;
     this.database.ref(uri).set(settings);
   }
 
@@ -867,7 +868,7 @@ export default class FirebaseHelper {
         return null;
       }
       //exclui campanhas fora de vigência
-      if (data.campanhas && JSON.Object(data.campanhas).length > 0) {
+      if (data.campanhas && Object.keys(data.campanhas).length > 0) {
         let campanhas = data.campanhas
         campanhas.forEach((usr_campanha) => {
           let dataHoje = Utils.dateFormat(new Date());
@@ -897,10 +898,18 @@ export default class FirebaseHelper {
     ref.update({ativo: false})
   }
 
-  gravaDadosPrimeiroLogin(uid, celular, emailAlternativo, listaChaves, emailPrincipal) {
+  gravaDadosPrimeiroLogin(uid, celular, email, listaChaves, emailPrincipal, celularPrincipal, tipoLogin) {
     let ref = this.database.ref(`login/${uid}`)
-    let chavePrincipal = Object.keys(listaChaves)[0]  //pega a primeira key com a chave
-    ref.update({celular: celular, emailAlternativo: emailAlternativo, chavePrincipal: chavePrincipal, listaChaves: listaChaves, emailPrincipal: emailPrincipal})
+    let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave
+    ref.update({
+      chave_principal: chavePrincipal, 
+      lista_chaves: listaChaves, 
+      email_principal: emailPrincipal && emailPrincipal !== '' ? emailPrincipal : email,
+      celular_principal: celularPrincipal && celularPrincipal !== '' ? celularPrincipal : celular,
+      tipo_login: tipoLogin,
+      celular_alternativo: celularPrincipal && celularPrincipal !== '' ? celular : '', // só grava email alternativo se houver o emailPrincipal. Caso contrário o email alternativo será o principal...
+      email_alternativo: emailPrincipal && emailPrincipal !== '' ? email : ''  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
+    })
   }
 
   gravaEfetivacaoPrimeiroLogin(uid) {
@@ -910,38 +919,108 @@ export default class FirebaseHelper {
   }
 
   validaRegistroPrimeiroLogin(uid) {
-    let ref = this.database.ref(`login/${uid}/data_primeiro_login`)
-    return ref.once('value', (data) => {
-      return data.val()!==null
+    let ref = this.database.ref(`login/${uid}`)
+    console.log('=== iniciando validaRegistroPrimeiroLogin')
+    return ref.once('value').then((data) => {
+      console.log('=== iniciando validaRegistroPrimeiroLogin - ', data.val())
+      if (data.val()) {
+        let usr = data.val()
+        return usr.hasOwnProperty('data_primeiro_login') //se tem a chave, pq já logou uma vez ao menos
+      } else {
+        return false
+      }
     })
   }
 
   enviarEmailLinkValidacao() {
-    let actionCodeSettings = {
+    /*let actionCodeSettings = {
       url: 'http://localhost:5000/home',
       handleCodeInApp: true //,
       // When multiple custom dynamic link domains are defined, specify which
       // one to use.
       //dynamicLinkDomain: "example.page.link"
-    };
-    firebase.auth().currentUser.sendEmailVerification(actionCodeSettings).then(()=> console.log('Email Enviado'))
+    };*/
+    //firebase.auth().currentUser.sendEmailVerification(actionCodeSettings).then(()=> console.log('Email Enviado'))
+    firebase.auth().currentUser.sendEmailVerification().then(()=> console.log('Email Enviado'))    
   }
 
-  async getUsuarioListaParticipantes(user) {
+  async getUsuarioListaParticipacoes(user, tipoLogin, celular, email) {
     //busca se email do usuário está cadastrado como email conhecido de participante
-    let ref = this.database.ref('settings/primeiroLogin/listaEmailValido')
-    return ref.orderByChild('email').equalTo(user.email).once('value')
-    .then((snapshot) => {
-      if (snapshot.val()===null) {
+    let p1 = new Promise((resolve) => {
+      let emailBusca = (user.email && user.email !== '') ? user.email : email
+      if (emailBusca !== '') {
+        let ref = this.database.ref('settings/primeiro_login/lista_email_valido')
+        return ref.orderByChild('email').equalTo(emailBusca).once('value')
+        .then((snapshot) => {
+          if (snapshot.val()===null) {
+            return resolve(false)
+          } else {
+            let listaChaves = {}
+            let i = 0  
+            snapshot.forEach((snap) => {
+              listaChaves[snap.child('chave').val()] = i
+              i++
+            })
+            if (Object.keys(listaChaves).length > 0) {
+              return resolve(listaChaves)
+            } else {
+              return resolve(false)
+            }
+          }
+        })  
+      } else {
+        return resolve(false)
+      }
+    })
+  
+    let p2 = new Promise((resolve) => {
+      let celularBusca = (user.phoneNumber && user.phoneNumber !== '') ? user.phoneNumber.substring(3) : celular
+      if (celularBusca !== '' && !isNaN(Number(celularBusca))) {
+        let ref = this.database.ref('settings/primeiro_login/lista_celular_valido')
+        return ref.orderByChild('celular').equalTo(Number(celularBusca)).once('value')
+        .then((snapshot) => {
+          if (snapshot.val()===null) {
+            return resolve(false)
+          } else {
+            let listaChaves = {}
+            let i = 0  
+            snapshot.forEach((snap) => {
+              listaChaves[snap.child('chave').val()] = i
+              i++
+            })
+            return resolve(Object.keys(listaChaves).length > 0 ? listaChaves : false)
+          }
+        })    
+      } else {
+        return resolve(false)
+      }
+    })
+
+    return Promise.all([p1, p2])
+    .then((retPromises) => {
+      if (!retPromises[0] && !retPromises[1]) { //se não achou nem na lista de emails nem na lista de celulares
         return false
       } else {
-        let listaChaves = {}
-        let i = 0  
-        snapshot.forEach((snap) => {
-          listaChaves[snap.child('chave').val()] = i
-          i++
-        })
-        return listaChaves
+        //faz um merge das chaves de cada uma das listas, para garantir atingir o maior número de chaves do usuário possível
+        let listaChavesRetorno = {}
+        let j = 0
+        if (retPromises[0]) {
+          $.each(retPromises[0], (key, val) => {
+            listaChavesRetorno[key] = j
+            console.log('===> retPromises[0] - key - j', key, j)
+            j++
+          });  
+        }
+        if (retPromises[1]) {
+          $.each(retPromises[1], (key, val) => {
+            if (listaChavesRetorno[key]===undefined) { //se ainda não foi incluido
+              listaChavesRetorno[key] = j
+              console.log('===> retPromises[1] - key - j', key, j)
+              j++  
+            }
+          });  
+        }
+        return listaChavesRetorno
       }
     })
   }
@@ -967,12 +1046,13 @@ export default class FirebaseHelper {
     })
   }
 
-  async getUsuarioChave(uid) {
-    let ref = this.database.ref(`login/${uid}/listaChaves`)
+  async getUsuarioChave(uid, numItemParticipacao) {
+    let ref = this.database.ref(`login/${uid}/lista_chaves`)
     let snapshot = await ref.once('value')
     let ret = null
     snapshot.forEach((snap) => {
-      if (snap.val()===0) {
+      console.log('====> snap.val()', snap.val())
+      if (snap.val()===numItemParticipacao) {
         ret = snap.key
       }
     })

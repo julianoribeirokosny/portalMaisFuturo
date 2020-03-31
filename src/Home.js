@@ -45,7 +45,10 @@ export default class Home {
     let firebaseHelper = this.firebaseHelper
     console.log('====> usuário logado:', this.auth.currentUser)    
 
-    let chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid)
+    //ATENÇÃO!!!!!!!!!!!!!!
+    // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
+    //    usuário no menu de seleção de visualizar participações!!!!!!!
+    let chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
     console.log('=====> CHAVE: ', chave)
     if (chave===null) {
       //return page('/erro')
