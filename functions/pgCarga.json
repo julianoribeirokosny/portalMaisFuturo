@@ -1,4 +1,4 @@
 {
-    "dados_portal": "select * from dados_portal where cad_plano = '--nome_plano--' AND datacomp = '--data_base_carga--' order by chave" 
+    "dadosPortal": "select * from dados_portal where cad_plano = '--nome_plano--' AND datacomp = '--data_base_carga--' order by chave, contr_eventocod" 
 }
 
