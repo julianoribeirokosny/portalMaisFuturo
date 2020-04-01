@@ -62,7 +62,6 @@ export default class Auth {
     this.uploadButton = $('button#add');
     this.mobileUploadButton = $('button#add-floating');
     this.preConsentCheckbox = $('#fp-pre-consent');
-    this.formConfirm = $('.form-confirm')
     this.confirmDadosButton = $('.fp-confirm-dados')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
 
@@ -134,15 +133,6 @@ export default class Auth {
         'uiShown': function() {
           const intervalId = setInterval(() => {
             const IDPButtons = $('.firebaseui-idp-button');           
-            //ajustar cor dos botões em português...
-            for (var i = 0; i < IDPButtons.length; i++) {
-              var button = IDPButtons[i];
-              var text = button.innerText;
-              if (text.indexOf('Fazer login com o e-mail') >= 0) {
-                button.style.cssText= "background-color: rgba(240,248,255, 0.2);"
-              }
-            }
-
             const nbIDPButtonDisplayed = IDPButtons.length;
             if (nbIDPButtonDisplayed > 0) {
               clearInterval(intervalId);
