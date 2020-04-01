@@ -76,27 +76,27 @@
 <div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div>
 
 <section id="page-primeiro-login"  class="primeiro-login">
-  <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
-  <br><br><br>
-  <div class="fp-caption">Olá! Precisamos de mais alguns dados seus, tudo bem?</div>
-  <div class="fp-caption3">Para tornar nosso relacionamento ainda melhor, pedimos que preencha os campos abaixo:</div>  
-  <div class="mdl-card__supporting-text">
-    <div style="max-width: 500px; text-align: center; margin: auto;">
-      <!--form class="form-confirm"--> 
-        <div style="margin-bottom: 20px;">
-            <input id="celular" autocomplete="off" name="celular" placeholder="Celular" value="" required  style="color: white; margin: auto;">
-        </div>
-        <div style="margin-bottom: 20px;">
-            <input id="email" autocomplete="off" name="email" placeholder="Outro e-mail de contato (opcional)" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
-        </div>
-        <div style="display: flex; align-items: center; justify-content: center;">
-          <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados">
-              <span class="mdl-color-text--white">Confirmar</span>
-          </button>
-        </div>
-      <!--/form> -->
-    </div>      
-  </div>
+    <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+    <br><br><br>
+    <div class="fp-caption">Olá! Precisamos de mais alguns dados seus, tudo bem?</div>
+    <div class="fp-caption3">Para tornar nosso relacionamento ainda melhor, pedimos que preencha os campos abaixo:</div>  
+    <div class="mdl-card__supporting-text">
+        <div style="max-width: 500px; text-align: center; margin: auto;">      
+            <div style="margin-bottom: 20px;">
+                <input class="fp-input-celular" id="celular" name="celular" autocomplete="off" value="" style="color: white; margin: auto;">
+                <div id="primeiro-login-input-celular-erro" style="color: red; font-size: 12px; display:none;"></div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <input class="fp-input-email" id="email" name="email" autocomplete="off" type="email" value="" style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
+                <div id="primeiro-login-input-email-erro" style="color: red; font-size: 12px; display:none;"></div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados">
+                    <span class="mdl-color-text--white">Confirmar</span>
+                </button>
+            </div>
+        </div>      
+    </div>
 </section>
 
 <section id="page-aviso-validacao" class="primeiro-login">
@@ -118,23 +118,30 @@
 </section>
 
 <section id="page-confirmacao-dados" class="primeiro-login">
-  <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
-  <br><br><br>
-  <div class="mdl-card__supporting-text">
-    <div style="max-width: 500px; text-align: center; margin: auto;">
-      <form class="form-confirm">
-        <div style="margin-bottom: 20px;">
-            <input id="celular2" name="celular2" placeholder="Celular" type="text" value="" required  style="color: white; margin: auto;"> <!--   pattern="-?[0-9]*(\.[0-9]+)?"> -->
-        </div>
-        <div style="margin-bottom: 20px;">
-            <input id="email2" name="email2" placeholder="E-mail" type="email" value="" required style="color: white; margin: auto;" onblur="this.setAttribute('value', this.value);">
-        </div>
-        <div>
-          <button class="fp-confirm">Confirmar</button>
-        </div>
-      </form>
-    </div>      
-  </div>
+    <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+    <br><br>
+    <div class="fp-caption" style="max-width: 500px;">Não localizamos seus dados em nossa base, precisamos de mais alguns dados, tudo bem?</div>
+    <div class="mdl-card__supporting-text">
+        <div style="max-width: 500px; text-align: center; margin: auto;">      
+            <div style="margin-bottom: 20px;">
+                <input class="fp-input-nome" id="nome" name="nome" autocomplete="off" placeholder="Nome completo" type="text" value="" style="color: white; margin: auto;">
+                <div id="confirma-dados-input-nome-erro" style="color: red; font-size: 12px; display:none;"></div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <input class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
+                <div id="confirma-dados-input-cpf-erro" style="color: red; font-size: 12px; display:none;"></div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <input class="fp-input-nascimento" id="nascimento" name="nascimento" autocomplete="off" placeholder="Data de nascimento (dd/mm/aaaa)" type="text" value="" style="color: white; margin: auto;">
+                <div id="confirma-dados-input-nascimento-erro" style="color: red; font-size: 12px; display:none;"></div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados2">
+                    <span class="mdl-color-text--white">Confirmar</span>
+                </button>
+            </div>
+        </div>      
+    </div>
 </section>
 
 <!-- Splash screen Login-->
@@ -249,19 +256,21 @@
 
   <!--Modal dialog-->
   <dialog id="termo-servico-dialog" class="mdl-dialog">
-    <h4 class="mdl-dialog__title">Nós protegemos sua privacidade!</h4>
-    <div class="mdl-dialog__content">
-      <p> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
-      <form class="col s12">
-        <p>
-          <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico"/>
-          <label for="allow-data-termo-servico">
-            Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
-          </label>
-        </p>
-      </form>
-      <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled>Continuar</button>
-    </div>
+      <div class="mdl-card__supporting-text mdl-card-container">
+          <h4 class="mdl-dialog__title" style="margin-left: 5px;font-size: 31px;">Nós protegemos sua privacidade!</h4>
+          <div class="mdl-dialog__content">
+              <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
+              <form class="col s12">
+                <p style="display: flex;">
+                  <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico" style="width:90px;"/>
+                  <label for="allow-data-termo-servico">
+                    Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
+                  </label>
+                </p>
+              </form>
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 300px;">Continuar</button>
+          </div>
+      </div>
   </dialog>
 
 

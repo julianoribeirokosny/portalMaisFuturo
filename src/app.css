@@ -174,6 +174,35 @@ a {
   align-items: center;
   justify-content: center;
 }
+
+ul.firebaseui-idp-list {
+  width: 300px;
+}
+li.firebaseui-list-item{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+}
+button.firebaseui-idp-button, button.firebaseui-tenant-button {
+  max-width: 240px !important;
+}
+div.firebaseui-card-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+div.firebaseui-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+button.firebaseui-id-secondary-link, button.firebaseui-id-submit {
+    width: auto;
+}
+button.firebaseui-idp-password {
+    background-color: rgba(240,248,255, 0.2) !important;
+}
 .fp-fullpic {
   max-width: 100%;
   max-height: 100%;

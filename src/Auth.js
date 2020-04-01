@@ -24,7 +24,7 @@ import page from 'page';
 import {Utils} from './Utils';
 import FirebaseHelper from './FirebaseHelper';
 import PrimeiroLogin from './PrimeiroLogin';
-//import VMasker from 'vanilla-masker';
+import VMasker from 'vanilla-masker';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -65,11 +65,20 @@ export default class Auth {
     this.formConfirm = $('.form-confirm')
     this.confirmDadosButton = $('.fp-confirm-dados')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
+    this.confirmDadosButton2 = $('.fp-confirm-dados2')    
 
-    /*let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+    let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
     var celular = document.querySelector('#celular');    
     VMasker(celular).maskPattern(celularMask[0]);
-    celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);*/ 
+    celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
+
+    let cpfMask = '999.999.999-99'
+    var cpf = document.querySelector('#cpf');    
+    VMasker(cpf).maskPattern(cpfMask);
+
+    let nascimentoMask = '99/99/9999'
+    var nascimento = document.querySelector('#nascimento');
+    VMasker(nascimento).maskPattern(nascimentoMask);
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -95,11 +104,15 @@ export default class Auth {
     this.confirmDadosButton.click(() => {
       let celular = $('.fp-input-celular').val()
       let email = $('.fp-input-email').val()
-      
       this.primeiroLogin.confirmEmailFone(celular, email);
-    });    
-
-  }
+    });
+    this.confirmDadosButton2.click(() => {
+      let nome = $('.fp-input-nome').val()
+      let cpf = $('.fp-input-cpf').val()
+      let nascimento = $('.fp-input-nascimento').val()
+      this.primeiroLogin.confirmDados(nome, cpf, nascimento);
+    });
+  }  
 
   configureFirebaseUi() {
     // Confgiure and add the FirebaseUI Widget
@@ -135,13 +148,13 @@ export default class Auth {
           const intervalId = setInterval(() => {
             const IDPButtons = $('.firebaseui-idp-button');           
             //ajustar cor dos botões em português...
-            for (var i = 0; i < IDPButtons.length; i++) {
-              var button = IDPButtons[i];
-              var text = button.innerText;
-              if (text.indexOf('Fazer login com o e-mail') >= 0) {
-                button.style.cssText= "background-color: rgba(240,248,255, 0.2);"
-              }
-            }
+            // for (var i = 0; i < IDPButtons.length; i++) {
+            //   var button = IDPButtons[i];
+            //   var text = button.innerText;
+            //   if (text.indexOf('Fazer login com o e-mail') >= 0) {
+            //     button.style.cssText= "background-color: rgba(240,248,255, 0.2) !important;"
+            //   }
+            // }
 
             const nbIDPButtonDisplayed = IDPButtons.length;
             if (nbIDPButtonDisplayed > 0) {
@@ -255,13 +268,13 @@ export default class Auth {
     page('/signout');
   } 
 
-  /*inputHandler(masks, max, event) {
+  inputHandler(masks, max, event) {
     var c = event.target;
     var v = c.value.replace(/\D/g, '');
     var m = c.value.length > max ? 1 : 0;
     VMasker(c).unMask();
     VMasker(c).maskPattern(masks[m]);
     c.value = VMasker.toPattern(v, masks[m]);
-  } */     
+  }
 
 };
