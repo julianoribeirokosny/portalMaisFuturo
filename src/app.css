@@ -127,7 +127,7 @@ button:checked {
 
 div.firebaseui-auth-container{
     display: contents;    
-    max-width: 500px;
+    max-width: 600px;
 }
 
 html, body, p {
@@ -1164,7 +1164,7 @@ button.firebaseui-idp-password {
 }
 .firebaseui-container {
   background: rgba(206, 216, 234, 0.82);
-  width: calc(100% - 24px);
+  width: calc(100% - 10px);
   min-height: 150px;
   padding-top: 10px;
   border-radius: 20px;

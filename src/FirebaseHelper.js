@@ -974,8 +974,10 @@ export default class FirebaseHelper {
     })
   
     let p2 = new Promise((resolve) => {
-      let celularBusca = (user.phoneNumber && user.phoneNumber !== '') ? user.phoneNumber.substring(3) : celular
-      celularBusca = celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
+      let celularBusca = user.phoneNumber ? user.phoneNumber.substring(3) : ''
+      if (!celularBusca || celularBusca === '') {
+        celularBusca = celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
+      } 
       if (celularBusca !== '' && !isNaN(Number(celularBusca))) {
         let ref = this.database.ref('settings/primeiro_login/lista_celular_valido')
         return ref.orderByChild('celular').equalTo(Number(celularBusca)).once('value')
