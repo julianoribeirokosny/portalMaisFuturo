@@ -125,7 +125,10 @@ button:checked {
   box-shadow: 0 5px 6px 0 rgba(0, 0, 0, 0.2);
 }
 
-
+div.firebaseui-auth-container{
+    display: contents;    
+    max-width: 500px;
+}
 
 html, body, p {
   font-family: 'Roboto', 'Helvetica', sans-serif;
@@ -188,9 +191,10 @@ button.firebaseui-idp-button, button.firebaseui-tenant-button {
   max-width: 240px !important;
 }
 div.firebaseui-card-content {
-    display: flex;
+  max-width: 500px;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
 }
 div.firebaseui-form-actions {
     display: flex;
@@ -1156,7 +1160,7 @@ button.firebaseui-idp-password {
 /* Firebase UI styling */
 
 #firebaseui-auth-container {
-  min-width: 251px;
+  min-width: 300px;
 }
 .firebaseui-container {
   background: rgba(206, 216, 234, 0.82);
