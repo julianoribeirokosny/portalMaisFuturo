@@ -67,6 +67,11 @@ export default class PrimeiroLogin {
 
             tipoLogin = 'email'
         }
+
+
+
+        ///SALVAR tipoLogin GOOGLE!!!!!!!!!!!!!!!!
+        
         
         //um usuário criado pode ter 1 ou mais participações!
         let listaChaves = await this.firebaseHelper.getUsuarioListaParticipacoes(firebase.auth().currentUser, tipoLogin, celular, email)
