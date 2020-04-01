@@ -56,6 +56,10 @@
         ".write": "root.child('login/'+auth.uid+'/lista_chaves/'+$chave).val() >= 0"
       }
     },
+    "usuariosHistorico": {
+      ".read": "auth.token.admin === true",
+      ".write": "false"
+    },    
     // Disallow all other attributes.
     "$other": {
       ".validate": false

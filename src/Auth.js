@@ -62,7 +62,6 @@ export default class Auth {
     this.uploadButton = $('button#add');
     this.mobileUploadButton = $('button#add-floating');
     this.preConsentCheckbox = $('#fp-pre-consent');
-    this.formConfirm = $('.form-confirm')
     this.confirmDadosButton = $('.fp-confirm-dados')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
     this.confirmDadosButton2 = $('.fp-confirm-dados2')    

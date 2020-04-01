@@ -23,7 +23,7 @@ const runtimeOpts = {
 CARGA!!!!!!!!!
 
 Carregar Atualizar lista e-mail Valido, com todas as chaves vinculadas ao CPF ou e-mail cadastrado!!!
-
+CRIAR DADOS CADASTRO DENTRO DE USUARIOS
 
 */
 
@@ -39,12 +39,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let plano = context.params.plano
 
   // inclui parametro de data de competência nos Selects
-  let select = jsonDataSelects[plano]
-  select = select.replace(/--data_base_carga--/g, change.after.val())
+  let select = jsonDataSelects['dados_portal']
+  select = select.replace(/--data_base_carga--/g, dataBase)
+  select = select.replace(/--nome_plano--/g, plano)
   console.log('===> select', select)
 
   let usuarios = {}
-  let jsonUsuarioModelo, dadosCadastrais, dadosContribuicoes, dadosContribuicoesTotais
   return buscaDadosPG(select)
   .then((retDadosPG) => {
     console.log('======> retDadosPG', retDadosPG)
@@ -53,33 +53,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       return false
     }
     let chave = '', usr
-    let listaItensContribuicaoChave = {}, listaValoresContribuicaoChave = {}
+    let listaItensContribuicaoChave = {}, listaValoresContribuicaoChave = {}, listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}
     let usuarioTotalContr = 0
     retDadosPG.forEach((rowDados) => {
       console.log('======> rowDados', rowDados)
       if (chave !== rowDados.chave) {
         if (chave !== '') {
           //salva informações acumuladas do usuário
-          usuarios[chave] = {
-            usr_apelido: usr.apelido,
-            usr_matricula: usr.matricula,
-            usr_nome: usr.nome,
-            usr_plano: usr.plano,
-            usr_segmento: validaSegmento(chave),
-            usr_contribuicao: {
-              acao: {
-                valor_contribuicao_potencial: calculaContribuicaoPotencial(),
-                valor_deducao_potencial: calculaDeducaoPotencial()
-              },
-              lista_itens_contribuicao: listaItensContribuicaoChave,
-              lista_valores_contribuicao: listaValoresContribuicaoChave,
-              total: {
-                color: "<<seg_contribuicao.total.color>>",
-                nome: "Contribuição total",
-                valor: usuarioTotalContr
-              }  
-            }
-          }
+          usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, listaItensReservaChave, usuarioTotalContr, usrReservaTotal)
         }
         //carrega dados novo registro do usuário
         chave = rowDados.chave        
@@ -89,10 +70,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           matricula: rowDados.cad_matricula,
           nome: rowDados.cad_nome,
           plano: rowDados.cad_plano,
-          segmento: validaSegmento(chave)
+          segmento: validaSegmento(chave),
+          competencia: dataBase.substring(0,6)
         }
         listaItensContribuicaoChave = {}
         listaValoresContribuicaoChave = {}
+        listaItensReservaChave = {}
+        listaValoresReservaChave = {}
+        usrReservaTotal = {}
         usuarioTotalContr = 0
       } 
       console.log('====> lendo dados do participante:'+chave, usr)
@@ -105,49 +90,94 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
       listaValoresContribuicaoChave[rowDados.contr_eventocod] = rowDados.contr_valor
 
+      listaItensReservaChave[0] = {
+        cor: '<<seg_saldo_reserva.itens.0.cor>>',
+        nome: rowDados.res_nomesaldototal,
+        valor: rowDados.res_saldototal
+      }
+      listaItensReservaChave[1] = {
+        cor: '<<seg_saldo_reserva.itens.1.cor>>',
+        nome: rowDados.res_nomesaldoparticipante,
+        valor: rowDados.res_saldoparticipante
+      }
+      listaItensReservaChave[2] = {
+        cor: '<<seg_saldo_reserva.itens.2.cor>>',
+        nome: rowDados.res_nomesaldopj,
+        valor: rowDados.res_saldopj
+      }
+
+      listaValoresReservaChave[0] = rowDados.res_saldoparticipante
+      listaValoresReservaChave[1] = rowDados.res_saldopj
+      usrReservaTotal = {
+        color: '<<seg_saldo_reserva.total.color>>',
+        nome: 'Saldo Total',
+        valor: rowDados.res_saldototal
+      }
+
       usuarioTotalContr += rowDados.contr_valor
     })
 
     if (chave!=='') {
-      usuarios[chave] = {
-        usr_apelido: usr.apelido,
-        usr_matricula: usr.matricula,
-        usr_nome: usr.nome,
-        usr_plano: usr.plano,
-        usr_segmento: validaSegmento(chave),
-        usr_contribuicao: {
-          acao: {
-            valor_contribuicao_potencial: calculaContribuicaoPotencial(),
-            valor_deducao_potencial: calculaDeducaoPotencial()
-          },
-          lista_itens_contribuicao: listaItensContribuicaoChave,
-          lista_valores_contribuicao: listaValoresContribuicaoChave,
-          total: {
-            color: "<<seg_contribuicao.total.color>>",
-            nome: "Contribuição total",
-            valor: usuarioTotalContr
-          }
-        }
-      }  
+      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, listaItensReservaChave, listaValoresReservaChave, usuarioTotalContr, usrReservaTotal)
     }
-
     usuarios = insereRegistroTestes(usuarios)
-
     console.log('usuarios', usuarios)
 
+    //salva dados anteriores dos usuários em usuariosHistorico
     let ref = admin.database().ref('usuarios')
-    return ref.update(usuarios).then((error) => {
-      if (error) {
-        console.log('#pgCarga - erro na atualização final dos usuários: ', error)
-      } else {
-        console.log('#pgCarga - dados atualizados com sucesso!', usuarios)
-      }
-      return true
+    return ref.once('value').then((usuariosAnterior) => {
+      ref = admin.database().ref(`usuariosHistorico/${dataBase}`)
+      return ref.update(usuariosAnterior)
+    }).then(() => {
+      //salva informações finais/ATUAIS na chave de usuários
+      ref = admin.database().ref('usuarios')
+      return ref.update(usuarios)
+    }).then(() => {
+      console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
+    }).catch((e) => {
+      console.log('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
     })
+
+
   })
 
 
 })
+
+function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, listaItensReservaChave, usuarioTotalContr) {
+
+  /*usr_dados_cadastro: {
+
+  },*/
+
+  usuarios[chave] = {
+    usr_competencia: usr.competencia,
+    usr_apelido: usr.apelido,
+    usr_matricula: usr.matricula,
+    usr_nome: usr.nome,
+    usr_plano: usr.plano,
+    usr_segmento: validaSegmento(chave),
+    usr_contribuicao: {
+      acao: {
+        valor_contribuicao_potencial: calculaContribuicaoPotencial(),
+        valor_deducao_potencial: calculaDeducaoPotencial()
+      },
+      lista_itens_contribuicao: listaItensContribuicaoChave,
+      lista_valores_contribuicao: listaValoresContribuicaoChave,
+      total: {
+        color: "<<seg_contribuicao.total.color>>",
+        nome: "Contribuição total",
+        valor: usuarioTotalContr
+      }  
+    },
+    usr_saldo_reserva: {
+      lista_itens_reserva: listaItensReservaChave
+
+    }
+  }
+
+  return usuarios
+}
 
 function calculaContribuicaoPotencial() {
   return 1000
