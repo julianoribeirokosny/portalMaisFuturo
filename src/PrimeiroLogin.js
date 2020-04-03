@@ -35,7 +35,7 @@ export default class PrimeiroLogin {
             let temRegistroPrimeiroLogin = await this.firebaseHelper.validaRegistroPrimeiroLogin(this.auth.currentUser.uid)
             if (!temRegistroPrimeiroLogin) {
                 ret = true
-            } else {
+            } else if (this.auth.currentUser.phoneNumber === '') { //se for de celular não valida email
                 ret = !this.auth.currentUser.emailVerified
             }
         }
@@ -48,7 +48,6 @@ export default class PrimeiroLogin {
                 this.auth.currentUser.reload()
                 if (this.auth.currentUser.emailVerified) {
                     clearInterval(intervalId);
-                    console.log('**** VERIFICADO!!!!!')
                     this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
                     return page('/') //joga para splash page para depois ir para a home
                 }  
@@ -83,7 +82,7 @@ export default class PrimeiroLogin {
                 page('/confirmacao-dados')      // pede confirmação de mais dados!
             } else { //achou ou email ou celular na lista
                 let loginGoogle = this.auth.currentUser.providerData[0].providerId === "google.com"
-                if (loginGoogle) { //se login google não precisa enviar email de validação...
+                if (loginGoogle || tipoLogin === 'celular') { //se login google não precisa enviar email de validação...
                     await this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
                     page('/home')
                 } else {
@@ -106,14 +105,32 @@ export default class PrimeiroLogin {
         let validCpf = this.validaCpfObrigatorio(cpf)
         let validNascimento = this.validaNascimentoObrigatorio(nascimento)
         if(validNome && validCpf && validNascimento) {
-            var intervalId = setInterval(() => {  //Aguarda até ter a verificação
-                this.auth.currentUser.reload()
-                if (this.auth.currentUser.email) {
-                    clearInterval(intervalId);
-                    this.firebaseHelper.enviarEmailLinkValidacao()
-                    page('/aviso-validacao')      
-                }  
-            }, 3000)
+            let tipoLogin
+            if (this.auth.currentUser.phoneNumber && this.auth.currentUser.phoneNumber !== "") { //login celular
+                tipoLogin = 'celular'
+            } else { //login por email
+                tipoLogin = 'email'
+            }            
+            let listaChaves = await this.firebaseHelper.getUsuarioListaParticipacoesDados(cpf, nome, nascimento)
+            this.firebaseHelper.gravaDadosPrimeiroLogin(firebase.auth().currentUser.uid, '', '', listaChaves ? listaChaves : '', firebase.auth().currentUser.email, firebase.auth().currentUser.phoneNumber, tipoLogin)        
+            if (!listaChaves) {
+                page('/confirmacao-dados')      // pede confirmação de mais dados!
+            } else { //achou ou email ou celular na lista
+                let loginGoogle = this.auth.currentUser.providerData[0].providerId === "google.com"
+                if (loginGoogle || tipoLogin === 'celular') { //se login google não precisa enviar email de validação...
+                    await this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
+                    page('/home')
+                } else {
+                    var intervalId = setInterval(() => {  //Aguarda até ter a verificação
+                        this.auth.currentUser.reload()
+                        if (this.auth.currentUser.email) {
+                            clearInterval(intervalId);
+                            this.firebaseHelper.enviarEmailLinkValidacao()
+                            page('/aviso-validacao')      
+                        }  
+                    }, 3000)
+                }
+            }
         }
     }
     //configura tela de primeiro login de acordo com o tipo do primeiro login feito

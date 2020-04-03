@@ -974,7 +974,10 @@ export default class FirebaseHelper {
     })
   
     let p2 = new Promise((resolve) => {
-      let celularBusca = (user.phoneNumber && user.phoneNumber !== '') ? user.phoneNumber.substring(3) : celular
+      let celularBusca = user.phoneNumber ? user.phoneNumber.substring(3) : ''
+      if (!celularBusca || celularBusca === '') {
+        celularBusca = celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
+      } 
       if (celularBusca !== '' && !isNaN(Number(celularBusca))) {
         let ref = this.database.ref('settings/primeiro_login/lista_celular_valido')
         return ref.orderByChild('celular').equalTo(Number(celularBusca)).once('value')
@@ -1024,6 +1027,33 @@ export default class FirebaseHelper {
       }
     })
   }
+
+  async getUsuarioListaParticipacoesDados(cpf, nome, dtnasc) {
+    let ref = this.database.ref('settings/primeiro_login/lista_dados_valido')
+    return ref.orderByChild('cpf').equalTo(cpf).once('value')
+    .then((snapshot) => {
+      if (snapshot.val()===null) {
+        return false
+      } else {
+        let listaChaves = {}
+        let i = 0  
+        snapshot.forEach((snap) => {
+          if ((snap.child('nome').val()).toUpperCase() === nome.toUpperCase()) {
+            if (snap.child('dtNasc').val() === dtnasc) {
+              listaChaves[snap.child('chave').val()] = i
+              i++    
+            }
+          }
+        })
+        if (Object.keys(listaChaves).length > 0) {
+          return listaChaves
+        } else {
+          return false
+        }
+      }
+    })  
+  }
+
 
   getUserClaims(user) {
     return user.getIdTokenResult().then((idTokenResult) => {

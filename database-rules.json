@@ -44,6 +44,11 @@
           ".indexOn": "celular",
           ".read": "auth.uid !== null || auth.token.admin === true",
           ".write": "false"
+        },
+        "lista_dados_valido": {
+          ".indexOn": "cpf",
+          ".read": "auth.uid !== null || auth.token.admin === true",
+          ".write": "false"
         }            
       }
     },

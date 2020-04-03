@@ -39,7 +39,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let plano = context.params.plano
 
   // inclui parametro de data de competência nos Selects
-  let select = jsonDataSelects['dados_portal']
+  let select = jsonDataSelects.dadosPortal
   select = select.replace(/--data_base_carga--/g, dataBase)
   select = select.replace(/--nome_plano--/g, plano)
   console.log('===> select', select)
@@ -75,10 +75,32 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         }
         listaItensContribuicaoChave = {}
         listaValoresContribuicaoChave = {}
-        listaItensReservaChave = {}
-        listaValoresReservaChave = {}
-        usrReservaTotal = {}
         usuarioTotalContr = 0
+        listaItensReservaChave[0] = {
+          cor: '<<seg_saldo_reserva.itens.0.cor>>',
+          nome: rowDados.res_nomesaldototal,
+          valor: rowDados.res_saldototal
+        }
+        listaItensReservaChave[1] = {
+          cor: '<<seg_saldo_reserva.itens.1.cor>>',
+          nome: rowDados.res_nomesaldoparticipante,
+          valor: rowDados.res_saldoparticipante
+        }
+        listaItensReservaChave[2] = {
+          cor: '<<seg_saldo_reserva.itens.2.cor>>',
+          nome: rowDados.res_nomesaldopj,
+          valor: rowDados.res_saldopj
+        }
+  
+        listaValoresReservaChave[0] = rowDados.res_saldoparticipante
+        listaValoresReservaChave[1] = rowDados.res_saldopj
+        usrReservaTotal = {
+          color: '<<seg_saldo_reserva.total.color>>',
+          nome: 'Saldo Total',
+          valor: rowDados.res_saldototal
+        }
+  
+  
       } 
       console.log('====> lendo dados do participante:'+chave, usr)
 
@@ -89,30 +111,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       }
 
       listaValoresContribuicaoChave[rowDados.contr_eventocod] = rowDados.contr_valor
-
-      listaItensReservaChave[0] = {
-        cor: '<<seg_saldo_reserva.itens.0.cor>>',
-        nome: rowDados.res_nomesaldototal,
-        valor: rowDados.res_saldototal
-      }
-      listaItensReservaChave[1] = {
-        cor: '<<seg_saldo_reserva.itens.1.cor>>',
-        nome: rowDados.res_nomesaldoparticipante,
-        valor: rowDados.res_saldoparticipante
-      }
-      listaItensReservaChave[2] = {
-        cor: '<<seg_saldo_reserva.itens.2.cor>>',
-        nome: rowDados.res_nomesaldopj,
-        valor: rowDados.res_saldopj
-      }
-
-      listaValoresReservaChave[0] = rowDados.res_saldoparticipante
-      listaValoresReservaChave[1] = rowDados.res_saldopj
-      usrReservaTotal = {
-        color: '<<seg_saldo_reserva.total.color>>',
-        nome: 'Saldo Total',
-        valor: rowDados.res_saldototal
-      }
 
       usuarioTotalContr += rowDados.contr_valor
     })
@@ -206,7 +204,9 @@ async function buscaDadosPG(select) {
   console.log('======> 1. iniciando buscaDadosPG')
 
   return getConnection().then( async (pgConn) => {
+    console.log('=====> Conectei no PG')
     let result = await pgConn.query(select)
+    console.log('=====> Query rodou')
     let ret
     if (!result) {
       console.log('#pgCarga - buscaDadosPG - retorno da query vazio.')
