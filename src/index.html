@@ -419,7 +419,8 @@
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                     <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                      
-                        <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background">
+                        <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background"
+                             style="cursor: pointer;"  @click.prevent="simuladorRenda('simulador-renda')">
                             <div class="mdl-card__supporting-text margin_auto">
                                 <div class="mdl-card-campanha-button-left">
                                     <dl>
@@ -617,6 +618,11 @@
           <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-seguro></simulador-seguro>
+          </section>     
+
+          <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+              <simulador-renda v-bind:dados="rendaSimulador"></simulador-renda>
           </section>     
           
           <section id="page-erro" class="mdl-grid fp-content" style="display: none;">

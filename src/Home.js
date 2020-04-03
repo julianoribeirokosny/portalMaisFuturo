@@ -8,6 +8,7 @@ import money from 'v-money';
 import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo';
 import rentabilidade from './component/rentabilidade/rentabilidade';
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
+import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import page from 'page';
 
 // register directive v-money and component <money>
@@ -139,11 +140,23 @@ export default class Home {
         components: {
             simuladorEmprestimo,
             rentabilidade,
-            simuladorSeguro
-        },
+            simuladorSeguro,
+            simuladorRenda
+        },        
         data: {
             home: this.data_Home,
             toggle: false,
+            rendaSimulador: {
+                tipoPlano: 'jmalucelli',//'instituido','jmalucelli'
+                titulo: 'Defina sua</br>contribuição mensal',
+                minimoContribuicao: 300,
+                maximoContribuicao: 3000,
+                stepContribuicao: 10,
+                reservaTotalFutura: 1000000,
+                rendaMensalFutura: 1500,
+                dataNacimento:'18/06/1978',
+                idadeBeneficio: 65
+            },
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
                 descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
@@ -156,19 +169,22 @@ export default class Home {
             }
         },        
         methods: {          
-          toggleCategory: function() {
-            this.toggle = !this.toggle;
-          },
-          removerCampanha: function(campanha) {
-              campanha.ativo = false
-              firebaseHelper.removerCampanha(chave, campanha.nome)
-          },
-          contratarCampanha(link) {
+            toggleCategory: function() {
+              this.toggle = !this.toggle;
+            },
+            removerCampanha: function(campanha) {
+                campanha.ativo = false
+                firebaseHelper.removerCampanha(chave, campanha.nome)
+            },
+            contratarCampanha(link) {
+                page(`/${link}`)
+            },
+            simuladorSeguro(link) {
+                page(`/${link}`)
+            },
+            simuladorRenda(link) {
               page(`/${link}`)
-          },
-          simuladorSeguro(link) {
-              page(`/${link}`)
-          }
+            }
         }
       })
       this.vueObj.$mount('#app'); 
