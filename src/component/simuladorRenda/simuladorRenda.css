@@ -1,0 +1,57 @@
+.span_contribuicao_prefixo {
+    font-family: 'MaisFuturo-Bold';        
+    font-size: 22px;
+    letter-spacing: -1px;
+    margin-right: 5px;
+}
+.span_contribuicao_valor {
+    font-family: 'MaisFuturo-Black';
+    font-size: 40px;
+    letter-spacing: -2px;
+    color: #0C7BC6;
+}
+.p_label_renda {
+    margin-bottom: 2px; 
+    margin-left: 2px;
+    font-size: 10px;
+    font-family: 'MaisFuturo-Medium';
+    color: #3B3C3E;
+    letter-spacing: -0.19px;
+    opacity: 0.7;
+    height: 14px;
+    margin-bottom: 5px;
+}
+.span_valor{
+    font-family: 'MaisFuturo-Bold';    
+    font-size: 20px;
+    letter-spacing: -2px;    
+    color: #003366;
+}
+.span_prefixo {
+    font-family: 'MaisFuturo-Bold';        
+    font-size: 22px;
+    letter-spacing: -1px;
+    margin-right: 5px;
+}
+.input_idade {
+    width: 120px !important;
+    font-family: 'MaisFuturo-Black';
+    font-size: 36px;
+    color: #0C7BC6;
+    letter-spacing: -2px;  
+    padding: 1px;
+    text-align: center;
+    border-right: #0C7BC6 solid 1px !important;
+    border-bottom: #0C7BC6 solid 1px !important;
+    background: none !important;
+}
+
+.vs__dropdown-toggle {
+    border-radius: 0px !important;
+    border-top: none  !important;
+    border-left: none !important;
+    border-right: 1px solid rgba(60, 60, 60, 0.26) !important;
+    border-bottom: 1px solid rgba(60, 60, 60, 0.26) !important;
+    width: 120px;
+}
+

@@ -1,29 +1,109 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
         <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
-        <div style="margin-top: 20px;">                    
-            <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
-            <p class="p_espaco_100"></p>
-            <p class="p_label">Altere o valor do empréstimo</p>
-            <div style="margin-left: 20px;margin-right: 20px;display: flex;">
-                <span class="span_input_prefixo">R$</span>
-                <input class="input_principal" inputmode="numeric" ref="inputprincipal" v-money="money" v-model="principal" v-on:change="alteraPrincipal" v-on:click="selectAll">
-                <span class="span_input_sufixo">,00</span>
-            </div>                  
-            <p class="p_mensagem_invalido" v-show="!valido">Valor excede o máximo permitido!</p>                
-            <p class="p_espaco_30"></p>
-            <p class="p_label">Parcelamento</p>
-            <p class="p_slider">
-                <vue-slider v-model="quantidade" ref="slider" v-bind="sliderOptions" :tooltip-formatter="formatter1"></vue-slider>
-            </p>
-            <p class="p_valor-simulado">
-                <span>{{ quantidade }} x de R$ {{ parcela }}</span> 
-            </p>
-            <p class="p_label">* Valor calculado para primeira parcela</p>
-            <p class="p_espaco_30"></p>
-            <div class="mdl-shadow--2dp div_btn_contratar" ref="botao" @click="contratarEmprestimo">
-                Contratar
-            </div>
+
+            <!--Planos Instituidos-->
+            <div style="margin-top: 40px;" v-if="dados.tipoPlano == 'instituido'">
+                <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
+                <div style="float: left; width: 75% !important; height: 280px; margin-top: 90px;">                    
+                    <p class="p_label_renda">Contribuição mensal</p>                    
+                    <p style="margin-bottom: 1px;">
+                        <span class='line span_contribuicao_valor'>
+                            <span id='text-top' class="span_contribuicao_prefixo">R$</span>{{ contribuicaoTela }}<span id='text-bottom'>,00</span>
+                        </span>
+                    </p>
+                    <p class="p_label_renda">Idade aposentadoria</p>
+                    <input class="input_idade" type="number" inputmode="numeric" ref="idade" v-model="idade" min="45" max="85">  <!-- v-on:click="selectAll"> -->
+                    <div style="margin-top: 50px;">
+                        <p class="p_label_renda">Nova projeção de reserva total</p>
+                        <p style="margin-bottom: 1px;">
+                            <span class='line span_valor'>
+                                <span id='text-top' class="span_prefixo">R$</span>{{ reservaTotalTela }},00
+                            </span>
+                        </p>
+                        <p class="p_label_renda">Nova projeção de renda mensal</p>
+                        <p style="margin-bottom: 1px;">
+                            <span class='line span_valor'>
+                                <span id='text-top' class="span_prefixo">R$</span>{{ rendaMensalTela }},00
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div style="float: right;width: 25% !important;height: 350px;display: flex;justify-content: flex-end;">                
+                    <div style="float: left; width: 50% !important;">
+                        <p class="p_slider_vertical">
+                            <vue-slider v-model="contribuicao" ref="slider" v-bind="sliderContribuicao" :tooltip-formatter="formatter1"></vue-slider>
+                        </p>
+                    </div>                    
+                </div>           
+            </div>      
+            <!--Plano JMalucelli-->
+            <div style="margin-top: 40px;" v-if="dados.tipoPlano == 'jmalucelli'">
+                <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
+                <div style="float: left; width: 75% !important; height: 310px; margin-top: 45px;">
+                    <!-- <p class="p_label_renda">Salário Base</p>
+                    <p style="margin-bottom: 1px;">
+                        <span class='line span_valor'>
+                            R$ 7.450,00
+                        </span>
+                    </p> -->
+                    <p class="p_label_renda">Contribuição mensal fixa</p>
+                    <p style="margin-bottom: 1px;">
+                        <span class='line span_valor'>
+                            R$ 485,00
+                        </span>
+                    </p>
+                    <p class="p_label_renda">Contribuição mensal adicional</p>
+                    <p style="margin-bottom: 1px;">
+                        <span class='line span_contribuicao_valor'>
+                            <span id='text-top' class="span_contribuicao_prefixo">R$</span>{{ contribuicaoTela }}<span id='text-bottom'>,00</span>
+                        </span>
+                    </p>
+                    <p class="p_label_renda">Contribuição total</p>
+                    <p style="margin-bottom: 1px;">
+                        <span class='line span_valor'>
+                            R$ 1.485,00
+                        </span>
+                    </p>
+                    <p class="p_label_renda">Idade aposentadoria</p>      
+                    <v-select v-model="idade" :options="lidades"></v-select>
+                    <!-- <input class="input_idade" type="number" inputmode="numeric" ref="idade" v-model="idade" min="45" max="85" v-on:click="selectAll"> -->
+                    <div style="margin-top: 22px;">
+                        <p class="p_label_renda">Nova projeção de reserva total</p>
+                        <p style="margin-bottom: 1px;">
+                            <span class='line span_valor'>
+                                R$ {{ reservaTotalTela }},00
+                            </span>
+                        </p>
+                        <p class="p_label_renda">Nova projeção de renda mensal</p>
+                        <p style="margin-bottom: 1px;">
+                            <span class='line span_valor'>
+                                R$ {{ rendaMensalTela }},00
+                            </span>
+                        </p>
+                    </div>
+                </div>
+                <div style="float: right;width: 25% !important;height: 380px;display: flex;justify-content: flex-end;">                
+                    <div style="float: left; width: 50% !important;">
+                        <p class="p_slider_vertical">
+                            <vue-slider v-model="contribuicao" ref="slider" v-bind="sliderContribuicao" :tooltip-formatter="formatter1"></vue-slider>
+                        </p>
+                    </div>                    
+                </div>           
+            </div>      
+            <div class="mdl-card__supporting-text mdl-card-container">                
+                    <template v-if="dados.minimoContribuicao == contribuicao">
+                        <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="continuar('home')">
+                            Continuar com R$ {{contribuicaoTela}}
+                        </div>                        
+                    </template>
+                    <template v-else>
+                        <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="contratar">
+                            Contratar R$ {{contribuicaoTela}} 
+                        </div>                        
+                    </template>
+                </div>
+            </div>              
         </div>
     </div>
 </div>

@@ -4,11 +4,7 @@
         <div style="margin-top: 20px;">                    
             <div class="div_descricao margin-auto" v-html="dados.descricao"></div>            
             <div style="float: left; width: 75% !important; height: 400px;">
-                <!-- <p class="p_label_seguro" style="padding-left: 0px;">Valor da cobertura total</p>
-                <div style="margin-left: 2px;margin-right: 20px;">
-                    <p style="margin-bottom: 1px;">
-                        <span class='line span_cobertura_valor' style="color:#0C7BC6"><span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaTotal }}<span id='text-bottom'>,00</span></span></p>
-                </div> -->
+                
                 <p class="p_label_seguro">Por Invalidez</p>
                 <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
                     <p style="margin-bottom: 1px;">
