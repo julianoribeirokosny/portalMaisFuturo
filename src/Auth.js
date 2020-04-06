@@ -24,7 +24,6 @@ import page from 'page';
 import {Utils} from './Utils';
 import FirebaseHelper from './FirebaseHelper';
 import PrimeiroLogin from './PrimeiroLogin';
-import VMasker from 'vanilla-masker';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -66,19 +65,6 @@ export default class Auth {
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
     this.confirmDadosButton2 = $('.fp-confirm-dados2')    
 
-    let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
-    var celular = document.querySelector('#celular');    
-    VMasker(celular).maskPattern(celularMask[0]);
-    celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
-
-    let cpfMask = '999.999.999-99'
-    var cpf = document.querySelector('#cpf');    
-    VMasker(cpf).maskPattern(cpfMask);
-
-    let nascimentoMask = '99/99/9999'
-    var nascimento = document.querySelector('#nascimento');
-    VMasker(nascimento).maskPattern(nascimentoMask);
-
     // Configure Firebase UI.
     this.configureFirebaseUi();
 
@@ -97,7 +83,7 @@ export default class Auth {
     this.updateAll.click(() => this.updateAllAccounts());
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
     this.avisoValidacaoButton.click(() => {
-      this.firebaseHelper.enviarEmailLinkValidacao()
+      this.firebaseHelper.enviarEmailLinkValidacao('firebase')
       page('/aviso-validacao')  
     })
     this.confirmDadosButton.click(() => {
@@ -106,10 +92,8 @@ export default class Auth {
       this.primeiroLogin.confirmEmailFone(celular, email);
     });
     this.confirmDadosButton2.click(() => {
-      let nome = $('.fp-input-nome').val()
       let cpf = $('.fp-input-cpf').val()
-      let nascimento = $('.fp-input-nascimento').val()
-      this.primeiroLogin.confirmDados(nome, cpf, nascimento);
+      this.primeiroLogin.confirmDados(cpf);
     });
   }  
 
@@ -266,14 +250,5 @@ export default class Auth {
     this.auth.signOut(); 
     page('/signout');
   } 
-
-  inputHandler(masks, max, event) {
-    var c = event.target;
-    var v = c.value.replace(/\D/g, '');
-    var m = c.value.length > max ? 1 : 0;
-    VMasker(c).unMask();
-    VMasker(c).maskPattern(masks[m]);
-    c.value = VMasker.toPattern(v, masks[m]);
-  }
 
 };

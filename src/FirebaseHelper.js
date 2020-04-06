@@ -912,6 +912,15 @@ export default class FirebaseHelper {
     })
   }
 
+  gravaListaChaves(uid, listaChaves) {
+    let ref = this.database.ref(`login/${uid}`)
+    let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave
+    ref.update({
+      chave_principal: chavePrincipal, 
+      lista_chaves: listaChaves
+    })
+  }
+
   gravaEfetivacaoPrimeiroLogin(uid) {
     let dataHoje = Utils.dateFormat(new Date())
     let ref = this.database.ref(`login/${uid}`)    
@@ -932,16 +941,49 @@ export default class FirebaseHelper {
     })
   }
 
-  enviarEmailLinkValidacao() {
-    /*let actionCodeSettings = {
-      url: 'http://localhost:5000/home',
-      handleCodeInApp: true //,
-      // When multiple custom dynamic link domains are defined, specify which
-      // one to use.
-      //dynamicLinkDomain: "example.page.link"
-    };*/
-    //firebase.auth().currentUser.sendEmailVerification(actionCodeSettings).then(()=> console.log('Email Enviado'))
-    firebase.auth().currentUser.sendEmailVerification().then(()=> console.log('Email Enviado'))    
+  enviarEmailLinkValidacao(tipoEnvio, emailDestino) {
+    let usr = firebase.auth().currentUser
+    if (tipoEnvio==='firebase') {
+      /*let actionCodeSettings = {
+        url: 'http://localhost:5000/home',
+        handleCodeInApp: true //,
+        // When multiple custom dynamic link domains are defined, specify which
+        // one to use.
+        //dynamicLinkDomain: "example.page.link"
+      };*/
+      //firebase.auth().currentUser.sendEmailVerification(actionCodeSettings).then(()=> console.log('Email Enviado'))
+      usr.sendEmailVerification().then(()=> console.log('Email Enviado'))    
+    } else {  //envio próprio de e-mails de verificação - grava no BD para trigger de e-mail enviar
+      
+      let dataEnvio = Utils.dateFormat(new Date(), true, true)
+      let emailLinkKey = usr.uid
+      emailLinkKey += dataEnvio
+      emailLinkKey = emailLinkKey.split("").reverse().join(""); //inverte
+
+      //grava emailLinkKey
+      let ref = this.database.ref(`login/${usr.uid}`)
+      ref.update({emailLinkKey: emailLinkKey})
+
+      //grava e-mail a ser enviado
+      let projetoId = 'portalmaisfuturo-teste' //functions.config().projetoid
+      let linkWeb = `https://us-central1-${projetoId}.cloudfunctions.net/validaEmailLinkKey?k=${emailLinkKey}`
+      ref = this.database.ref(`login/${usr.uid}/emails`)
+      let jsonEmail = {}
+      jsonEmail[dataEnvio] = {
+        emailDestinatario: emailDestino,
+        assunto: 'Verifique seu e-mail para acessar o app do Portal Mais Futuro',
+        corpo: '',
+        corpoHtml: `Olá, ${usr.displayName} <br><br>
+        Clique neste link para verificar seu endereço de e-mail<br><br>
+        ${linkWeb}<br><br>
+        Se você não solicitou a verificação deste endereço, ignore este e-mail.<br<br>
+        Obrigado,<br>
+        Equipe do app Portal Mais Futuro
+        `
+      }
+      ref.update(jsonEmail)
+      
+    }
   }
 
   async getUsuarioListaParticipacoes(user, tipoLogin, celular, email) {
@@ -1028,7 +1070,7 @@ export default class FirebaseHelper {
     })
   }
 
-  async getUsuarioListaParticipacoesDados(cpf, nome, dtnasc) {
+  async getUsuarioListaParticipacoesDados(cpf) {
     let ref = this.database.ref('settings/primeiro_login/lista_dados_valido')
     return ref.orderByChild('cpf').equalTo(cpf).once('value')
     .then((snapshot) => {
@@ -1037,16 +1079,16 @@ export default class FirebaseHelper {
       } else {
         let listaChaves = {}
         let i = 0  
+        let emailCadastro = ''
         snapshot.forEach((snap) => {
-          if ((snap.child('nome').val()).toUpperCase() === nome.toUpperCase()) {
-            if (snap.child('dtNasc').val() === dtnasc) {
-              listaChaves[snap.child('chave').val()] = i
-              i++    
-            }
+          if (emailCadastro === '') { //pega somente o primeiro
+            emailCadastro = snap.child('emailCadastro').val()
           }
+          listaChaves[snap.child('chave').val()] = i
+          i++    
         })
         if (Object.keys(listaChaves).length > 0) {
-          return listaChaves
+          return [emailCadastro, listaChaves]
         } else {
           return false
         }

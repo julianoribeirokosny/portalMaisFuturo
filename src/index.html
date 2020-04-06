@@ -117,23 +117,41 @@
   </div>
 </section>
 
+<section id="page-confirmacao-dados-final" class="primeiro-login">
+  <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+  <br><br>
+  <div class="mdl-card__supporting-text">
+    <div style="max-width: 500px; text-align: center; margin: auto;">
+      <div class="fp-caption">Atenção!</div> 
+      <div class="fp-caption2" id="msg-participante1"></div>     
+      <div class="fp-caption2" id="msg-participante2"></div>     
+      <div class="fp-caption2">Agora é só seguir com as orientações do e-mail e voltar aqui.</div>     
+      <div class="fp-caption2">Caso não tenha recebido o e-mail de verificação, clique abaixo. Lembre-se de verificar também na caixa de Spam, ok?</div>           
+      <div style="padding-top: 30px;">
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="btn-reenvia-verificacao"  style="margin: 0 auto;">
+          <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
+        </button>
+      </div>
+      <div style="padding-top: 30px; display:none" id="div-nao-reconhece-email">
+        <div class="fp-caption2" id="msg-participante3" style="padding-bottom: 10px;"></div>     
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-aviso-validacao" id="btn-nao-reconhece-email"  style="margin: 0 auto;">
+          <span class="mdl-color-text--white" id='btn-nao-reconhece-email-texto'>Solicitar a troca do e-mail</span>
+        </button>
+      </div>        
+    </div>      
+  </div>
+</section>
+
 <section id="page-confirmacao-dados" class="primeiro-login">
     <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
     <br><br>
     <div class="fp-caption" style="max-width: 500px;">Para finalizar, precisamos apenas de mais alguns dados, tudo bem?</div>
+    
     <div class="mdl-card__supporting-text">
         <div style="max-width: 500px; text-align: center; margin: auto;">      
             <div style="margin-bottom: 20px;">
-                <input class="fp-input-nome" id="nome" name="nome" autocomplete="off" placeholder="Nome completo" type="text" value="" style="color: white; margin: auto;">
-                <div id="confirma-dados-input-nome-erro" style="color: red; font-size: 12px; display:none;"></div>
-            </div>
-            <div style="margin-bottom: 20px;">
                 <input class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
                 <div id="confirma-dados-input-cpf-erro" style="color: red; font-size: 12px; display:none;"></div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <input class="fp-input-nascimento" id="nascimento" name="nascimento" autocomplete="off" placeholder="Data de nascimento (dd/mm/aaaa)" type="text" value="" style="color: white; margin: auto;">
-                <div id="confirma-dados-input-nascimento-erro" style="color: red; font-size: 12px; display:none;"></div>
             </div>
             <div style="display: flex; align-items: center; justify-content: center;">
                 <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados2">
@@ -650,7 +668,7 @@
               <div class="mdl-card__supporting-text mdl-color-text--grey-600">
                 <i class="fp-info material-icons">contacts</i>
                 <div>
-                  <p>Para entrar em contato com nosso time, envie um email para contato@maisfuturo.com.br</p>
+                  <p>Para entrar em contato com nosso time, envie um e-mail para contato@maisfuturo.com.br</p>
 
                   <p>Para outras informações, acesse nosso site institucional <a href="www.maisfuturo.com.br">www.maisfuturo.com.br</a></p>
                 </div>
