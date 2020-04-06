@@ -159,9 +159,16 @@ export default {
             var vf = ipagto.valorFuturo(10000, 1, 10, 150)
             console.log('valorFuturo', vf)
 
-            var pv = ipagto.valorPresente(150, 1, 12)
+            var pv = ipagto.valorPresente(100, 3.5, 12)
             console.log('valorPresente', pv)
-            
+
+            var strpgto = ipagto.float_to_string(pgto)
+            var strvp = ipagto.float_to_string(vf)
+            var strpv = ipagto.float_to_string(pv)
+
+            console.log('strpgto', strpgto)            
+            console.log('strvp', strvp)            
+            console.log('strpv', strpv)
         },
         selectAll() {
             this.$refs.idade.select();

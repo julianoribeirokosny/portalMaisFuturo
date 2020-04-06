@@ -30,8 +30,7 @@ export default class Financeiro {
         return  (pv * (i/100) * Math.pow(1 + (i/100), n) / (Math.pow(1 + (i/100), n) - 1 )).toFixed(2)
     }
 
-    float_to_string(num) {
-        let numero = String(num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-        return numero
+    float_to_string(num) {        
+        return String(String(num).replace('.',',')).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
     }
 }
