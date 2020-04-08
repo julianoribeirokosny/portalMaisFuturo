@@ -21,9 +21,15 @@
     height: 14px;
     margin-bottom: 5px;
 }
-.span_valor{
+.span_valor {
     font-family: 'MaisFuturo-Bold';    
-    font-size: 20px;
+    font-size: 16px;
+    letter-spacing: -2px;    
+    color: #003366; 
+}
+.span_valor_projetado {
+    font-family: 'MaisFuturo-Bold';    
+    font-size: 26px;
     letter-spacing: -2px;    
     color: #003366;
 }
@@ -33,25 +39,32 @@
     letter-spacing: -1px;
     margin-right: 5px;
 }
-.input_idade {
-    width: 120px !important;
-    font-family: 'MaisFuturo-Black';
-    font-size: 36px;
-    color: #0C7BC6;
-    letter-spacing: -2px;  
-    padding: 1px;
-    text-align: center;
-    border-right: #0C7BC6 solid 1px !important;
-    border-bottom: #0C7BC6 solid 1px !important;
-    background: none !important;
+.vs__selected {
+    font-size: 14px;
+    font-family: 'MaisFuturo-Bold';
+    color: #003366;
+    
 }
-
+.vs__selected-options, .vs__actions {
+    cursor: pointer;
+}
 .vs__dropdown-toggle {
     border-radius: 0px !important;
     border-top: none  !important;
     border-left: none !important;
     border-right: 1px solid rgba(60, 60, 60, 0.26) !important;
     border-bottom: 1px solid rgba(60, 60, 60, 0.26) !important;
-    width: 120px;
+    width: 140px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.vs__dropdown-menu {
+    min-width: 140px;
+    max-height: 200px;
+    width: 140px;
+    border-radius: 0 0 0 0px;
+    font-size: 13px;
+    font-family: 'MaisFuturo-Bold';
 }
 

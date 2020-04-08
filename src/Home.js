@@ -147,15 +147,19 @@ export default class Home {
             home: this.data_Home,
             toggle: false,
             rendaSimulador: {
-                tipoPlano: 'jmalucelli',//'instituido','jmalucelli'
-                titulo: 'Defina sua</br>contribuição mensal',
-                minimoContribuicao: 300,
+                usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
+                taxa_anual_simulacao: 5,
+                titulo: 'Defina sua</br>contribuição</br>mensal',
+                minimoContribuicao: 150,
+                contribuicaoFixa: 100.00,
+                contribuicaoPatronal: 32.21,
                 maximoContribuicao: 3000,
-                stepContribuicao: 10,
+                stepContribuicao: 50,
+                reservaTotalAtual: 98011.45,
                 reservaTotalFutura: 1000000,
-                rendaMensalFutura: 1500,
-                dataNacimento:'18/06/1978',
-                idadeBeneficio: 65
+                rendaMensalFutura: 1500.51,
+                usr_dtnasc:'18/06/1978',
+                idadeBeneficio: 60
             },
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
