@@ -93,6 +93,9 @@ export default {
             }
         }
     },    
+    created(){          
+        this.$refs.botao.style.backgroundColor = '#dfe5eb';
+    },
     mounted(){
         this.calcula_taxa_mensal();
     },
