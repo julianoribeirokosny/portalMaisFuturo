@@ -7,6 +7,7 @@ import 'firebase/storage';
 import latinize from 'latinize';
 import {Utils} from './Utils';
 import $ from 'jquery';
+import {Erros} from './Erros';
 
 /**
  * Handles all Firebase interactions.
@@ -898,18 +899,9 @@ export default class FirebaseHelper {
     ref.update({ativo: false})
   }
 
-  gravaDadosPrimeiroLogin(uid, celular, email, listaChaves, emailPrincipal, celularPrincipal, tipoLogin) {
+  gravaDadosPrimeiroLogin(primeiroLogin, uid) {
     let ref = this.database.ref(`login/${uid}`)
-    let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave
-    ref.update({
-      chave_principal: chavePrincipal, 
-      lista_chaves: listaChaves, 
-      email_principal: emailPrincipal && emailPrincipal !== '' ? emailPrincipal : email,
-      celular_principal: celularPrincipal && celularPrincipal !== '' ? celularPrincipal : celular,
-      tipo_login: tipoLogin,
-      celular_alternativo: celularPrincipal && celularPrincipal !== '' ? celular : '', // só grava email alternativo se houver o emailPrincipal. Caso contrário o email alternativo será o principal...
-      email_alternativo: emailPrincipal && emailPrincipal !== '' ? email : ''  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
-    })
+    ref.update(primeiroLogin)
   }
 
   gravaListaChaves(uid, listaChaves) {
@@ -921,28 +913,27 @@ export default class FirebaseHelper {
     })
   }
 
-  gravaEfetivacaoPrimeiroLogin(uid) {
-    let dataHoje = Utils.dateFormat(new Date())
+  gravaLoginSucesso(uid) {
+    let dataHoje = Utils.dateFormat(new Date(), true)
     let ref = this.database.ref(`login/${uid}`)    
-    ref.update({data_primeiro_login: dataHoje})
+    ref.update({data_ultimo_login: dataHoje})
   }
 
-  validaRegistroPrimeiroLogin(uid) {
+  validaRegistroLogin(uid) {
     let ref = this.database.ref(`login/${uid}`)
-    console.log('=== iniciando validaRegistroPrimeiroLogin')
     return ref.once('value').then((data) => {
-      console.log('=== iniciando validaRegistroPrimeiroLogin - ', data.val())
       if (data.val()) {
         let usr = data.val()
-        return usr.hasOwnProperty('data_primeiro_login') //se tem a chave, pq já logou uma vez ao menos
+        return usr.hasOwnProperty('data_ultimo_login') //se tem a chave, pq já logou uma vez ao menos
       } else {
         return false
       }
     })
   }
 
-  enviarEmailLinkValidacao(tipoEnvio, emailDestino) {
+  async enviarEmailLinkValidacao(tipoEnvio, emailDestino) {
     let usr = firebase.auth().currentUser
+    let ref
     if (tipoEnvio==='firebase') {
       /*let actionCodeSettings = {
         url: 'http://localhost:5000/home',
@@ -952,10 +943,30 @@ export default class FirebaseHelper {
         //dynamicLinkDomain: "example.page.link"
       };*/
       //firebase.auth().currentUser.sendEmailVerification(actionCodeSettings).then(()=> console.log('Email Enviado'))
-      usr.sendEmailVerification().then(()=> console.log('Email Enviado'))    
+      let ret = await usr.sendEmailVerification()
+      .then(()=> {
+        console.log('=> Email Enviado')
+        return true
+      }).catch((e) => {
+        Erros.registraErro('emailVer', 'enviarEmailLinkValidacao')
+        return false
+      })
+      return ret
     } else {  //envio próprio de e-mails de verificação - grava no BD para trigger de e-mail enviar
-      
+      let idToken = await usr.getIdToken(/* forceRefresh */ true)
+      .then((idToken) => {
+        console.log('=> Token OK')
+        return idToken
+      }).catch((e) => {
+        Erros.registraErro('tkn', 'enviarEmailLinkValidacao')
+        return false
+      });      
+
+      if (!idToken) {
+        return false
+      }
       let dataEnvio = Utils.dateFormat(new Date(), true, true)
+      /*
       let emailLinkKey = usr.uid
       emailLinkKey += dataEnvio
       emailLinkKey = emailLinkKey.split("").reverse().join(""); //inverte
@@ -963,33 +974,65 @@ export default class FirebaseHelper {
       //grava emailLinkKey
       let ref = this.database.ref(`login/${usr.uid}`)
       ref.update({emailLinkKey: emailLinkKey})
+      */
 
       //grava e-mail a ser enviado
       let projetoId = 'portalmaisfuturo-teste' //functions.config().projetoid
-      let linkWeb = `https://us-central1-${projetoId}.cloudfunctions.net/validaEmailLinkKey?k=${emailLinkKey}`
+      let linkWeb = `https://us-central1-${projetoId}.cloudfunctions.net/validaEmailLinkKey?k=${idToken}`
       ref = this.database.ref(`login/${usr.uid}/emails`)
       let jsonEmail = {}
       jsonEmail[dataEnvio] = {
         emailDestinatario: emailDestino,
         assunto: 'Verifique seu e-mail para acessar o app do Portal Mais Futuro',
         corpo: '',
-        corpoHtml: `Olá, ${usr.displayName} <br><br>
-        Clique neste link para verificar seu endereço de e-mail<br><br>
-        ${linkWeb}<br><br>
-        Se você não solicitou a verificação deste endereço, ignore este e-mail.<br<br>
-        Obrigado,<br>
-        Equipe do app Portal Mais Futuro
-        `
+        linkWeb: linkWeb,
+        corpoHtml: 'validaEmailLink.html'
       }
       ref.update(jsonEmail)
-      
+      console.log('=> Email Enviado')
+      return true
     }
   }
 
   async getUsuarioListaParticipacoes(user, tipoLogin, celular, email) {
-    //busca se email do usuário está cadastrado como email conhecido de participante
+    let emailBusca = (user.email && user.email !== '') ? user.email : email
+    let celularBusca = user.phoneNumber
+    if (!celularBusca || celularBusca === '') {
+      celularBusca = celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
+    } 
+    let vlrBuscaLogin = tipoLogin === 'celular' ? celularBusca : emailBusca
+    //primeiro verifica se já logou e pega do login caso exista
+    let ref = this.database.ref('login')
+    let ret = false
+    await ref.orderByChild(tipoLogin+'_principal').equalTo(vlrBuscaLogin).limitToFirst(2) //últimos 2 porque pode ocorrer de já ter o registro incompleto do próprio uid
+    .once('value', (snapshot) => {
+      if (snapshot.val()!==null) { //já achou dados do usuário no registro de Logins, portanto, pega as chaves de lá
+        snapshot.forEach((snap) => {
+          if (ret==='' && snap.key !== user.uid) { //pega só o primeiro, desde que não seja o próprio uid
+            ret = snap.val()
+            ret['uid_vinculado'] = snap.key
+          }
+        })
+      } else { //não achou no login, então tenta pegar do registro de primeiro login
+        ret = false
+      }
+    }).catch((e) => {
+      //erro de acesso (denied) - não encontrou nenhum nó e então dá erro de acesso a raiz login
+      console.log('===> e', e)
+      ret = false
+    })
+    return ret
+  }
+
+  async getUsuarioListaParticipacoesPrimeiroLogin(user, celular, email) {
+    let emailBusca = (user.email && user.email !== '') ? user.email : email
+    let celularBusca = user.phoneNumber
+    if (!celularBusca || celularBusca === '') {
+      celularBusca = celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
+    }     
+    let nomeP1, nomeP2
+    //busca se email do usuário está cadastrado como email conhecido de participante em dados de primeiro login
     let p1 = new Promise((resolve) => {
-      let emailBusca = (user.email && user.email !== '') ? user.email : email
       if (emailBusca !== '') {
         let ref = this.database.ref('settings/primeiro_login/lista_email_valido')
         return ref.orderByChild('email').equalTo(emailBusca).once('value')
@@ -1000,6 +1043,7 @@ export default class FirebaseHelper {
             let listaChaves = {}
             let i = 0  
             snapshot.forEach((snap) => {
+              nomeP1 = snap.child('nome').val()
               listaChaves[snap.child('chave').val()] = i
               i++
             })
@@ -1016,13 +1060,9 @@ export default class FirebaseHelper {
     })
   
     let p2 = new Promise((resolve) => {
-      let celularBusca = user.phoneNumber ? user.phoneNumber.substring(3) : ''
-      if (!celularBusca || celularBusca === '') {
-        celularBusca = celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
-      } 
-      if (celularBusca !== '' && !isNaN(Number(celularBusca))) {
+      if (celularBusca !== '') {
         let ref = this.database.ref('settings/primeiro_login/lista_celular_valido')
-        return ref.orderByChild('celular').equalTo(Number(celularBusca)).once('value')
+        return ref.orderByChild('celular').equalTo(celularBusca).once('value')
         .then((snapshot) => {
           if (snapshot.val()===null) {
             return resolve(false)
@@ -1030,6 +1070,7 @@ export default class FirebaseHelper {
             let listaChaves = {}
             let i = 0  
             snapshot.forEach((snap) => {
+              nomeP2 = snap.child('nome').val()
               listaChaves[snap.child('chave').val()] = i
               i++
             })
@@ -1065,9 +1106,11 @@ export default class FirebaseHelper {
             }
           });  
         }
-        return listaChavesRetorno
+        let nomeRet = nomeP1 ? nomeP1 : nomeP2
+        return {listaChavesRetorno: listaChavesRetorno, nome: nomeRet}
       }
     })
+
   }
 
   async getUsuarioListaParticipacoesDados(cpf) {
@@ -1080,15 +1123,17 @@ export default class FirebaseHelper {
         let listaChaves = {}
         let i = 0  
         let emailCadastro = ''
+        let nome = ''
         snapshot.forEach((snap) => {
           if (emailCadastro === '') { //pega somente o primeiro
+            nome = snap.child('nome').val()
             emailCadastro = snap.child('emailCadastro').val()
           }
           listaChaves[snap.child('chave').val()] = i
           i++    
         })
         if (Object.keys(listaChaves).length > 0) {
-          return [emailCadastro, listaChaves]
+          return {emailCadastro: emailCadastro, listaChaves: listaChaves, nome: nome}
         } else {
           return false
         }
@@ -1129,5 +1174,10 @@ export default class FirebaseHelper {
       }
     })
     return ret
+  }
+
+  logErros(codErro, origem) {
+    ref = this.database.ref(`logErros/${codErro}`)
+    ref.update({uid: usr.uid, erro: e, origem: origem})
   }
 };

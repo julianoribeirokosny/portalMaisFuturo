@@ -16,7 +16,6 @@ const mailTransport = nodemailer.createTransport({
 module.exports =  {
 
     enviarEmail : function (assunto, destinatarios, corpo, corpoHtml) {
-
         let remetente = 'naoresponda@maisfuturo.com.br'
         let email = {
             //from: remetente,
@@ -27,6 +26,7 @@ module.exports =  {
             html: corpoHtml
         };
 
+        console.log('====> email', email)
         return mailTransport.sendMail(email).then((info) => {
             console.log('#email - Mensagem %s enviada para %s: %s', info.messageId, email, info.response);
             return true;

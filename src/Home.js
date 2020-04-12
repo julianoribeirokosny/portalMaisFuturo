@@ -10,6 +10,7 @@ import rentabilidade from './component/rentabilidade/rentabilidade';
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
 import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import page from 'page';
+import {Erros} from './Erros';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -40,11 +41,12 @@ export default class Home {
    
     this.auth = firebase.auth();
     if (!this.auth.currentUser) {
-      return
+      Erros.registraErro('auth', 'showHome')
+      return page('/erro')
     }
-
     let firebaseHelper = this.firebaseHelper
-    console.log('====> usuário logado:', this.auth.currentUser)    
+
+    firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
 
     //ATENÇÃO!!!!!!!!!!!!!!
     // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
@@ -52,13 +54,15 @@ export default class Home {
     let chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
     console.log('=====> CHAVE: ', chave)
     if (chave===null) {
-      //return page('/erro')
+      Erros.registraErro('chave', 'showHome')
+      return page('/erro')
     }
 
 
     let data_Home = await this.dadosHome(chave)
     if (data_Home===null) {
-      return 
+      Erros.registraErro('data_home', 'showHome')
+      return page('/erro')
     }    
 
     Vue.component('grafico-reserva', {
@@ -147,15 +151,19 @@ export default class Home {
             home: this.data_Home,
             toggle: false,
             rendaSimulador: {
-                tipoPlano: 'jmalucelli',//'instituido','jmalucelli'
-                titulo: 'Defina sua</br>contribuição mensal',
-                minimoContribuicao: 300,
+                usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
+                taxa_anual_simulacao: 5,
+                titulo: 'Defina sua</br>contribuição</br>mensal',
+                minimoContribuicao: 150,
+                contribuicaoFixa: 100.00,
+                contribuicaoPatronal: 32.21,
                 maximoContribuicao: 3000,
-                stepContribuicao: 10,
+                stepContribuicao: 50,
+                reservaTotalAtual: 98011.45,
                 reservaTotalFutura: 1000000,
-                rendaMensalFutura: 1500,
-                dataNacimento:'18/06/1978',
-                idadeBeneficio: 65
+                rendaMensalFutura: 1500.51,
+                usr_dtnasc:'18/06/1978',
+                idadeBeneficio: 60
             },
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
@@ -324,4 +332,5 @@ export default class Home {
       }
     })
   }
+
 }

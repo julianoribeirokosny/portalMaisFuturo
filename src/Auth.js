@@ -62,8 +62,10 @@ export default class Auth {
     this.mobileUploadButton = $('button#add-floating');
     this.preConsentCheckbox = $('#fp-pre-consent');
     this.confirmDadosButton = $('.fp-confirm-dados')
+    this.confirmVoltarButton = $('.fp-confirm-voltar')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
-    this.confirmDadosButton2 = $('.fp-confirm-dados2')    
+    this.confirmDadosButton2 = $('.fp-confirm-dados2')   
+    this.sairErroButton = $('.fp-erro-sair')   
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -82,19 +84,28 @@ export default class Auth {
     this.deleteAccountButton.click(() => this.deleteAccount());
     this.updateAll.click(() => this.updateAllAccounts());
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
-    this.avisoValidacaoButton.click(() => {
-      this.firebaseHelper.enviarEmailLinkValidacao('firebase')
-      page('/aviso-validacao')  
+    this.avisoValidacaoButton.click(async () => {
+      if (! await this.firebaseHelper.enviarEmailLinkValidacao('firebase')) {
+        page('/erro')  
+      } else {
+        page('/aviso-validacao')  
+      }
+      
     })
     this.confirmDadosButton.click(() => {
       let celular = $('.fp-input-celular').val()
       let email = $('.fp-input-email').val()
       this.primeiroLogin.confirmEmailFone(celular, email);
     });
+    this.confirmVoltarButton.click(() => {
+      page('/primeiro-login')
+    });
     this.confirmDadosButton2.click(() => {
       let cpf = $('.fp-input-cpf').val()
       this.primeiroLogin.confirmDados(cpf);
     });
+
+    this.sairErroButton.click(() => this.signOut())
   }  
 
   configureFirebaseUi() {
@@ -107,15 +118,6 @@ export default class Auth {
     }
 
     // FirebaseUI config.
-    // retirado por Leandro em 30/Mar - implementar depois:      firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-
-    /*          recaptchaParameters: {
-            type: 'image', // 'audio'
-            size: 'invisible', // 'invisible' or 'compact'
-            badge: 'bottomright' //' bottomright' or 'inline' applies to invisible.
-          },
-        */
-
     this.uiConfig = {
       'signInSuccessUrl': '/',
       'signInFlow': signInFlow,
@@ -123,22 +125,21 @@ export default class Auth {
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
         {provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-          defaultCountry: 'BR'
+          defaultCountry: 'BR',
+          recaptchaParameters: {
+            type: 'image', // 'audio'
+            size: 'invisible', // 'invisible' or 'compact'
+            badge: 'bottomright' //' bottomright' or 'inline' applies to invisible.
+          },
         }
       ],
       'callbacks': {
         'uiShown': function() {
-          const intervalId = setInterval(() => {
-            const IDPButtons = $('.firebaseui-idp-button');           
-            //ajustar cor dos botões em português...
-            // for (var i = 0; i < IDPButtons.length; i++) {
-            //   var button = IDPButtons[i];
-            //   var text = button.innerText;
-            //   if (text.indexOf('Fazer login com o e-mail') >= 0) {
-            //     button.style.cssText= "background-color: rgba(240,248,255, 0.2) !important;"
-            //   }
-            // }
+          //const IDPButtons = $('.firebaseui-idp-button');           
+          //IDPButtons.attr('disabled', 'disabled');
 
+          /*const intervalId = setInterval(() => {
+            const IDPButtons = $('.firebaseui-idp-button');           
             const nbIDPButtonDisplayed = IDPButtons.length;
             if (nbIDPButtonDisplayed > 0) {
               clearInterval(intervalId);
@@ -146,7 +147,7 @@ export default class Auth {
                 IDPButtons.attr('disabled', 'disabled');
               }
             }
-          }, 1);
+          }, 1);*/
         },
       },
     };

@@ -107,7 +107,7 @@ export default class TermoServicoSettings {
       this.firebaseHelper.removeFromSearch(uid);
     }
     this.termoServicoDialog.get(0).close();
-    Router.reloadPage();
+    //Router.reloadPage();
     //this.setUploadButtonState(this.allowContent.prop('checked'));
   }
 

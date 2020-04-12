@@ -145,7 +145,7 @@
 <section id="page-confirmacao-dados" class="primeiro-login">
     <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
     <br><br>
-    <div class="fp-caption" style="max-width: 500px;">Para finalizar, precisamos apenas de mais alguns dados, tudo bem?</div>
+    <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br>Por favor informe abaixo o seu cpf.</div>
     
     <div class="mdl-card__supporting-text">
         <div style="max-width: 500px; text-align: center; margin: auto;">      
@@ -157,6 +157,11 @@
                 <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados2">
                     <span class="mdl-color-text--white">Confirmar</span>
                 </button>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+              <button class="mdl-button mdl-js-button mdl-color-text--grey-600 fp-confirm-voltar">
+                <span class="mdl-color-text--white">Voltar</span>
+              </button>
             </div>
         </div>      
     </div>
@@ -194,12 +199,6 @@
           <span class="mdl-color-text--white">Abrir o aplicativo</span>
         </button>  
       </div>
-    </div>
-    <div class="fp-note" id="div-termouso" style="display: none; text-align: center;">  
-      <label class="mdl-checkbox mdl-js-checkbox" for="fp-pre-consent">
-        <input type="checkbox" id="fp-pre-consent" class="mdl-checkbox__input" checked>
-        <span class="mdl-checkbox__label">Eu li e concordo com os <a href="https://fundoparana.com.br">termos de serviço</a> do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.</span>
-      </label>
     </div>
   </div>
 </section>
@@ -624,7 +623,7 @@
           <section id="page-simulador-emprestimo" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-emprestimo></simulador-emprestimo>
-          </section>
+          </section> 
 
           <!--Rentabilidade-->
           <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
@@ -632,16 +631,17 @@
               <rentabilidade></rentabilidade>
           </section>
 
-          <!--Simulador Seguro-->
+          <!--Simulador Seguro 
           <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-seguro></simulador-seguro>
-          </section>     
+          </section>     -->
 
+          <!--Simulador Renda
           <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-renda v-bind:dados="rendaSimulador"></simulador-renda>
-          </section>     
+          </section>-->
           
           <section id="page-erro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
@@ -655,9 +655,14 @@
                       <div class="mdl-card__supporting-text div_mensagem">
                         <p class="div_mensagem">Parece que houve um problema na identificação de seus dados.</p>
                         <p class="div_mensagem">Mas não se preocupe!</p>
-                        <p class="div_mensagem">Por favor envie um e-mail para <b>contato@maisfuturo.com.br</b>, informe o erro e aguarde que resolveremos tudo rapidinho para você!</p>
-                        <!--p class="div_mensagem">Login: {{ email logado }}</p -->
+                        <p class="div_mensagem">Por favor envie um e-mail para <b>contato@maisfuturo.com.br</b>, informe o erro abaixo e aguarde que resolveremos tudo rapidinho para você!</p>
+                        <p class="div_mensagem" id="mensagem-erro"></p>
                       </div>                      
+                      <div style="display: flex; align-items: center; justify-content: center;">
+                        <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-erro-sair">
+                            <span class="mdl-color-text--white">Sair</span>
+                        </button>
+                    </div>                      
                   </div>
               </div>
           </section>

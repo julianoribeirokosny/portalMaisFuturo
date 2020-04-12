@@ -25,7 +25,17 @@ exports.default = functions.database.ref('login/{uid}/emails/{dataEnvio}')
 
     console.log('#solicitaEnvioEmail - enviando email para o usuário: ', context.params.uid)
 
-    return email.enviarEmail(dadosEmail.assunto, dadosEmail.emailDestinatario, dadosEmail.corpo, dadosEmail.corpoHtml)
+    let corpoHtml
+    if (dadosEmail.corpoHtml && dadosEmail.corpoHtml.indexOf('.html') >= 0) {
+        let fs = require('fs');
+        corpoHtml = fs.readFileSync('./html/'+dadosEmail.corpoHtml, 'utf8') 
+        corpoHtml = corpoHtml.replace('{{linkWeb}}', dadosEmail.linkWeb)
+        console.log('===> corpoHtml', corpoHtml)
+    } else {
+        corpoHtml = dadosEmail.corpoHtml
+    }
+    
+    return email.enviarEmail(dadosEmail.assunto, dadosEmail.emailDestinatario, dadosEmail.corpo, corpoHtml)
     .then((ret) => {
         if (!ret) {
             console.log('#solicitaEnvioEmail - erro no envio de email para usuário: '+context.params.uid, '. Veja mensagens anteriores.')

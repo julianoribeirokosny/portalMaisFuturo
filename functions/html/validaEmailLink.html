@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <style>
+            button {
+            /*font-family: 'roboto', sans-serif;*/
+            transition: transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), box-shadow 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+            border: none;
+            border-radius: 25px !important;
+            height: 40px;
+            background: #03a9f4;
+            cursor: pointer;  
+            min-width: initial;
+            width: 400px;
+            color: white;
+            margin: 15px;
+            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.2);
+            width: 200px;
+            }
+            html, body, p {
+                font-family: 'roboto', 'helvetica', sans-serif;
+                font-size: 16px;
+            }            
+        </style>                     
+    </head>
+    <body>
+        <div></div>
+        <p>Olá, Leandro Rocha Furini</p>
+        <p>Clique neste link abaixo para validar seu endereço de e-mail.</p>
+        <div>
+            <a href="{{linkWeb}}">
+                <button class="button">Validar meu e-mail agora</button>
+            </a>
+        </div>
+        <p>Se você não solicitou a validação deste endereço de e-mail, ignore este e-mail.</p>
+        <p>Obrigado,<br>Equipe do app Portal Mais Futuro</p>
+    </body>
+</html>

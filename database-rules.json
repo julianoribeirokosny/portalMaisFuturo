@@ -11,7 +11,8 @@
     },
     // Public profile information.
     "login": {
-      ".indexOn": ["_search_index/full_name", "_search_index/reversed_full_name", "uid"],
+      ".indexOn": ["_search_index/full_name", "_search_index/reversed_full_name", "uid", "email_principal"],     
+			".read": "query.orderByChild == 'email_principal' && query.equalTo == auth.token.email",
       "$uid": {
         ".read": "auth.uid === $uid || auth.token.admin === true",
         ".write": "auth.uid === $uid || auth.token.admin === true",
@@ -61,10 +62,16 @@
         ".write": "root.child('login/'+auth.uid+'/lista_chaves/'+$chave).val() >= 0"
       }
     },
+    // histórico das cargas para cada usuário
     "usuariosHistorico": {
       ".read": "auth.token.admin === true",
       ".write": "false"
-    },    
+    },
+    // log geral de erros
+    "logErros": {
+      ".read": "false",
+      ".write": "auth.uid !== null"
+    },
     // Disallow all other attributes.
     "$other": {
       ".validate": false

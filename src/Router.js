@@ -5,6 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import {MaterialUtils} from './Utils';
 import {Utils} from './Utils';
+import {Erros} from './Erros';
 import page from 'page';
 
 /**
@@ -85,7 +86,8 @@ export default class Router {
     });
 
     page('/erro', () => {
-      this.displayPage('erro');
+      Erros.displayMensagemErro()
+      this.displayPage('erro')
     })
     page('/terms', () => {this.displayPage('terms');});
     page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
