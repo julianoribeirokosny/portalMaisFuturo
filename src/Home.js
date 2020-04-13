@@ -10,6 +10,7 @@ import rentabilidade from './component/rentabilidade/rentabilidade';
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
 import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import page from 'page';
+import {Erros} from './Erros';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -41,11 +42,12 @@ export default class Home {
    
     this.auth = firebase.auth();
     if (!this.auth.currentUser) {
-      return
+      Erros.registraErro('auth', 'showHome')
+      return page('/erro')
     }
-
     let firebaseHelper = this.firebaseHelper
-    console.log('====> usuário logado:', this.auth.currentUser)    
+
+    firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
 
     //ATENÇÃO!!!!!!!!!!!!!!
     // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
@@ -53,13 +55,15 @@ export default class Home {
     this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
     console.log('=====> CHAVE: ', this.chave)
     if (this.chave===null) {
-      //return page('/erro')
+      Erros.registraErro('chave', 'showHome')
+      return page('/erro')      
     }
 
 
     let data_Home = await this.dadosHome(this.chave)
     if (data_Home===null) {
-      return 
+      Erros.registraErro('data_home', 'showHome')
+      return page('/erro')
     }    
 
     Vue.component('grafico-reserva', {
@@ -331,4 +335,5 @@ export default class Home {
       }
     })
   }
+
 }

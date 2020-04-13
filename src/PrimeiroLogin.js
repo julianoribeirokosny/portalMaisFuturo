@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import page from 'page';
 import $ from 'jquery';
+import VMasker from 'vanilla-masker';
 
 export default class PrimeiroLogin {
     
@@ -26,17 +27,35 @@ export default class PrimeiroLogin {
 
         this.displayNascimento = document.querySelector('#confirma-dados-input-nascimento-erro')
         this.inputNascimento = document.querySelector('#nascimento')
+
+        this.montaMascaras()
     }  
 
     async verificaPrimeiroLogin() {
         let ret = false
-        if (this.auth.currentUser) { //Not empty
-            console.log('====> emailVerified', this.auth.currentUser.emailVerified)
-            let temRegistroPrimeiroLogin = await this.firebaseHelper.validaRegistroPrimeiroLogin(this.auth.currentUser.uid)
-            if (!temRegistroPrimeiroLogin) {
-                ret = true
-            } else if (this.auth.currentUser.phoneNumber === '') { //se for de celular não valida email
-                ret = !this.auth.currentUser.emailVerified
+        let usr = this.auth.currentUser
+        if (usr) { //Not empty
+            if (usr.phoneNumber && usr.phoneNumber !== "") { //login celular
+                sessionStorage.tipoLogin = 'celular'
+            } else { //login por email
+                sessionStorage.tipoLogin = 'email'
+            }
+            console.log('====> emailVerified', usr.emailVerified)
+            let temRegistroPrimeiroLogin = await this.firebaseHelper.validaRegistroLogin(usr.uid)
+            if (!temRegistroPrimeiroLogin) { //se não achou registro do login no BD, precisa seguir fluxo do primeiro login
+                //é primeiro login... ou pelo menos não finalizou na primeira vez...
+                //porém, verifica se já não fez outro login que tenha cadastrado o email ou telefone que está tentando agora
+                let usuarioOutroLogin = await this.firebaseHelper.getUsuarioListaParticipacoes(usr, sessionStorage.tipoLogin, '', '')
+                if (!usuarioOutroLogin || !usuarioOutroLogin.data_ultimo_login || usuarioOutroLogin.data_ultimo_login !== '') { 
+                    ret = true
+                } else { 
+                    //se achou em outra conta pelo e-mail ou celular do primeiro login, indica que já fez login com outra conta, cadastrando e-mail ou celular
+                    this.firebaseHelper.gravaDadosPrimeiroLogin(usuarioOutroLogin, usr.uid) 
+                    this.firebaseHelper.gravaLoginSucesso(usr.uid) //loga data-hora do login
+                    ret = false
+                }
+            } else if (!usr.phoneNumber || usr.phoneNumber === '') { //se for de celular não valida email
+                ret = !usr.emailVerified
             }
         }
         return ret
@@ -48,87 +67,99 @@ export default class PrimeiroLogin {
                 this.auth.currentUser.reload()
                 if (this.auth.currentUser.emailVerified) {
                     clearInterval(intervalId);
-                    this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
-                    return page('/') //joga para splash page para depois ir para a home
+                    this.firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
+                    return page('/home') //joga para splash page para depois ir para a home
                 }  
             }, 5000)
         }
     }  
 
     async confirmEmailFone(celular, email) {
-        let tipoLogin
-        if (this.auth.currentUser.phoneNumber && this.auth.currentUser.phoneNumber !== "") { //login celular
-            tipoLogin = 'celular'
-        } else { //login por email
-            tipoLogin = 'email'
-        }
+        let usr = firebase.auth().currentUser
         let validacao
         let validemail
         let validcelular
-        if(tipoLogin === 'celular') {
+        //ajusta padrão do celular
+        celular = '+55' + celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
+
+        if(sessionStorage.tipoLogin === 'celular') {
             validemail = this.validaEmailObrigatorio(email)
             validcelular = this.validaCelularDiferenteLogin(celular)
             validacao = validemail && validcelular
-        } else if (tipoLogin ==='email') {
+        } else if (sessionStorage.tipoLogin ==='email') {
             validemail = this.validaEmailDiferenteLogin(email)
             validcelular = this.validaCelularObrigatorio(celular)
             validacao = validemail && validcelular
         }
         if(validacao) {
+            sessionStorage.emailAlternativo = email
             //um usuário criado pode ter 1 ou mais participações!
-            let listaChaves = await this.firebaseHelper.getUsuarioListaParticipacoes(firebase.auth().currentUser, tipoLogin, celular, email)
-            this.firebaseHelper.gravaDadosPrimeiroLogin(firebase.auth().currentUser.uid, celular, email, listaChaves ? listaChaves : '', firebase.auth().currentUser.email, firebase.auth().currentUser.phoneNumber, tipoLogin)        
+            let participacoes = await this.firebaseHelper.getUsuarioListaParticipacoesPrimeiroLogin(usr, celular, email)
+            let listaChaves = participacoes.listaChavesRetorno
             if (!listaChaves) {
                 page('/confirmacao-dados')      // pede confirmação de mais dados!
             } else { //achou ou email ou celular na lista
-                let loginGoogle = this.auth.currentUser.providerData[0].providerId === "google.com"
-                if (loginGoogle || tipoLogin === 'celular') { //se login google não precisa enviar email de validação...
-                    await this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
+                let nome = participacoes.nome
+                let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave            
+                let primeiroLogin = {
+                    chave_principal: chavePrincipal, 
+                    lista_chaves: listaChaves, 
+                    email_principal: usr.email && usr.email !== '' ? usr.email : email,
+                    celular_principal: usr.phoneNumber && usr.phoneNumber !== '' ? usr.phoneNumber : celular,
+                    tipo_login: sessionStorage.tipoLogin,
+                    celular_alternativo: usr.phoneNumber && usr.phoneNumber !== '' ? celular : '', // só grava email alternativo se houver o emailPrincipal. Caso contrário o email alternativo será o principal...
+                    email_alternativo: usr.email && usr.email !== '' ? email : '',  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
+                    full_name: nome
+                }
+                this.firebaseHelper.gravaDadosPrimeiroLogin(primeiroLogin, usr.uid)            
+                let loginGoogle = usr.providerData[0].providerId === "google.com"
+                if (loginGoogle || sessionStorage.tipoLogin === 'celular') { //se login google não precisa enviar email de validação...
+                    this.firebaseHelper.gravaLoginSucesso(usr.uid) //loga data-hora do login
                     page('/home')
                 } else {
-                    //NECESSÁRIO para aguardar gravação do email quando o login for via celular
-                    var intervalId = setInterval(() => {  //Aguarda até ter a verificação
-                        this.auth.currentUser.reload()
-                        if (this.auth.currentUser.email) {
-                            clearInterval(intervalId);
-                            this.firebaseHelper.enviarEmailLinkValidacao()
-                            page('/aviso-validacao')      
-                        }  
-                    }, 3000)
+                    let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('firebase')
+                    if (enviouEmail) {
+                        page('/aviso-validacao')
+                    } else {
+                        //não registra erro aqui pq já registrou dentro de enviarEmailLinkValidacao
+                        page('/erro')
+                    }
+                    
                 }
             }
         }
     }
 
-    async confirmDados(nome, cpf, nascimento) {        
-        let validNome = this.validaNomeObrigatorio(nome)
-        let validCpf = this.validaCpfObrigatorio(cpf)
-        let validNascimento = this.validaNascimentoObrigatorio(nascimento)
-        if(validNome && validCpf && validNascimento) {
-            let tipoLogin
-            if (this.auth.currentUser.phoneNumber && this.auth.currentUser.phoneNumber !== "") { //login celular
-                tipoLogin = 'celular'
-            } else { //login por email
-                tipoLogin = 'email'
-            }            
-            let listaChaves = await this.firebaseHelper.getUsuarioListaParticipacoesDados(cpf, nome, nascimento)
-            this.firebaseHelper.gravaDadosPrimeiroLogin(firebase.auth().currentUser.uid, '', '', listaChaves ? listaChaves : '', firebase.auth().currentUser.email, firebase.auth().currentUser.phoneNumber, tipoLogin)        
+    async confirmDados(cpf) {        
+        if(this.validaCpfObrigatorio(cpf)) {
+            let usr = firebase.auth().currentUser
+            let retListaParticipacoesDados = await this.firebaseHelper.getUsuarioListaParticipacoesDados(cpf)
+            let listaChaves = retListaParticipacoesDados.listaChaves
+            let nome = retListaParticipacoesDados.nome
+            sessionStorage.emailCadastro = retListaParticipacoesDados.emailCadastro
             if (!listaChaves) {
-                page('/confirmacao-dados')      // pede confirmação de mais dados!
-            } else { //achou ou email ou celular na lista
-                let loginGoogle = this.auth.currentUser.providerData[0].providerId === "google.com"
-                if (loginGoogle || tipoLogin === 'celular') { //se login google não precisa enviar email de validação...
-                    await this.firebaseHelper.gravaEfetivacaoPrimeiroLogin(this.auth.currentUser.uid)
-                    page('/home')
+                page('/erro-confirmacao-dados')
+            } else {
+                //grava registro primeiro login
+                let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave            
+                let primeiroLogin = {
+                    chave_principal: chavePrincipal, 
+                    lista_chaves: listaChaves, 
+                    email_principal: usr.email && usr.email !== '' ? usr.email : sessionStorage.emailCadastro,
+                    celular_principal: usr.phoneNumber && usr.phoneNumber !== '' ? usr.phoneNumber : '',
+                    tipo_login: sessionStorage.tipoLogin,
+                    celular_alternativo: '',
+                    email_alternativo: usr.email && usr.email !== '' ? sessionStorage.emailCadastro : '',  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
+                    full_name: nome
+                }
+                this.firebaseHelper.gravaDadosPrimeiroLogin(primeiroLogin, usr.uid) 
+                //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)        
+                let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro)
+                if (enviouEmail) { //envia email
+                    page('/confirmacao-dados-final')      
                 } else {
-                    var intervalId = setInterval(() => {  //Aguarda até ter a verificação
-                        this.auth.currentUser.reload()
-                        if (this.auth.currentUser.email) {
-                            clearInterval(intervalId);
-                            this.firebaseHelper.enviarEmailLinkValidacao()
-                            page('/aviso-validacao')      
-                        }  
-                    }, 3000)
+                    //não registra erro aqui pq já registrou dentro de enviarEmailLinkValidacao
+                    page('/erro')
                 }
             }
         }
@@ -148,6 +179,38 @@ export default class PrimeiroLogin {
             $('.fp-input-email').prop('required', 'false')
         }
     }
+
+    telaConfirmacaoDadosFinalConfig() {
+        if (this.auth.currentUser) { //Not empty
+            let emailCadastro = sessionStorage.emailCadastro
+            let emailAlternativo = sessionStorage.emailAlternativo
+            let btnReenviaVerificacao = $('#btn-reenvia-verificacao')
+            let btnNaoReconhece = $('#btn-nao-reconhece-email')
+            let divNaoReconhece = $('#div-nao-reconhece-email')
+            let msgPart1 = $('#msg-participante1')
+            let msgPart2 = $('#msg-participante2')
+            let msgPart3 = $('#msg-participante3')
+            if (emailCadastro === emailAlternativo) {
+                msgPart1.text(`Identificamos que o e-mail ${emailAlternativo} informado já consta em nossa base da dados.`)
+                msgPart2.texto(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para este e-mail.`)
+                msgPart3.text(`_`)            
+                divNaoReconhece.hide()            
+            } else {
+                divNaoReconhece.show()
+                btnReenviaVerificacao.click(() => {
+                    this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro)
+                })    
+                msgPart3.text(`Não reconhece ou não usa mais o e-mail ${emailCadastro}?`)
+                msgPart2.text(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para seu e-mail cadastrado: ${emailCadastro}`)                
+                if (emailAlternativo !== '') {
+                    msgPart1.text(`Nenhum dos e-mails informados (${this.auth.currentUser.email} e ${emailAlternativo}) foram identificados em nossa base de dados.`)
+                } else {
+                    msgPart1.text(`O e-mail ${this.auth.currentUser.email} não foi identificado em nossos cadastros.`)
+                }
+            }
+        }
+    }
+
     validaCelularObrigatorio(celular) {
         this.displayCelular.style.display = 'none'
         if(celular.length <= 13) {
@@ -164,7 +227,6 @@ export default class PrimeiroLogin {
         }
     }
     validaCelularDiferenteLogin(celular) {
-        celular = '+55' + celular.replace('(','').replace(')','').replace(' ','').replace('-','')        
         this.displayCelular.style.display = 'none'        
         if((firebase.auth().currentUser.phoneNumber) && 
             (firebase.auth().currentUser.phoneNumber !== "") && 
@@ -181,6 +243,7 @@ export default class PrimeiroLogin {
             return true
         }      
     }
+    
     validaEmailObrigatorio(email) {        
         this.displayEmail.style.display = 'none'
         if (email !== "" || email) {
@@ -300,4 +363,25 @@ export default class PrimeiroLogin {
             return true
         }
     }
+
+    montaMascaras() {
+        let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+        var celular = document.querySelector('#celular');    
+        VMasker(celular).maskPattern(celularMask[0]);
+        celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
+    
+        let cpfMask = '999.999.999-99'
+        var cpf = document.querySelector('#cpf');    
+        VMasker(cpf).maskPattern(cpfMask);    
+    }
+
+    inputHandler(masks, max, event) {
+        var c = event.target;
+        var v = c.value.replace(/\D/g, '');
+        var m = c.value.length > max ? 1 : 0;
+        VMasker(c).unMask();
+        VMasker(c).maskPattern(masks[m]);
+        c.value = VMasker.toPattern(v, masks[m]);
+    }
+    
 }

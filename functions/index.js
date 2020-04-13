@@ -19,3 +19,11 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'setDadosLoginUs
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'setUserClaims') {
   exports.setUserClaims = require('./setUserClaims').default;
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'solicitaEnvioEmail') {
+  exports.solicitaEnvioEmail = require('./solicitaEnvioEmail').default;
+}
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'validaEmailLinkKey') {
+  exports.validaEmailLinkKey = require('./validaEmailLinkKey').default;
+}
