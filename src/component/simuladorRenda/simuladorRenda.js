@@ -7,8 +7,9 @@ import './simuladorRenda.css';
 import page from 'page';
 import vSelect from 'vue-select'; 
 import 'vue-select/dist/vue-select.css';
-import financeiro from '../../../functions/Financeiro';
 import Contratacao from '../contratacao/contratacao';
+
+const financeiro = require('../../../functions/Financeiro')
 
 export default {    
     template: simuladorRenda,
@@ -53,8 +54,7 @@ export default {
                       { label: '60 anos', value: 60 },{ label: '61 anos', value: 61 },{ label: '62 anos', value: 62 },
                       { label: '63 anos', value: 63 },{ label: '64 anos', value: 64 },{ label: '65 anos', value: 65 },
                       { label: '66 anos', value: 66 },{ label: '67 anos', value: 67 },{ label: '68 anos', value: 68 },
-                      { label: '69 anos', value: 69 },{ label: '70 anos', value: 70 }],
-            ipagto: new financeiro(),
+                      { label: '69 anos', value: 69 },{ label: '70 anos', value: 70 }],            
             contribuicao: this.dados.minimoContribuicao,
             formatter1: v => `${('' + v).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
             contribuicaoTela: '',
@@ -147,22 +147,22 @@ export default {
             }
         }
     },
-    created(){          
+    created(){        
         this.date_now = new Date()
         this.date_inicio_renda = new Date(Number(this.date_parts[2]) + Number(this.idade), this.date_parts[1] - 1, this.date_parts[0])
-        this.contribuicaoTela = this.ipagto.float_to_string(this.dados.minimoContribuicao.toFixed(2))
-        this.reservaTotalTela = this.ipagto.float_to_string(this.dados.reservaTotalFutura)
-        this.rendaMensalTela = this.ipagto.float_to_string(this.dados.rendaMensalFutura)
-        this.contribuicaoFixaTela = this.ipagto.float_to_string(this.dados.contribuicaoFixa.toFixed(2))
-        this.contribuicaoTotalTela = this.ipagto.float_to_string((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2))
+        this.contribuicaoTela = financeiro.float_to_string(this.dados.minimoContribuicao.toFixed(2))
+        this.reservaTotalTela = financeiro.float_to_string(this.dados.reservaTotalFutura)
+        this.rendaMensalTela = financeiro.float_to_string(this.dados.rendaMensalFutura)
+        this.contribuicaoFixaTela = financeiro.float_to_string(this.dados.contribuicaoFixa.toFixed(2))
+        this.contribuicaoTotalTela = financeiro.float_to_string((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2))
     }, 
     mounted(){
     },
     watch: {
         contribuicao(newVal, oldVal) {
             if(newVal !== oldVal) {
-                this.contribuicaoTela = this.ipagto.float_to_string(newVal.toFixed(2))
-                this.contribuicaoTotalTela = this.ipagto.float_to_string((newVal + this.dados.contribuicaoFixa).toFixed(2))
+                this.contribuicaoTela = financeiro.float_to_string(newVal.toFixed(2))
+                this.contribuicaoTotalTela = financeiro.float_to_string((newVal + this.dados.contribuicaoFixa).toFixed(2))
                 this.calculaReservaFutura()
                 this.calculaRendaFutura()
             }
@@ -209,24 +209,24 @@ export default {
         },
         calculaReservaFutura() {
             this.calculaQuantidadeMeses()
-            this.reservaTotal = this.ipagto.valorFuturo(this.dados.reservaTotalAtual,
+            this.reservaTotal = financeiro.valorFuturo(this.dados.reservaTotalAtual,
                                                         this.taxa_mensal_simulador, 
                                                         this.qtd_meses,
                                                         (this.contribuicao + this.dados.contribuicaoFixa + this.dados.contribuicaoPatronal).toFixed(2))
             
             if(this.dados.usr_tipo_plano == 'jmalucelli') {
-                let decimoTerceiro = this.ipagto.valorFuturo(0, 5, this.qtd_meses/12, (this.dados.contribuicaoFixa + this.dados.contribuicaoPatronal).toFixed(2))
+                let decimoTerceiro = financeiro.valorFuturo(0, 5, this.qtd_meses/12, (this.dados.contribuicaoFixa + this.dados.contribuicaoPatronal).toFixed(2))
                 console.log('decimoTerceiro',decimoTerceiro)
                 console.log('this.reservaTotal antes',this.reservaTotal)
                 this.reservaTotal += decimoTerceiro
                 console.log('this.reservaTotal depois',this.reservaTotal)
             }
                                                         
-            this.reservaTotalTela = this.ipagto.float_to_string(this.reservaTotal.toFixed(2))
+            this.reservaTotalTela = financeiro.float_to_string(this.reservaTotal.toFixed(2))
         },
         calculaRendaFutura() {
-            this.rendaMensal = this.ipagto.pgto(this.reservaTotal, this.taxa_mensal_simulador, (this.tempo*12))            
-            this.rendaMensalTela = this.ipagto.float_to_string(this.rendaMensal)
+            this.rendaMensal = financeiro.pgto(this.reservaTotal, this.taxa_mensal_simulador, (this.tempo*12))            
+            this.rendaMensalTela = financeiro.float_to_string(this.rendaMensal)
         },
         calculaQuantidadeMeses() {
             this.qtd_meses = (this.date_inicio_renda.getFullYear() - this.date_now.getFullYear()) * 12;

@@ -42,7 +42,7 @@ export default class Home {
    
     this.auth = firebase.auth();
     if (!this.auth.currentUser) {
-      Erros.registraErro('auth', 'showHome')
+      Erros.registraErro('', 'auth', 'showHome')      
       return page('/erro')
     }
     let firebaseHelper = this.firebaseHelper
@@ -55,14 +55,13 @@ export default class Home {
     this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
     console.log('=====> CHAVE: ', this.chave)
     if (this.chave===null) {
-      Erros.registraErro('chave', 'showHome')
-      return page('/erro')      
+      Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
+      return page('/erro')
     }
-
 
     let data_Home = await this.dadosHome(this.chave)
     if (data_Home===null) {
-      Erros.registraErro('data_home', 'showHome')
+      Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
     }    
 
@@ -151,6 +150,8 @@ export default class Home {
         data: {
             home: this.data_Home,
             toggle: false,
+            chave: this.chave,
+            uid: this.auth.currentUser.uid,
             rendaSimulador: {
                 usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
                 taxa_anual_simulacao: 5,
@@ -164,7 +165,7 @@ export default class Home {
                 reservaTotalFutura: 1000000,
                 rendaMensalFutura: 1500.51,
                 usr_dtnasc:'18/06/1978',
-                idadeBeneficio: 60,
+                idadeBeneficio: 60,        
                 chave: this.chave,
                 uid: this.auth.currentUser.uid,
             },
@@ -184,7 +185,7 @@ export default class Home {
               this.toggle = !this.toggle;
             },
             removerCampanha: function(campanha) {
-                campanha.ativo = false
+                campanha.ativo = false                
                 firebaseHelper.removerCampanha(this.chave, campanha.nome)
             },
             contratarCampanha(link) {

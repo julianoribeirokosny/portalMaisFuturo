@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import FirebaseHelper from './FirebaseHelper';
+import { Utils } from './Utils';
 
 export class Erros {
   static displayMensagemErro() {
@@ -13,9 +14,10 @@ export class Erros {
     }
   }
 
-  static registraErro(type, origem) {
+  static registraErro(uid, type, origem) {
     let codErro = Utils.dateFormat(new Date(), true, false)+'-'+type
     sessionStorage.erro = codErro
-    FirebaseHelper.logErros(codErro, origem)
+    let firebaseHelper = new FirebaseHelper();
+    firebaseHelper.logErros(uid, codErro, origem)
   }
 }

@@ -20,10 +20,10 @@
             <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
         </div>
         <div>        
-            <div class="mdl-shadow--2dp div_btn_contratar"  @click="confirmar" style="margin-top: 30px;">
+            <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar" style="margin-top: 30px;">
                 Confirmar novo valor
             </div>  
-            <div class="mdl-shadow--2dp div_btn_contratar"  @click="cancelar" style="margin-top: 30px; background-color: brown;">
+            <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="cancelar" style="margin-top: 30px; background-color: brown;">
                 Cancelar
             </div>
         </div>

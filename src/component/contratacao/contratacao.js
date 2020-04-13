@@ -27,8 +27,7 @@ export default {
     },    
     data: function() {
         return {
-            firebaseHelper: new FirebaseHelper(),
-            //utils: new Utils(),
+            firebaseHelper: new FirebaseHelper(),            
             finalizado: false,
             error_banco: false
         }
@@ -47,19 +46,11 @@ export default {
             let objeto_contratacao = new Object()     
             let dateFormat = Utils.dateFormat(new Date(), true, true)            
             objeto_contratacao[dateFormat] = {
+                                                uid: this.dados.uid,
                                                 tipo: 'Contribuição mensal',
                                                 valor_anterior: this.dados.valor_antigo,
                                                 valor_solicitado: this.dados.valor_novo,
-                                                status: 'solicitado',
-                                                visualizadores: { 
-                                                    [this.dados.uid]: {
-                                                        data: dateFormat  
-                                                    }                                                  
-                                                },
-                                                cadastro: {
-                                                    uid: this.dados.uid,
-                                                    data: dateFormat
-                                                }
+                                                status: 'solicitado',                                                
                                             }
             console.log('Objeto:',objeto_contratacao)
             var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)            
