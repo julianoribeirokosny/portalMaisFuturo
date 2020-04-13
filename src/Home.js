@@ -41,7 +41,7 @@ export default class Home {
    
     this.auth = firebase.auth();
     if (!this.auth.currentUser) {
-      Erros.registraErro('auth', 'showHome')
+      Erros.registraErro('', 'auth', 'showHome')
       return page('/erro')
     }
     let firebaseHelper = this.firebaseHelper
@@ -54,14 +54,14 @@ export default class Home {
     let chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
     console.log('=====> CHAVE: ', chave)
     if (chave===null) {
-      Erros.registraErro('chave', 'showHome')
+      Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
     }
 
 
     let data_Home = await this.dadosHome(chave)
     if (data_Home===null) {
-      Erros.registraErro('data_home', 'showHome')
+      Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
     }    
 
@@ -268,6 +268,7 @@ export default class Home {
           let chave = stringHome.substring(posIni+2, posFim)
           let caminho = chave.split('.')
           let valor
+          let achouCaminhoPart = false, achouCaminhoSeg = false
 
           console.log('===========> chave', chave)
 
@@ -276,6 +277,7 @@ export default class Home {
             valor = part
             for (let i in caminho) {
               if (valor[caminho[i]]!==undefined) {
+                achouCaminhoPart = true
                 valor = valor[caminho[i]]
               }
             }  
@@ -286,12 +288,13 @@ export default class Home {
             valor = segmentoUsuario
             for (let i in caminho) {
               if (valor[caminho[i]]!==undefined) {
+                achouCaminhoSeg = true
                 valor = valor[caminho[i]]
               }
             }  
           }
 
-          if (valor===undefined) {
+          if (valor===undefined || (!achouCaminhoPart && !achouCaminhoSeg)) {
             valor = ''
           }
 

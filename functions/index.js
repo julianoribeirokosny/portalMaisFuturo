@@ -27,3 +27,11 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'solicitaEnvioEm
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'validaEmailLinkKey') {
   exports.validaEmailLinkKey = require('./validaEmailLinkKey').default;
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'registraTransacoesContratacoes') {
+  exports.registraTransacoesContratacoes = require('./registraTransacoesContratacoes').default;
+}
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'registraTransacoesCadastro') {
+  exports.registraTransacoesCadastro = require('./registraTransacoesCadastro').default;
+}

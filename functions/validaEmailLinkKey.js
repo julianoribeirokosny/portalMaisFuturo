@@ -54,7 +54,7 @@ exports.default = functions.https.onRequest((req, res) => {
                 return false
             });
         }).catch((e) => {
-            console.log(`#validaEmailLinkKey - erro na validação do link para o uid: ${uid}`, e)
+            console.error(`#validaEmailLinkKey - erro na validação do link.`, e)
             res.status(401).send("Ops! Parece que este link não é mais válido. Retorne ao aplicativo e solicite um novo envio de e-mail.")            
             return false
         })

@@ -47,6 +47,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   //console.log('===> select', select)
 
   let usuarios = {}
+
   return buscaDadosPG(select)
   .then((retDadosPG) => {
     if (!retDadosPG) {
@@ -86,8 +87,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
             nome: 'Reserva projetada',
             valor: listaDatasetsProjetoDeVida[2].data[5]
-          }         
+          }     
+
+          listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
+
           //salva informações acumuladas do usuário
+          //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
           usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
         }
         //carrega dados novo registro do usuário
@@ -248,7 +253,11 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         nome: 'Reserva projetada',
         valor: listaDatasetsProjetoDeVida[2].data[5]
       }         
+      
+      listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
+
       //salva informações acumuladas do usuário
+      //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
       usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
     }
     usuarios = insereRegistroTestes(usuarios)
@@ -257,19 +266,23 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
     //salva dados anteriores dos usuários em usuariosHistorico
     let ref = admin.database().ref('usuarios')
-    return ref.once('value').then((usuariosAnterior) => {
-      if (usuariosAnterior.val() !== null) {
-        let dtHistorico = utils.dateFormat(new Date(), true, true)
-        ref = admin.database().ref(`usuariosHistorico/${plano}/${dtHistorico}`)
-        return ref.update(usuariosAnterior.val())  
-      } else {
-        return true
-      }
-    }).then(() => {
-      //salva informações finais/ATUAIS na chave de usuários
-      ref = admin.database().ref('usuarios')
-      return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
+    return ref.orderByChild('usr_plano').equalTo(plano).once('value')
+    .then((usrAnterior) => {
+      ref = admin.database().ref(`usuariosHistorico`)
+      ref.remove()
+      let dtHistorico = utils.dateFormat(new Date(), true, true)
+      ref = admin.database().ref(`usuariosHistorico/${plano}`)
+      let usrHistorico = {}
+      usrHistorico[dtHistorico] = JSON.stringify(usrAnterior.val())
+      return ref.update(usrHistorico) 
+    //.then(() => {
+    //  //salva informações finais/ATUAIS na chave de usuários
+    //  ref = admin.database().ref('usuarios')
+    //  return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
     }).then(() => {      
+      console.log('===> usuarios string', JSON.stringify(usuarios))
+      ref = admin.database().ref(`usuarios`)
+      //ref.update({teste: JSON.stringify(usuarios)})
       return ref.update(usuarios)
     }).then(() => {
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
@@ -277,13 +290,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       console.log('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
     })
 
-
   })
 
 
 })
 
-function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida) {
+function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, transacoes) {
 
   /*usr_dados_cadastro: {
 
@@ -338,6 +350,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
       lista_meses_projetoDeVida: listaMesesProjetoDeVida,
       vigente: true
     }
+    //,    transacoes: transacoes ? transacoes : ''
   }
 
   return usuarios
@@ -355,7 +368,7 @@ function calculaGraficoReserva(valorHoje, contribHoje, dataNasc, dataAdesao, tax
   //transforma taxa anual em mensal:
   taxa = (1+(taxa/100))^(1/12)
 
-  valorHoje = Number(valorHoje.replace('.','').replace(',','.'))
+  //valorHoje = Number(valorHoje.replace('.','').replace(',','.'))
 
   //calculo da reserva aos 65 anos
   let dtNasc = new Date(dataNasc)

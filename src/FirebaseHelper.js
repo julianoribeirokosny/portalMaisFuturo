@@ -948,7 +948,7 @@ export default class FirebaseHelper {
         console.log('=> Email Enviado')
         return true
       }).catch((e) => {
-        Erros.registraErro('emailVer', 'enviarEmailLinkValidacao')
+        Erros.registraErro(usr.uid, 'emailVer', 'enviarEmailLinkValidacao')
         return false
       })
       return ret
@@ -958,7 +958,7 @@ export default class FirebaseHelper {
         console.log('=> Token OK')
         return idToken
       }).catch((e) => {
-        Erros.registraErro('tkn', 'enviarEmailLinkValidacao')
+        Erros.registraErro(usr.uid, 'tkn', 'enviarEmailLinkValidacao')
         return false
       });      
 
@@ -1168,7 +1168,6 @@ export default class FirebaseHelper {
     let snapshot = await ref.once('value')
     let ret = null
     snapshot.forEach((snap) => {
-      console.log('====> snap.val()', snap.val())
       if (snap.val()===numItemParticipacao) {
         ret = snap.key
       }
@@ -1176,8 +1175,20 @@ export default class FirebaseHelper {
     return ret
   }
 
-  logErros(codErro, origem) {
-    ref = this.database.ref(`logErros/${codErro}`)
-    ref.update({uid: usr.uid, erro: e, origem: origem})
+  async getContratacaoEmAberto(chave) {
+    let ref = this.database.ref(`usuarios/${chave}`)
+    let snapshot = await ref.once('value')
+    let ret = {}
+    snapshot.forEach((snap) => {
+      if (snap.status !== 'concluído') {
+        ret[snap.key] = snap.val()
+      }
+    })
+    return Object.keys(ret).length > 0 ? ret : null
+  }
+
+  logErros(uid, codErro, origem) {
+    let ref = this.database.ref(`logErros/${codErro}`)
+    ref.update({uid: uid, erro: e, origem: origem})
   }
 };
