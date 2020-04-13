@@ -8,12 +8,12 @@ import page from 'page';
 import vSelect from 'vue-select'; 
 import 'vue-select/dist/vue-select.css';
 import financeiro from '../../../functions/Financeiro';
-import contratacao from '../contratacao/contratacao'
+import Contratacao from '../contratacao/contratacao';
 
 export default {    
     template: simuladorRenda,
     components: { 
-        VueSlider, vSelect, contratacao
+        VueSlider, vSelect, Contratacao
     },
     props: { 
         dados: {
@@ -37,9 +37,13 @@ export default {
     data: function() {
         return {
             contratacao: {
-                titulo: 'Confirme a </br> alteração da </br>sua contribuição',
-                mensagem: 'Mensagem de teste',
-                valor: '3.012,54'
+                titulo: '',
+                msg_inicial: '',
+                msg_vigencia: '',
+                msg_novo_valor: '',
+                valor_novo: '',
+                valor_antigo: '',
+                uid:'',
             },
             lidades: [{ label: '45 anos', value: 45 },{ label: '46 anos', value: 46 },{ label: '47 anos', value: 47 },
                       { label: '48 anos', value: 48 },{ label: '49 anos', value: 49 },{ label: '50 anos', value: 50 },
@@ -178,13 +182,30 @@ export default {
         }
     },
     methods: {
+        cancelarContratacao(value) {
+            this.simulador = value
+        },
+        voltar() {
+            page('/home')
+        },
         continuar(link) {
             page(`/${link}`)
         },
-        contratar() {            
-            //this.simulador = false
-            console.log('this.simulador',this.simulador)
-            console.log('this.contratacao',this.contratacao)
+        contratar() {
+            this.contratacao.titulo = 'Confirme a </br> alteração da </br>sua contribuição',
+            this.contratacao.msg_inicial = 'Você está alterando o valor da sua contribuição mensal.'
+            this.contratacao.msg_vigencia = 'A sua nova contribuição mensal estará vigente a partir do mês de Mai/2020.'
+            this.contratacao.msg_novo_valor = `O valor da sua nova contribuição mensal é de R$ ${this.contribuicaoTela}.`
+            this.contratacao.valor_novo = this.contribuicao
+            this.contratacao.valor_novo_Tela = this.contribuicaoTela
+            this.contratacao.valor_antigo = this.dados.minimoContribuicao
+            this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Sua contribuição </br> foi alterada'
+            this.contratacao.finalizacao_msg = 'Contribuição mensal alterada com sucesso.'
+            this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$ '
+            this.contratacao.chave = this.dados.chave
+            this.contratacao.uid =  this.dados.uid
+            console.log('Contratacao',this.contratacao)
+            this.simulador = false
         },
         calculaReservaFutura() {
             this.calculaQuantidadeMeses()
