@@ -15,9 +15,9 @@ export class Erros {
   }
 
   static registraErro(uid, type, origem) {
-    let codErro = Utils.dateFormat(new Date(), true, false)+'-'+type
-    sessionStorage.erro = codErro
+    let data = Utils.dateFormat(new Date(), true, true)
+    sessionStorage.erro = data+'-'+type
     let firebaseHelper = new FirebaseHelper();
-    firebaseHelper.logErros(uid, codErro, origem)
+    firebaseHelper.logErros(uid, data, type, origem)
   }
 }

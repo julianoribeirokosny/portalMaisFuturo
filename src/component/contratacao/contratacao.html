@@ -1,15 +1,43 @@
-<div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
-<div style="margin-top: 40px;">
-    <div>
-        <p style="margin-bottom: 1px;">
-           {{ dados.mensagem }}
-        </p>                    
-    </div>                           
-</div>
-<div style="margin-top: 40px;">
-    <div>
-        <p style="margin-bottom: 1px;">
-           {{ dados.valor }}
-        </p>                    
-    </div>                           
+<div>    
+    <template v-if="!finalizado">
+        <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;"></div>
+        <div style="margin-top: 30px;">
+            <p>
+            {{ dados.msg_inicial }}
+            </p>
+        </div>
+        <div style="margin-top: 30px;">        
+            <p>
+            {{ dados.msg_vigencia }}
+            </p>    
+        </div>
+        <div style="margin-top: 30px;">
+            <p>
+            {{ dados.msg_novo_valor }}
+            </p>              
+        </div>
+        <div v-if="error_banco" style="margin-top: 30px;color: brown;">
+            <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
+        </div>
+        <div>        
+            <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar" style="margin-top: 30px;">
+                Confirmar novo valor
+            </div>  
+            <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="cancelar" style="margin-top: 30px; background-color: brown;">
+                Cancelar
+            </div>
+        </div>
+    </template>
+    <template v-if="finalizado">
+        <div class="div_titulo_card margin-auto" v-html="dados.titulo_finalizacao" style="margin-top: 30px;"></div>
+        <div style="margin-top: 40px;">
+            <p>{{ dados.finalizacao_msg}}</p>
+        </div>    
+        <div style="margin-top: 40px;">
+            <p>{{ dados.finalizacao_msg_novo_valor }} {{ dados.valor_novo_Tela }} </p>
+        </div>            
+        <div class="mdl-shadow--2dp div_btn_contratar"  @click="retornar" style="margin-top: 40px;">
+            Retornar para Home
+        </div>
+    </template>
 </div>

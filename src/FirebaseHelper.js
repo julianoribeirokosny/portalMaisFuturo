@@ -1163,6 +1163,26 @@ export default class FirebaseHelper {
     })
   }
 
+  contratarNovoValor(contratacao, chave) {
+      try {
+          let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/`)          
+          ref.update(contratacao)
+
+          ref = this.database.ref(`usuarios/${chave}/usr_projeto_vida/acao/`)          
+          ref.update({vigente:false})
+
+          ref = this.database.ref(`usuarios/${chave}/usr_contribuicao/acao/`)
+          ref.update({vigente:false})
+
+          return true
+      }
+      catch (e) {
+          return false
+      }
+    // let ref = this.database.ref(`usuarios/${uid}/usr_campanhas/${nome}`)
+    
+  }
+
   async getUsuarioChave(uid, numItemParticipacao) {
     let ref = this.database.ref(`login/${uid}/lista_chaves`)
     let snapshot = await ref.once('value')
@@ -1187,8 +1207,8 @@ export default class FirebaseHelper {
     return Object.keys(ret).length > 0 ? ret : null
   }
 
-  logErros(uid, codErro, origem) {
-    let ref = this.database.ref(`logErros/${codErro}`)
-    ref.update({uid: uid, erro: e, origem: origem})
+  logErros(uid, data, codErro, origem) {
+    let ref = this.database.ref(`logErros/${uid}/${data}`)
+    ref.update({erro: codErro, origem: origem})
   }
 };

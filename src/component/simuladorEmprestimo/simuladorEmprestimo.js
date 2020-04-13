@@ -94,7 +94,7 @@ export default {
         }
     },    
     created(){          
-        this.$refs.botao.style.backgroundColor = '#dfe5eb';
+        //this.$refs.botao.style.backgroundColor = '#dfe5eb';
     },
     mounted(){
         this.calcula_taxa_mensal();
@@ -103,10 +103,10 @@ export default {
         calcularParcela(){    
             if(parseFloat(this.principal.toString().replace(/\./g,'')) > this.maximo) {
                 this.valido = false;                
-                this.$refs.botao.style.backgroundColor = '#dfe5eb';                
+                //this.$refs.botao.style.backgroundColor = '#dfe5eb';                
                 this.parcela = '0';
             } else {
-                this.$refs.botao.style.backgroundColor = '#0C7BC6';                
+                //this.$refs.botao.style.backgroundColor = '#0C7BC6';
                 this.valido = true;
                 this.PGTO();
                 //this.parcela = this.thousands_separators((parseFloat(this.principal.toString().replace(/\./g,''))/this.quantidade).toFixed(2));

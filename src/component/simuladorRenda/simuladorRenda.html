@@ -1,6 +1,6 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-        <template v-show="simulador">
+        <template v-if="simulador">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo">            
             </div>
             <!--Planos Instituidos-->
@@ -95,7 +95,7 @@
 
             <div class="mdl-card__supporting-text mdl-card-container">                
                 <template v-if="dados.minimoContribuicao == contribuicao">
-                    <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="continuar('home')">
+                    <div class="mdl-shadow--2dp div_btn_contratar"  @click="continuar('home')">
                         Continuar com R$ {{contribuicaoTela}}
                     </div>                        
                 </template>
@@ -103,11 +103,14 @@
                     <div class="mdl-shadow--2dp div_btn_contratar"  @click="contratar()">
                         Contratar R$ {{contribuicaoTela}} 
                     </div>                        
-                </template>                
+                </template>        
+                <div class="mdl-shadow--2dp div_btn_contratar"  @click="voltar" style="margin-top: 30px; background-color: brown;">
+                    Voltar
+                </div>        
             </div>
         </template>
-        <template v-show="!simulador">
-            <contratacao v-bind:dados="contratacao"></contratacao>
+        <template v-if="!simulador">            
+            <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
         </template>
     </div>
 </div>

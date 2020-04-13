@@ -35,6 +35,7 @@ export default class Home {
     this.home = null
     this.data_Home = null    
     this.vueObj = null
+    this.chave = null
   }  
 
   async showHome() {
@@ -51,15 +52,14 @@ export default class Home {
     //ATENÇÃO!!!!!!!!!!!!!!
     // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
     //    usuário no menu de seleção de visualizar participações!!!!!!!
-    let chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
-    console.log('=====> CHAVE: ', chave)
-    if (chave===null) {
+    this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
+    console.log('=====> CHAVE: ', this.chave)
+    if (this.chave===null) {
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
     }
 
-
-    let data_Home = await this.dadosHome(chave)
+    let data_Home = await this.dadosHome(this.chave)
     if (data_Home===null) {
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
@@ -150,6 +150,8 @@ export default class Home {
         data: {
             home: this.data_Home,
             toggle: false,
+            chave: this.chave,
+            uid: this.auth.currentUser.uid,
             rendaSimulador: {
                 usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
                 taxa_anual_simulacao: 5,
@@ -163,7 +165,9 @@ export default class Home {
                 reservaTotalFutura: 1000000,
                 rendaMensalFutura: 1500.51,
                 usr_dtnasc:'18/06/1978',
-                idadeBeneficio: 60
+                idadeBeneficio: 60,        
+                chave: this.chave,
+                uid: this.auth.currentUser.uid,
             },
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
@@ -181,8 +185,8 @@ export default class Home {
               this.toggle = !this.toggle;
             },
             removerCampanha: function(campanha) {
-                campanha.ativo = false
-                firebaseHelper.removerCampanha(chave, campanha.nome)
+                campanha.ativo = false                
+                firebaseHelper.removerCampanha(this.chave, campanha.nome)
             },
             contratarCampanha(link) {
                 page(`/${link}`)
@@ -201,8 +205,8 @@ export default class Home {
     }
     
     //Escuta por alterações na home ou no usuario
-    firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', chave))
-    firebaseHelper.registerForUserUpdate(chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', chave))
+    firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
+    firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
   }
 
   async dadosHome(chave) {
