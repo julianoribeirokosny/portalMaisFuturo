@@ -1179,8 +1179,24 @@ export default class FirebaseHelper {
       catch (e) {
           return false
       }
-    // let ref = this.database.ref(`usuarios/${uid}/usr_campanhas/${nome}`)
-    
+  }
+
+  cancelarContratacao(chave, id) {
+      try{
+          let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
+          ref.update({status:'cancelado pelo usuário'})
+
+          ref = this.database.ref(`usuarios/${chave}/usr_projeto_vida/acao/`)          
+          ref.update({vigente:true})
+
+          ref = this.database.ref(`usuarios/${chave}/usr_contribuicao/acao/`)
+          ref.update({vigente:true})
+
+          return true
+      }
+      catch (e) {
+          return false
+      }
   }
 
   async getUsuarioChave(uid, numItemParticipacao) {
@@ -1195,15 +1211,20 @@ export default class FirebaseHelper {
     return ret
   }
 
-  async getContratacaoEmAberto(chave) {
+  async getContratacaoEmAberto(chave, tipo) {
     let ref = this.database.ref(`usuarios/${chave}`)
     let snapshot = await ref.once('value')
     let ret = {}
-    snapshot.forEach((snap) => {
-      if (snap.status !== 'concluído') {
-        ret[snap.key] = snap.val()
-      }
-    })
+    if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {
+      snapshot.child('transacoes/contratacoes').forEach((snap) => {
+        let contratacao = snap.val()        
+        if (contratacao.tipo === tipo) {
+          if (contratacao.status !== 'concluído') {
+            ret[snap.key] = snap.val()
+          }  
+        }
+      })  
+    }
     return Object.keys(ret).length > 0 ? ret : null
   }
 

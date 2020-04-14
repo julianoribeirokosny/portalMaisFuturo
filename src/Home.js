@@ -1,14 +1,15 @@
 'use strict';
 
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import Vue from 'vue/dist/vue.esm.js';
-import VueCharts from 'vue-chartjs';
-import money from 'v-money';
-import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo';
-import rentabilidade from './component/rentabilidade/rentabilidade';
-import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro';
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import Vue from 'vue/dist/vue.esm.js'
+import VueCharts from 'vue-chartjs'
+import money from 'v-money'
+import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo'
+import rentabilidade from './component/rentabilidade/rentabilidade'
+import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro'
 import simuladorRenda from './component/simuladorRenda/simuladorRenda'
+import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import page from 'page';
 import {Erros} from './Erros';
 
@@ -36,6 +37,8 @@ export default class Home {
     this.data_Home = null    
     this.vueObj = null
     this.chave = null
+    this.contribuicao_Aberta = null
+    this.consulta_contribuicao = null
   }  
 
   async showHome() {
@@ -64,6 +67,20 @@ export default class Home {
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
     }    
+
+    this.consulta_contribuicao = new Object()
+    this.consulta_contribuicao.dados = null
+    this.consulta_contribuicao.titulo = null
+    this.consulta_contribuicao.chave = this.chave
+    if(!data_Home.projeto_vida.acao.vigente) {
+      this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, "Contribuição mensal")
+      if (this.contribuicao_Aberta) {        
+        this.consulta_contribuicao.dados = this.contribuicao_Aberta
+        this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
+      }
+    }
+
+    console.log('consulta_contribuicao',this.consulta_contribuicao)
 
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
@@ -145,13 +162,15 @@ export default class Home {
             simuladorEmprestimo,
             rentabilidade,
             simuladorSeguro,
-            simuladorRenda
+            simuladorRenda,
+            contratacaoAberta
         },        
         data: {
             home: this.data_Home,
             toggle: false,
             chave: this.chave,
             uid: this.auth.currentUser.uid,
+            contribuicaoAberta: this.consulta_contribuicao,
             rendaSimulador: {
                 usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
                 taxa_anual_simulacao: 5,
@@ -195,7 +214,10 @@ export default class Home {
                 page(`/${link}`)
             },
             simuladorRenda(link) {
-              page(`/${link}`)
+                page(`/${link}`)
+            },
+            contratacaoAberta() {
+                page('/contratacao-aberta')               
             }
         }
       })

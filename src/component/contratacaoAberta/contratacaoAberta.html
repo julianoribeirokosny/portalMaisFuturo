@@ -1,0 +1,63 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+    <template v-if="!finalizado">
+        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+            <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;">
+            </div>
+            <div style="margin-top: 30px;">
+                <p class="p_label_renda">Tipo de contratação</p>
+                <p style="margin-bottom: 1px;">
+                    <span class='line span_valor_projetado'>            
+                        {{ contratacao.tipo }}
+                    </span>
+                </p>
+            </div>
+            <div style="margin-top: 20px;">
+                <p class="p_label_renda">Status da contratação</p>
+                <p style="margin-bottom: 1px;">
+                    <span class='line span_valor_projetado'>            
+                        {{ contratacao.status }}
+                    </span>
+                </p>
+            </div>
+            <div style="margin-top: 20px;">
+                <p class="p_label_renda">Valor anterior</p>
+                <p style="margin-bottom: 1px;">
+                    <span class='line span_valor_projetado'>            
+                        R$ {{ valor_anterior }}
+                    </span>
+                </p>
+            </div>            
+            <div style="margin-top: 20px;">
+                <p class="p_label_renda">Valor contratado</p>
+                <p style="margin-bottom: 1px;">
+                    <span class='line span_valor_projetado'>            
+                        R$ {{ valor_atual }}
+                    </span>
+                </p>
+            </div>
+            <div v-if="error_banco" style="margin-top: 20px;color: brown; font-size: 14px;">
+                <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
+            </div>
+            <div style="margin-top: 30px;">
+                <div class="mdl-shadow--2dp div_btn_contratar"  @click="retornaHome" style="margin-top: 30px;">
+                    Retornar para Home
+                </div>  
+                <div class="mdl-shadow--2dp div_btn_contratar"  @click="cancelarContratacao" style="margin-top: 30px; background-color: brown;">
+                    Cancelar Contratação
+                </div>
+            </div>
+        </div>
+    </template>
+    <template v-if="finalizado">
+        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+            <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;">
+            </div>        
+            <div style="margin-top: 40px;">
+                <p>Contratação cancelada com sucesso!</p>
+            </div>            
+            <div class="mdl-shadow--2dp div_btn_contratar"  @click="retornaHome" style="cursor:pointer; margin-top: 40px;">
+                Retornar para Home
+            </div>
+        </div>            
+    </template>
+</div>

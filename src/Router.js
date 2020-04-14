@@ -71,6 +71,9 @@ export default class Router {
     });
     page('/simulador-renda', () => {
       this.displayPage('simulador-renda');
+    });
+    page('/contratacao-aberta', () => {
+      this.displayPage('contratacao-aberta');
     });    
     page('/aviso-validacao', () => {
       this.displayPage('aviso-validacao')
