@@ -1,12 +1,13 @@
-.div_descricao {
+.div_msg_emprestimo {
     font-family: 'MaisFuturo-Regular';
-    font-size: 16px;
-    font-style: italic;
+    font-size: 16px;    
     font-weight: 100;
     letter-spacing: -0.56px;
     color: #3B3C3E;
     opacity: 1;
     margin-left: 20px;
+    margin-top: 8px;
+    display: list-item;
 }
 
 .slider-content {
@@ -15,8 +16,8 @@
     justify-content: flex-end;
 }
 
-.p_espaco_100 {
-    margin-top: 100px;
+.p_espaco_50 {
+    margin-top: 50px;
 }
 
 .p_espaco_30 {
@@ -26,6 +27,7 @@
 .p_label {
     margin-bottom: 2px; 
     margin-left: 20px;
+    line-height: 15px;
     font-size: 14px;
     font-family: 'MaisFuturo-Medium';
     color: #3B3C3E;
@@ -38,18 +40,21 @@
     letter-spacing: -3px;
     color: #0C7BC6; 
     font-size: 22px; 
-    padding-top: 15px;
+    padding-top: 5px;
     padding-right: 5px;
 }
 
 .input_principal {
-    width: 80% !important;
+    width: 70% !important;
     font-family: 'MaisFuturo-Black';
     font-size: 44px;
     color: #0C7BC6;
-    padding-top: 10px;
+    padding-top: 3px;
     letter-spacing: -3px;
     text-align: end;
+    border-bottom: none;
+    background: none;
+    max-width: 300px;
 }
 
 .span_input_sufixo {
@@ -57,7 +62,7 @@
     letter-spacing: -3px;
     color: #0C7BC6; 
     font-size: 24px; 
-    padding-top: 30px;
+    padding-top: 21px;
     padding-right: 5px;
 }
 

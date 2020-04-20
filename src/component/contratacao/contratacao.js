@@ -36,7 +36,7 @@ export default {
 
     },
     mounted(){
-
+        console.log('DADOS ===>', this.dados)
     },
     methods: {
         cancelar(){
@@ -47,10 +47,10 @@ export default {
             let dateFormat = Utils.dateFormat(new Date(), true, true)            
             objeto_contratacao[dateFormat] = {
                                                 uid: this.dados.uid,
-                                                tipo: 'Contribuição mensal',
+                                                tipo: this.dados.tipo,
                                                 valor_anterior: this.dados.valor_antigo,
                                                 valor_solicitado: this.dados.valor_novo,
-                                                status: 'solicitado',                                                
+                                                status: 'solicitado',
                                             }
             console.log('Objeto:',objeto_contratacao)
             var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)            

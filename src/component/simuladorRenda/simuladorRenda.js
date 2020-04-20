@@ -38,13 +38,20 @@ export default {
     data: function() {
         return {
             contratacao: {
-                titulo: '',
-                msg_inicial: '',
-                msg_vigencia: '',
-                msg_novo_valor: '',
-                valor_novo: '',
-                valor_antigo: '',
+                titulo:'',
+                msg_inicial:'',
+                msg_vigencia:'',
+                msg_novo_valor:'',
+                valor_novo:'',
+                valor_novo_Tela:'',
+                valor_antigo:'',
+                titulo_finalizacao:'',
+                finalizacao_msg:'',
+                finalizacao_msg_novo_valor:'',
+                chave:'',
                 uid:'',
+                label_button:'',
+                tipo: ''
             },
             lidades: [{ label: '45 anos', value: 45 },{ label: '46 anos', value: 46 },{ label: '47 anos', value: 47 },
                       { label: '48 anos', value: 48 },{ label: '49 anos', value: 49 },{ label: '50 anos', value: 50 },
@@ -204,6 +211,8 @@ export default {
             this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$ '
             this.contratacao.chave = this.dados.chave
             this.contratacao.uid =  this.dados.uid
+            this.contratacao.label_button = 'Confirma novo valor'
+            this.contratacao.tipo = 'Contribuição mensal'
             console.log('Contratacao',this.contratacao)
             this.simulador = false
         },
