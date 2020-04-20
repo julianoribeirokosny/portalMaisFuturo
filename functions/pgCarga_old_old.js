@@ -18,6 +18,8 @@ const runtimeOpts = {
   memory: '2GB'
 }
 
+const taxaAtuarial = 0.65
+
 /*************************************************
 ***********
 *********
@@ -26,7 +28,6 @@ CARGA!!!!!!!!!
 
 Carregar Atualizar lista e-mail Valido, com todas as chaves vinculadas ao CPF ou e-mail cadastrado!!!
 CRIAR DADOS CADASTRO DENTRO DE USUARIOS
-CRIAR DEMAIS DADOS (CAMPOS DO POSTGRE!!!! MESMO QUE NÃO USE AGORA - EX: vlrCota)
 
 */
 
@@ -47,7 +48,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   //console.log('===> select', select)
 
   let usuarios = {}
-
   return buscaDadosPG(select)
   .then((retDadosPG) => {
     if (!retDadosPG) {
@@ -55,46 +55,20 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       return false
     }
     let chave = '', usr
-    let listaItensContribuicaoChave = {}, listaValoresContribuicaoChave = {}, listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}, listaItensProjetoDeVidaProjecao = {}, listaItensProjetoDeVidaCoberturas = {},listaMesesProjetoDeVida = {}
+    let listaItensContribuicaoChave = {}, listaValoresContribuicaoChave = {}, listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}
     retDadosPG.forEach((rowDados) => {
-      console.log('====> processando participante: ', rowDados.chave, ' - chave anterior:', chave)
       if (chave !== rowDados.chave) {
         if (chave !== '') {
-          let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'completo')          
-          let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje')                    
+          //Reserva Total - só na mudança da chave por que precisa do valor total da contribuição
           listaDatasetsProjetoDeVida[2] = {
             backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
             borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
             borderWidth: "<<seg_projeto_vida.grafico.datasets.2.borderWidth>>",
             label: 'Reserva Total',
-            data: retGraficoReservaCompleto[0]
+            data: calculaGraficoReserva(rowDados.res_saldototal, usuarioTotalContr.valor, rowDados.cad_idade, rowDados.cad_nasc, rowDados.cad_dataadesao)          
           }
-          listaDatasetsProjetoDeVida[3] = {
-            backgroundColor: "<<seg_projeto_vida.grafico.datasets.3.backgroundColor>>",
-            borderColor: "<<seg_projeto_vida.grafico.datasets.3.borderColor>>",
-            borderWidth: "<<seg_projeto_vida.grafico.datasets.3.borderWidth>>",
-            label: 'Reserva Total',
-            data: retGraficoReservaAteHoje[0]
-          }          
-
-          listaItensProjetoDeVidaProjecao[0] = {
-            cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-            nome: 'Renda projetada',
-            valor: 0
-          }            
-          listaItensProjetoDeVidaProjecao[1] = {
-            cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-            nome: 'Reserva projetada',
-            valor: financeiro.valor_to_string_formatado(listaDatasetsProjetoDeVida[2].data[5],2)
-          }     
-
-          listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
-
           //salva informações acumuladas do usuário
-          //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
-          usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
-          usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
-          usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
+          usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas)
         }
         //carrega dados novo registro do usuário
         chave = rowDados.chave        
@@ -103,12 +77,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           matricula: rowDados.cad_matricula,
           nome: rowDados.cad_nome,
           plano: rowDados.cad_plano,
-          tipoPlano: rowDados.cad_tipo_plano,
+          tipoPlano: rowDados.cad_tipoPlano,
           segmento: validaSegmento(chave),
-          competencia: dataBase.substring(0,7),
-          nasc: rowDados.cad_nasc,
-          dataadesao: rowDados.cad_dataadesao,
-          taxa: 5.000
+          competencia: dataBase.substring(0,7)
         }
         
         //Bloco estrutura valores de contribuição
@@ -118,30 +89,23 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           color: "<<seg_contribuicao.total.color>>",
           nome: "Contribuição total",
           valor: 0
-        }      
-        listaItensReservaChave = {}   
-        listaValoresReservaChave = {} 
-        listaItensCoberturas = {}
-        listaDatasetsProjetoDeVida = {}
-        listaItensProjetoDeVidaProjecao = {}
-        listaItensProjetoDeVidaCoberturas = {}
-        listaMesesProjetoDeVida = {}
+        }          
 
         //Bloco estrutura valores de Reserva
         listaItensReservaChave[0] = {
           cor: '<<seg_saldo_reserva.itens.0.cor>>',
           nome: rowDados.res_nomesaldototal,
-          valor: financeiro.valor_to_string_formatado(rowDados.res_saldototal,2)
+          valor: rowDados.res_saldototal
         }
         listaItensReservaChave[1] = {
           cor: '<<seg_saldo_reserva.itens.1.cor>>',
           nome: rowDados.res_nomesaldoparticipante,
-          valor: financeiro.valor_to_string_formatado(rowDados.res_saldoparticipante,2)
+          valor: rowDados.res_saldoparticipante
         }
         listaItensReservaChave[2] = {
           cor: '<<seg_saldo_reserva.itens.2.cor>>',
           nome: rowDados.res_nomesaldopj,
-          valor: financeiro.valor_to_string_formatado(rowDados.res_saldopj,2)
+          valor: rowDados.res_saldopj
         }
         listaValoresReservaChave[0] = rowDados.res_saldoparticipante
         listaValoresReservaChave[1] = rowDados.res_saldopj
@@ -153,69 +117,61 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
         //Bloco estrutura valores cobertura risco/seguro
         //MOrte
-        let capitalMorte = rowDados.cob_capitalmorte !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalmorte,2) : 0
+        let capitalMorte = rowDados.cob_capitalmorte !== null ? rowDados.cob_capitalmorte : '(não contratado)'
         listaItensCoberturas[0] = {
           cor: '<<seg_coberturas.lista_itens_coberturas.0.cor>>',
           nome: rowDados.cob_nomecapitalmorte,
-          valor: capitalMorte === 0 ? '(não contratado)' : capitalMorte
+          valor: capitalMorte
         }
         //Invalidez
-        let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalinvalidez,2) : 0
+        let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? rowDados.cob_capitalinvalidez : '(não contratado)'
         listaItensCoberturas[1] = {
           cor: '<<seg_coberturas.lista_itens_coberturas.1.cor>>',
           nome: rowDados.cob_nomecapitalinvalidez,
-          valor: capitalInvalidez === 0 ? '(não contratado)' : capitalInvalidez
+          valor: capitalInvalidez
         }
 
         //Bloco estrutura valores projeto de vida
         //cobertura por morte
-        listaDatasetsProjetoDeVida[0] = {
-          backgroundColor: "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",
-          borderColor: "<<seg_projeto_vida.grafico.datasets.0.borderColor>>",
-          borderWidth: "<<seg_projeto_vida.grafico.datasets.0.borderWidth>>",
-          label: rowDados.cob_nomecapitalmorte,
-          data: {
-            0: capitalMorte,
-            1: capitalMorte,
-            2: capitalMorte,
-            3: capitalMorte,
-            4: capitalMorte,
-            5: capitalMorte
+        if (capitalMorte !== '(não contratado)') {        
+          listaDatasetsProjetoDeVida[0] = {
+            backgroundColor: "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",
+            borderColor: "<<seg_projeto_vida.grafico.datasets.0.borderColor>>",
+            borderWidth: "<<seg_projeto_vida.grafico.datasets.0.borderWidth>>",
+            label: rowDados.cob_nomecapitalmorte,
+            data: {
+              0: capitalMorte,
+              1: capitalMorte,
+              2: capitalMorte,
+              3: capitalMorte,
+              4: capitalMorte,
+              5: capitalMorte
+            }
           }
         }
-        listaItensProjetoDeVidaCoberturas[0] = {
-          cor: '<<seg_projeto_vida.itens.coberturas.0.cor>>',
-          nome: rowDados.cob_nomecapitalmorte,
-          valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte,2)
-        }
-
         //cobertura por Invalidez
-        listaDatasetsProjetoDeVida[1] = {
-          backgroundColor: "<<seg_projeto_vida.grafico.datasets.1.backgroundColor>>",
-          borderColor: "<<seg_projeto_vida.grafico.datasets.1.borderColor>>",
-          borderWidth: "<<seg_projeto_vida.grafico.datasets.1.borderWidth>>",
-          label: rowDados.cob_nomecapitalinvalidez,
-          data: {
-            0: capitalInvalidez,
-            1: capitalInvalidez,
-            2: capitalInvalidez,
-            3: capitalInvalidez,
-            4: capitalInvalidez,
-            5: capitalInvalidez
-          }
+        if (capitalInvalidez !== '(não contratado)') {
+          listaDatasetsProjetoDeVida[1] = {
+            backgroundColor: "<<seg_projeto_vida.grafico.datasets.1.backgroundColor>>",
+            borderColor: "<<seg_projeto_vida.grafico.datasets.1.borderColor>>",
+            borderWidth: "<<seg_projeto_vida.grafico.datasets.1.borderWidth>>",
+            label: rowDados.cob_nomecapitalinvalidez,
+            data: {
+              0: capitalInvalidez,
+              1: capitalInvalidez,
+              2: capitalInvalidez,
+              3: capitalInvalidez,
+              4: capitalInvalidez,
+              5: capitalInvalidez
+            }
+          }  
         }
-        listaItensProjetoDeVidaCoberturas[1] = {
-          cor: '<<seg_projeto_vida.itens.coberturas.1.cor>>',
-          nome: rowDados.cob_nomecapitalinvalidez,
-          valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez,2)
-        }            
-
       } 
 
       listaItensContribuicaoChave[rowDados.contr_eventocod] = {
         cor: `<<seg_contribuicao.itens.${rowDados.contr_eventocod}.cor>>`,
         nome: rowDados.contr_eventonome,
-        valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2)
+        valor: rowDados.contr_valor
       }
 
       listaValoresContribuicaoChave[rowDados.contr_eventocod] = rowDados.contr_valor
@@ -223,66 +179,28 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       usuarioTotalContr.valor += rowDados.contr_valor
     })
 
-    console.log('===> saindo do For... - chave', chave)
     if (chave!=='') {
-      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'completo')          
-      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje')                    
-      listaDatasetsProjetoDeVida[2] = {
-        backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
-        borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
-        borderWidth: "<<seg_projeto_vida.grafico.datasets.2.borderWidth>>",
-        label: 'Reserva Total',
-        data: retGraficoReservaCompleto[0]
-      }
-      listaDatasetsProjetoDeVida[3] = {
-        backgroundColor: "<<seg_projeto_vida.grafico.datasets.3.backgroundColor>>",
-        borderColor: "<<seg_projeto_vida.grafico.datasets.3.borderColor>>",
-        borderWidth: "<<seg_projeto_vida.grafico.datasets.3.borderWidth>>",
-        label: 'Reserva Total',
-        data: retGraficoReservaAteHoje[0]
-      }          
-      listaItensProjetoDeVidaProjecao[0] = {
-        cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-        nome: 'Renda projetada',
-        valor: 0
-      }            
-      listaItensProjetoDeVidaProjecao[1] = {
-        cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-        nome: 'Reserva projetada',
-        valor: financeiro.valor_to_string_formatado(listaDatasetsProjetoDeVida[2].data[5],2)
-      }         
-      
-      listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
-
-      //salva informações acumuladas do usuário
-      //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
-      usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
-      usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
-      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
+      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, listaItensReservaChave, usuarioTotalContr, listaValoresReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas)
     }
-    //usuarios = insereRegistroTestes(usuarios)
+    usuarios = insereRegistroTestes(usuarios)
 
     console.log('#pgCarga - finalizando carga - salvando usuários: ', usuarios)
 
     //salva dados anteriores dos usuários em usuariosHistorico
     let ref = admin.database().ref('usuarios')
-    return ref.orderByChild('usr_plano').equalTo(plano).once('value')
-    .then((usrAnterior) => {
-      ref = admin.database().ref(`usuariosHistorico`)
-      ref.remove()
-      let dtHistorico = utils.dateFormat(new Date(), true, true)
-      ref = admin.database().ref(`usuariosHistorico/${plano}`)
-      let usrHistorico = {}
-      usrHistorico[dtHistorico] = JSON.stringify(usrAnterior.val())
-      return ref.update(usrHistorico) 
-    //.then(() => {
-    //  //salva informações finais/ATUAIS na chave de usuários
-    //  ref = admin.database().ref('usuarios')
-    //  return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
+    return ref.once('value').then((usuariosAnterior) => {
+      if (usuariosAnterior.val() !== null) {
+        let dtHistorico = utils.dateFormat(new Date(), true, true)
+        ref = admin.database().ref(`usuariosHistorico/${plano}/${dtHistorico}`)
+        return ref.update(usuariosAnterior.val())  
+      } else {
+        return true
+      }
+    }).then(() => {
+      //salva informações finais/ATUAIS na chave de usuários
+      ref = admin.database().ref('usuarios')
+      return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
     }).then(() => {      
-      console.log('===> usuarios string', JSON.stringify(usuarios))
-      ref = admin.database().ref(`usuarios`)
-      //ref.update({teste: JSON.stringify(usuarios)})
       return ref.update(usuarios)
     }).then(() => {
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
@@ -290,12 +208,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       console.log('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
     })
 
+
   })
 
 
 })
 
-function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, transacoes) {
+function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas) {
 
   /*usr_dados_cadastro: {
 
@@ -308,9 +227,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_nome: usr.nome,
     usr_plano: usr.plano,
     usr_tipo_plano: usr.tipoPlano,
-    usr_dtnasc: usr.nasc,
-    segmento: validaSegmento(chave),
-    usr_taxaPadrao: usr.taxa,
+    usr_segmento: validaSegmento(chave),
     usr_contribuicao: {
       acao: {
         valor_contribuicao_potencial: calculaContribuicaoPotencial(),
@@ -342,44 +259,54 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
         valor_reserva_potencial: calculaReservaPotencial(),
         vigente: true
       },
-      lista_datasets_projetoDeVida: listaDatasetsProjetoDeVida,
-      lista_itens_projetoDeVida: {
-        coberturas: listaItensProjetoDeVidaCoberturas,
-        projecao: listaItensProjetoDeVidaProjecao
-      },
-      lista_meses_projetoDeVida: listaMesesProjetoDeVida,
       vigente: true
     }
-    //,    transacoes: transacoes ? transacoes : ''
   }
 
   return usuarios
 }
 
-function calculaGraficoReserva(valorHoje, contribHoje, dataNasc, dataAdesao, taxa, amplitude) {
+function calculaGraficoReserva(valorHoje, contribHoje, idadeAtual, dataNasc, dataAdesao) {
 
-  let retDataset = {
-    0: 0    
-  }
-  let retListaMeses = {
-    0: "Adesão"
-  }
-
-  //transforma taxa anual em mensal:
-  taxa = (1+(taxa/100))^(1/12)
-
-  //valorHoje = Number(valorHoje.replace('.','').replace(',','.'))
+  valorHoje = Number(valorHoje.replace('.','').replace(',','.'))
+  console.log('===> valor Hoje', valorHoje)
+  console.log('===> contrib Hoje', contribHoje)
 
   //calculo da reserva aos 65 anos
   let dtNasc = new Date(dataNasc)
+  console.log('===> dtNasc', dtNasc)
+  console.log('===> dataAdesao', dataAdesao)
   let data65Anos = new Date((dtNasc.getFullYear() + 65).toString()+'-'+(dtNasc.getMonth()+1).toString()+'-'+dtNasc.getDate().toString())
+  console.log('===> data65Anos', data65Anos)
   
-  let difMesesHoje65Anos = utils.diffDatasEmMeses(new Date(), data65Anos)
+  let difMeses = utils.diffDatasEmMeses(new Date(), data65Anos)
+  console.log('===> difMeses', difMeses)
   let difMesesDaAdesao65Anos = utils.diffDatasEmMeses(dataAdesao, data65Anos)
+  console.log('===> difMesesDaAdesao65Anos', difMesesDaAdesao65Anos)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
-
-  let valor65anos = financeiro.valorFuturo(valorHoje, taxa, difMesesHoje65Anos, contribHoje)
+  console.log('===> difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
+  let difMesesNascAdesao = utils.diffDatasEmMeses(dataNasc, dataAdesao) //idade na adesão será o item 0 do eixo 'x' do gráfico
+  console.log('===> difMesesNascAdesao', difMesesNascAdesao)
   
+  let valor65anos = financeiro.valorFuturo(valorHoje, taxaAtuarial, difMeses, contribHoje)
+  console.log('===> valor65anos', valor65anos)
+
+  
+  
+  //calculo da curva exponencial considerando desde a adesão até a projeção de 65 anos
+  let valorNaAdesao = 1
+  let r = Math.pow((valor65anos / valorNaAdesao), (1/difMesesDaAdesao65Anos)) - 1
+  console.log('===> r', r)
+  //achado o r, calcula os valores de cada idade do gráfico
+  let ret = {
+    0: 0,   
+    1: 0,   
+    2: 0,   
+    3: 0,   
+    4: 0,   
+    5: 0    
+  }
+
   //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e 65 anos
   let crescPorFaixas = difMesesDaAdesao65Anos / 5
   let aIdades = [
@@ -391,39 +318,34 @@ function calculaGraficoReserva(valorHoje, contribHoje, dataNasc, dataAdesao, tax
       difMesesDaAdesao65Anos
   ]
 
-  let taxaCrescimentoRealReserva = financeiro.taxaCrescimentoRealReserva(valorHoje, difMesesDaAdesaoHoje, contribHoje)
+  let faixa = 0
+  for (let idadeEmMeses in aIdades) {
+    console.log('===> idadeEmMeses', idadeEmMeses, ' - aIdades[idadeEmMeses]', aIdades[idadeEmMeses], ' - difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
+    if (aIdades[idadeEmMeses] >= difMesesDaAdesaoHoje) {
+      break
+    }
+    faixa = idadeEmMeses
+  }
 
-  for (let linha in aIdades) {
-    let dif = aIdades[linha] - difMesesDaAdesaoHoje    
-    if (linha > 0) {
-      if (dif < 0) { //calculo de valor presente - de hoje para trás..
-        console.log('===> valorHoje', valorHoje, ' - taxaCrescimentoRealReserva', taxaCrescimentoRealReserva, ' - difMesesDaAdesaoHoje', difMesesDaAdesaoHoje, ' - aIdades[linha]', aIdades[linha])
-        console.log('===> valor Presente: ', financeiro.valorPresente(valorHoje, taxaCrescimentoRealReserva, (difMesesDaAdesaoHoje - aIdades[linha])))
-        retDataset[linha] = financeiro.valorPresente(valorHoje, taxaCrescimentoRealReserva, (difMesesDaAdesaoHoje - aIdades[linha]))
-        retListaMeses[linha] = ''        
-      } else {
-        if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
-          retListaMeses[linha] = 'Hoje'        
-          retDataset[linha] = valorHoje  //posiciona o valor de hoje na faixa mais aproximada
-          if (amplitude==='até hoje') {
-            console.log('saindo do Break')
-            break 
-          }
-        } else {
-          retListaMeses[linha] = ''     
-          //projeta até o mês da faixa
-          retDataset[linha] = financeiro.valorFuturo(valorHoje, taxa, dif, contribHoje)
-        }
-      }  
+  console.log('===> faixa', faixa)
+  ret[faixa] = valorHoje  //posiciona o valor de hoje na faixa 
+  ret[5] = valor65anos    //inclui valor projetado de 65 anos na última faixa
+
+  console.log('===> ret inicial', ret)
+  //inclui demais valores
+  for (let item in ret) {
+    if (ret[item] === 0) {
+      //função para cálculo do valor de acordo com a curva exponencial
+      console.log('===> item', item, ' - valorHoje', valorHoje, ' - aIdades[item]', aIdades[item], ' - difMesesDaAdesao65Anos', difMesesDaAdesao65Anos)
+      console.log('===> r', r, '- aIdades[item] - difMesesDaAdesao65Anos', aIdades[item] - difMesesDaAdesao65Anos)
+      console.log('===> valorHoje * ((1 + r)^(aIdades[item] - difMesesDaAdesao65Anos))', valorHoje * ((1 + r)^(aIdades[item] - difMesesDaAdesao65Anos)))
+      ret[item] = valorHoje * ((1 + r)^(aIdades[item] - difMesesDaAdesao65Anos))
     }
   }
 
-  if (amplitude==='completo') {
-    retListaMeses[5] = '65 anos'     
-    retDataset[5] = valor65anos    //inclui valor projetado de 65 anos na última faixa
-  }
+  console.log('======> ret', ret)
+  return ret
 
-  return [retDataset, retListaMeses]
 }
 
 function calculaContribuicaoPotencial() {
@@ -487,11 +409,9 @@ async function buscaDadosPG(select) {
 function insereRegistroTestes(usuarios){
   usuarios['9999-0001'] = 
   {
-    "usr_tipo_plano" : 'instituido',
+    "tipo_plano" : 'instituido',
     "usr_apelido" : "Leandro",
     "usr_plano" : "Mais Futuro",
-    "usr_dtnasc" : '10/03/1978',
-    "usr_taxaPadrao" : 5.0000,
     "usr_campanhas" : {
       "aporte" : {
         "ativo" : true,
@@ -505,8 +425,7 @@ function insereRegistroTestes(usuarios){
     },
     "usr_coberturas" : {
       "acao" : {
-        "valor_cobertura_potencial" : "1 Mi",
-        "vigente": true
+        "valor_cobertura_potencial" : "1 Mi"
       },
       "lista_itens_coberturas" : [ {
         "cor" : "<<seg_coberturas.lista_itens_coberturas.0.cor>>",
@@ -522,8 +441,7 @@ function insereRegistroTestes(usuarios){
     "usr_contribuicao" : {
       "acao" : {
         "valor_contribuicao_potencial" : "25,00",
-        "valor_deducao_potencial" : "400,00",
-        "vigente": true
+        "valor_deducao_potencial" : "400,00"
       },
       "lista_itens_contribuicao" : [ {
         "cor" : "<<seg_contribuicao.itens.0.cor>>",
@@ -555,8 +473,7 @@ function insereRegistroTestes(usuarios){
     "usr_projeto_vida" : {
       "acao" : {
         "valor_renda_potencial" : "3.000,00",
-        "valor_reserva_potencial" : "1 mi",
-        "vigente": true
+        "valor_reserva_potencial" : "1 mi"
       },
       "lista_datasets_projetoDeVida" : [ {
         "backgroundColor" : "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",
@@ -644,8 +561,6 @@ function insereRegistroTestes(usuarios){
     "usr_tipo_plano" : 'instituido',
     "usr_apelido" : "Juliano",
     "usr_plano" : "Mais Futuro",
-    "usr_dtnasc" : '10/03/1978',  
-    "usr_taxaPadrao" : 5.0000,  
     "usr_campanhas" : {
       "aporte" : {
         "ativo" : true,
@@ -659,8 +574,7 @@ function insereRegistroTestes(usuarios){
     },
     "usr_coberturas" : {
       "acao" : {
-        "valor_cobertura_potencial" : "1 Mi",
-        "vigente": true
+        "valor_cobertura_potencial" : "1 Mi"
       },
       "lista_itens_coberturas" : [ {
         "cor" : "<<seg_coberturas.lista_itens_coberturas.0.cor>>",
@@ -676,8 +590,7 @@ function insereRegistroTestes(usuarios){
     "usr_contribuicao" : {
       "acao" : {
         "valor_contribuicao_potencial" : "25,00",
-        "valor_deducao_potencial" : "400,00",
-        "vigente": true        
+        "valor_deducao_potencial" : "400,00"
       },
       "lista_itens_contribuicao" : [ {
         "cor" : "<<seg_contribuicao.itens.0.cor>>",
@@ -709,8 +622,7 @@ function insereRegistroTestes(usuarios){
     "usr_projeto_vida" : {
       "acao" : {
         "valor_renda_potencial" : "3.000,00",
-        "valor_reserva_potencial" : "1 mi",
-        "vigente": true
+        "valor_reserva_potencial" : "1 mi"
       },
       "lista_datasets_projetoDeVida" : [ {
         "backgroundColor" : "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",

@@ -33,6 +33,12 @@ module.exports =  {
         return String(String(num).replace('.',',')).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
     },
 
+    valor_to_string_formatado(num, casasDecimais) {
+        let numFormatado = num.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
+        numFormatado = numFormatado.replace(',','#').replace('.',',').replace('#','.')
+        return numFormatado
+    },
+
     //fv: float
     //i: float
     //n: int

@@ -1195,15 +1195,20 @@ export default class FirebaseHelper {
     return ret
   }
 
-  async getContratacaoEmAberto(chave) {
+  async getContratacaoEmAberto(chave, tipo) {
     let ref = this.database.ref(`usuarios/${chave}`)
     let snapshot = await ref.once('value')
     let ret = {}
-    snapshot.forEach((snap) => {
-      if (snap.status !== 'concluído') {
-        ret[snap.key] = snap.val()
-      }
-    })
+    if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {
+      let data = ''
+      snapshot.child('transacoes/contratacoes').forEach((snap) => {
+        let contratacao = snap.val()
+        if (snap.key > data && contratacao.tipo === tipo && contratacao.status !== 'concluído') {
+          ret[snap.key] = snap.val()
+        }
+        data = snap.key
+      })  
+    }
     return Object.keys(ret).length > 0 ? ret : null
   }
 
