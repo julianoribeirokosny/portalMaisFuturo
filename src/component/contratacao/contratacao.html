@@ -1,28 +1,39 @@
-<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+<div>
     <template v-if="!finalizado">
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;"></div>
-            <div style="margin-top: 30px;">
+            <div v-if='dados.msg_inicial' style="margin-top: 30px;">
                 <p>
                 {{ dados.msg_inicial }}
                 </p>
             </div>
-            <div style="margin-top: 30px;">        
+            <div class="grid" v-if="dados.resumo" style="margin-top: 30px;">
+                <template v-for="item in dados.resumo">                
+                    <div v-html="item.nome"></div>
+                    <div v-html="item.valor"></div>                                                   
+                </template>
+            </div>            
+            <div v-if="dados.msg_vigencia" style="margin-top: 30px;">
                 <p>
                 {{ dados.msg_vigencia }}
                 </p>    
             </div>
-            <div style="margin-top: 30px;">
+            <div v-if="dados.msg_novo_valor" style="margin-top: 30px;">
                 <p>
                 {{ dados.msg_novo_valor }}
                 </p>              
+            </div>
+            <div v-if="dados.observacao" style="margin-top: 20px;">
+                <p>
+                {{ dados.observacao }}
+                </p>    
             </div>
             <div v-if="error_banco" style="margin-top: 30px;color: brown;">
                 <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
             </div>        
             <div style="margin-top: 30px;">
                 <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar" style="margin-top: 30px;">
-                    Confirmar novo valor
+                    {{ dados.label_button }}
                 </div>  
                 <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="cancelar" style="margin-top: 30px; background-color: brown;">
                     Cancelar

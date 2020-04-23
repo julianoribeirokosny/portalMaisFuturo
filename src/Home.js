@@ -200,6 +200,17 @@ export default class Home {
                 chave: this.chave,
                 uid: this.auth.currentUser.uid,
             },
+            emprestimoSimulador: {
+                titulo: "Simulador </br>de Empréstimo",                
+                taxa_adm: 5.14, //2,88 ou 5.14
+                fundo_risco: 0, //2,26 ou 0
+                taxa_mensal: 0.8,
+                indice_anterior: 0.19,               
+                pre_aprovado: 20000.00,
+                saldo_devedor: 2000.00,
+                chave: this.chave,
+                uid: this.auth.currentUser.uid,
+            },
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
                 descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",

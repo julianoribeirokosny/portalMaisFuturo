@@ -1484,21 +1484,18 @@ dialog + .backdrop { /* polyfill */
   }
 
   .p-contribuicao-lista {          
-      margin-left: 25px;
-      margin-bottom: 10px;
+      margin-left: 5px;
+      margin-bottom: 5px;
   }
   .dot {
-      height: 24px;
-      width: 24px;
-      border-radius: 50%;
-      display: inline-block;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;     
   }
   .span-contribuicao-2 {
-      font-family: 'MaisFuturo-Regular';
-      margin-right: 1px;
+      font-family: 'MaisFuturo-Regular';      
       margin-left: 5px;
-      font-size: 14px;
-      vertical-align: super;
+      font-size: 11px;      
       letter-spacing: 0;
       color: #0F0F0F;
       opacity: 1;
@@ -1506,14 +1503,14 @@ dialog + .backdrop { /* polyfill */
   .span-contribuicao-3 {
       font-family: 'MaisFuturo-Regular';
       margin-right: 5px;      
-      font-size: 25px;
+      font-size: 20px;
       letter-spacing: 0;
       color: #0F0F0F;
       opacity: 1;
   }
   .span-contribuicao-4 {
       font-family: 'MaisFuturo-Medium';      
-      font-size: 18px;      
+      font-size: 16px;
       letter-spacing: -0.19px;
       color: #3B3C3E;
       opacity: 0.7;
@@ -1843,17 +1840,17 @@ dialog + .backdrop { /* polyfill */
           margin-bottom: 8px;
       }
       .dot {
-          height: 20px;
-          width: 20px;          
+          height: 18px;
+          width: 18px;          
       }
       .span-contribuicao-2 {        
-          font-size: 12px;        
+          font-size: 10px;        
       }
       .span-contribuicao-3 {        
-          font-size: 21px;        
+          font-size: 18px;        
       }
       .span-contribuicao-4 {        
-          font-size: 15px;
+          font-size: 14px;
       }    
       .img-mais-amigos-1 {
         width: 170px;
@@ -1953,10 +1950,10 @@ dialog + .backdrop { /* polyfill */
           width: 16px;          
       }
       .span-contribuicao-2 {        
-          font-size: 10px;        
+          font-size: 9px;        
       }
       .span-contribuicao-3 {        
-          font-size: 17px;        
+          font-size: 16px;        
       }
       .span-contribuicao-4 {        
           font-size: 12px;

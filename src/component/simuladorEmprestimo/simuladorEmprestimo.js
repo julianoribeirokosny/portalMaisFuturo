@@ -2,41 +2,46 @@
 
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
-
+import page from 'page';
 import simuladorEmprestimo from './simuladorEmprestimo.html';
 import './simuladorEmprestimo.css';
+import Contratacao from '../contratacao/contratacao';
+
+const financeiro = require('../../../functions/Financeiro')
 
 export default {
     template: simuladorEmprestimo,
     components: { 
-        VueSlider
+        VueSlider, Contratacao
     },
     props: { 
         dados: {
             type: Object,
             default: () => { 
                 return {
-                    titulo: "Simulador </br>de Empréstimo",
-                    descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",                     
-                    quantidade: 36,
-                    principal: 840000,
-                    maximo: 850000,
-                    taxa_adm: 5.14,
-                    taxa_mensal: 0.8,
-                    indice_anterior: 0.19,                    
+                    titulo: '',
+                    pre_aprovado: 0,
+                    saldo_devedor: 0,
+                    taxa_adm: 0,
+                    fundo_risco: 0,
+                    taxa_mensal: 0,
+                    indice_anterior: 0,
                 }
             }
         }
     },    
     data: function() {
         return {   
-            taxa_mensal: 0,
+            taxa_mensal: this.dados.taxa_mensal,
             formatter1: '{value} x',
-            quantidade: this.dados.quantidade,
-            principal: this.dados.principal,   
-            maximo: this.dados.maximo, 
+            quantidade: 36,
+            maximo: this.dados.pre_aprovado - this.dados.saldo_devedor, 
+            saldo_devedor: this.dados.saldo_devedor,
+            str_maximo: 0,
+            principal: 0,
             valido: true,
             parcela: 0,
+            simulador: true,
             money: {
                 decimal: '',
                 thousands: '.',
@@ -90,11 +95,31 @@ export default {
                     "backgroundColor": "#0C7BC6",
                     "border-color": "#0C7BC6"
                 },
-            }
+            },
+            contratacao: {
+                titulo:'',
+                msg_inicial:'',
+                msg_vigencia:'',
+                msg_novo_valor:'',
+                valor_novo:'',
+                valor_novo_Tela:'',
+                valor_antigo:'',
+                titulo_finalizacao:'',
+                finalizacao_msg:'',
+                finalizacao_msg_novo_valor:'',
+                chave:'',
+                uid:'',
+                label_button:'',
+                resumo: [],
+            },
         }
     },    
-    created(){          
-        //this.$refs.botao.style.backgroundColor = '#dfe5eb';
+    created(){ 
+        console.log('Emprestimo Simulador ====>',this.dados)
+        this.dados.pre_aprovado = financeiro.float_to_string(this.dados.pre_aprovado.toFixed(2))
+        this.dados.saldo_devedor = financeiro.float_to_string(this.dados.saldo_devedor.toFixed(2))        
+        this.str_maximo = financeiro.float_to_string(this.maximo.toFixed(2))
+        this.principal = (this.maximo / 2).toFixed(0)        
     },
     mounted(){
         this.calcula_taxa_mensal();
@@ -102,30 +127,95 @@ export default {
     methods: {      
         calcularParcela(){    
             if(parseFloat(this.principal.toString().replace(/\./g,'')) > this.maximo) {
-                this.valido = false;                
-                //this.$refs.botao.style.backgroundColor = '#dfe5eb';                
+                this.valido = false;
                 this.parcela = '0';
-            } else {
-                //this.$refs.botao.style.backgroundColor = '#0C7BC6';
+            } else {                
                 this.valido = true;
-                this.PGTO();
-                //this.parcela = this.thousands_separators((parseFloat(this.principal.toString().replace(/\./g,''))/this.quantidade).toFixed(2));
+                this.parcela = financeiro.float_to_string(financeiro.pgto(
+                                    parseFloat(
+                                        this.principal.toString().replace(/\./g,'')
+                                    ), 
+                                    this.taxa_mensal, this.quantidade))
             }
         },
         alteraPrincipal(){
             this.calcularParcela();
-        },
-        thousands_separators(num) {
-            var num_parts = num.toString().split(".");
-            num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            return num_parts.join(",");
-        },
+        },        
         selectAll() {
             this.$refs.inputprincipal.select();
         },
-        contratarEmprestimo(){
+        solicitarEmprestimo(){            
+            let principal = parseFloat(this.principal.split('.').join('')).toFixed(2)            
             if(this.valido) {
-                alert("Redirect Contratar " + this.principal.toString() + " " + this.quantidade.toString() + "x de " + this.parcela.toString());
+                this.contratacao.resumo = []
+                this.contratacao.titulo = 'Solicite o</br> empréstimo simulado'
+                this.contratacao.resumo.push(
+                                                { nome:'DADOS DO EMPRÉSTIMO:', valor:'' },
+                                                { nome:'Quantidade de parcelas:', valor: this.quantidade },
+                                                { nome:'Valor da parcela:', valor: `R$ ${this.parcela}` },
+                                                { nome:'(a) Valor bruto contratado:', valor: `R$ ${financeiro.float_to_string(principal)}` },
+                                                { nome:'', valor:'' },
+                                                { nome:'DEDUÇÕES:', valor:'' }
+                                            )
+                let liquido = 0
+                let risco = 0
+                let taxa_adm = 0
+                if(this.dados.fundo_risco > 0) {
+                    risco = principal * this.dados.fundo_risco / 100
+                    taxa_adm = principal * this.dados.taxa_adm / 100
+                    this.contratacao.resumo.push(
+                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.float_to_string(taxa_adm.toFixed(2))}`},
+                                                    {nome:'(c) Fundo de risco:', valor: `R$ ${financeiro.float_to_string(risco.toFixed(2))}`}
+                                                )
+                    liquido = principal - risco - taxa_adm
+                    if(this.saldo_devedor !== 0) {
+                        liquido -= this.saldo_devedor
+                        this.contratacao.resumo.push(
+                                    { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
+                                    { nome:'', valor:'' },
+                                    { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                        )
+                    } else {
+                        this.contratacao.resumo.push(
+                                    { nome:'', valor:'' },
+                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                        )
+                    }                    
+                } else {                    
+                    taxa_adm = principal * this.dados.taxa_adm / 100
+                    this.contratacao.resumo.push(
+                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.float_to_string(taxa_adm.toFixed(2))}`},
+                                                )
+                    liquido = principal - taxa_adm
+                    if(this.saldo_devedor !== 0) {
+                        liquido -= this.saldo_devedor
+                        this.contratacao.resumo.push(
+                                    { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
+                                    { nome:'', valor:'' },
+                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                        )
+                    } else {
+                        this.contratacao.resumo.push(
+                                    { nome:'', valor:'' },
+                                    { nome:'VALOR FINAL (a - b):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                        )
+                    }
+                }                                                
+                this.contratacao.msg_inicial = ''
+                this.contratacao.msg_vigencia = ''
+                this.contratacao.msg_novo_valor = ''
+                this.contratacao.observacao = '*Sobre este valor incidirá IOF, calculado na data da assinatura do contrato.'
+                this.contratacao.valor_novo = principal
+                this.contratacao.valor_novo_Tela = financeiro.float_to_string(principal)
+                this.contratacao.valor_antigo = this.dados.saldo_devedor
+                this.contratacao.titulo_finalizacao = 'Solicitação </br> de empréstimo </br>encaminhada'
+                this.contratacao.finalizacao_msg = 'Em breve entraremos em contato para assinatura do contrato.'
+                this.contratacao.finalizacao_msg_novo_valor = 'Valor bruto simulado de R$ '
+                this.contratacao.chave = this.dados.chave
+                this.contratacao.uid = this.dados.uid
+                this.contratacao.label_button = 'Solicitar'
+                this.contratacao.tipo = 'Empréstimo'
+                this.simulador = false
             }            
         },
         calcula_taxa_mensal() {  
@@ -134,9 +224,13 @@ export default {
             const diferenca = Math.abs(data_liberacao.getTime() - inicio.getTime());
             const dias = Math.ceil(diferenca / (1000 * 60 * 60 * 24)) - 1;
             this.taxa_mensal = ((1 + this.dados.taxa_mensal/100) * (Math.pow(1 + (this.dados.indice_anterior/100), (dias / 30))) - 1) * 100;
+        },        
+        voltar() {
+            page('/homne')
         },
-        PGTO() {
-            this.parcela =  this.thousands_separators((parseFloat(this.principal.toString().replace(/\./g,'')) *  (this.taxa_mensal/100) * Math.pow(1 + (this.taxa_mensal/100), this.quantidade) / (Math.pow(1 + (this.taxa_mensal/100), this.quantidade) - 1 )).toFixed(2));
-        }
+        cancelarContratacao(value) {
+            this.simulador = value
+        },
+
     },
 }

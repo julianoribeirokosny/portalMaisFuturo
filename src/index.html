@@ -341,12 +341,12 @@
                     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
                         <div class="mdl-card__supporting-text div_titulo_card">
                           Olá {{ home.apelido }}!
-                        </div>  
-                        <!-- <div class="mdl-card__supporting-text">
-                            <bar :chartdata="dataSetBar"></bar>
-                        </div>                         -->
+                        </div>
                         <div class="mdl-card__supporting-text div_mensagem">
                           {{ home.mensagem }}
+                        </div>
+                        <div class="mdl-card__supporting-text div_mensagem" v-if="home.plano && home.tipo_plano">   
+                            {{ home.plano }} {{ home.tipo_plano }} <template v-if="home.competencia"> - {{ home.competencia }}</template>
                         </div>
                     </div>
                   </div>
@@ -355,7 +355,7 @@
               <!--Reserva Total Atual-->
               <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <div class="mdl-card__supporting-text mdl-card-container div_reserva_total">
+                      <div class="mdl-card__supporting-text mdl-card-container div_reserva_total" style="margin-top: 0px;">
                           <div class="div_reserva_text_1">
                               <dl class="dl_reserva_text">
                                   <dt class="dt_reserva_text">Reserva total atual</dt>
@@ -529,21 +529,27 @@
                       </div>
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <div class="mdl-card__supporting-text mdl-card-container" style="display: table;">
-                          <template v-for="contribuicao in home.contribuicao.itens">
+                      <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px;">
+                          <template v-if="home.contribuicao.itens.participante.nome" v-for="contribuicao in home.contribuicao.itens.participante.eventos">                          
+                              <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
+                                  <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
+                                  <span class="span-contribuicao-2">R$</span>
+                                  <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
+                                  <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
+                              </div>
+                          </template>
+
+                        
+                          <!-- <template v-for="contribuicao in home.contribuicao.itens">                            
                               <p class="p-contribuicao-lista">
                                   <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
                                   <span class="span-contribuicao-2">R$</span>
                                   <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
                                   <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
-                              </p>
-                          </template>
-                      </div>
+                              </p>                          
+                          </template>                       -->
+                      </div>  
                   </div>
-
-
-
-
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                       <template v-if="home.contribuicao.acao.vigente">
                           <div class="mdl-card__supporting-text margin_auto mdl-card-container">
@@ -563,10 +569,6 @@
                           </div>
                       </template>
                   </div>
-
-
-
-
               </template>
 
               <!--Mais Amigos-->
@@ -653,7 +655,7 @@
           <!--Simulador Emprestimo-->
           <section id="page-simulador-emprestimo" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <simulador-emprestimo></simulador-emprestimo>
+              <simulador-emprestimo  v-bind:dados="emprestimoSimulador"></simulador-emprestimo>
           </section> 
 
           <!--Rentabilidade-->
@@ -662,11 +664,11 @@
               <rentabilidade></rentabilidade>
           </section>
 
-          <!--Simulador Seguro 
+          <!--Simulador Seguro -->
           <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <simulador-seguro></simulador-seguro>
-          </section>     -->
+          </section>     
 
           <!--Simulador Renda-->
           <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
