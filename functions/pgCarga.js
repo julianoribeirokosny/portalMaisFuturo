@@ -18,6 +18,9 @@ const runtimeOpts = {
   memory: '2GB'
 }
 
+var logProcessamento = {}
+var dataProcessamento
+
 /*************************************************
 ***********
 *********
@@ -27,6 +30,7 @@ CARGA!!!!!!!!!
 Carregar Atualizar lista e-mail Valido, com todas as chaves vinculadas ao CPF ou e-mail cadastrado!!!
 CRIAR DADOS CADASTRO DENTRO DE USUARIOS
 CRIAR DEMAIS DADOS (CAMPOS DO POSTGRE!!!! MESMO QUE NÃO USE AGORA - EX: vlrCota)
+EXCLUIR USUARIOS QUE RESGATARAM
 
 */
 
@@ -46,129 +50,229 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   select = select.replace(/--nome_plano--/g, plano)
   //console.log('===> select', select)
 
-  let usuarios = {}
+  dataProcessamento = utils.dateFormat(new Date(), true, false)
+  logProcessamento[dataProcessamento] = {
+    plano: plano,
+    inicio: dataProcessamento.substring(-8),
+    fim: '',
+    qtd_participantes_carregados: 0,
+    qtd_participantes_bloqueados: 0,
+    status: 'Em andamento',
+    msg: '',
+    erro: '',
+  }
 
-  return buscaDadosPG(select)
-  .then((retDadosPG) => {
+  let usuarios = {} //lista de usuários que serão atualizados na base
+  let usuariosBloquear = {} //lista de usuários que não foram carregados
+  //listas de parametros de cod contribuição 
+  let listaContribSaldo, listaContribSaldo13, listaContribSaldoPartPlanoPatroc, listaContribSeguro, listaContribSaida, listaContribPortabilidade, listaContribExtraordinaria
+  let listaSituacoesValidas //lista de situações de plano válidas para carga no portal
+
+  let ref = change.after.ref.parent;
+  return ref.once('value').then((snapshotParent)  => {
+    if (!snapshotParent.val()) {
+      console.error('#pgCarga - Processamento cancelado. Estrutura do settings do plano inconsistente.')
+      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+      logProcessamento[dataProcessamento].status = 'Cancelado'
+      logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano inconsistente'
+      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      refProc.update(logProcessamento)
+      return false
+    } else {
+      listaContribSaldo = snapshotParent.child('listaContribSaldo').val()
+      listaContribSaldo13 = snapshotParent.child('listaContribSaldo13').val()
+      listaContribSaldoPartPlanoPatroc = snapshotParent.child('listaContribSaldoPartPlanoPatroc').val()
+      listaContribSeguro = snapshotParent.child('listaContribSeguro').val()
+      listaContribSaida = snapshotParent.child('listaContribSaida').val()
+      listaContribPortabilidade = snapshotParent.child('listaContribSaida').val()
+      listaContribExtraordinaria = snapshotParent.child('listaContribExtraordinaria').val()
+      listaSituacoesValidas = snapshotParent.child('listaSituacoesValidas').val()
+      //console.log('***> listaContribSaldo', listaContribSaldo)
+      //console.log('***> listaContribSaldo13', listaContribSaldo13)
+      //console.log('***> listaContribSaldoPartPlanoPatroc', listaContribSaldoPartPlanoPatroc)
+      if (
+        listaContribSaldo === null ||
+        listaContribSaldo13 === null ||
+        listaContribSaldoPartPlanoPatroc === null ||
+        listaContribSeguro === null ||
+        listaContribSaida === null ||
+        listaContribPortabilidade === null ||
+        listaContribExtraordinaria === null ||
+        listaSituacoesValidas === null 
+        ) {
+          console.error('#pgCarga - Processamento cancelado. Estrutura do settings do plano->contribuicao inconsistente.')
+          logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+          logProcessamento[dataProcessamento].status = 'Cancelado'
+          logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano->contribuicao inconsistente.'
+          let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+          refProc.update(logProcessamento)          
+          return false   
+      }
+      //transforma em array
+      listaContribSaldo = listaContribSaldo.split(';')
+      listaContribSaldo13 = listaContribSaldo13.split(';')
+      listaContribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.split(';')
+      listaContribSeguro = listaContribSeguro.split(';')
+      listaContribSaida = listaContribSaida.split(';')
+      listaContribPortabilidade = listaContribPortabilidade.split(';')
+      listaContribExtraordinaria = listaContribExtraordinaria.split(';')
+      listaSituacoesValidas = listaSituacoesValidas.split(';')
+
+    }
+    return buscaDadosPG(select)  //select na base do Postgre
+  }).then((retDadosPG) => {
     if (!retDadosPG) {
-      console.log('#pgCarga - Processamento cancelado. Verifique mensagens anteriores.')
+      console.error('#pgCarga - Processamento cancelado. Verifique mensagens anteriores.')
       return false
     }
     let chave = '', usr
-    let listaItensContribuicaoChave = {}, listaValoresContribuicaoChave = {}, listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}, listaItensProjetoDeVidaProjecao = {}, listaItensProjetoDeVidaCoberturas = {},listaMesesProjetoDeVida = {}
+    let listaItensContribuicaoChave = [], listaValoresContribuicaoChave = [], listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}, listaItensProjetoDeVidaProjecao = {}, listaItensProjetoDeVidaCoberturas = {},listaMesesProjetoDeVida = {}
+    let usuarioContrib = {
+      contribParticipante: 0,
+      contribParticipantePlanoPatrocinado: 0,
+      contribPatronal: 0
+    }
     retDadosPG.forEach((rowDados) => {
-      console.log('====> processando participante: ', rowDados.chave, ' - chave anterior:', chave)
-      if (chave !== rowDados.chave) {
-        if (chave !== '') {
-          //Reserva Total - só na mudança da chave por que precisa do valor total da contribuição
-          let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'completo')          
-          let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje')                    
-          listaDatasetsProjetoDeVida[2] = {
-            backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
-            borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
-            borderWidth: "<<seg_projeto_vida.grafico.datasets.2.borderWidth>>",
-            label: 'Reserva Total',
-            data: retGraficoReservaCompleto[0]
-          }
-          listaDatasetsProjetoDeVida[3] = {
-            backgroundColor: "<<seg_projeto_vida.grafico.datasets.3.backgroundColor>>",
-            borderColor: "<<seg_projeto_vida.grafico.datasets.3.borderColor>>",
-            borderWidth: "<<seg_projeto_vida.grafico.datasets.3.borderWidth>>",
-            label: 'Reserva Total',
-            data: retGraficoReservaAteHoje[0]
-          }          
-
-          listaItensProjetoDeVidaProjecao[0] = {
-            cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-            nome: 'Renda projetada',
-            valor: 0
-          }            
-          listaItensProjetoDeVidaProjecao[1] = {
-            cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-            nome: 'Reserva projetada',
-            valor: listaDatasetsProjetoDeVida[2].data[5]
-          }     
-
-          listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
-
-          //salva informações acumuladas do usuário
-          //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
-          usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
-        }
-        //carrega dados novo registro do usuário
-        chave = rowDados.chave        
-        usr =  {
-          apelido: rowDados.cad_apelido,
-          matricula: rowDados.cad_matricula,
-          nome: rowDados.cad_nome,
-          plano: rowDados.cad_plano,
-          tipoPlano: rowDados.cad_tipo_plano,
+      console.log('#pgCarga - processando participante: ', rowDados.chave, ' - chave anterior:', chave)
+      //primeiro verifica se está em situação do plano válida para o portal:
+      //se não achou situação OK ou se saldoTotal is null, marca para bloquear
+      let naoAchouSituacaoPlano = listaSituacoesValidas.indexOf(rowDados.cad_sitpart)<0
+      if ( naoAchouSituacaoPlano || rowDados.res_saldototal === null) { 
+        usuariosBloquear[rowDados.chave] = {
+          usr_apelido: rowDados.cad_apelido,
+          usr_matricula: rowDados.cad_matricula,
+          usr_nome: rowDados.cad_nome,
+          usr_plano: rowDados.cad_plano,
+          usr_tipoPlano: rowDados.cad_tipo_plano,
           segmento: validaSegmento(chave),
-          competencia: dataBase.substring(0,7),
-          nasc: rowDados.cad_nasc,
-          dataadesao: rowDados.cad_dataadesao,
-          taxa: 5.000
+          usr_competencia: dataBase.substring(0,7),
+          usr_dtnasc: utils.dateFormat(rowDados.cad_nasc, false, false),
+          usr_dtadesao: rowDados.cad_dataadesao,
+          usr_vigente: false,
+          motivo_bloqueio_carga: naoAchouSituacaoPlano ? 'situação não permitida para carga' : 'sem saldo total',
+          usr_situacao_plano: rowDados.cad_sitpart
         }
-        
-        //Bloco estrutura valores de contribuição
-        listaItensContribuicaoChave = {}
-        listaValoresContribuicaoChave = {}
-        usuarioTotalContr =  {
-          color: "<<seg_contribuicao.total.color>>",
-          nome: "Contribuição total",
-          valor: 0
-        }      
-        listaItensReservaChave = {}   
-        listaValoresReservaChave = {} 
-        listaItensCoberturas = {}
-        listaDatasetsProjetoDeVida = {}
-        listaItensProjetoDeVidaProjecao = {}
-        listaItensProjetoDeVidaCoberturas = {}
-        listaMesesProjetoDeVida = {}
+        //console.log('====> Bloqueando participante: ', rowDados.chave, rowDados.cad_sitpart)
+      } else {
+        if (chave !== rowDados.chave) {
+          if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
+            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
+            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
+            listaDatasetsProjetoDeVida[2] = {
+              backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
+              borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
+              borderWidth: "<<seg_projeto_vida.grafico.datasets.2.borderWidth>>",
+              label: 'Reserva Total',
+              data: retGraficoReservaCompleto[0]
+            }
+            listaDatasetsProjetoDeVida[3] = {
+              backgroundColor: "<<seg_projeto_vida.grafico.datasets.3.backgroundColor>>",
+              borderColor: "<<seg_projeto_vida.grafico.datasets.3.borderColor>>",
+              borderWidth: "<<seg_projeto_vida.grafico.datasets.3.borderWidth>>",
+              label: 'Reserva Total',
+              data: retGraficoReservaAteHoje[0]
+            }          
+  
+            listaItensProjetoDeVidaProjecao[0] = {
+              cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
+              nome: 'Renda projetada',
+              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3],2)
+            }            
+            listaItensProjetoDeVidaProjecao[1] = {
+              cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
+              nome: 'Reserva projetada',
+              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2],2)
+            }     
+  
+            listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
+  
+            //salva informações acumuladas do usuário
+            //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
+            usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
+            usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
+            usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
+          }
+          //carrega dados novo registro do usuário
+          chave = rowDados.chave        
+          usr =  {
+            apelido: rowDados.cad_apelido,
+            matricula: rowDados.cad_matricula,
+            nome: rowDados.cad_nome,
+            plano: rowDados.cad_plano,
+            tipoPlano: rowDados.cad_tipo_plano,
+            segmento: validaSegmento(chave),
+            competencia: dataBase.substring(0,7),
+            nasc: utils.dateFormat(rowDados.cad_nasc, false, false),
+            dataadesao: utils.dateFormat(rowDados.cad_dataadesao, false, false),
+            taxa: 5.000000,
+            idade: rowDados.cad_idade,
+            sitPart: rowDados.cad_sitpart
+          }
+          
+          //Bloco estrutura valores de contribuição
+          listaItensContribuicaoChave = []
+          listaValoresContribuicaoChave = []
+          usuarioTotalContr =  {
+            color: "<<seg_contribuicao.total.color>>",
+            nome: "Contribuição total",
+            valor: 0
+          }
+          usuarioContrib = {
+            contribParticipante: 0,
+            contribParticipantePlanoPatrocinado: 0,
+            contribPatronal: 0
+          }
 
-        //Bloco estrutura valores de Reserva
-        listaItensReservaChave[0] = {
-          cor: '<<seg_saldo_reserva.itens.0.cor>>',
-          nome: rowDados.res_nomesaldototal,
-          valor: rowDados.res_saldototal
-        }
-        listaItensReservaChave[1] = {
-          cor: '<<seg_saldo_reserva.itens.1.cor>>',
-          nome: rowDados.res_nomesaldoparticipante,
-          valor: rowDados.res_saldoparticipante
-        }
-        listaItensReservaChave[2] = {
-          cor: '<<seg_saldo_reserva.itens.2.cor>>',
-          nome: rowDados.res_nomesaldopj,
-          valor: rowDados.res_saldopj
-        }
-        listaValoresReservaChave[0] = rowDados.res_saldoparticipante
-        listaValoresReservaChave[1] = rowDados.res_saldopj
-        usrReservaTotal = {
-          color: '<<seg_saldo_reserva.total.color>>',
-          nome: 'Reserva Total',
-          valor: rowDados.res_saldototal
-        }
-
-        //Bloco estrutura valores cobertura risco/seguro
-        //MOrte
-        let capitalMorte = rowDados.cob_capitalmorte !== null ? rowDados.cob_capitalmorte : '(não contratado)'
-        listaItensCoberturas[0] = {
-          cor: '<<seg_coberturas.lista_itens_coberturas.0.cor>>',
-          nome: rowDados.cob_nomecapitalmorte,
-          valor: capitalMorte
-        }
-        //Invalidez
-        let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? rowDados.cob_capitalinvalidez : '(não contratado)'
-        listaItensCoberturas[1] = {
-          cor: '<<seg_coberturas.lista_itens_coberturas.1.cor>>',
-          nome: rowDados.cob_nomecapitalinvalidez,
-          valor: capitalInvalidez
-        }
-
-        //Bloco estrutura valores projeto de vida
-        //cobertura por morte
-        if (capitalMorte !== '(não contratado)') {        
+          listaItensReservaChave = {}   
+          listaValoresReservaChave = {} 
+          listaItensCoberturas = {}
+          listaDatasetsProjetoDeVida = {}
+          listaItensProjetoDeVidaProjecao = {}
+          listaItensProjetoDeVidaCoberturas = {}
+          listaMesesProjetoDeVida = {}
+  
+          //Bloco estrutura valores de Reserva
+          listaItensReservaChave[0] = {
+            cor: '<<seg_saldo_reserva.itens.0.cor>>',
+            nome: rowDados.res_nomesaldototal,
+            valor: financeiro.valor_to_string_formatado(rowDados.res_saldototal,2)
+          }
+          listaItensReservaChave[1] = {
+            cor: '<<seg_saldo_reserva.itens.1.cor>>',
+            nome: rowDados.res_nomesaldoparticipante,
+            valor: financeiro.valor_to_string_formatado(rowDados.res_saldoparticipante,2)
+          }
+          listaItensReservaChave[2] = {
+            cor: '<<seg_saldo_reserva.itens.2.cor>>',
+            nome: rowDados.res_nomesaldopj,
+            valor: financeiro.valor_to_string_formatado(rowDados.res_saldopj,2)
+          }
+          listaValoresReservaChave[0] = rowDados.res_saldoparticipante
+          listaValoresReservaChave[1] = rowDados.res_saldopj
+          usrReservaTotal = {
+            color: '<<seg_saldo_reserva.total.color>>',
+            nome: 'Reserva Total',
+            valor: rowDados.res_saldototal
+          }
+  
+          //Bloco estrutura valores cobertura risco/seguro
+          //MOrte
+          let capitalMorte = rowDados.cob_capitalmorte !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalmorte,2) : 0
+          listaItensCoberturas[0] = {
+            cor: '<<seg_coberturas.lista_itens_coberturas.0.cor>>',
+            nome: rowDados.cob_nomecapitalmorte,
+            valor: capitalMorte === 0 ? '(não contratado)' : capitalMorte
+          }
+          //Invalidez
+          let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalinvalidez,2) : 0
+          listaItensCoberturas[1] = {
+            cor: '<<seg_coberturas.lista_itens_coberturas.1.cor>>',
+            nome: rowDados.cob_nomecapitalinvalidez,
+            valor: capitalInvalidez === 0 ? '(não contratado)' : capitalInvalidez
+          }
+  
+          //Bloco estrutura valores projeto de vida
+          //cobertura por morte
           listaDatasetsProjetoDeVida[0] = {
             backgroundColor: "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",
             borderColor: "<<seg_projeto_vida.grafico.datasets.0.borderColor>>",
@@ -186,11 +290,10 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaCoberturas[0] = {
             cor: '<<seg_projeto_vida.itens.coberturas.0.cor>>',
             nome: rowDados.cob_nomecapitalmorte,
-            valor: capitalMorte
+            valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte,2)
           }
-        }
-        //cobertura por Invalidez
-        if (capitalInvalidez !== '(não contratado)') {
+  
+          //cobertura por Invalidez
           listaDatasetsProjetoDeVida[1] = {
             backgroundColor: "<<seg_projeto_vida.grafico.datasets.1.backgroundColor>>",
             borderColor: "<<seg_projeto_vida.grafico.datasets.1.borderColor>>",
@@ -208,27 +311,42 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaCoberturas[1] = {
             cor: '<<seg_projeto_vida.itens.coberturas.1.cor>>',
             nome: rowDados.cob_nomecapitalinvalidez,
-            valor: capitalInvalidez
+            valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez,2)
           }            
+  
+        } 
+  
+        let contribSaldo = false, contribSaldo13 = false, contribSaldoPartPlanoPatroc = false, contribSeguro = false
+
+        if (rowDados.contr_eventocod !== null) {
+          contribSaldo = listaContribSaldo.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+          contribSaldo13 = listaContribSaldo13.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+          contribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+          contribSeguro = listaContribSeguro.indexOf(rowDados.contr_eventocod.toString()) >= 0  
         }
-      } 
-
-      listaItensContribuicaoChave[rowDados.contr_eventocod] = {
-        cor: `<<seg_contribuicao.itens.${rowDados.contr_eventocod}.cor>>`,
-        nome: rowDados.contr_eventonome,
-        valor: rowDados.contr_valor
+        //console.log('***> rowDados.contr_eventocod', rowDados.contr_eventocod, contribSaldo, contribSaldo13, contribSaldoPartPlanoPatroc, contribSeguro)
+        if (contribSaldo || contribSaldo13 || contribSaldoPartPlanoPatroc || contribSeguro) {
+          listaItensContribuicaoChave.push({
+            cor: `<<seg_contribuicao.itens.${rowDados.contr_eventocod}.cor>>`,
+            nome: rowDados.contr_eventonome,
+            valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2)
+          })
+          listaValoresContribuicaoChave.push(rowDados.contr_valor)
+          usuarioTotalContr.valor += rowDados.contr_valor
+          if (contribSaldo || contribSaldo13) { 
+            usuarioContrib.contribParticipante += rowDados.contr_valor
+          }  
+          if (usr.tipoPlano === 'jmalucelli' && contribSaldoPartPlanoPatroc) {
+            usuarioContrib.contribParticipantePlanoPatrocinado += rowDados.contr_valor
+          }
+          usuarioContrib.contribPatronal = 0 //atenção está zerando aqui porque já está dentro de usuarioContrib.contribParticipante
+        }  
       }
-
-      listaValoresContribuicaoChave[rowDados.contr_eventocod] = rowDados.contr_valor
-
-      usuarioTotalContr.valor += rowDados.contr_valor
     })
 
-    console.log('===> saindo do For... - chave', chave)
     if (chave!=='') {
-      console.log('===> entrei no if - listaDatasetsProjetoDeVida:', listaDatasetsProjetoDeVida)
-      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'completo')          
-      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioTotalContr.valor, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje')                    
+      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
+      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
       listaDatasetsProjetoDeVida[2] = {
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -246,48 +364,60 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaItensProjetoDeVidaProjecao[0] = {
         cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
         nome: 'Renda projetada',
-        valor: 0
+        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3],2)
       }            
       listaItensProjetoDeVidaProjecao[1] = {
         cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
         nome: 'Reserva projetada',
-        valor: listaDatasetsProjetoDeVida[2].data[5]
-      }         
-      
+        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2],2)
+      }     
+
       listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
 
       //salva informações acumuladas do usuário
       //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
+      usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
+      usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
       usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
     }
-    usuarios = insereRegistroTestes(usuarios)
-
-    console.log('#pgCarga - finalizando carga - salvando usuários: ', usuarios)
+    //usuarios = insereRegistroTestes(usuarios)
 
     //salva dados anteriores dos usuários em usuariosHistorico
-    let ref = admin.database().ref('usuarios')
+    ref = admin.database().ref('usuarios')
     return ref.orderByChild('usr_plano').equalTo(plano).once('value')
     .then((usrAnterior) => {
-      ref = admin.database().ref(`usuariosHistorico`)
-      ref.remove()
-      let dtHistorico = utils.dateFormat(new Date(), true, true)
       ref = admin.database().ref(`usuariosHistorico/${plano}`)
       let usrHistorico = {}
-      usrHistorico[dtHistorico] = JSON.stringify(usrAnterior.val())
+      usrHistorico[dataProcessamento] = JSON.stringify(usrAnterior.val())
       return ref.update(usrHistorico) 
-    //.then(() => {
-    //  //salva informações finais/ATUAIS na chave de usuários
-    //  ref = admin.database().ref('usuarios')
-    //  return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
+    }).then(() => {
+      ref = admin.database().ref('usuarios')
+      return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
     }).then(() => {      
-      console.log('===> usuarios string', JSON.stringify(usuarios))
+      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios))
       ref = admin.database().ref(`usuarios`)
-      //ref.update({teste: JSON.stringify(usuarios)})
+      //primeiro salva usuário bloqueados pelo processamento
+      ref.update(usuariosBloquear)
+      //salva usuário processados com sucesso
       return ref.update(usuarios)
     }).then(() => {
+      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+      logProcessamento[dataProcessamento].status = 'Finalizado com sucesso'
+      logProcessamento[dataProcessamento].qtd_participantes_carregados = Object.keys(usuarios).length
+      logProcessamento[dataProcessamento].qtd_participantes_bloqueados = Object.keys(usuariosBloquear).length
+      logProcessamento[dataProcessamento].msg = 'Processamento finalizado com sucesso.'
+      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      refProc.update(logProcessamento)          
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
     }).catch((e) => {
-      console.log('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
+      console.error('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
+      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+      logProcessamento[dataProcessamento].status = 'Finalizado com erro'
+      logProcessamento[dataProcessamento].msg = 'Erro ao final do processo. Dados não foram salvos.'
+      logProcessamento[dataProcessamento].erro = e
+      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      refProc.update(logProcessamento)          
+
     })
 
   })
@@ -302,6 +432,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   },*/
 
   usuarios[chave] = {
+    usr_vigente: true,
     usr_competencia: usr.competencia,
     usr_apelido: usr.apelido,
     usr_matricula: usr.matricula,
@@ -309,7 +440,9 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_plano: usr.plano,
     usr_tipo_plano: usr.tipoPlano,
     usr_dtnasc: usr.nasc,
-    usr_segmento: validaSegmento(chave),
+    usr_dtadesao: usr.dataadesao,
+    usr_situacao_plano: usr.sitPart,
+    segmento: validaSegmento(chave),
     usr_taxaPadrao: usr.taxa,
     usr_contribuicao: {
       acao: {
@@ -356,7 +489,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   return usuarios
 }
 
-function calculaGraficoReserva(valorHoje, contribHoje, dataNasc, dataAdesao, taxa, amplitude) {
+function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano) {
 
   let retDataset = {
     0: 0    
@@ -365,62 +498,76 @@ function calculaGraficoReserva(valorHoje, contribHoje, dataNasc, dataAdesao, tax
     0: "Adesão"
   }
 
-  //transforma taxa anual em mensal:
-  taxa = (1+(taxa/100))^(1/12)
+  //calculo da reserva aos 65 anos ou a idade + 5 se for mais velho que 65..
+  let idadeApos = 65
+  if (idade > '64') {
+    idadeApos = Number(idade) + 5
+  }
 
-  //valorHoje = Number(valorHoje.replace('.','').replace(',','.'))
-
-  //calculo da reserva aos 65 anos
-  let dtNasc = new Date(dataNasc)
-  let data65Anos = new Date((dtNasc.getFullYear() + 65).toString()+'-'+(dtNasc.getMonth()+1).toString()+'-'+dtNasc.getDate().toString())
-  
-  let difMesesHoje65Anos = utils.diffDatasEmMeses(new Date(), data65Anos)
-  let difMesesDaAdesao65Anos = utils.diffDatasEmMeses(dataAdesao, data65Anos)
+  //calculo de datas e tempos
+  let dataAposentadoria = financeiro.calculaDataInicioRenda(dataNasc, idadeApos)
+  let difMesesHojeAposentadoria = utils.diffDatasEmMeses(new Date(), dataAposentadoria)
+  let difMesesDaAdesaoAposentadoria = utils.diffDatasEmMeses(dataAdesao, dataAposentadoria)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
 
-  let valor65anos = financeiro.valorFuturo(valorHoje, taxa, difMesesHoje65Anos, contribHoje)
+  //console.log('***> valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano', valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
+  let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
+  //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
+  let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxa, (15*12)) //calculo de renda por 15 anos            
+  //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
   
-  //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e 65 anos
-  let crescPorFaixas = difMesesDaAdesao65Anos / 5
+  //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e idadeAposentadoria
+  let crescPorFaixas = difMesesDaAdesaoAposentadoria / 5
   let aIdades = [
       1, 
       Math.trunc(1 + (crescPorFaixas)), 
       Math.trunc(1 + (crescPorFaixas * 2)), 
       Math.trunc(1 + (crescPorFaixas * 3)), 
       Math.trunc(1 + (crescPorFaixas * 4)), 
-      difMesesDaAdesao65Anos
+      difMesesDaAdesaoAposentadoria
   ]
 
-  let taxaCrescimentoRealReserva = financeiro.taxaCrescimentoRealReserva(valorHoje, difMesesDaAdesaoHoje, contribHoje)
+  let aDistribCurvaGrafico = [
+    0, 0.40, 0.55, 0.70, 0.85, 1
+  ]
 
+  let aDistribuicaoValores = [
+    0,
+    valorReservaAposentadoria / 5,
+    valorReservaAposentadoria / 5 * 2,
+    valorReservaAposentadoria / 5 * 3,
+    valorReservaAposentadoria / 5 * 4,
+    valorReservaAposentadoria
+  ]
+
+  //console.log('==> valorReservaAposentadoria', valorReservaAposentadoria, ' - aIdades', aIdades, ' - valorHoje', valorHoje, ' - difMesesHojeAposentadoria',difMesesHojeAposentadoria)
   for (let linha in aIdades) {
     let dif = aIdades[linha] - difMesesDaAdesaoHoje    
     if (linha > 0) {
-      if (dif < 0) { //calculo de valor presente - de hoje para trás..
-        retDataset[linha] = financeiro.valorPresente(valorHoje, taxaCrescimentoRealReserva, (difMesesDaAdesaoHoje - aIdades[linha]))
+      if (dif < 0) { 
+        retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
           retListaMeses[linha] = 'Hoje'        
-          retDataset[linha] = valorHoje  //posiciona o valor de hoje na faixa mais aproximada
+          retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
           if (amplitude==='até hoje') {
-            console.log('saindo do Break')
             break 
           }
-        } else {
+        } else { 
           retListaMeses[linha] = ''     
-          retDataset[linha] = financeiro.valorFuturo(valorHoje, taxa, dif, contribHoje) //projeta até o mês da faixa
+          retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
         }
       }  
     }
   }
 
   if (amplitude==='completo') {
-    retListaMeses[5] = '65 anos'     
-    retDataset[5] = valor65anos    //inclui valor projetado de 65 anos na última faixa
+    retListaMeses[5] = `${idadeApos} anos`     
+    retDataset[5] = valorReservaAposentadoria    //inclui valor projetado de 65 anos na última faixa
   }
 
-  return [retDataset, retListaMeses]
+  return [retDataset, retListaMeses, valorReservaAposentadoria, valorRendaAposentadoria]
 }
 
 function calculaContribuicaoPotencial() {
@@ -459,24 +606,33 @@ async function getConnection () {
 }
 
 async function buscaDadosPG(select) {
-  console.log('======> 1. iniciando buscaDadosPG - select:', select)
+  console.log('#buscaDadosPG - Iniciando - select:', select)
 
   return getConnection().then( async (pgConn) => {
-    console.log('=====> Conectei no PG')
+    console.log('#buscaDadosPG - Banco conectado.')
     let result = await pgConn.query(select)
-    console.log('=====> Query rodou')
     let ret
     if (!result) {
-      console.log('#pgCarga - buscaDadosPG - retorno da query vazio.')
+      console.error('#pgCarga - buscaDadosPG - retorno da query vazio.')
+      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+      logProcessamento[dataProcessamento].status = 'Finalizado com erro'
+      logProcessamento[dataProcessamento].msg = 'O banco de dados não retornou nenhum registro'
+      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      refProc.update(logProcessamento)          
       ret = false
     } else {
-      console.log('=====> result buscaDadosPG', result)  
       ret = result.rows 
     }
     pgConn.end()
     return ret
   }).catch(e => {
-    console.log('#pgCarga - buscaDadosPG - Erro na conexão ao PG:',e);
+    console.error('#pgCarga - buscaDadosPG - Erro na conexão ao PG:',e);
+    logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+    logProcessamento[dataProcessamento].status = 'Finalizado com erro'
+    logProcessamento[dataProcessamento].msg = 'Erro na conexão ao banco de dados.'
+    logProcessamento[dataProcessamento].erro = e
+    let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+    refProc.update(logProcessamento)          
     return false
   })
 }
@@ -502,7 +658,8 @@ function insereRegistroTestes(usuarios){
     },
     "usr_coberturas" : {
       "acao" : {
-        "valor_cobertura_potencial" : "1 Mi"
+        "valor_cobertura_potencial" : "1 Mi",
+        "vigente": true
       },
       "lista_itens_coberturas" : [ {
         "cor" : "<<seg_coberturas.lista_itens_coberturas.0.cor>>",
@@ -518,7 +675,8 @@ function insereRegistroTestes(usuarios){
     "usr_contribuicao" : {
       "acao" : {
         "valor_contribuicao_potencial" : "25,00",
-        "valor_deducao_potencial" : "400,00"
+        "valor_deducao_potencial" : "400,00",
+        "vigente": true
       },
       "lista_itens_contribuicao" : [ {
         "cor" : "<<seg_contribuicao.itens.0.cor>>",
@@ -550,7 +708,8 @@ function insereRegistroTestes(usuarios){
     "usr_projeto_vida" : {
       "acao" : {
         "valor_renda_potencial" : "3.000,00",
-        "valor_reserva_potencial" : "1 mi"
+        "valor_reserva_potencial" : "1 mi",
+        "vigente": true
       },
       "lista_datasets_projetoDeVida" : [ {
         "backgroundColor" : "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",
@@ -653,7 +812,8 @@ function insereRegistroTestes(usuarios){
     },
     "usr_coberturas" : {
       "acao" : {
-        "valor_cobertura_potencial" : "1 Mi"
+        "valor_cobertura_potencial" : "1 Mi",
+        "vigente": true
       },
       "lista_itens_coberturas" : [ {
         "cor" : "<<seg_coberturas.lista_itens_coberturas.0.cor>>",
@@ -669,7 +829,8 @@ function insereRegistroTestes(usuarios){
     "usr_contribuicao" : {
       "acao" : {
         "valor_contribuicao_potencial" : "25,00",
-        "valor_deducao_potencial" : "400,00"
+        "valor_deducao_potencial" : "400,00",
+        "vigente": true        
       },
       "lista_itens_contribuicao" : [ {
         "cor" : "<<seg_contribuicao.itens.0.cor>>",
@@ -701,7 +862,8 @@ function insereRegistroTestes(usuarios){
     "usr_projeto_vida" : {
       "acao" : {
         "valor_renda_potencial" : "3.000,00",
-        "valor_reserva_potencial" : "1 mi"
+        "valor_reserva_potencial" : "1 mi",
+        "vigente": true
       },
       "lista_datasets_projetoDeVida" : [ {
         "backgroundColor" : "<<seg_projeto_vida.grafico.datasets.0.backgroundColor>>",

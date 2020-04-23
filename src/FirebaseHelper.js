@@ -1215,13 +1215,13 @@ export default class FirebaseHelper {
     let snapshot = await ref.once('value')
     let ret = {}
     if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {
-      snapshot.child('transacoes/contratacoes').forEach((snap) => {
-        let contratacao = snap.val()        
-        if (contratacao.tipo === tipo) {
-          if (contratacao.status === status) {
-            ret[snap.key] = snap.val()
-          }  
+      let data = ''
+      snapshot.child('transacoes/contratacoes').forEach((snap) => {        
+        let contratacao = snap.val()
+        if (snap.key > data && contratacao.tipo === tipo && contratacao.status === status) {
+          ret[snap.key] = snap.val()
         }
+        data = snap.key
       })  
     }
     return Object.keys(ret).length > 0 ? ret : null

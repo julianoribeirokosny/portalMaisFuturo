@@ -70,6 +70,13 @@ export default class Home {
       return page('/erro')
     }    
 
+    
+    //participante com inabilitado para acessar o portal
+    if (!data_Home.vigente) {
+      Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome')
+      return page('/erro')
+    }    
+    
     this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
     this.consulta_contribuicao = new Object()
     this.consulta_contribuicao.tipo = 'Contribuição mensal'
@@ -104,6 +111,8 @@ export default class Home {
         }
     });
 
+    console.log('===> gráfico reserva ok')
+
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,
         mounted () {            
@@ -136,6 +145,8 @@ export default class Home {
         }
     });
 
+    console.log('===> projeto vida ok')
+
     Vue.component('contribuicao', {
         extends: VueCharts.Doughnut,        
         //template: '#contribuicao',
@@ -160,6 +171,8 @@ export default class Home {
         }
     });
     
+    console.log('===> gráfico contribuicao ok')
+
     if (!this.vueObj) {
       this.vueObj = new Vue({
         components: {
@@ -266,7 +279,6 @@ export default class Home {
     let p2 = new Promise((resolve, reject) => {
       if (Object.keys(this.participante).length === 0) {
         resolve(this.firebaseHelper.getParticipante(chave).then((part) => {
-          console.log('====> part', part)
           if (part===null) {
             return false
           } else {
@@ -284,9 +296,6 @@ export default class Home {
       if (!retPromises[0] || !retPromises[1]) {
         return null
       } else {
-
-        console.log('===> home', this.home)
-        console.log('===> participante', this.participante)
 
         let part = this.participante
         let segmentoUsuario = await this.firebaseHelper.getSegmento(part.segmento)
@@ -312,17 +321,29 @@ export default class Home {
           let valor
           let achouCaminhoPart = false, achouCaminhoSeg = false
 
-          console.log('===========> chave', chave)
-
           // busca chave em usuario
           if (chave.substring(0,4) === 'usr_') {
             valor = part
+
+            if (chave === 'usr_contribuicao.lista_itens_contribuicao') {
+              console.log('************** valor inicial', valor)
+            }
+  
+
             for (let i in caminho) {
               if (valor[caminho[i]]!==undefined) {
                 achouCaminhoPart = true
                 valor = valor[caminho[i]]
+                if (chave === 'usr_contribuicao.lista_itens_contribuicao') {
+                  console.log('************** valor indo...', valor)
+                }
+    
               }
             }  
+          }
+
+          if (chave === 'usr_contribuicao.lista_itens_contribuicao') {
+            console.log('************** usr_contribuicao.lista_itens_contribuicao', valor)
           }
 
           // busca chave em segmento

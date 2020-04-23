@@ -17,30 +17,14 @@ exports.default = functions.https.onRequest((req, res) => {
         res.status(401).send("Ops! Parece que este link não é mais válido. Retorne ao aplicativo e solicite um novo envio de e-mail.")
         return false
     } else {
-        /*let chave = key.split("").reverse().join(""); //desinverte..
-        let uid = chave.substring(0, chave.length - 14)
-        let dataChave = chave.substring(chave.length - 14)
-        console.log('=====> chave, uid, dataChave', chave, uid, dataChave)
-        console.log(`#validaEmailLinkKey - validando link para o uid: ${uid}.`)
-        let ref = admin.database().ref(`login/${uid}/emailLinkKey`)
-        return ref.once('value').then((emailLinkKey) => {
-            if (emailLinkKey.val()===null) {
-                console.log(`#validaEmailLinkKey - erro na validação do link para o uid: ${uid} - Chave não encontrada.`)
-                res.status(401).send("Ops! Parece que este link não é mais válido. Retorne ao aplicativo e solicite um novo envio de e-mail.")
-                return false    
-            }
-            console.log('====> emailLinkKey, key',emailLinkKey.val(), key, emailLinkKey.val() === key)
-            if (emailLinkKey.val() !== key){
-                console.log(`#validaEmailLinkKey - erro na validação do link para o uid: ${uid} - Chave não bate.`)
-                res.status(401).send("Ops! Parece que este link não é mais válido. Retorne ao aplicativo e solicite um novo envio de e-mail.")
-                return false    
-            } */
+        console.log(`#validaEmailLinkKey - decode token...`)
         return admin.auth().verifyIdToken(idToken)
         .then(function(decodedToken) {
-          return decodedToken.uid;
-          // ...
+            console.log(`#validaEmailLinkKey - token válido.`)
+            return decodedToken.uid;
         }).then((uid) => {
             //atualiza EmailVerified para true
+            console.log(`#validaEmailLinkKey - atualizando usuários.`)
             return admin.auth().updateUser(uid, {
                 emailVerified: true
             }).then((userData) => {
