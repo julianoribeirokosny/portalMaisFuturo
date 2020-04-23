@@ -6,13 +6,14 @@ import page from 'page';
 import simuladorEmprestimo from './simuladorEmprestimo.html';
 import './simuladorEmprestimo.css';
 import Contratacao from '../contratacao/contratacao';
+import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 
 const financeiro = require('../../../functions/Financeiro')
 
 export default {
     template: simuladorEmprestimo,
     components: { 
-        VueSlider, Contratacao
+        VueSlider, Contratacao, ContratacaoAberta
     },
     props: { 
         dados: {
@@ -28,7 +29,7 @@ export default {
                     indice_anterior: 0,
                 }
             }
-        }
+        }        
     },    
     data: function() {
         return {   
@@ -36,12 +37,16 @@ export default {
             formatter1: '{value} x',
             quantidade: 36,
             maximo: this.dados.pre_aprovado - this.dados.saldo_devedor, 
+            str_maximo: '',
             saldo_devedor: this.dados.saldo_devedor,
-            str_maximo: 0,
+            minimo: this.dados.saldo_devedor,
+            str_minimo: '',
             principal: 0,
-            valido: true,
+            valido_maximo: true,
+            valido_minimo: true,
             parcela: 0,
             simulador: true,
+            emprestimoSolicitado: false,
             money: {
                 decimal: '',
                 thousands: '.',
@@ -114,28 +119,34 @@ export default {
             },
         }
     },    
-    created(){ 
-        console.log('Emprestimo Simulador ====>',this.dados)
-        this.dados.pre_aprovado = financeiro.float_to_string(this.dados.pre_aprovado.toFixed(2))
-        this.dados.saldo_devedor = financeiro.float_to_string(this.dados.saldo_devedor.toFixed(2))        
-        this.str_maximo = financeiro.float_to_string(this.maximo.toFixed(2))
-        this.principal = (this.maximo / 2).toFixed(0)        
+    created(){   
+        console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)      
+        if(this.dados.emprestimoSolicitado.dados != null) {
+            this.emprestimoSolicitado = true            
+        } else {
+            this.dados.pre_aprovado = financeiro.float_to_string(this.dados.pre_aprovado.toFixed(2))
+            this.dados.saldo_devedor = financeiro.float_to_string(this.dados.saldo_devedor.toFixed(2))
+            this.str_maximo = financeiro.float_to_string(this.maximo.toFixed(2))
+            this.str_minimo = financeiro.float_to_string(this.minimo.toFixed(2))
+            this.principal = (this.maximo / 2).toFixed(0)
+        }
     },
     mounted(){
         this.calcula_taxa_mensal();
     },
     methods: {      
         calcularParcela(){    
-            if(parseFloat(this.principal.toString().replace(/\./g,'')) > this.maximo) {
-                this.valido = false;
-                this.parcela = '0';
+            let principal = parseFloat(this.principal.toString().replace(/\./g,''))
+            if (principal > this.maximo) {
+                this.valido_maximo = false
+                this.parcela = '0'
+            } else if (principal < this.minimo) {
+                this.valido_minimo = false
+                this.parcela = '0'
             } else {                
-                this.valido = true;
-                this.parcela = financeiro.float_to_string(financeiro.pgto(
-                                    parseFloat(
-                                        this.principal.toString().replace(/\./g,'')
-                                    ), 
-                                    this.taxa_mensal, this.quantidade))
+                this.valido_maximo = true
+                this.valido_minimo = true
+                this.parcela = financeiro.float_to_string(financeiro.pgto(principal, this.taxa_mensal, this.quantidade))
             }
         },
         alteraPrincipal(){
@@ -146,7 +157,7 @@ export default {
         },
         solicitarEmprestimo(){            
             let principal = parseFloat(this.principal.split('.').join('')).toFixed(2)            
-            if(this.valido) {
+            if(this.valido_maximo && this.valido_minimo) {
                 this.contratacao.resumo = []
                 this.contratacao.titulo = 'Solicite o</br> empréstimo simulado'
                 this.contratacao.resumo.push(
@@ -154,7 +165,7 @@ export default {
                                                 { nome:'Quantidade de parcelas:', valor: this.quantidade },
                                                 { nome:'Valor da parcela:', valor: `R$ ${this.parcela}` },
                                                 { nome:'(a) Valor bruto contratado:', valor: `R$ ${financeiro.float_to_string(principal)}` },
-                                                { nome:'', valor:'' },
+                                                { nome:'&nbsp;', valor:'' },
                                                 { nome:'DEDUÇÕES:', valor:'' }
                                             )
                 let liquido = 0
@@ -172,12 +183,12 @@ export default {
                         liquido -= this.saldo_devedor
                         this.contratacao.resumo.push(
                                     { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
-                                    { nome:'', valor:'' },
+                                    { nome:'&nbsp;', valor:' ' },
                                     { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
                         )
                     } else {
                         this.contratacao.resumo.push(
-                                    { nome:'', valor:'' },
+                                    { nome:'&nbsp;', valor:' ' },
                                     { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
                         )
                     }                    
@@ -191,12 +202,12 @@ export default {
                         liquido -= this.saldo_devedor
                         this.contratacao.resumo.push(
                                     { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
-                                    { nome:'', valor:'' },
+                                    { nome:'&nbsp;', valor:' ' },
                                     { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
                         )
                     } else {
                         this.contratacao.resumo.push(
-                                    { nome:'', valor:'' },
+                                    { nome:'&nbsp;', valor:' ' },
                                     { nome:'VALOR FINAL (a - b):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
                         )
                     }
@@ -205,9 +216,9 @@ export default {
                 this.contratacao.msg_vigencia = ''
                 this.contratacao.msg_novo_valor = ''
                 this.contratacao.observacao = '*Sobre este valor incidirá IOF, calculado na data da assinatura do contrato.'
-                this.contratacao.valor_novo = principal
+                this.contratacao.valor_novo = parseFloat(principal)
                 this.contratacao.valor_novo_Tela = financeiro.float_to_string(principal)
-                this.contratacao.valor_antigo = this.dados.saldo_devedor
+                this.contratacao.valor_antigo = parseFloat(this.dados.saldo_devedor.toString().replace(/\./g,''))
                 this.contratacao.titulo_finalizacao = 'Solicitação </br> de empréstimo </br>encaminhada'
                 this.contratacao.finalizacao_msg = 'Em breve entraremos em contato para assinatura do contrato.'
                 this.contratacao.finalizacao_msg_novo_valor = 'Valor bruto simulado de R$ '
@@ -215,6 +226,8 @@ export default {
                 this.contratacao.uid = this.dados.uid
                 this.contratacao.label_button = 'Solicitar'
                 this.contratacao.tipo = 'Empréstimo'
+
+                console.log('Novo Valor Emprestimos',this.contratacao.valor_novo)
                 this.simulador = false
             }            
         },

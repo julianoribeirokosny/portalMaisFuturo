@@ -38,7 +38,9 @@ export default class Home {
     this.vueObj = null
     this.chave = null
     this.contribuicao_Aberta = null
+    this.emprestimo_Solicitado = null
     this.consulta_contribuicao = null
+    this.consulta_emprestimo = null
   }  
 
   async showHome() {
@@ -68,19 +70,21 @@ export default class Home {
       return page('/erro')
     }    
 
+    this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
     this.consulta_contribuicao = new Object()
-    this.consulta_contribuicao.dados = null
-    this.consulta_contribuicao.titulo = null
-    this.consulta_contribuicao.chave = this.chave
-    if(!data_Home.projeto_vida.acao.vigente) {
-      this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, "Contribuição mensal")
-      if (this.contribuicao_Aberta) {        
-        this.consulta_contribuicao.dados = this.contribuicao_Aberta
-        this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
-      }
-    }
+    this.consulta_contribuicao.tipo = 'Contribuição mensal'
+    this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'    
+    this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
+    this.consulta_contribuicao.chave = this.chave    
+    console.log('consulta_contribuicao4 ====>',this.consulta_contribuicao)
 
-    console.log('consulta_contribuicao',this.consulta_contribuicao)
+    this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
+    this.consulta_emprestimo = new Object()
+    this.consulta_emprestimo.tipo = 'Empréstimo'
+    this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
+    this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null  
+    this.consulta_emprestimo.chave = this.chave    
+    //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
 
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
@@ -170,7 +174,7 @@ export default class Home {
             toggle: false,
             chave: this.chave,
             uid: this.auth.currentUser.uid,
-            contribuicaoAberta: this.consulta_contribuicao,
+            contribuicaoAberta: this.consulta_contribuicao,            
             rendaSimulador: {
                 usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
                 taxa_anual_simulacao: 5,
@@ -198,6 +202,7 @@ export default class Home {
                 saldo_devedor: 2000.00,
                 chave: this.chave,
                 uid: this.auth.currentUser.uid,
+                emprestimoSolicitado: this.consulta_emprestimo,
             },
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
