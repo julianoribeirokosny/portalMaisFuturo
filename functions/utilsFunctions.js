@@ -2,7 +2,28 @@
 
 module.exports =  {
 
-    dateFormat : function (x, completo, soNumeros) {
+    dateFormat : function (x, completo, soNumeros, dd_mm_yyyy) {
+
+        if (!(x instanceof Date)) { //se String e não date... converte
+            let dateParts = x.split('/')
+            console.log('****> dateParts.length', dateParts.length)
+            if (dateParts.length === 1) {
+                dateParts = x.split('-')
+                console.log('****> dateParts.length', dateParts.length)
+                if (dateParts.length===1) {
+                    return null //erro no formato de data de entrada: nem "-" nem "/" na formatação
+                }
+            }
+
+            console.log('*****> dateParts', dateParts)
+            //se AAAA-MM-DD
+            if (Number(dateParts[0]) > Number(dateParts[2])) {
+                x = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]))
+            } else {
+                x = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]))
+            }
+        }
+
         let ret = ''
         let y = x.getFullYear().toString();
         let m = (x.getMonth() + 1).toString();
@@ -22,8 +43,12 @@ module.exports =  {
             if (completo) {
                 ret += ho + mi + se
             }  
+        } else {
+            if (dd_mm_yyyy) {
+                ret = d + '/' + m + '/' + y 
             } else {
-            ret = y + '-' + m + '-' + d 
+                ret = y + '-' + m + '-' + d 
+            }
             if (completo) {
                 ret += ' ' + ho + ':' + mi + ':' + se
             }  
@@ -33,6 +58,12 @@ module.exports =  {
     },
 
     diffDatasEmMeses : function (dataMenor, dataMaior) {
+        if (!(dataMaior instanceof Date)) {
+            dataMaior = new Date(dataMaior)
+        }
+        if (!(dataMenor instanceof Date)) {
+            dataMenor = new Date(dataMenor)
+        }
         let months;
         months = (dataMaior.getFullYear() - dataMenor.getFullYear()) * 12;
         months -= dataMenor.getMonth() + 1;

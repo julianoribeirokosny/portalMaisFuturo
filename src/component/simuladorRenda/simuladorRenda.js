@@ -64,7 +64,6 @@ export default {
             rendaMensal: 0,
             contribuicaoFixaTela: '',            
             contribuicaoTotalTela: '',
-            taxa_mensal_simulador: Math.pow(this.dados.taxa_anual_simulacao/100+1, 1/12)-1,
             qtd_meses: 0,
             idade: this.dados.idadeBeneficio,            
             tempo: 15,
@@ -93,7 +92,6 @@ export default {
             simulador: true,
             taxa_mensal: 0,     
             date_now: '',
-            date_parts: this.dados.usr_dtnasc.split('/'),
             date_inicio_renda: '',
             sliderContribuicao: {
                 dotSize: 14,
@@ -148,8 +146,7 @@ export default {
         }
     },
     created(){        
-        this.date_now = new Date()
-        this.date_inicio_renda = new Date(Number(this.date_parts[2]) + Number(this.idade), this.date_parts[1] - 1, this.date_parts[0])
+        this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
         this.contribuicaoTela = financeiro.float_to_string(this.dados.minimoContribuicao.toFixed(2))
         this.reservaTotalTela = financeiro.float_to_string(this.dados.reservaTotalFutura)
         this.rendaMensalTela = financeiro.float_to_string(this.dados.rendaMensalFutura)
@@ -169,8 +166,8 @@ export default {
         },
         idade(newVal, oldVal) {
             if(newVal !== oldVal) {
-                this.date_inicio_renda = new Date(Number(this.date_parts[2]) + Number(newVal), this.date_parts[1] - 1, this.date_parts[0])
-                this.calculaQuantidadeMeses()
+                //this.date_inicio_renda = new Date(Number(this.date_parts[2]) + Number(newVal), this.date_parts[1] - 1, this.date_parts[0])
+                this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
                 this.calculaReservaFutura()
                 this.calculaRendaFutura()
             }
@@ -208,31 +205,26 @@ export default {
             this.simulador = false
         },
         calculaReservaFutura() {
-            this.calculaQuantidadeMeses()
-            this.reservaTotal = financeiro.valorFuturo(this.dados.reservaTotalAtual,
-                                                        this.taxa_mensal_simulador, 
-                                                        this.qtd_meses,
-                                                        (this.contribuicao + this.dados.contribuicaoFixa + this.dados.contribuicaoPatronal).toFixed(2))
-            
-            if(this.dados.usr_tipo_plano == 'jmalucelli') {
-                let decimoTerceiro = financeiro.valorFuturo(0, 5, this.qtd_meses/12, (this.dados.contribuicaoFixa + this.dados.contribuicaoPatronal).toFixed(2))
-                console.log('decimoTerceiro',decimoTerceiro)
-                console.log('this.reservaTotal antes',this.reservaTotal)
-                this.reservaTotal += decimoTerceiro
-                console.log('this.reservaTotal depois',this.reservaTotal)
-            }
-                                                        
-            this.reservaTotalTela = financeiro.float_to_string(this.reservaTotal.toFixed(2))
+            this.reservaTotal = financeiro.calculaReservaFutura(
+                this.dados.reservaTotalAtual, 
+                this.dados.taxa_anual_simulacao, 
+                this.contribuicao,
+                this.dados.contribuicaoFixa,
+                this.dados.contribuicaoPatronal,
+                this.date_inicio_renda,
+                this.dados.usr_tipo_plano
+            )
+
+            this.reservaTotalTela = financeiro.float_to_string(this.reservaTotal)
         },
         calculaRendaFutura() {
-            this.rendaMensal = financeiro.pgto(this.reservaTotal, this.taxa_mensal_simulador, (this.tempo*12))            
-            this.rendaMensalTela = financeiro.float_to_string(this.rendaMensal)
+            this.rendaMensalTela = financeiro.float_to_string(
+                financeiro.calculaRendaFutura(
+                    this.reservaTotal,
+                    this.dados.taxa_anual_simulacao,
+                    this.tempo
+                )
+            )
         },
-        calculaQuantidadeMeses() {
-            this.qtd_meses = (this.date_inicio_renda.getFullYear() - this.date_now.getFullYear()) * 12;
-            this.qtd_meses -= this.date_now.getMonth();
-            this.qtd_meses += this.date_inicio_renda.getMonth();
-            this.qtd_meses <= 0 ? 0 : this.qtd_meses;
-        }
     },
 }

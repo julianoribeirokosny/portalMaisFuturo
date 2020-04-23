@@ -434,10 +434,13 @@
                         </div>
                     </div>
                   </div>
+
+
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                    <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                      
-                        <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background"
-                             style="cursor: pointer;"  @click.prevent="simuladorRenda('simulador-renda')">
+                      <template v-if="home.projeto_vida.acao.vigente">
+                          <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                                                
+                              <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background"
+                             style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda')">
                             <div class="mdl-card__supporting-text margin_auto">
                                 <div class="mdl-card-campanha-button-left">
                                     <dl>
@@ -456,8 +459,17 @@
                                 <span class="span-card-botton-projeto-vida">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
                                 <i class="material-icons icon-button">arrow_forward</i>
                             </div>
-                        </div>                        
-                      </div>
+                              </div>  
+                          </div>
+                      </template>   
+                      <template v-else>
+                          <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">
+                              <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
+                                  <span class="span-card-botton-projeto-vida">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
+                                  <i class="material-icons icon-button">arrow_forward</i>
+                              </div>
+                          </div>
+                      </template>                      
                   </div>                
               </template>
 
@@ -491,7 +503,7 @@
                   </div>
               </template>
 
-              <!--Minhas Contribuição-->
+              <!--Minha Contribuição-->
               <template v-if="home.contribuicao && home.contribuicao.vigente">
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                       <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
@@ -528,14 +540,33 @@
                           </template>
                       </div>
                   </div>
+
+
+
+
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <div class="mdl-card__supporting-text margin_auto mdl-card-container">
-                          <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
-                              <span class="span-card-botton-projeto-vida">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
-                              <i class="material-icons icon-button">arrow_forward</i>
+                      <template v-if="home.contribuicao.acao.vigente">
+                          <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                              <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background"
+                              style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda')">
+                                  <span class="span-card-botton-projeto-vida">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
+                                  <i class="material-icons icon-button">arrow_forward</i>
+                              </div>
                           </div>
-                      </div>
+                      </template>  
+                      <template v-else>
+                          <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">
+                              <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
+                                  <span class="span-card-botton-projeto-vida">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
+                                  <i class="material-icons icon-button">arrow_forward</i>
+                              </div>
+                          </div>
+                      </template>
                   </div>
+
+
+
+
               </template>
 
               <!--Mais Amigos-->
@@ -643,6 +674,13 @@
               <simulador-renda v-bind:dados="rendaSimulador"></simulador-renda>
           </section>
           
+          <!--Consulta Contratação em Aberto-->
+          <section id="page-contratacao-aberta" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+              <contratacao-aberta v-bind:dados="contribuicaoAberta"></contratacao-aberta>
+          </section>
+
+          <!--Pagina de Erro-->
           <section id="page-erro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">

@@ -18,9 +18,6 @@ const runtimeOpts = {
   memory: '2GB'
 }
 
-var logProcessamento = {}
-var dataProcessamento
-
 /*************************************************
 ***********
 *********
@@ -50,20 +47,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   select = select.replace(/--nome_plano--/g, plano)
   //console.log('===> select', select)
 
-  dataProcessamento = utils.dateFormat(new Date(), true, false)
-  logProcessamento[dataProcessamento] = {
-    plano: plano,
-    inicio: dataProcessamento.substring(-8),
-    fim: '',
-    qtd_participantes_carregados: 0,
-    qtd_participantes_bloqueados: 0,
-    status: 'Em andamento',
-    msg: '',
-    erro: '',
-  }
-
   let usuarios = {} //lista de usuários que serão atualizados na base
-  let usuariosBloquear = {} //lista de usuários que não foram carregados
+  let usuariosBloquear = {} //lista de usuários que ou m
   //listas de parametros de cod contribuição 
   let listaContribSaldo, listaContribSaldo13, listaContribSaldoPartPlanoPatroc, listaContribSeguro, listaContribSaida, listaContribPortabilidade, listaContribExtraordinaria
   let listaSituacoesValidas //lista de situações de plano válidas para carga no portal
@@ -72,24 +57,19 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   return ref.once('value').then((snapshotParent)  => {
     if (!snapshotParent.val()) {
       console.error('#pgCarga - Processamento cancelado. Estrutura do settings do plano inconsistente.')
-      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
-      logProcessamento[dataProcessamento].status = 'Cancelado'
-      logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano inconsistente'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
-      refProc.update(logProcessamento)
       return false
     } else {
       listaContribSaldo = snapshotParent.child('listaContribSaldo').val()
+      console.log('***> listaContribSaldo', listaContribSaldo)
       listaContribSaldo13 = snapshotParent.child('listaContribSaldo13').val()
+      console.log('***> listaContribSaldo13', listaContribSaldo13)
       listaContribSaldoPartPlanoPatroc = snapshotParent.child('listaContribSaldoPartPlanoPatroc').val()
+      console.log('***> listaContribSaldoPartPlanoPatroc', listaContribSaldoPartPlanoPatroc)
       listaContribSeguro = snapshotParent.child('listaContribSeguro').val()
       listaContribSaida = snapshotParent.child('listaContribSaida').val()
       listaContribPortabilidade = snapshotParent.child('listaContribSaida').val()
       listaContribExtraordinaria = snapshotParent.child('listaContribExtraordinaria').val()
       listaSituacoesValidas = snapshotParent.child('listaSituacoesValidas').val()
-      //console.log('***> listaContribSaldo', listaContribSaldo)
-      //console.log('***> listaContribSaldo13', listaContribSaldo13)
-      //console.log('***> listaContribSaldoPartPlanoPatroc', listaContribSaldoPartPlanoPatroc)
       if (
         listaContribSaldo === null ||
         listaContribSaldo13 === null ||
@@ -101,11 +81,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         listaSituacoesValidas === null 
         ) {
           console.error('#pgCarga - Processamento cancelado. Estrutura do settings do plano->contribuicao inconsistente.')
-          logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
-          logProcessamento[dataProcessamento].status = 'Cancelado'
-          logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano->contribuicao inconsistente.'
-          let refProc = admin.database().ref(`settings/carga/logProcessamento`)
-          refProc.update(logProcessamento)          
           return false   
       }
       //transforma em array
@@ -122,7 +97,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     return buscaDadosPG(select)  //select na base do Postgre
   }).then((retDadosPG) => {
     if (!retDadosPG) {
-      console.error('#pgCarga - Processamento cancelado. Verifique mensagens anteriores.')
+      console.log('#pgCarga - Processamento cancelado. Verifique mensagens anteriores.')
       return false
     }
     let chave = '', usr
@@ -133,26 +108,22 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       contribPatronal: 0
     }
     retDadosPG.forEach((rowDados) => {
-      console.log('#pgCarga - processando participante: ', rowDados.chave, ' - chave anterior:', chave)
+      console.log('====> processando participante: ', rowDados.chave, ' - chave anterior:', chave)
       //primeiro verifica se está em situação do plano válida para o portal:
-      //se não achou situação OK ou se saldoTotal is null, marca para bloquear
-      let naoAchouSituacaoPlano = listaSituacoesValidas.indexOf(rowDados.cad_sitpart)<0
-      if ( naoAchouSituacaoPlano || rowDados.res_saldototal === null) { 
+      if (listaSituacoesValidas.indexOf(rowDados.cad_sitpart)===0) { //se não achou, marca para bloquear
         usuariosBloquear[rowDados.chave] = {
-          usr_apelido: rowDados.cad_apelido,
-          usr_matricula: rowDados.cad_matricula,
-          usr_nome: rowDados.cad_nome,
-          usr_plano: rowDados.cad_plano,
-          usr_tipoPlano: rowDados.cad_tipo_plano,
+          apelido: rowDados.cad_apelido,
+          matricula: rowDados.cad_matricula,
+          nome: rowDados.cad_nome,
+          plano: rowDados.cad_plano,
+          tipoPlano: rowDados.cad_tipo_plano,
           segmento: validaSegmento(chave),
-          usr_competencia: dataBase.substring(0,7),
-          usr_dtnasc: utils.dateFormat(rowDados.cad_nasc, false, false),
-          usr_dtadesao: rowDados.cad_dataadesao,
-          usr_vigente: false,
-          motivo_bloqueio_carga: naoAchouSituacaoPlano ? 'situação não permitida para carga' : 'sem saldo total',
-          usr_situacao_plano: rowDados.cad_sitpart
+          competencia: dataBase.substring(0,7),
+          nasc: utils.dateFormat(rowDados.cad_nasc, false, false),
+          dataadesao: rowDados.cad_dataadesao,
+          usr_vigente: false
         }
-        //console.log('====> Bloqueando participante: ', rowDados.chave, rowDados.cad_sitpart)
+        console.log('====> Bloqueando participante: ', rowDados.chave, rowDados.cad_sitpart)
       } else {
         if (chave !== rowDados.chave) {
           if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
@@ -205,8 +176,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             nasc: utils.dateFormat(rowDados.cad_nasc, false, false),
             dataadesao: utils.dateFormat(rowDados.cad_dataadesao, false, false),
             taxa: 5.000000,
-            idade: rowDados.cad_idade,
-            sitPart: rowDados.cad_sitpart
+            idade: rowDados.cad_idade
           }
           
           //Bloco estrutura valores de contribuição
@@ -316,15 +286,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
         } 
   
-        let contribSaldo = false, contribSaldo13 = false, contribSaldoPartPlanoPatroc = false, contribSeguro = false
+        let contribSaldo = listaContribSaldo.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+        let contribSaldo13 = listaContribSaldo13.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+        let contribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+        let contribSeguro = listaContribSeguro.indexOf(rowDados.contr_eventocod.toString()) >= 0
 
-        if (rowDados.contr_eventocod !== null) {
-          contribSaldo = listaContribSaldo.indexOf(rowDados.contr_eventocod.toString()) >= 0 
-          contribSaldo13 = listaContribSaldo13.indexOf(rowDados.contr_eventocod.toString()) >= 0 
-          contribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.indexOf(rowDados.contr_eventocod.toString()) >= 0 
-          contribSeguro = listaContribSeguro.indexOf(rowDados.contr_eventocod.toString()) >= 0  
-        }
-        //console.log('***> rowDados.contr_eventocod', rowDados.contr_eventocod, contribSaldo, contribSaldo13, contribSaldoPartPlanoPatroc, contribSeguro)
+        console.log('***> rowDados.contr_eventocod', rowDados.contr_eventocod, contribSaldo, contribSaldo13, contribSaldoPartPlanoPatroc, contribSeguro)
+
         if (contribSaldo || contribSaldo13 || contribSaldoPartPlanoPatroc || contribSeguro) {
           listaItensContribuicaoChave.push({
             cor: `<<seg_contribuicao.itens.${rowDados.contr_eventocod}.cor>>`,
@@ -344,6 +312,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       }
     })
 
+    console.log('===> saindo do For... - chave', chave)
     if (chave!=='') {
       let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
       let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
@@ -382,42 +351,32 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     }
     //usuarios = insereRegistroTestes(usuarios)
 
+    console.log('#pgCarga - finalizando carga - salvando usuários: ', usuarios)
+
     //salva dados anteriores dos usuários em usuariosHistorico
     ref = admin.database().ref('usuarios')
     return ref.orderByChild('usr_plano').equalTo(plano).once('value')
     .then((usrAnterior) => {
+      //ref = admin.database().ref(`usuariosHistorico`)
+      //ref.remove()
+      let dtHistorico = utils.dateFormat(new Date(), true, true)
       ref = admin.database().ref(`usuariosHistorico/${plano}`)
       let usrHistorico = {}
-      usrHistorico[dataProcessamento] = JSON.stringify(usrAnterior.val())
+      usrHistorico[dtHistorico] = JSON.stringify(usrAnterior.val())
       return ref.update(usrHistorico) 
-    }).then(() => {
-      ref = admin.database().ref('usuarios')
-      return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
+    //.then(() => {
+    //  //salva informações finais/ATUAIS na chave de usuários
+    //  ref = admin.database().ref('usuarios')
+    //  return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
     }).then(() => {      
-      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios))
+      console.log('===> usuarios string', JSON.stringify(usuarios))
       ref = admin.database().ref(`usuarios`)
-      //primeiro salva usuário bloqueados pelo processamento
-      ref.update(usuariosBloquear)
-      //salva usuário processados com sucesso
+      //ref.update({teste: JSON.stringify(usuarios)})
       return ref.update(usuarios)
     }).then(() => {
-      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
-      logProcessamento[dataProcessamento].status = 'Finalizado com sucesso'
-      logProcessamento[dataProcessamento].qtd_participantes_carregados = Object.keys(usuarios).length
-      logProcessamento[dataProcessamento].qtd_participantes_bloqueados = Object.keys(usuariosBloquear).length
-      logProcessamento[dataProcessamento].msg = 'Processamento finalizado com sucesso.'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
-      refProc.update(logProcessamento)          
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
     }).catch((e) => {
-      console.error('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
-      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
-      logProcessamento[dataProcessamento].status = 'Finalizado com erro'
-      logProcessamento[dataProcessamento].msg = 'Erro ao final do processo. Dados não foram salvos.'
-      logProcessamento[dataProcessamento].erro = e
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
-      refProc.update(logProcessamento)          
-
+      console.log('#pgCarga - erro ao final do processo. Dados não foram salvos.', e)
     })
 
   })
@@ -441,7 +400,6 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_tipo_plano: usr.tipoPlano,
     usr_dtnasc: usr.nasc,
     usr_dtadesao: usr.dataadesao,
-    usr_situacao_plano: usr.sitPart,
     segmento: validaSegmento(chave),
     usr_taxaPadrao: usr.taxa,
     usr_contribuicao: {
@@ -510,11 +468,15 @@ function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipan
   let difMesesDaAdesaoAposentadoria = utils.diffDatasEmMeses(dataAdesao, dataAposentadoria)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
 
-  //console.log('***> valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano', valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
+  console.log('***> valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano', valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
+
   let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
-  //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
+
+  console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
+
   let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxa, (15*12)) //calculo de renda por 15 anos            
-  //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
+
+  console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
   
   //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e idadeAposentadoria
   let crescPorFaixas = difMesesDaAdesaoAposentadoria / 5
@@ -527,36 +489,41 @@ function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipan
       difMesesDaAdesaoAposentadoria
   ]
 
-  let aDistribCurvaGrafico = [
-    0, 0.40, 0.55, 0.70, 0.85, 1
-  ]
+  console.log('==> valorReservaAposentadoria', valorReservaAposentadoria, ' - aIdades', aIdades, ' - valorHoje', valorHoje, ' - difMesesHojeAposentadoria',difMesesHojeAposentadoria)
 
-  let aDistribuicaoValores = [
-    0,
-    valorReservaAposentadoria / 5,
-    valorReservaAposentadoria / 5 * 2,
-    valorReservaAposentadoria / 5 * 3,
-    valorReservaAposentadoria / 5 * 4,
-    valorReservaAposentadoria
-  ]
+  //calculo da Curva Exponencial - y = ab^x
+  //calculando o b
+  let b = Math.pow((valorReservaAposentadoria / valorHoje), (1/difMesesHojeAposentadoria))
+  console.log('===> b', b)
+  //calculando o "a"
+  //console.log('===> difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
+  let a = valorHoje/Math.pow(b,difMesesDaAdesaoHoje)
+  console.log('===> a', a)
 
-  //console.log('==> valorReservaAposentadoria', valorReservaAposentadoria, ' - aIdades', aIdades, ' - valorHoje', valorHoje, ' - difMesesHojeAposentadoria',difMesesHojeAposentadoria)
   for (let linha in aIdades) {
     let dif = aIdades[linha] - difMesesDaAdesaoHoje    
     if (linha > 0) {
-      if (dif < 0) { 
-        retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
+      if (dif < 0) { //aplica função exponencial 
+        console.log('===> linha', linha)
+        console.log('===> aIdades[linha]', aIdades[linha])
+        retDataset[linha] = a * Math.pow(b,aIdades[linha])
+        console.log('===> retDataset[linha]', retDataset[linha])
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
           retListaMeses[linha] = 'Hoje'        
-          retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
+          //retDataset[linha] = valorHoje  //posiciona o valor de hoje na faixa mais aproximada
+          retDataset[linha] = a * Math.pow(b,aIdades[linha])
           if (amplitude==='até hoje') {
+            //console.log('saindo do Break')
             break 
           }
-        } else { 
+        } else { //aplica função exponencial 
           retListaMeses[linha] = ''     
-          retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
+          console.log('===> linha', linha)
+          console.log('===> aIdades[linha]', aIdades[linha])          
+          retDataset[linha] = a * Math.pow(b,aIdades[linha])
+          console.log('===> retDataset[linha]', retDataset[linha])
         }
       }  
     }
@@ -606,33 +573,24 @@ async function getConnection () {
 }
 
 async function buscaDadosPG(select) {
-  console.log('#buscaDadosPG - Iniciando - select:', select)
+  console.log('======> 1. iniciando buscaDadosPG - select:', select)
 
   return getConnection().then( async (pgConn) => {
-    console.log('#buscaDadosPG - Banco conectado.')
+    console.log('=====> Conectei no PG')
     let result = await pgConn.query(select)
+    console.log('=====> Query rodou')
     let ret
     if (!result) {
-      console.error('#pgCarga - buscaDadosPG - retorno da query vazio.')
-      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
-      logProcessamento[dataProcessamento].status = 'Finalizado com erro'
-      logProcessamento[dataProcessamento].msg = 'O banco de dados não retornou nenhum registro'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
-      refProc.update(logProcessamento)          
+      console.log('#pgCarga - buscaDadosPG - retorno da query vazio.')
       ret = false
     } else {
+      console.log('=====> result buscaDadosPG', result)  
       ret = result.rows 
     }
     pgConn.end()
     return ret
   }).catch(e => {
-    console.error('#pgCarga - buscaDadosPG - Erro na conexão ao PG:',e);
-    logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
-    logProcessamento[dataProcessamento].status = 'Finalizado com erro'
-    logProcessamento[dataProcessamento].msg = 'Erro na conexão ao banco de dados.'
-    logProcessamento[dataProcessamento].erro = e
-    let refProc = admin.database().ref(`settings/carga/logProcessamento`)
-    refProc.update(logProcessamento)          
+    console.log('#pgCarga - buscaDadosPG - Erro na conexão ao PG:',e);
     return false
   })
 }
