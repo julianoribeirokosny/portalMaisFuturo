@@ -65,7 +65,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let usuarios = {} //lista de usuários que serão atualizados na base
   let usuariosBloquear = {} //lista de usuários que não foram carregados
   //listas de parametros de cod contribuição 
-  let listaContribSaldo, listaContribSaldo13, listaContribSaldoPartPlanoPatroc, listaContribSeguro, listaContribSaida, listaContribPortabilidade, listaContribExtraordinaria
+  let listaContribSaldo, listaContribSaldo13, listaContribSaldoPartPlanoPatroc, listaContribSeguro, listaContribSaida, listaContribPortabilidade, listaContribExtraordinaria, listaContribSaldoPartEmpresa
   let listaSituacoesValidas //lista de situações de plano válidas para carga no portal
 
   let ref = change.after.ref.parent;
@@ -75,11 +75,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Cancelado'
       logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano inconsistente'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)
       return false
     } else {
       listaContribSaldo = snapshotParent.child('listaContribSaldo').val()
+      listaContribSaldoPartEmpresa = snapshotParent.child('listaContribSaldoPartEmpresa').val()
       listaContribSaldo13 = snapshotParent.child('listaContribSaldo13').val()
       listaContribSaldoPartPlanoPatroc = snapshotParent.child('listaContribSaldoPartPlanoPatroc').val()
       listaContribSeguro = snapshotParent.child('listaContribSeguro').val()
@@ -93,6 +94,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       if (
         listaContribSaldo === null ||
         listaContribSaldo13 === null ||
+        listaContribSaldoPartEmpresa === null ||
         listaContribSaldoPartPlanoPatroc === null ||
         listaContribSeguro === null ||
         listaContribSaida === null ||
@@ -104,12 +106,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
           logProcessamento[dataProcessamento].status = 'Cancelado'
           logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano->contribuicao inconsistente.'
-          let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+          let refProc = admin.database().ref(`admin/carga/logProcessamento`)
           refProc.update(logProcessamento)          
           return false   
       }
       //transforma em array
       listaContribSaldo = listaContribSaldo.split(';')
+      listaContribSaldoPartEmpresa = listaContribSaldoPartEmpresa.split(';')
       listaContribSaldo13 = listaContribSaldo13.split(';')
       listaContribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.split(';')
       listaContribSeguro = listaContribSeguro.split(';')
@@ -130,7 +133,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     let usuarioContrib = {
       contribParticipante: 0,
       contribParticipantePlanoPatrocinado: 0,
-      contribPatronal: 0
+      contribEmpresa: 0,
+      contribRisco: 0
     }
     retDadosPG.forEach((rowDados) => {
       console.log('#pgCarga - processando participante: ', rowDados.chave, ' - chave anterior:', chave)
@@ -138,7 +142,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //se não achou situação OK ou se saldoTotal is null, marca para bloquear
       let naoAchouSituacaoPlano = listaSituacoesValidas.indexOf(rowDados.cad_sitpart)<0
       if ( naoAchouSituacaoPlano || rowDados.res_saldototal === null) { 
-        usuariosBloquear[rowDados.chave] = {
+        usuariosBloquear[`${rowDados.chave}/home`] = {
           usr_apelido: rowDados.cad_apelido,
           usr_matricula: rowDados.cad_matricula,
           usr_nome: rowDados.cad_nome,
@@ -156,8 +160,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       } else {
         if (chave !== rowDados.chave) {
           if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
-            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
-            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
+            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribEmpresa, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
+            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribEmpresa, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
             listaDatasetsProjetoDeVida[2] = {
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -187,7 +191,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
   
             //salva informações acumuladas do usuário
-            //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
+            usuarios = incluiUsuarioDataJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
             usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
             usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
             usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
@@ -220,10 +224,11 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           usuarioContrib = {
             contribParticipante: 0,
             contribParticipantePlanoPatrocinado: 0,
-            contribPatronal: 0
+            contribEmpresa: 0,
+            contribRisco: 0
           }
 
-          listaItensReservaChave = {}   
+          listaItensReservaChave = {}  
           listaValoresReservaChave = {} 
           listaItensCoberturas = {}
           listaDatasetsProjetoDeVida = {}
@@ -316,16 +321,17 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
         } 
   
-        let contribSaldo = false, contribSaldo13 = false, contribSaldoPartPlanoPatroc = false, contribSeguro = false
+        let éContribSaldo = false, éContribSaldo13 = false, éContribSaldoPartPlanoPatroc = false, éContribSeguro = false, éContribPartEmpresa = false
 
         if (rowDados.contr_eventocod !== null) {
-          contribSaldo = listaContribSaldo.indexOf(rowDados.contr_eventocod.toString()) >= 0 
-          contribSaldo13 = listaContribSaldo13.indexOf(rowDados.contr_eventocod.toString()) >= 0 
-          contribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.indexOf(rowDados.contr_eventocod.toString()) >= 0 
-          contribSeguro = listaContribSeguro.indexOf(rowDados.contr_eventocod.toString()) >= 0  
+          éContribSaldo = listaContribSaldo.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+          éContribSaldo13 = listaContribSaldo13.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+          éContribSaldoPartPlanoPatroc = listaContribSaldoPartPlanoPatroc.indexOf(rowDados.contr_eventocod.toString()) >= 0 
+          éContribSeguro = listaContribSeguro.indexOf(rowDados.contr_eventocod.toString()) >= 0  
+          éContribPartEmpresa = listaContribSaldoPartEmpresa.indexOf(rowDados.contr_eventocod.toString()) >= 0  
         }
         //console.log('***> rowDados.contr_eventocod', rowDados.contr_eventocod, contribSaldo, contribSaldo13, contribSaldoPartPlanoPatroc, contribSeguro)
-        if (contribSaldo || contribSaldo13 || contribSaldoPartPlanoPatroc || contribSeguro) {
+        if (éContribSaldo || éContribSaldo13 || éContribSaldoPartPlanoPatroc || éContribSeguro || éContribPartEmpresa) {
           listaItensContribuicaoChave.push({
             cor: `<<seg_contribuicao.itens.${rowDados.contr_eventocod}.cor>>`,
             nome: rowDados.contr_eventonome,
@@ -333,20 +339,25 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           })
           listaValoresContribuicaoChave.push(rowDados.contr_valor)
           usuarioTotalContr.valor += rowDados.contr_valor
-          if (contribSaldo || contribSaldo13) { 
+          if (éContribSaldo || éContribSaldo13) { 
             usuarioContrib.contribParticipante += rowDados.contr_valor
           }  
-          if (usr.tipoPlano === 'jmalucelli' && contribSaldoPartPlanoPatroc) {
+          if (usr.tipoPlano === 'jmalucelli' && éContribSaldoPartPlanoPatroc) {
             usuarioContrib.contribParticipantePlanoPatrocinado += rowDados.contr_valor
           }
-          usuarioContrib.contribPatronal = 0 //atenção está zerando aqui porque já está dentro de usuarioContrib.contribParticipante
+          if (éContribSeguro) {
+            usuarioContrib.contribRisco += rowDados.contr_valor
+          }
+          if (éContribPartEmpresa) {
+            usuarioContrib.contribEmpresa += rowDados.contr_valor
+          }
         }  
       }
     })
 
     if (chave!=='') {
-      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
-      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribPatronal, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
+      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribEmpresa, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
+      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribEmpresa, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
       listaDatasetsProjetoDeVida[2] = {
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -375,12 +386,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
 
       //salva informações acumuladas do usuário
-      //let transacoes = usuariosAnterior && usuariosAnterior[chave] ? usuariosAnterior[chave] : ''
+      usuarios = incluiUsuarioDataJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
       usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
       usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
       usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
     }
-    //usuarios = insereRegistroTestes(usuarios)
+    usuarios = insereRegistroTestes(usuarios)
 
     //salva dados anteriores dos usuários em usuariosHistorico
     ref = admin.database().ref('usuarios')
@@ -406,7 +417,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].qtd_participantes_carregados = Object.keys(usuarios).length
       logProcessamento[dataProcessamento].qtd_participantes_bloqueados = Object.keys(usuariosBloquear).length
       logProcessamento[dataProcessamento].msg = 'Processamento finalizado com sucesso.'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
     }).catch((e) => {
@@ -415,7 +426,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].status = 'Finalizado com erro'
       logProcessamento[dataProcessamento].msg = 'Erro ao final do processo. Dados não foram salvos.'
       logProcessamento[dataProcessamento].erro = e
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
 
     })
@@ -425,13 +436,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
 })
 
-function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, transacoes) {
-
-  /*usr_dados_cadastro: {
-
-  },*/
-
-  usuarios[chave] = {
+function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida) {
+  //carrega estrutura da Home
+  usuarios[`${chave}/home`] = {
     usr_vigente: true,
     usr_competencia: usr.competencia,
     usr_apelido: usr.apelido,
@@ -483,13 +490,29 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
       lista_meses_projetoDeVida: listaMesesProjetoDeVida,
       vigente: true
     }
-    //,    transacoes: transacoes ? transacoes : ''
   }
 
   return usuarios
 }
 
-function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano) {
+
+function incluiUsuarioDataJSON (usuarios, chave, listaUsuarioContrib, reservaHoje, reservaFutura, rendaFutura, totalContrib) { 
+  //carrega estrutura de informações
+  usuarios[`${chave}/data`] = {
+    contribParticipante: listaUsuarioContrib.contribParticipante,
+    contribParticipantePlanoPatrocinado: listaUsuarioContrib.contribParticipantePlanoPatrocinado,
+    contribEmpresa: listaUsuarioContrib.contribEmpresa,
+    contribRisco: listaUsuarioContrib.contribRisco,
+    contribTotal: totalContrib,
+    reservaTotalAtual: reservaHoje,
+    reservaTotalFutura: reservaFutura,
+    rendaMensalFutura: rendaFutura
+  }
+
+  return usuarios
+}
+
+function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipantePlanoPatrocinado, contribEmpresa, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano) {
 
   let retDataset = {
     0: 0    
@@ -510,8 +533,7 @@ function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipan
   let difMesesDaAdesaoAposentadoria = utils.diffDatasEmMeses(dataAdesao, dataAposentadoria)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
 
-  //console.log('***> valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano', valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
-  let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataAposentadoria, tipoPlano)
+  let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribEmpresa, dataAposentadoria, tipoPlano)
   //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
   let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxa, (15*12)) //calculo de renda por 15 anos            
   //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
@@ -617,7 +639,7 @@ async function buscaDadosPG(select) {
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Finalizado com erro'
       logProcessamento[dataProcessamento].msg = 'O banco de dados não retornou nenhum registro'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       ret = false
     } else {
@@ -631,15 +653,16 @@ async function buscaDadosPG(select) {
     logProcessamento[dataProcessamento].status = 'Finalizado com erro'
     logProcessamento[dataProcessamento].msg = 'Erro na conexão ao banco de dados.'
     logProcessamento[dataProcessamento].erro = e
-    let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+    let refProc = admin.database().ref(`admin/carga/logProcessamento`)
     refProc.update(logProcessamento)          
     return false
   })
 }
 
 function insereRegistroTestes(usuarios){
-  usuarios['9999-0001'] = 
+  usuarios['9999-0001/home'] = 
   {
+    "usr_vigente" : true,
     "usr_tipo_plano" : 'instituido',
     "usr_apelido" : "Leandro",
     "usr_plano" : "Mais Futuro",
@@ -678,28 +701,44 @@ function insereRegistroTestes(usuarios){
         "valor_deducao_potencial" : "400,00",
         "vigente": true
       },
-      "lista_itens_contribuicao" : [ {
-        "cor" : "<<seg_contribuicao.itens.0.cor>>",
-        "nome" : "maisfuturo previdência",
-        "valor" : "178,70"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.1.cor>>",
-        "nome" : "Cobertura | morte",
-        "valor" : "40,96"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.2.cor>>",
-        "nome" : "Cobertura | invalidez",
-        "valor" : "47,56"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.3.cor>>",
-        "nome" : "maisfuturo reserva",
-        "valor" : "32,76"
-      } ],
-      "lista_valores_contribuicao" : [ 178.7, 40.96, 47.56, 32.78 ],
+      "lista_itens_contribuicao" : {
+          "participante" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.0.cor>>",
+              "nome" : "maisfuturo previdência",
+              "valor" : "178,70"
+            }],
+            "nome" : "Contribuição Participante",
+            "valor" : "178,70"
+          }, 
+          "patronal" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "maisfuturo Pj",
+              "valor" : "32,70"
+            }],
+            "nome" : "Contribuição PJ",
+            "valor" : "32,70"
+          },
+          "seguro" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "Cobertura | morte",
+              "valor" : "40,96"
+            }, {
+              "cor" : "<<seg_contribuicao.itens.2.cor>>",
+              "nome" : "Cobertura | invalidez",
+              "valor" : "47,56"
+            }],
+            "nome" : "Contribuição de riscos",
+            "valor" : "88,52"
+          }
+        },
+      "lista_valores_contribuicao" : [ 178.70, 32.70, 40.96, 47.56],
       "total" : {
         "color" : "<<seg_contribuicao.total.color>>",
         "nome" : "Contribuição total",
-        "valor" : "300,00"
+        "valor" : "299,92"
       },
       "vigente" : true
     },
@@ -792,8 +831,20 @@ function insereRegistroTestes(usuarios){
     },
     "segmento" : "black"
   }
-  usuarios['9999-0002'] = 
+
+  usuarios['9999-0001/data'] = {
+    "contribParticipante" : 0,
+    "contribParticipantePlanoPatrocinado" : 178.70,
+    "contribEmpresa" : 32.70,
+    "contribRisco": 88.52,
+    "rendaMensalFutura" : 543.67,
+    "reservaTotalAtual" : 34436.16,
+    "reservaTotalFutura" : 100468.42
+  }
+
+  usuarios['9999-0002/home'] = 
   {
+    "usr_vigente" : true,
     "usr_tipo_plano" : 'instituido',
     "usr_apelido" : "Juliano",
     "usr_plano" : "Mais Futuro",
@@ -832,28 +883,44 @@ function insereRegistroTestes(usuarios){
         "valor_deducao_potencial" : "400,00",
         "vigente": true        
       },
-      "lista_itens_contribuicao" : [ {
-        "cor" : "<<seg_contribuicao.itens.0.cor>>",
-        "nome" : "maisfuturo previdência",
-        "valor" : "178,70"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.1.cor>>",
-        "nome" : "Cobertura | morte",
-        "valor" : "40,96"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.2.cor>>",
-        "nome" : "Cobertura | invalidez",
-        "valor" : "47,56"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.3.cor>>",
-        "nome" : "maisfuturo reserva",
-        "valor" : "32,76"
-      } ],
-      "lista_valores_contribuicao" : [ 178.7, 40.96, 47.56, 32.78 ],
+      "lista_itens_contribuicao" : {
+          "participante" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.0.cor>>",
+              "nome" : "maisfuturo previdência",
+              "valor" : "178,70"
+            }],
+            "nome" : "Contribuição Participante",
+            "valor" : "178,70"
+          }, 
+          "patronal" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "maisfuturo Pj",
+              "valor" : "32,70"
+            }],
+            "nome" : "Contribuição PJ",
+            "valor" : "32,70"
+          },
+          "seguro" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "Cobertura | morte",
+              "valor" : "40,96"
+            }, {
+              "cor" : "<<seg_contribuicao.itens.2.cor>>",
+              "nome" : "Cobertura | invalidez",
+              "valor" : "47,56"
+            }],
+            "nome" : "Contribuição de riscos",
+            "valor" : "88,52"
+          }
+        },
+      "lista_valores_contribuicao" : [ 178.70, 32.70, 40.96, 47.56],
       "total" : {
         "color" : "<<seg_contribuicao.total.color>>",
         "nome" : "Contribuição total",
-        "valor" : "300,00"
+        "valor" : "299,92"
       },
       "vigente" : true
     },
@@ -946,6 +1013,18 @@ function insereRegistroTestes(usuarios){
     },
     "segmento" : "black"
   }
+
+  usuarios['9999-0002/data'] = {
+    "contribParticipante" : 0,
+    "contribParticipantePlanoPatrocinado" : 178.70,
+    "contribEmpresa" : 32.70,
+    "contribRisco": 88.52,
+    "rendaMensalFutura" : 543.67,
+    "reservaTotalAtual" : 34436.16,
+    "reservaTotalFutura" : 100468.42
+  }
+  
+
   return usuarios
 }
 

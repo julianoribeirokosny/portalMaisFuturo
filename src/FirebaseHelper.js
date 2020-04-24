@@ -847,11 +847,11 @@ export default class FirebaseHelper {
    * Escuta por alterações em usuarios
   */
   registerForUserUpdate(chave, updateCallback) {
-    let ref = this.database.ref('usuarios/'+chave)  
+    let ref = this.database.ref(`usuarios/${chave}/home`)  
     return ref.once('value').then((usr) => {
       usr.forEach((itemUsr) => {
         if (itemUsr.val().hasOwnProperty('vigente')) {
-          ref = this.database.ref(`usuarios/${chave}/${itemUsr.key}/vigente`);
+          ref = this.database.ref(`usuarios/${chave}/home/${itemUsr.key}/vigente`);
           //liga listener do Firebase
           ref.on('value', (vigente) => {
             updateCallback(itemUsr.key, vigente.val())
@@ -894,8 +894,8 @@ export default class FirebaseHelper {
     })
   }
 
-  removerCampanha(uid, nome) {
-    let ref = this.database.ref(`usuarios/${uid}/usr_campanhas/${nome}`)
+  removerCampanha(chave, nome) {
+    let ref = this.database.ref(`usuarios/${chave}/home/usr_campanhas/${nome}`)
     ref.update({ativo: false})
   }
 
@@ -1153,7 +1153,7 @@ export default class FirebaseHelper {
   }
 
   getParticipante(chave) {
-    let ref = this.database.ref('usuarios/'+chave);
+    let ref = this.database.ref(`usuarios/${chave}/home`);
     return ref.once('value').then((data) => {    
       if (data.val()) {
         return data.val()
@@ -1169,9 +1169,9 @@ export default class FirebaseHelper {
           ref.update(contratacao)
 
           if(contratacao.tipo === 'Contribuição mensal') {
-            ref = this.database.ref(`usuarios/${chave}/usr_projeto_vida/acao/`)          
+            ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
             ref.update({vigente:false})
-            ref = this.database.ref(`usuarios/${chave}/usr_contribuicao/acao/`)
+            ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
             ref.update({vigente:false})
           }
           return true
@@ -1186,10 +1186,10 @@ export default class FirebaseHelper {
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
           ref.update({status:'cancelado pelo usuário'})
           if(tipo && tipo === 'Contribuição mensal') {
-            ref = this.database.ref(`usuarios/${chave}/usr_projeto_vida/acao/`)          
-            ref.update({vigente:true})
-            ref = this.database.ref(`usuarios/${chave}/usr_contribuicao/acao/`)
-            ref.update({vigente:true})
+              ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
+              ref.update({vigente:true})
+              ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
+              ref.update({vigente:true})
           }
           return true
       }
@@ -1211,7 +1211,7 @@ export default class FirebaseHelper {
   }
 
   async getContratacaoEmAberto(chave, tipo, status) {
-    let ref = this.database.ref(`usuarios/${chave}`)
+    let ref = this.database.ref(`usuarios/${chave}/home`)
     let snapshot = await ref.once('value')
     let ret = {}
     if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {
