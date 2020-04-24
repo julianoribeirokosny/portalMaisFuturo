@@ -160,8 +160,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       } else {
         if (chave !== rowDados.chave) {
           if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
-            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribEmpresa, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
-            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib.contribParticipante, usuarioContrib.contribParticipantePlanoPatrocinado, usuarioContrib.contribEmpresa, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
+            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
+            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
             listaDatasetsProjetoDeVida[2] = {
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -512,7 +512,7 @@ function incluiUsuarioDataJSON (usuarios, chave, listaUsuarioContrib, reservaHoj
   return usuarios
 }
 
-function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipantePlanoPatrocinado, contribEmpresa, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano) {
+function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano) {
 
   let retDataset = {
     0: 0    
@@ -533,7 +533,7 @@ function calculaGraficoReserva(valorHoje, contribParticipante, contribParticipan
   let difMesesDaAdesaoAposentadoria = utils.diffDatasEmMeses(dataAdesao, dataAposentadoria)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
 
-  let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, contribParticipante, contribParticipantePlanoPatrocinado, contribEmpresa, dataAposentadoria, tipoPlano)
+  let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
   //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
   let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxa, (15*12)) //calculo de renda por 15 anos            
   //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)

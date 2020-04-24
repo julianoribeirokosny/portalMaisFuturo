@@ -277,7 +277,7 @@ export default class Home {
 
     let p2 = new Promise((resolve, reject) => {
       if (Object.keys(this.participante).length === 0) {
-        resolve(this.firebaseHelper.getParticipante(chave).then((part) => {
+        resolve(this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
           if (part===null) {
             return false
           } else {
@@ -378,7 +378,7 @@ export default class Home {
   
   'refreshHome'(item, vigente, origem, chave) {
     console.log('====> refreshing home')
-    return this.firebaseHelper.getParticipante(chave).then((part) => {
+    return this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
       if (!vigente) { //se for para desligar, não precisa avaliar critério
         this.data_Home[item].vigente = vigente 
       } else {

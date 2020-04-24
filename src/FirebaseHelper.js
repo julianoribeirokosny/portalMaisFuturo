@@ -1141,6 +1141,69 @@ export default class FirebaseHelper {
     })  
   }
 
+  getSimuladorEmprestimoSettings(plano) {
+    let ref = this.database.ref(`settings/simulador_emprestimo/${plano}`)
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })    
+  }
+
+  getSimuladorRendaSettings(plano) {
+    let ref = this.database.ref(`settings/simulador_renda/${plano}`)
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })    
+  }
+
+  async getDadosSimuladorRenda(chave, uid) {
+    let usuario = await this.getParticipante(chave)
+    let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
+
+    let dadosSimuladorRenda = {
+      usr_tipo_plano: usuario.home.usr_tipo_plano,
+      taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
+      titulo: 'Defina sua</br>contribuição</br>mensal',
+      minimoContribuicao: usuario.data.contribParticipante,
+      contribuicaoFixa: usuario.data.contribParticipantePlanoPatrocinado,
+      contribuicaoPatronal: usuario.data.contribEmpresa,
+      maximoContribuicao: 3000,
+      stepContribuicao: simuladorRendaSettings.step_contribuicao,
+      reservaTotalAtual: usuario.data.reservaTotalAtual,
+      reservaTotalFutura: usuario.data.reservaTotalFutura,
+      rendaMensalFutura: usuario.data.rendaMensalFutura,
+      usr_dtnasc: usuario.home.usr_dtnasc,
+      idadeBeneficio: simuladorRendaSettings.idade_beneficio,        
+      chave: chave,
+      uid: uid
+    }
+    return dadosSimuladorRenda
+  }
+
+  async getDadosSimuladorEmprestimo(chave, uid) {
+    let usuario = await this.getParticipante(chave)
+    let simuladorEmprestimoSettings = await this.getSimuladorEmprestimoSettings(usuario.home.usr_plano)
+
+    let dadosSimuladorEmprestimo = {
+      titulo: "Simulador </br>de Empréstimo",                
+      taxa_adm: simuladorEmprestimoSettings.taxa_adm, 
+      fundo_risco: simuladorEmprestimoSettings.fundo_risco, 
+      taxa_mensal: simuladorEmprestimoSettings.taxa_mensal,
+      indice_anterior: simuladorEmprestimoSettings.indice_anterior,               
+      pre_aprovado: 20000.00,
+      saldo_devedor: 2000.00,
+      chave: chave,
+      uid: uid
+    }
+    return dadosSimuladorEmprestimo
+  }
 
   getUserClaims(user) {
     return user.getIdTokenResult().then((idTokenResult) => {
@@ -1152,8 +1215,13 @@ export default class FirebaseHelper {
     })
   }
 
-  getParticipante(chave) {
-    let ref = this.database.ref(`usuarios/${chave}/home`);
+  getParticipante(chave, chaveInterna) {
+    let ref
+    if (chaveInterna) {
+      ref = this.database.ref(`usuarios/${chave}/${chaveInterna}`)
+    } else {
+      ref = this.database.ref(`usuarios/${chave}`)
+    }
     return ref.once('value').then((data) => {    
       if (data.val()) {
         return data.val()
