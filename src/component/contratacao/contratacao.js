@@ -36,7 +36,7 @@ export default {
 
     },
     mounted(){
-        console.log('DADOS ===>', this.dados)
+        //console.log('DADOS ===>', this.dados)
     },
     methods: {
         cancelar(){

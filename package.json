@@ -60,6 +60,8 @@
     "mdl-ext": "^0.17.1",
     "npm": "^6.13.7",
     "page": "^1.8.6",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
     "sweetalert": "^2.1.0",
     "typeface-amaranth": "0.0.54",
     "universal-ga": "^1.2.0",

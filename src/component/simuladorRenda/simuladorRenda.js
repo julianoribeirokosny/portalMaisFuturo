@@ -210,7 +210,7 @@ export default {
             this.contratacao.uid =  this.dados.uid
             this.contratacao.label_button = 'Confirma novo valor'
             this.contratacao.tipo = 'Contribuição mensal'
-            console.log('Contratacao',this.contratacao)
+            //console.log('Contratacao',this.contratacao)
             this.simulador = false
         },
         calculaReservaFutura() {

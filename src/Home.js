@@ -58,7 +58,7 @@ export default class Home {
     // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
     //    usuário no menu de seleção de visualizar participações!!!!!!!
     this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
-    console.log('=====> CHAVE: ', this.chave)
+    //console.log('=====> CHAVE: ', this.chave)
     if (this.chave===null) {
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
@@ -69,21 +69,20 @@ export default class Home {
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
     }    
-
     
     //participante com inabilitado para acessar o portal
     if (!data_Home.vigente) {
       Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome')
       return page('/erro')
     }    
-    
+
     this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
     this.consulta_contribuicao = new Object()
     this.consulta_contribuicao.tipo = 'Contribuição mensal'
     this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'    
     this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
     this.consulta_contribuicao.chave = this.chave    
-    console.log('consulta_contribuicao4 ====>',this.consulta_contribuicao)
+    //console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
 
     this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
     this.consulta_emprestimo = new Object()
@@ -97,8 +96,8 @@ export default class Home {
         extends: VueCharts.Doughnut,
         mounted () {
 
-            console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
-            console.log('Doughnut', data_Home.saldo_reserva.grafico);
+            //console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
+            //console.log('Doughnut', data_Home.saldo_reserva.grafico);
 
             this.renderChart({labels: data_Home.saldo_reserva.grafico.labels,
               datasets: [{
@@ -111,7 +110,7 @@ export default class Home {
         }
     });
 
-    console.log('===> gráfico reserva ok')
+    //console.log('===> gráfico reserva ok')
 
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,
@@ -122,7 +121,7 @@ export default class Home {
             gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
             data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
 
-            console.log('Projeto de vida:',data_Home.projeto_vida.grafico.datasets);
+            //console.log('Projeto de vida:',data_Home.projeto_vida.grafico.datasets);
 
             this.renderChart({
                 labels: data_Home.projeto_vida.grafico.labels,
@@ -145,7 +144,7 @@ export default class Home {
         }
     });
 
-    console.log('===> projeto vida ok')
+    //console.log('===> projeto vida ok')
 
     Vue.component('contribuicao', {
         extends: VueCharts.Doughnut,        
@@ -171,7 +170,7 @@ export default class Home {
         }
     });
     
-    console.log('===> gráfico contribuicao ok')
+    //console.log('===> gráfico contribuicao ok')
 
     if (!this.vueObj) {
       this.vueObj = new Vue({

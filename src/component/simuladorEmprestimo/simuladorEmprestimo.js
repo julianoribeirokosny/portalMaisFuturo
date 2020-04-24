@@ -120,7 +120,7 @@ export default {
         }
     },    
     created(){   
-        console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)      
+        //console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)      
         if(this.dados.emprestimoSolicitado.dados != null) {
             this.emprestimoSolicitado = true            
         } else {
@@ -227,7 +227,7 @@ export default {
                 this.contratacao.label_button = 'Solicitar'
                 this.contratacao.tipo = 'Empréstimo'
 
-                console.log('Novo Valor Emprestimos',this.contratacao.valor_novo)
+                //console.log('Novo Valor Emprestimos',this.contratacao.valor_novo)
                 this.simulador = false
             }            
         },

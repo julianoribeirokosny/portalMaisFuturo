@@ -1185,7 +1185,7 @@ export default class FirebaseHelper {
       try{
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
           ref.update({status:'cancelado pelo usuário'})
-          if(tipo === 'Contribuição mensal') {
+          if(tipo && tipo === 'Contribuição mensal') {
             ref = this.database.ref(`usuarios/${chave}/usr_projeto_vida/acao/`)          
             ref.update({vigente:true})
             ref = this.database.ref(`usuarios/${chave}/usr_contribuicao/acao/`)
