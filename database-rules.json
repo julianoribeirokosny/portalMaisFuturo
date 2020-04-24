@@ -1,6 +1,6 @@
 {
   "rules": {
-    "admins": {
+    "admin": {
       ".read": "false",  // Only a cloud function or admins can update this.
       ".write": "false",  // Only a cloud function or admins can update this.
       "$index": {

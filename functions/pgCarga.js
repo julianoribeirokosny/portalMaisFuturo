@@ -75,7 +75,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Cancelado'
       logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano inconsistente'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)
       return false
     } else {
@@ -104,7 +104,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
           logProcessamento[dataProcessamento].status = 'Cancelado'
           logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano->contribuicao inconsistente.'
-          let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+          let refProc = admin.database().ref(`admin/carga/logProcessamento`)
           refProc.update(logProcessamento)          
           return false   
       }
@@ -138,7 +138,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //se não achou situação OK ou se saldoTotal is null, marca para bloquear
       let naoAchouSituacaoPlano = listaSituacoesValidas.indexOf(rowDados.cad_sitpart)<0
       if ( naoAchouSituacaoPlano || rowDados.res_saldototal === null) { 
-        usuariosBloquear[rowDados.chave] = {
+        usuariosBloquear[`${rowDados.chave}/home`] = {
           usr_apelido: rowDados.cad_apelido,
           usr_matricula: rowDados.cad_matricula,
           usr_nome: rowDados.cad_nome,
@@ -380,7 +380,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
       usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
     }
-    //usuarios = insereRegistroTestes(usuarios)
+    usuarios = insereRegistroTestes(usuarios)
 
     //salva dados anteriores dos usuários em usuariosHistorico
     ref = admin.database().ref('usuarios')
@@ -406,7 +406,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].qtd_participantes_carregados = Object.keys(usuarios).length
       logProcessamento[dataProcessamento].qtd_participantes_bloqueados = Object.keys(usuariosBloquear).length
       logProcessamento[dataProcessamento].msg = 'Processamento finalizado com sucesso.'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
     }).catch((e) => {
@@ -415,7 +415,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].status = 'Finalizado com erro'
       logProcessamento[dataProcessamento].msg = 'Erro ao final do processo. Dados não foram salvos.'
       logProcessamento[dataProcessamento].erro = e
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
 
     })
@@ -431,7 +431,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
 
   },*/
 
-  usuarios[chave] = {
+  usuarios[`${chave}/home`] = {
     usr_vigente: true,
     usr_competencia: usr.competencia,
     usr_apelido: usr.apelido,
@@ -617,7 +617,7 @@ async function buscaDadosPG(select) {
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Finalizado com erro'
       logProcessamento[dataProcessamento].msg = 'O banco de dados não retornou nenhum registro'
-      let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       ret = false
     } else {
@@ -631,15 +631,16 @@ async function buscaDadosPG(select) {
     logProcessamento[dataProcessamento].status = 'Finalizado com erro'
     logProcessamento[dataProcessamento].msg = 'Erro na conexão ao banco de dados.'
     logProcessamento[dataProcessamento].erro = e
-    let refProc = admin.database().ref(`settings/carga/logProcessamento`)
+    let refProc = admin.database().ref(`admin/carga/logProcessamento`)
     refProc.update(logProcessamento)          
     return false
   })
 }
 
 function insereRegistroTestes(usuarios){
-  usuarios['9999-0001'] = 
+  usuarios['9999-0001/home'] = 
   {
+    "usr_vigente" : true,
     "usr_tipo_plano" : 'instituido',
     "usr_apelido" : "Leandro",
     "usr_plano" : "Mais Futuro",
@@ -678,28 +679,44 @@ function insereRegistroTestes(usuarios){
         "valor_deducao_potencial" : "400,00",
         "vigente": true
       },
-      "lista_itens_contribuicao" : [ {
-        "cor" : "<<seg_contribuicao.itens.0.cor>>",
-        "nome" : "maisfuturo previdência",
-        "valor" : "178,70"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.1.cor>>",
-        "nome" : "Cobertura | morte",
-        "valor" : "40,96"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.2.cor>>",
-        "nome" : "Cobertura | invalidez",
-        "valor" : "47,56"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.3.cor>>",
-        "nome" : "maisfuturo reserva",
-        "valor" : "32,76"
-      } ],
-      "lista_valores_contribuicao" : [ 178.7, 40.96, 47.56, 32.78 ],
+      "lista_itens_contribuicao" : {
+          "participante" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.0.cor>>",
+              "nome" : "maisfuturo previdência",
+              "valor" : "178,70"
+            }],
+            "nome" : "Contribuição Participante",
+            "valor" : "178,70"
+          }, 
+          "patronal" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "maisfuturo Pj",
+              "valor" : "32,70"
+            }],
+            "nome" : "Contribuição PJ",
+            "valor" : "32,70"
+          },
+          "seguro" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "Cobertura | morte",
+              "valor" : "40,96"
+            }, {
+              "cor" : "<<seg_contribuicao.itens.2.cor>>",
+              "nome" : "Cobertura | invalidez",
+              "valor" : "47,56"
+            }],
+            "nome" : "Contribuição de riscos",
+            "valor" : "88,52"
+          }
+        },
+      "lista_valores_contribuicao" : [ 178.70, 32.70, 40.96, 47.56],
       "total" : {
         "color" : "<<seg_contribuicao.total.color>>",
         "nome" : "Contribuição total",
-        "valor" : "300,00"
+        "valor" : "299,92"
       },
       "vigente" : true
     },
@@ -792,8 +809,9 @@ function insereRegistroTestes(usuarios){
     },
     "segmento" : "black"
   }
-  usuarios['9999-0002'] = 
+  usuarios['9999-0002/home'] = 
   {
+    "usr_vigente" : true,
     "usr_tipo_plano" : 'instituido',
     "usr_apelido" : "Juliano",
     "usr_plano" : "Mais Futuro",
@@ -832,28 +850,44 @@ function insereRegistroTestes(usuarios){
         "valor_deducao_potencial" : "400,00",
         "vigente": true        
       },
-      "lista_itens_contribuicao" : [ {
-        "cor" : "<<seg_contribuicao.itens.0.cor>>",
-        "nome" : "maisfuturo previdência",
-        "valor" : "178,70"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.1.cor>>",
-        "nome" : "Cobertura | morte",
-        "valor" : "40,96"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.2.cor>>",
-        "nome" : "Cobertura | invalidez",
-        "valor" : "47,56"
-      }, {
-        "cor" : "<<seg_contribuicao.itens.3.cor>>",
-        "nome" : "maisfuturo reserva",
-        "valor" : "32,76"
-      } ],
-      "lista_valores_contribuicao" : [ 178.7, 40.96, 47.56, 32.78 ],
+      "lista_itens_contribuicao" : {
+          "participante" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.0.cor>>",
+              "nome" : "maisfuturo previdência",
+              "valor" : "178,70"
+            }],
+            "nome" : "Contribuição Participante",
+            "valor" : "178,70"
+          }, 
+          "patronal" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "maisfuturo Pj",
+              "valor" : "32,70"
+            }],
+            "nome" : "Contribuição PJ",
+            "valor" : "32,70"
+          },
+          "seguro" : {
+            "eventos" : [ {
+              "cor" : "<<seg_contribuicao.itens.1.cor>>",
+              "nome" : "Cobertura | morte",
+              "valor" : "40,96"
+            }, {
+              "cor" : "<<seg_contribuicao.itens.2.cor>>",
+              "nome" : "Cobertura | invalidez",
+              "valor" : "47,56"
+            }],
+            "nome" : "Contribuição de riscos",
+            "valor" : "88,52"
+          }
+        },
+      "lista_valores_contribuicao" : [ 178.70, 32.70, 40.96, 47.56],
       "total" : {
         "color" : "<<seg_contribuicao.total.color>>",
         "nome" : "Contribuição total",
-        "valor" : "300,00"
+        "valor" : "299,92"
       },
       "vigente" : true
     },
