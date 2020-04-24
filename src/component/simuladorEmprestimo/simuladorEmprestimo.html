@@ -1,45 +1,54 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-        <template v-if="simulador">
-            <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
-            <div style="margin-top: 20px;">                    
-                <div v-if="dados.pre_aprovado" class="div_msg_emprestimo margin-auto">
-                    Você tem um limite, pré-aprovado, de R$ {{ dados.pre_aprovado }}.
+        <template v-if="!emprestimoSolicitado">
+            <template v-if="simulador">
+                <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
+                <div style="margin-top: 20px;">                    
+                    <div v-if="dados.pre_aprovado" class="div_msg_emprestimo margin-auto">
+                        Você tem um limite, pré-aprovado, de R$ {{ dados.pre_aprovado }}.
+                    </div>
+                    <div v-if="dados.saldo_devedor" class="div_msg_emprestimo margin-auto">
+                        Seu saldo devedor atual é R$ {{ dados.saldo_devedor }}.
+                    </div>
+                    <div v-if="dados.saldo_devedor" class="div_msg_emprestimo margin-auto">
+                        O valor mínimo para empréstimo é R$ {{ str_minimo }}.
+                    </div>
+                    <div v-if="str_maximo" class="div_msg_emprestimo margin-auto">
+                        O valor máximo para empréstimo é R$ {{ str_maximo }}.
+                    </div>            
+                    <p class="p_espaco_50"></p>
+                    <p class="p_label">Altere o valor do empréstimo</p>
+                    <div style="margin-left: 20px;margin-right: 20px;display: flex;">
+                        <span class="span_input_prefixo">R$</span>
+                        <input class="input_principal" inputmode="numeric" ref="inputprincipal" v-money="money" v-model="principal" v-on:change="alteraPrincipal" v-on:click="selectAll">
+                        <span class="span_input_sufixo">,00</span>
+                    </div>                  
+                    <p class="p_mensagem_invalido" v-show="!valido_maximo">Valor excede o máximo permitido!</p>
+                    <p class="p_mensagem_invalido" v-show="!valido_minimo">Valor menor que o mínimo permitido!</p>                              
+                    <p class="p_espaco_30"></p>
+                    <p class="p_label">Parcelamento</p>
+                    <p class="p_slider">
+                        <vue-slider v-model="quantidade" ref="slider" v-bind="sliderOptions" :tooltip-formatter="formatter1"></vue-slider>
+                    </p>
+                    <p class="p_valor-simulado">
+                        <span>{{ quantidade }} x de R$ {{ parcela }}</span> 
+                    </p>
+                    <p class="p_label">* Valor calculado para primeira parcela</p>
+                    <p class="p_espaco_30"></p>
+                    <div class="mdl-shadow--2dp div_btn_contratar" ref="botao" @click="solicitarEmprestimo">
+                        Continuar
+                    </div>
+                    <div class="mdl-shadow--2dp div_btn_contratar"  @click="voltar" style="margin-top: 30px; background-color: brown;">
+                        Voltar
+                    </div>   
                 </div>
-                <div v-if="dados.saldo_devedor" class="div_msg_emprestimo margin-auto">
-                    Seu saldo devedor atual é R$ {{ dados.saldo_devedor }}.
-                </div>
-                <div v-if="str_maximo" class="div_msg_emprestimo margin-auto">
-                    O valor máximo para empréstimo é R$ {{ str_maximo }}.
-                </div>            
-                <p class="p_espaco_50"></p>
-                <p class="p_label">Altere o valor do empréstimo</p>
-                <div style="margin-left: 20px;margin-right: 20px;display: flex;">
-                    <span class="span_input_prefixo">R$</span>
-                    <input class="input_principal" inputmode="numeric" ref="inputprincipal" v-money="money" v-model="principal" v-on:change="alteraPrincipal" v-on:click="selectAll">
-                    <span class="span_input_sufixo">,00</span>
-                </div>                  
-                <p class="p_mensagem_invalido" v-show="!valido">Valor excede o máximo permitido!</p>                
-                <p class="p_espaco_30"></p>
-                <p class="p_label">Parcelamento</p>
-                <p class="p_slider">
-                    <vue-slider v-model="quantidade" ref="slider" v-bind="sliderOptions" :tooltip-formatter="formatter1"></vue-slider>
-                </p>
-                <p class="p_valor-simulado">
-                    <span>{{ quantidade }} x de R$ {{ parcela }}</span> 
-                </p>
-                <p class="p_label">* Valor calculado para primeira parcela</p>
-                <p class="p_espaco_30"></p>
-                <div class="mdl-shadow--2dp div_btn_contratar" ref="botao" @click="solicitarEmprestimo">
-                    Continuar
-                </div>
-                <div class="mdl-shadow--2dp div_btn_contratar"  @click="voltar" style="margin-top: 30px; background-color: brown;">
-                    Voltar
-                </div>   
-            </div>
+            </template>
+            <template v-if="!simulador">            
+                <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
+            </template>
         </template>
-        <template v-if="!simulador">            
-            <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
+        <template v-else>
+            <contratacao-aberta v-bind:dados="dados.emprestimoSolicitado"></contratacao-aberta>
         </template>
     </div>
 </div>

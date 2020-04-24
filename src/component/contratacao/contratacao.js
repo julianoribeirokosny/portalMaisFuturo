@@ -51,10 +51,8 @@ export default {
                                                 valor_anterior: this.dados.valor_antigo,
                                                 valor_solicitado: this.dados.valor_novo,
                                                 status: 'solicitado',
-                                            }
-            console.log('Objeto:',objeto_contratacao)
-            var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)            
-            console.log('contratacao',contratacao)
+                                            }            
+            var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)
             if(contratacao) {
                 this.finalizado = true
             } else if(!contratacao) {

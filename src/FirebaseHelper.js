@@ -1168,12 +1168,12 @@ export default class FirebaseHelper {
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/`)          
           ref.update(contratacao)
 
-          ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
-          ref.update({vigente:false})
-
-          ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
-          ref.update({vigente:false})
-
+          if(contratacao.tipo === 'Contribuição mensal') {
+            ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
+            ref.update({vigente:false})
+            ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
+            ref.update({vigente:false})
+          }
           return true
       }
       catch (e) {
@@ -1181,17 +1181,16 @@ export default class FirebaseHelper {
       }
   }
 
-  cancelarContratacao(chave, id) {
+  cancelarContratacao(chave, id, tipo) {
       try{
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
           ref.update({status:'cancelado pelo usuário'})
-
-          ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
-          ref.update({vigente:true})
-
-          ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
-          ref.update({vigente:true})
-
+          if(tipo === 'Contribuição mensal') {
+            ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
+            ref.update({vigente:true})
+            ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
+            ref.update({vigente:true})
+          }
           return true
       }
       catch (e) {
@@ -1211,15 +1210,15 @@ export default class FirebaseHelper {
     return ret
   }
 
-  async getContratacaoEmAberto(chave, tipo) {
+  async getContratacaoEmAberto(chave, tipo, status) {
     let ref = this.database.ref(`usuarios/${chave}/home`)
     let snapshot = await ref.once('value')
     let ret = {}
     if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {
       let data = ''
-      snapshot.child('transacoes/contratacoes').forEach((snap) => {
+      snapshot.child('transacoes/contratacoes').forEach((snap) => {        
         let contratacao = snap.val()
-        if (snap.key > data && contratacao.tipo === tipo && contratacao.status !== 'concluído') {
+        if (snap.key > data && contratacao.tipo === tipo && contratacao.status === status) {
           ret[snap.key] = snap.val()
         }
         data = snap.key
