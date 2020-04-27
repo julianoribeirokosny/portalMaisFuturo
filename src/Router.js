@@ -8,6 +8,17 @@ import {Utils} from './Utils';
 import {Erros} from './Erros';
 import page from 'page';
 
+//var express = require('express')
+//var cors = require('cors')
+//var app = express()
+
+// var corsOptions = {
+//   origin: 'http://localhost:5000',
+//   optionsSuccessStatus: 200
+// }
+
+//app.use(cors(corsOptions))
+
 /**
  * Handles the pages/routing.
  */

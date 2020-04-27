@@ -27,5 +27,8 @@
   "orientation": "portrait",
   "background_color": "#0288d1",
   "theme_color": "#039be5",
-  "gcm_sender_id": "103953800507"
+  "gcm_sender_id": "103953800507",
+  "permissions":[
+    "https://www.google.com/","https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/"
+  ]
 }

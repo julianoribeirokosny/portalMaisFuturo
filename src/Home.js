@@ -13,6 +13,8 @@ import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import page from 'page';
 import {Erros} from './Erros';
 
+const apiSinqia = require('../functions/APISinqia')
+
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
 //Vue.use(VueMask);
@@ -246,6 +248,11 @@ export default class Home {
             },
             contratacaoAberta() {
                 page('/contratacao-aberta')               
+            },
+            testeAPISinqia(){
+                var teste = apiSinqia.teste()
+
+                console.log('Teste', teste)
             }
         }
       })

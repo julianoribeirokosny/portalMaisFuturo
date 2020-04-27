@@ -45,9 +45,12 @@
   },
   "dependencies": {
     "@material/select": "^5.1.0",
+    "axios": "^0.19.2",
     "chart.js": "^2.9.3",
+    "cors": "^2.8.5",
     "dialog-polyfill": "^0.4.9",
     "eq.js": "^1.9.0",
+    "express": "^4.17.1",
     "file-loader": "^1.1.11",
     "firebase": "^6.6.2",
     "firebase-admin": "^8.9.2",
@@ -74,5 +77,8 @@
     "vue-select": "^3.6.0",
     "vue-slider-component": "^3.1.1"
   },
-  "private": true
+  "private": true,
+  "browser": {
+    "fs": false
+  }
 }
