@@ -250,7 +250,7 @@
       
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/home">Home</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/about">Meu Cadastro</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/cadastro">Meu Cadastro</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/simulador-emprestimo">Simulador Empréstimo</a>
       <hr class="hr-menu-nav"/>      
@@ -353,9 +353,7 @@
                     </div>
                   </div>
               </template>
-
-              <button @click.prevent="testeAPISinqia">teste API login</button>
-
+              
               <!--Reserva Total Atual-->
               <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
@@ -700,6 +698,11 @@
           <section id="page-contratacao-aberta" class="mdl-grid fp-content" style="display: none;">
               <a></a>
               <contratacao-aberta v-bind:dados="contribuicaoAberta"></contratacao-aberta>
+          </section>
+
+          <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+              <cadastro v-bind:chave_usuario="chave"></cadastro>              
           </section>
 
           <!--Pagina de Erro-->

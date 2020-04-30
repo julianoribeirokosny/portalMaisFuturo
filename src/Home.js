@@ -10,6 +10,7 @@ import rentabilidade from './component/rentabilidade/rentabilidade'
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro'
 import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
+import cadastro from './component/cadastro/cadastro'
 import page from 'page';
 import {Erros} from './Erros';
 
@@ -181,7 +182,8 @@ export default class Home {
             rentabilidade,
             simuladorSeguro,
             simuladorRenda,
-            contratacaoAberta
+            contratacaoAberta,
+            cadastro,
         },        
         data: {
             home: this.data_Home,

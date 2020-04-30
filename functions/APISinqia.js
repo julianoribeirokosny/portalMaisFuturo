@@ -51,7 +51,7 @@ const bodyLogin = JSON.stringify({
 module.exports =  {
     
     teste() { 
-         app.get(urls_prod.teste, function (req, res) {
+         //app.get(urls_prod.teste, function (req, res) {
         //     res.send('Hello World')
         //   })
 
