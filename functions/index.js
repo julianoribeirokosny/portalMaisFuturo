@@ -35,3 +35,8 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'registraTransac
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'registraTransacoesCadastro') {
   exports.registraTransacoesCadastro = require('./registraTransacoesCadastro').default;
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'buscaDadosSinqia') {
+  exports.buscaDadosSinqia = require('./buscaDadosSinqia').default;
+}
+

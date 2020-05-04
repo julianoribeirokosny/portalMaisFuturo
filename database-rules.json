@@ -30,6 +30,16 @@
         ".read": "auth.uid !== null || auth.token.admin === true",
         ".write": "false"
       },    
+      // settings do simulador de empréstimo
+      "simulador_emprestimo": {
+        ".read": "auth.uid !== null || auth.token.admin === true",
+        ".write": "false"
+      },          
+      // settings do simulador de empréstimo
+      "simulador_renda": {
+        ".read": "auth.uid !== null || auth.token.admin === true",
+        ".write": "false"
+      },          
       // segmentos de clientes
       "segmentos": {
         ".read": "auth.uid !== null || auth.token.admin === true",

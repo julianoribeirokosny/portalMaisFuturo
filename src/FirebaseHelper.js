@@ -1166,19 +1166,20 @@ export default class FirebaseHelper {
   async getDadosSimuladorRenda(chave, uid) {
     let usuario = await this.getParticipante(chave)
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
+    let maximoContribuicao = (usuario.data.valores.contribParticipante === 0 ? usuario.data.valores.contribParticipantePlanoPatrocinado : usuario.data.valores.contribParticipante) * 3
 
     let dadosSimuladorRenda = {
       usr_tipo_plano: usuario.home.usr_tipo_plano,
       taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
       titulo: 'Defina sua</br>contribuição</br>mensal',
-      minimoContribuicao: usuario.data.contribParticipante,
-      contribuicaoFixa: usuario.data.contribParticipantePlanoPatrocinado,
-      contribuicaoPatronal: usuario.data.contribEmpresa,
-      maximoContribuicao: 3000,
+      minimoContribuicao: usuario.data.valores.contribParticipante,
+      contribuicaoFixa: usuario.data.valores.contribParticipantePlanoPatrocinado,
+      contribuicaoPatronal: usuario.data.valores.contribEmpresa,
+      maximoContribuicao: maximoContribuicao,
       stepContribuicao: simuladorRendaSettings.step_contribuicao,
-      reservaTotalAtual: usuario.data.reservaTotalAtual,
-      reservaTotalFutura: usuario.data.reservaTotalFutura,
-      rendaMensalFutura: usuario.data.rendaMensalFutura,
+      reservaTotalAtual: usuario.data.valores.reservaTotalAtual,
+      reservaTotalFutura: usuario.data.valores.reservaTotalFutura,
+      rendaMensalFutura: usuario.data.valores.rendaMensalFutura,
       usr_dtnasc: usuario.home.usr_dtnasc,
       idadeBeneficio: simuladorRendaSettings.idade_beneficio,        
       chave: chave,
