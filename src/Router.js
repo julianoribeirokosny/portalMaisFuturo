@@ -101,6 +101,9 @@ export default class Router {
     page('/cadastro', () => {
       this.displayPage('cadastro')
     });
+    page('/servicos', () => {
+      this.displayPage('servicos')
+    });
     page('/erro', () => {
       Erros.displayMensagemErro()
       this.displayPage('erro')

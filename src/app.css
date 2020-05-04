@@ -1996,4 +1996,139 @@ dialog + .backdrop { /* polyfill */
       .img-redes-footer {
           height:22px;
       }
-  }
+}
+
+/* Simulador Emprestimo */
+.div_msg_emprestimo__se {
+    font-family: 'MaisFuturo-Regular';
+    font-size: 16px;    
+    font-weight: 100;
+    letter-spacing: -0.56px;
+    color: #3B3C3E;
+    opacity: 1;
+    margin-left: 20px;
+    margin-top: 8px;
+    display: list-item;
+}
+.p_espaco_50__se {
+    margin-top: 50px;
+}
+.p_espaco_30__se {
+    margin-top: 30px;
+}
+.p_label__se {
+    margin-bottom: 2px; 
+    margin-left: 20px;
+    line-height: 15px;
+    font-size: 14px;
+    font-family: 'MaisFuturo-Medium';
+    color: #3B3C3E;
+    letter-spacing: -0.19px;
+    opacity: 0.7;
+}
+.span_input_prefixo__se {
+    font-family: 'MaisFuturo-Black'; 
+    letter-spacing: -3px;
+    color: #0C7BC6; 
+    font-size: 22px; 
+    padding-top: 5px;
+    padding-right: 5px;
+}
+.input_principal__se {
+    width: 70% !important;
+    font-family: 'MaisFuturo-Black';
+    font-size: 44px;
+    color: #0C7BC6;
+    padding-top: 3px;
+    letter-spacing: -3px;
+    text-align: end;
+    border-bottom: none;
+    background: none;
+    max-width: 300px;
+}
+.span_input_sufixo__se {
+    font-family: 'MaisFuturo-Black'; 
+    letter-spacing: -3px;
+    color: #0C7BC6; 
+    font-size: 24px; 
+    padding-top: 21px;
+    padding-right: 5px;
+}
+.p_mensagem_invalido__se {
+    text-align: center; 
+    font-size: 14px;
+    color: rgb(219, 52, 52);
+    font-family: 'MaisFuturo-Medium';
+    margin-top: 5px !important;
+    margin-bottom: 2px !important;
+}
+.p_valor-simulado__se {
+    font-family: 'MaisFuturo-Bold';
+    line-height: 32px;
+    font-size: 30px;
+    letter-spacing: -0.39px;
+    color: #0C7BC6;
+    opacity: 1;
+    letter-spacing: -2px;
+    margin-left: 20px !important;    
+    margin-bottom: 2px !important;
+}
+.p_slider__se {
+    margin: 35px 20px 15px 20px;
+}
+.div_btn_contratar__se {
+    height: 40px;
+    margin: 20px;
+    cursor: pointer;
+    background-color: rgb(12, 123, 198);
+    color: #FFFFFF;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 25px;
+}
+.div_btn_contratar__se:hover { 
+  background-color: rgb(49, 129, 182);  
+}
+.div_btn_voltar__se {
+  height: 40px;
+  margin: 20px;
+  cursor: pointer;
+  background-color: rgb(150, 151, 151);
+  color: #FFFFFF;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 25px;
+  margin-top: 30px;
+}
+.div_btn_voltar__se:hover { 
+  background-color: rgb(173, 175, 175);  
+}
+
+
+@media screen and (max-width: 425px) {
+    .p_label__se {        
+        font-size: 12px;        
+    }
+    .span_input_prefixo__se {        
+        font-size: 16px; 
+        padding-top: 15px;        
+    }
+    .input_principal__se {                
+        font-size: 34px;
+        padding-top: 12px;        
+    }
+    .span_input_sufixo__se {        
+        font-size: 18px; 
+        padding-top: 22px;        
+    }
+    .p_mensagem_invalido__se {     
+        font-size: 12px;        
+    }
+    .p_valor-simulado__se {     
+        font-size: 20px;
+    }
+}

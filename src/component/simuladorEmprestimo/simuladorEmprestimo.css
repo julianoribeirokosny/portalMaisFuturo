@@ -1,4 +1,4 @@
-.div_msg_emprestimo {
+/* .div_msg_emprestimo__se {
     font-family: 'MaisFuturo-Regular';
     font-size: 16px;    
     font-weight: 100;
@@ -9,22 +9,13 @@
     margin-top: 8px;
     display: list-item;
 }
-
-.slider-content {
-    padding:10px;
-    display: flex; 
-    justify-content: flex-end;
-}
-
-.p_espaco_50 {
+.p_espaco_50__se {
     margin-top: 50px;
 }
-
-.p_espaco_30 {
+.p_espaco_30__se {
     margin-top: 30px;
 }
-
-.p_label {
+.p_label__se {
     margin-bottom: 2px; 
     margin-left: 20px;
     line-height: 15px;
@@ -34,8 +25,7 @@
     letter-spacing: -0.19px;
     opacity: 0.7;
 }
-
-.span_input_prefixo {
+.span_input_prefixo__se {
     font-family: 'MaisFuturo-Black'; 
     letter-spacing: -3px;
     color: #0C7BC6; 
@@ -43,8 +33,7 @@
     padding-top: 5px;
     padding-right: 5px;
 }
-
-.input_principal {
+.input_principal__se {
     width: 70% !important;
     font-family: 'MaisFuturo-Black';
     font-size: 44px;
@@ -56,8 +45,7 @@
     background: none;
     max-width: 300px;
 }
-
-.span_input_sufixo {
+.span_input_sufixo__se {
     font-family: 'MaisFuturo-Black'; 
     letter-spacing: -3px;
     color: #0C7BC6; 
@@ -65,8 +53,7 @@
     padding-top: 21px;
     padding-right: 5px;
 }
-
-.p_mensagem_invalido {
+.p_mensagem_invalido__se {
     text-align: center; 
     font-size: 14px;
     color: rgb(219, 52, 52);
@@ -74,8 +61,7 @@
     margin-top: 5px !important;
     margin-bottom: 2px !important;
 }
-
-.p_valor-simulado {
+.p_valor-simulado__se {
     font-family: 'MaisFuturo-Bold';
     line-height: 32px;
     font-size: 30px;
@@ -86,12 +72,10 @@
     margin-left: 20px !important;    
     margin-bottom: 2px !important;
 }
-
-.p_slider {
+.p_slider__se {
     margin: 35px 20px 15px 20px;
 }
-
-.div_btn_contratar {
+.div_btn_contratar__se {
     height: 40px;
     margin: 20px;
     cursor: pointer;
@@ -103,27 +87,26 @@
     justify-content: center;
     border-radius: 25px;
 }
-
 @media screen and (max-width: 425px) {
-    .p_label {        
+    .p_label__se {        
         font-size: 12px;        
     }
-    .span_input_prefixo {        
+    .span_input_prefixo__se {        
         font-size: 16px; 
         padding-top: 15px;        
     }
-    .input_principal {                
+    .input_principal__se {                
         font-size: 34px;
         padding-top: 12px;        
     }
-    .span_input_sufixo {        
+    .span_input_sufixo__se {        
         font-size: 18px; 
         padding-top: 22px;        
     }
-    .p_mensagem_invalido {     
+    .p_mensagem_invalido__se {     
         font-size: 12px;        
     }
-    .p_valor-simulado {     
+    .p_valor-simulado__se {     
         font-size: 20px;
     }
-}
+} */
