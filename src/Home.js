@@ -11,6 +11,7 @@ import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro'
 import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import cadastro from './component/cadastro/cadastro'
+import servicos from './component/servicos/servicos'
 import page from 'page';
 import {Erros} from './Erros';
 
@@ -184,6 +185,7 @@ export default class Home {
             simuladorRenda,
             contratacaoAberta,
             cadastro,
+            servicos
         },        
         data: {
             home: this.data_Home,

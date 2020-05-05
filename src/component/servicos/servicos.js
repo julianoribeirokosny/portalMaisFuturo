@@ -11,7 +11,7 @@ export default {
     },    
     data: function() {
         return {           
-            
+            displayIcon: true
         }        
     },
     created(){
@@ -24,6 +24,11 @@ export default {
         
     },
     methods: { 
-        
+        toggledisplayList(){
+            this.displayIcon = false
+        },
+        toggledisplayIcon(){
+            this.displayIcon = true
+        }
     },
 }
