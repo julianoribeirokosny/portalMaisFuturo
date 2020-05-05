@@ -6,16 +6,12 @@ module.exports =  {
 
         if (!(x instanceof Date)) { //se String e não date... converte
             let dateParts = x.split('/')
-            console.log('****> dateParts.length', dateParts.length)
             if (dateParts.length === 1) {
                 dateParts = x.split('-')
-                console.log('****> dateParts.length', dateParts.length)
                 if (dateParts.length===1) {
                     return null //erro no formato de data de entrada: nem "-" nem "/" na formatação
                 }
             }
-
-            console.log('*****> dateParts', dateParts)
             //se AAAA-MM-DD
             if (Number(dateParts[0]) > Number(dateParts[2])) {
                 x = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]))
@@ -77,6 +73,6 @@ module.exports =  {
             anos--
         }
         return anos <= 0 ? 0 : anos;        
-    }
+    },
 
 }

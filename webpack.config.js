@@ -112,15 +112,21 @@ module.exports = (env, argv) => {
             search: '@font-face {',
             replace: '@font-face {font-display: fallback;',
           },
-        },
+        }        
       ]  
     },
+    node: {
+      console: true,
+      fs: 'empty',
+      net: 'empty',
+      tls: 'empty'
+    },    
     optimization: {
       minimizer: devMode ? [] : [
         new UglifyJsPlugin({
           cache: true,
           parallel: true,
-          sourceMap: true,
+          sourceMap: true
         }),
         new OptimizeCssAssetsPlugin({
           cssProcessor: require('cssnano'),

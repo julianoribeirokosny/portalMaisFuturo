@@ -57,10 +57,10 @@ module.exports =  {
                 Math.trunc(qtdMeses / 12), //incluído por Leandro: garantir somente anos completos 
                 (contribParticipantePlanoPatrocinado + contribPatronal).toFixed(2)
             )
-            console.log('decimoTerceiro',decimoTerceiro)
-            console.log('reservaFutura antes',reservaFutura)
+            //console.log('decimoTerceiro',decimoTerceiro)
+            //console.log('reservaFutura antes',reservaFutura)
             reservaFutura += decimoTerceiro
-            console.log('reservaFutura depois',reservaFutura)
+            //console.log('reservaFutura depois',reservaFutura)
         }
                                                     
         return reservaFutura.toFixed(2)
@@ -76,7 +76,7 @@ module.exports =  {
 
     calculaRendaFutura(reservaTotal, taxaAnual, qtdAnosRenda) {
         let taxaMensal = this.calculaTaxaMensal(taxaAnual)
-        console.log('===> taxaMensal', taxaMensal)
+        //console.log('===> taxaMensal', taxaMensal)
         let rendaMensal = this.pgto(reservaTotal, taxaMensal, (qtdAnosRenda*12))            
         return rendaMensal
     },
@@ -86,18 +86,13 @@ module.exports =  {
     },
 
     calculaDataInicioRenda(dataNasc, idadeApos) {
-        console.log('***> dataNasc', dataNasc)
         //garante que a data estará no formato dd/mm/aaaa
         dataNasc = utils.dateFormat(dataNasc, false, false, true)
-        console.log('***> dataNasc2', dataNasc)        
-
         let dateParts = dataNasc.split('/')
-        console.log('***> dateParts', dateParts)                
         return new Date(Number(dateParts[2]) + Number(idadeApos), dateParts[1] - 1, dateParts[0])
     },
 
     calculaCrescimentoRealAnual(valorContribuicaoHoje, valorReservaHoje, qtdMesesDesdeAdesao) {
-        console.log('****> calculaCrescimentoRealAnual - valorContribuicaoHoje, valorReservaHoje, qtdMesesDesdeAdesao', valorContribuicaoHoje, valorReservaHoje, qtdMesesDesdeAdesao)
         let percCresc = valorReservaHoje / (valorContribuicaoHoje * qtdMesesDesdeAdesao)
         let percCrescAnualizado = (Math.pow(Math.pow(percCresc, (1/qtdMesesDesdeAdesao)), 12) - 1) * 100
         return percCrescAnualizado < 0 ? 0 : percCrescAnualizado

@@ -23,7 +23,7 @@ export default {
                 return {
                     usr_tipo_plano: 'instituido',
                     taxa_anual_simulacao: 5,
-                    titulo: 'Defina sua</br>participação </br> mensal',
+                    titulo: 'Defina sua</br>participaÇÃO </br> mensal',
                     minimoContribuicao: 100,
                     maximoContribuicao: 1000,
                     stepContribuicao: 10,

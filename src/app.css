@@ -2076,7 +2076,7 @@ dialog + .backdrop { /* polyfill */
 .p_slider__se {
     margin: 35px 20px 15px 20px;
 }
-.div_btn_contratar__se {
+.div_btn_contratar {
     height: 40px;
     margin: 20px;
     cursor: pointer;
@@ -2088,10 +2088,10 @@ dialog + .backdrop { /* polyfill */
     justify-content: center;
     border-radius: 25px;
 }
-.div_btn_contratar__se:hover { 
+.div_btn_contratar:hover { 
   background-color: rgb(49, 129, 182);  
 }
-.div_btn_voltar__se {
+.div_btn_voltar {
   height: 40px;
   margin: 20px;
   cursor: pointer;
@@ -2104,7 +2104,7 @@ dialog + .backdrop { /* polyfill */
   border-radius: 25px;
   margin-top: 30px;
 }
-.div_btn_voltar__se:hover { 
+.div_btn_voltar:hover { 
   background-color: rgb(173, 175, 175);  
 }
 
