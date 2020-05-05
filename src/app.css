@@ -2062,14 +2062,14 @@ dialog + .backdrop { /* polyfill */
     margin-top: 5px !important;
     margin-bottom: 2px !important;
 }
-.p_valor-simulado__se {
-    font-family: 'MaisFuturo-Bold';
-    line-height: 32px;
-    font-size: 30px;
-    letter-spacing: -0.39px;
-    color: #0C7BC6;
-    opacity: 1;
-    letter-spacing: -2px;
+.p_valor_simulado__se {
+    font-family: 'MaisFuturo-Bold' !important;
+    line-height: 32px !important;
+    font-size: 30px !important;
+    letter-spacing: -0.39px !important;
+    color: #0C7BC6 !important;
+    opacity: 1 !important;
+    letter-spacing: -2px !important;
     margin-left: 20px !important;    
     margin-bottom: 2px !important;
 }
@@ -2128,7 +2128,7 @@ dialog + .backdrop { /* polyfill */
     .p_mensagem_invalido__se {     
         font-size: 12px;        
     }
-    .p_valor-simulado__se {     
+    .p_valor_simulado__se {     
         font-size: 20px;
     }
 }
