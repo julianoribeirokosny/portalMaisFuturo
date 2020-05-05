@@ -20,6 +20,7 @@ const runtimeOpts = {
 
 var logProcessamento = {}
 var dataProcessamento
+var dataBase, anoMes
 
 /*************************************************
 ***********
@@ -42,7 +43,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     return
   }
 
-  let dataBase = change.after.val()
+  dataBase = change.after.val()
+  anoMes = dataBase.substring(5, 6) + '-' + dataBase.substring(0, 3)
   let plano = context.params.plano
 
   // inclui parametro de data de competência nos Selects
@@ -202,6 +204,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             //salva informações acumuladas do usuário
             usuarios = incluiUsuarioCadastroJSON (usuarios, chave, usr)
             usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
+            usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)            
             usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
             usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
             usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
@@ -415,6 +418,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //salva informações acumuladas do usuário
       usuarios = incluiUsuarioCadastroJSON (usuarios, chave, usr)
       usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
+      usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)
       usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
       usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
       usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
@@ -535,6 +539,19 @@ function incluiUsuarioValoresJSON (usuarios, chave, listaUsuarioContrib, reserva
     reservaTotalFutura: reservaFutura,
     rendaMensalFutura: rendaFutura
   }
+
+  return usuarios
+}
+
+function incluiUsuarioHistContribJSON (usuarios, chave, listaUsuarioContrib, anoMes) { 
+  //carrega estrutura de informações
+  let anoMesJson = {}
+  anoMesJson[anoMes] = {
+    valor: listaUsuarioContrib.contribParticipante + listaUsuarioContrib.contribParticipantePlanoPatrocinado + listaUsuarioContrib.contribRisco,
+    linkBoleto: '',
+    pago: true
+  }
+  usuarios[chave].valores.historicoContribuicoes = anoMesJson
 
   return usuarios
 }

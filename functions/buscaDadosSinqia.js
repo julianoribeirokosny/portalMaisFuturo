@@ -16,26 +16,24 @@ const apisSinqiaPrd = {
     login: 'https://api-fundoparana.sinqia.com.br/api/acesso/login',
     obterCobrancasEmAberto: 'https://api-fundoparana.sinqia.com.br/api/v1/beneficio/adesao/obterCobrancasEmAberto/{{pCPF}}',
     obterListaAdesoes: 'https://api-fundoparana.sinqia.com.br/api/v1/beneficio/adesao/{{pCPF}}',
-    obterCobrancasEmAtraso: 'https://api-fundoparana.sinqia.com.br/api/v1/beneficio/adesao/obterCobrancasEmAtraso/{{pIdAdesao}}'
+    obterCobrancasEmAtraso: 'https://api-fundoparana.sinqia.com.br/api/v1/beneficio/adesao/obterCobrancasEmAtraso/{{pCPF}}/{{pIdAdesao}}'
 }
 
 const apisSinqiaHmg = {
     login: 'https://api-fundoparanahmg.sinqia.com.br/api/acesso/login',
     obterCobrancasEmAberto: 'https://api-fundoparanahmg.sinqia.com.br/api/v1/beneficio/adesao/obterCobrancasEmAberto/{{pCPF}}',
     obterListaAdesoes: 'https://api-fundoparanahmg.sinqia.com.br/api/v1/beneficio/adesao/{{pCPF}}',
-    obterCobrancasEmAtraso: 'https://api-fundoparana.sinqia.com.br/api/v1/beneficio/adesao/obterCobrancasEmAtraso/{{pIdAdesao}}'    
+    obterCobrancasEmAtraso: 'https://api-fundoparana.sinqia.com.br/api/v1/beneficio/adesao/obterCobrancasEmAtraso/{{pCPF}}/{{pIdAdesao}}'    
 }
 
-exports.default = functions.runWith(runtimeOpts).database.ref('usuarios/{chave}/integracoes/sinqia/api/{apiSolicitada}/request').onWrite(
+exports.default = functions.runWith(runtimeOpts).database.ref('usuarios/{chave}/integracoes/sinqia/api/request').onWrite(
   async (change, context) => {
 
     if (!change.after.exists() || change.after.val()=='') {
         return
     }
     let chave = context.params.chave
-    let apiSolicitada = context.params.apiSolicitada
     let dadosApiSolicitada = change.after.val()
-    console.log('#buscaDadosSinqia - API solicitada:', apiSolicitada, ' - para chave:', chave)
     console.log('#buscaDadosSinqia - busca token de autenticação', dadosApiSolicitada)
     return recuperaTokenSinqia(dadosApiSolicitada.ambiente).then((accessToken) => {
         if (!accessToken) {
@@ -43,16 +41,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('usuarios/{chave}/
             return false
         }
         return obterListaAdesoes(accessToken, chave, dadosApiSolicitada).then((pIdAdesao) => {
-            if (pIdAdesao===null) {
+            if (!pIdAdesao) {
                 console.error('#buscaDadosSinqia - não foi possível identificar o ID da adesão do participante.')
                 return false    
             }
-            if (apiSolicitada==='obterCobrancasEmAberto') {
-                return obterCobrancasEmAberto(accessToken, chave, dadosApiSolicitada)
-            }
-            if (apiSolicitada==='obterCobrancasEmAtraso') {
-                return obterCobrancasEmAtraso(accessToken, chave, pIdAdesao)
-            }
+            return Promise.all([
+                obterCobrancasEmAberto(accessToken, chave, dadosApiSolicitada),
+                obterCobrancasEmAtraso(accessToken, chave, dadosApiSolicitada, pIdAdesao)
+            ])
         })
 
     })
@@ -82,7 +78,7 @@ function getTokenSinqia(ambiente) {
         body: JSON.stringify(bodyLogin)
     }
     
-    console.log('==> iniciando validação da API', options)
+    console.log('#buscaDadosSinqia - iniciando busca de Token Sinqia', options)
     return request(options).then((response) => {
         console.log('#buscaDadosSinqia - Token Sinqia gerado com sucesso.')
         return response
@@ -97,9 +93,10 @@ function recuperaTokenSinqia(ambiente) {
     let ref = admin.database().ref('usuarios/shared/sinqia/accessToken')
     return ref.once('value').then((snapshot) => {
         let accessToken = snapshot.val()
-        console.log('===> snapshot.val()', snapshot.val())
         let dataAgora = new Date()
-        atualizaToken = !accessToken || accessToken.data_limite_request <= dataAgora
+        let dataLimiteRequest = new Date(accessToken.data_limite_request)
+        atualizaToken = !accessToken || dataLimiteRequest < dataAgora
+        console.log('===> snapshot.val()', snapshot.val(), ' - dataAgora', dataAgora, ' - dataLimiteRequest', dataLimiteRequest, ' - atualizaToken', atualizaToken)
         if (atualizaToken) {
             return getTokenSinqia(ambiente)
         } else {
@@ -113,7 +110,11 @@ function recuperaTokenSinqia(ambiente) {
             accessToken = JSON.parse(accessToken)
             let expiresIn = Number(accessToken.expiresIn)
             let dataLimite = new Date()
-            dataLimite.setSeconds( dataLimite.getSeconds() + (expiresIn - 120) ) //deixa 2 minutos de margem    
+            console.log('===> dataLimite', dataLimite)
+            console.log('===> dataLimite.getSeconds()', dataLimite.getSeconds())
+            console.log('===> expiresIn', expiresIn)
+            dataLimite.setSeconds(dataLimite.getSeconds() + (expiresIn - 120) ) //deixa 2 minutos de margem    
+            console.log('===> dataLimite', dataLimite)
             accessToken['data_limite_request'] = dataLimite
             console.log('===> accessToken', accessToken)
             ref = admin.database().ref('usuarios/shared/sinqia/accessToken')
@@ -194,17 +195,20 @@ function obterListaAdesoes(accessToken, chave, dadosRequest) {
                 //salva retorno da API
                 let ref = admin.database().ref(`usuarios/${chave}/integracoes/sinqia/api/obterListaAdesoes/response`)
                 response = JSON.parse(response)
+                console.log('===> response', response)
                 ref.update(response)
                 //verifica se existem mais de uma adesão e pega apenas aquela da matrícula
                 let ret = null
-                result.forEach((itemAdesao) => {
-                    if (itemAdesao === dadosRequest.matricula) {
+                response.result.forEach((itemAdesao) => {
+                    console.log('====> itemAdesao', itemAdesao)
+                    if (itemAdesao.Matricula === dadosRequest.matricula.toString()) {
                         ret = itemAdesao.IdAdesao
                     }
                 })
 
                 if (ret!==null) { //salva o IdAdesao para reutilizar em novas chamadas
-                    refAdesao.update(itemAdesao.IdAdesao)
+                    refAdesao = admin.database().ref(`usuarios/${chave}/integracoes/sinqia/api`)
+                    refAdesao.update({id_adesao: ret})
                 }
 
                 return ret
@@ -217,7 +221,7 @@ function obterListaAdesoes(accessToken, chave, dadosRequest) {
     })
 }
 
-function obterCobrancasEmAtraso(accessToken, chave, pIdAdesao) {
+function obterCobrancasEmAtraso(accessToken, chave, dadosRequest, pIdAdesao) {
 
     const bearer = 'Bearer '+accessToken
 
@@ -227,11 +231,12 @@ function obterCobrancasEmAtraso(accessToken, chave, pIdAdesao) {
         'Authorization': bearer,
     };
 
-    if (!dadosRequest.ambiente || !dadosRequest.cpf) {
-        console.log('#buscaDadosSinqia - obterCobrancasEmAtraso - erro no formato da requisição à API - Ambiente:', dadosRequest.ambiente, ' - Cpf:', dadosRequest.cpf)
+    if (!dadosRequest.ambiente || !dadosRequest.cpf || !pIdAdesao) {
+        console.log('#buscaDadosSinqia - obterCobrancasEmAtraso - erro no formato da requisição à API - Ambiente:', dadosRequest.ambiente, ' - Cpf:', dadosRequest.cpf, ' - pIdAdesao:', pIdAdesao)
         return false
     }
     let url = dadosRequest.ambiente==='PRD' ? apisSinqiaPrd.obterCobrancasEmAtraso : apisSinqiaHmg.obterCobrancasEmAtraso
+    url = url.replace('{{pIdAdesao}}', pIdAdesao)
     url = url.replace('{{pCPF}}', dadosRequest.cpf)
     const options = {
         url: url,

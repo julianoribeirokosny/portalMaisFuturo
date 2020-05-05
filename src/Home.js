@@ -14,8 +14,6 @@ import cadastro from './component/cadastro/cadastro'
 import page from 'page';
 import {Erros} from './Erros';
 
-const apiSinqia = require('../functions/APISinqia')
-
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
 //Vue.use(VueMask);
@@ -55,6 +53,7 @@ export default class Home {
     }
     let firebaseHelper = this.firebaseHelper
 
+    //registra login com sucesso
     firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
 
     //ATENÇÃO!!!!!!!!!!!!!!
@@ -66,6 +65,9 @@ export default class Home {
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
     }
+
+    //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
+    firebaseHelper.solicitaDadosSinqia(this.chave) //loga data-hora do login
 
     let data_Home = await this.dadosHome(this.chave)
     if (data_Home===null) {
@@ -94,6 +96,11 @@ export default class Home {
     this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null  
     this.consulta_emprestimo.chave = this.chave    
     //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
+
+    let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
+    let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
+
+    dadosSimuladorEmprestimo.emprestimoSolicitado = this.emprestimo_Solicitado
 
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
@@ -191,35 +198,8 @@ export default class Home {
             chave: this.chave,
             uid: this.auth.currentUser.uid,
             contribuicaoAberta: this.consulta_contribuicao,            
-            rendaSimulador: {
-                usr_tipo_plano: 'jmalucelli',//'instituido','jmalucelli'
-                taxa_anual_simulacao: 5,
-                titulo: 'Defina sua</br>contribuição</br>mensal',
-                minimoContribuicao: 150,
-                contribuicaoFixa: 100.00,
-                contribuicaoPatronal: 32.21,
-                maximoContribuicao: 3000,
-                stepContribuicao: 50,
-                reservaTotalAtual: 98011.45,
-                reservaTotalFutura: 1000000,
-                rendaMensalFutura: 1500.51,
-                usr_dtnasc:'18/06/1978',
-                idadeBeneficio: 60,        
-                chave: this.chave,
-                uid: this.auth.currentUser.uid,
-            },
-            emprestimoSimulador: {
-                titulo: "Simulador </br>de Empréstimo",                
-                taxa_adm: 5.14, //2,88 ou 5.14
-                fundo_risco: 0, //2,26 ou 0
-                taxa_mensal: 0.8,
-                indice_anterior: 0.19,               
-                pre_aprovado: 20000.00,
-                saldo_devedor: 2000.00,
-                chave: this.chave,
-                uid: this.auth.currentUser.uid,
-                emprestimoSolicitado: this.consulta_emprestimo,
-            },
+            rendaSimulador: dadosSimuladorRenda,
+            emprestimoSimulador: dadosSimuladorEmprestimo,
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
                 descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
@@ -250,11 +230,6 @@ export default class Home {
             },
             contratacaoAberta() {
                 page('/contratacao-aberta')               
-            },
-            testeAPISinqia(){
-                var teste = apiSinqia.teste()
-
-                console.log('Teste', teste)
             }
         }
       })

@@ -121,7 +121,7 @@ export default {
     },    
     created(){   
         //console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)      
-        if(this.dados.emprestimoSolicitado.dados != null) {
+        if(this.dados.emprestimoSolicitado != null) {
             this.emprestimoSolicitado = true            
         } else {
             this.dados.pre_aprovado = financeiro.float_to_string(this.dados.pre_aprovado.toFixed(2))

@@ -1167,7 +1167,12 @@ export default class FirebaseHelper {
     let usuario = await this.getParticipante(chave)
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
     let maximoContribuicao = (usuario.data.valores.contribParticipante === 0 ? usuario.data.valores.contribParticipantePlanoPatrocinado : usuario.data.valores.contribParticipante) * 3
-
+    let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
+    if (qtdStep % 1 !== 0) {
+      qtdStep = Math.round(qtdStep)
+      maximoContribuicao = simuladorRendaSettings.step_contribuicao * qtdStep
+    }
+    
     let dadosSimuladorRenda = {
       usr_tipo_plano: usuario.home.usr_tipo_plano,
       taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
@@ -1185,6 +1190,9 @@ export default class FirebaseHelper {
       chave: chave,
       uid: uid
     }
+
+    dadosSimuladorRenda.maximoContribuicao = Math.round(dadosSimuladorRenda.maximoContribuicao)
+    dadosSimuladorRenda.minimoContribuicao = Math.round(dadosSimuladorRenda.minimoContribuicao)
     return dadosSimuladorRenda
   }
 
@@ -1201,7 +1209,8 @@ export default class FirebaseHelper {
       pre_aprovado: 20000.00,
       saldo_devedor: 2000.00,
       chave: chave,
-      uid: uid
+      uid: uid,
+      emprestimoSolicitado: ''
     }
     return dadosSimuladorEmprestimo
   }
@@ -1305,6 +1314,11 @@ export default class FirebaseHelper {
       })  
     }
     return Object.keys(ret).length > 0 ? ret : null
+  }
+
+  solicitaDadosSinqia(chave) {
+    let ref = this.database.ref(`usuarios/${chave}/home`)
+
   }
 
   logErros(uid, data, codErro, origem) {
