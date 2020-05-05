@@ -1,0 +1,194 @@
+.Meu_Perfil_Class_v2 {    
+    overflow: visible;   
+    white-space: nowrap;
+    line-height: 29px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-family: Objectivity;
+    font-family: Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    color: rgba(59,60,62,1);
+}
+.margin_30 {
+    margin-top: 30px !important;
+}
+.card_v2 {
+    box-shadow: 0 10px 30px 5px rgba(105, 160, 202, 0.14), 0 10px 30px 5px rgba(93, 147, 189, 0.14), 0 10px 30px 5px rgba(95, 154, 199, 0.14) !important;
+    border-radius: 25px; 
+    height: 140px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 0px !important;
+}
+.card_left_v2 {
+    float: left; 
+    width: 120px;
+    padding: 10px !important;
+}
+.card_right_v2 {
+    float: right;   
+    padding-left: 5px; 
+}
+.UserFullName_Class_v2 {
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    color: rgba(19,23,33,1);
+}
+.NomedoPlano_Class_v2 {    
+    text-align: left;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: lighter;
+    font-size: 10px;
+    color: rgba(19,23,33,1);
+    overflow: visible;    
+}
+.img_card_v2 {
+    width:120px;
+    height:120px;
+    border-radius:60px;
+}
+.SectionTitle_v2{  
+    margin-top: 20px !important;
+    white-space: nowrap;
+    line-height: 38px;
+    margin-top: -1.5px;
+    text-align: left;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: lighter;
+    font-size: 35px;
+    color: rgba(59,60,62,1);
+    letter-spacing: -0.4px;
+}
+.div-formulario {
+    padding-top: 5px !important;
+}
+.Div_Campo_v2 {
+    border: silver solid 1px;
+    height: 40px;
+    border-radius: 20px;
+    padding-left: 15px;
+    margin-top: 5px;
+}
+.Div_vSelect_v2 {
+    width: 90%;
+    border: silver solid 1px;
+    height: 40px;
+    border-radius: 20px;
+    padding-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;    
+}
+.vs__dropdown-toggle {
+    border-right: none !important;
+    border-bottom: none !important;
+    height: 18px !important;
+    padding: 0px !important;
+    width: 99%
+}
+.vs__search {
+    display: none !important;
+}
+.vs__selected {
+    margin: 0 !important;
+    padding: 0 0 0 13px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #174b8f !important;
+}
+.vs__dropdown-menu {
+    width: 99%
+}
+.vs__actions {
+    display: none;
+}
+.Div_Button_Salvar {    
+    background-color: #1a6bb6;
+    height: 40px;
+    border-radius: 20px;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.Div_Button_Salvar:hover {    
+    background-color: #165fa3;
+}
+.Div_Button_Voltar {
+    background-color: rgb(170, 169, 169);    
+    height: 40px;
+    border-radius: 20px;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.Div_Button_Voltar:hover {   
+    background-color: rgb(161, 160, 160);     
+}
+.msg-sucesso{
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #174b8f !important;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.Span_Button_v2 {
+    color: rgba(236, 236, 236, 0.877);
+    font-size: 16px;
+}
+.Span_Label_v2 {
+    font-size: 10px;
+}
+.Span_Label_vSelect_v2 {
+    color: rgba(0, 0, 0, 0.54);
+    padding-left: 16px;
+    font-size: 10px;
+}
+.Span_Text_v2 {
+    font-size: 14px;
+    color: grey;
+    font-weight: 500;
+}
+.Input_Text_v2 {
+    width: 80%;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
+    font-size: 14px;
+    font-weight: 500;
+    color: #174b8f;
+    border-bottom: none !important;
+    background: none !important;
+}
+.hasvalid {
+    border: solid 1px rgb(19, 158, 65);
+}
+.hasinvalid {
+    border: solid 1px rgb(206, 58, 58);
+}
+.img-editar{
+    width: 32px;
+    height: 32px;
+}
+.div-img-input {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 4px;    
+    margin-top: -34px;
+}
+.div-img-vSelect {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 4px;    
+    margin-top: -36px;
+}

@@ -47,6 +47,7 @@
   "dependencies": {
     "@material/select": "^5.1.0",
     "axios": "^0.19.2",
+    "cep-promise": "^3.0.9",
     "chart.js": "^2.9.3",
     "cors": "^2.8.5",
     "dialog-polyfill": "^0.4.9",

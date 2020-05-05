@@ -98,7 +98,12 @@ export default class Router {
       this.displayPage('confirmacao-dados-final')
       aguardaValidaLinkPrimeiroLogin()
     });
-
+    page('/cadastro', () => {
+      this.displayPage('cadastro')
+    });
+    page('/servicos', () => {
+      this.displayPage('servicos')
+    });
     page('/erro', () => {
       Erros.displayMensagemErro()
       this.displayPage('erro')

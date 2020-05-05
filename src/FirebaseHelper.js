@@ -1267,6 +1267,17 @@ export default class FirebaseHelper {
       }
   }
 
+  salvarCadastro(chave, chave_interna, cadastro) {
+      try {
+          let ref = this.database.ref(`usuarios/${chave}/${chave_interna}/`)          
+          ref.update(cadastro)          
+          return true
+      }
+      catch (e) {
+          return false
+      }
+  }
+
   async getUsuarioChave(uid, numItemParticipacao) {
     let ref = this.database.ref(`login/${uid}/lista_chaves`)
     let snapshot = await ref.once('value')

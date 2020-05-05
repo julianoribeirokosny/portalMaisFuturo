@@ -250,15 +250,13 @@
       
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/home">Home</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/about">Meu Cadastro</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/cadastro">Meu Cadastro</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/simulador-emprestimo">Simulador Empréstimo</a>
-      <hr class="hr-menu-nav"/>      
-      <!-- <a class="mdl-navigation__link a-menu-nav" href="/simulador">Simulador</a>
-      <hr class="hr-menu-nav"/> -->
+      <hr class="hr-menu-nav"/>    
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/rentabilidade">Rentabilidade</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Serviços</a>
+      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/servicos">Serviços</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Educação Financeira</a>
       <hr class="hr-menu-nav"/>
@@ -300,9 +298,7 @@
 
           <!-- Show home -->
           <section id="page-home" class="mdl-grid fp-content" style="display: none;">
-              <a></a>
-
-              
+              <a></a>              
 
               <!--Campanha-->
               <template v-for="campanha in home.campanhas" v-if="home.campanhas.vigente && campanha.ativo">
@@ -353,9 +349,7 @@
                     </div>
                   </div>
               </template>
-
-              <button @click.prevent="testeAPISinqia">teste API login</button>
-
+              
               <!--Reserva Total Atual-->
               <template v-if="home.saldo_reserva && home.saldo_reserva.vigente">
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
@@ -701,6 +695,18 @@
               <a></a>
               <contratacao-aberta v-bind:dados="contribuicaoAberta"></contratacao-aberta>
           </section>
+
+          <!--Cadastro-->
+          <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
+              <a></a>
+              <cadastro v-bind:chave_usuario="chave"></cadastro>              
+          </section>
+
+          <section id="page-servicos" class="mdl-grid fp-content" style="display: none;">
+            <a></a>
+            <p>Serviços</p>              
+          </section>
+
 
           <!--Pagina de Erro-->
           <section id="page-erro" class="mdl-grid fp-content" style="display: none;">
