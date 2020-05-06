@@ -14,32 +14,32 @@
         <!-- Tabela Histórico Serviços - Ícones Grandes -->
         <div class="mdl-card__supporting-text mdl-card-container div-container grid-2C__serv">                         
             <div class="TableIcons__serv">
-                <img src="../../../public/images/SegundaViaBoleto-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">segunda via do boleto</span>
+                <img src="../../../public/images/SegundaViaBoleto-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('historico-contribuicao')"><br>
+                <span class="IconsText__serv" @click="clickPage('historico-contribuicao')">segunda via do boleto</span>
             </div>
             <div class="TableIcons__serv">
-                <img src="../../../public/images/SegundaViaIR-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">segunda via do informe de rendimentos</span>
+                <img src="../../../public/images/SegundaViaIR-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('em-construcao')"><br>
+                <span class="IconsText__serv" @click="clickPage('em-construcao')">segunda via do informe de rendimentos</span>
             </div>
             <div class="TableIcons__serv">
-                <img src="../../../public/images/ExtratoContribuicoes-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">histórico de contribuições</span>
+                <img src="../../../public/images/ExtratoContribuicoes-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('historico-contribuicao')"><br>
+                <span class="IconsText__serv" @click="clickPage('historico-contribuicao')">histórico de contribuições</span>
             </div>
             <div class="TableIcons__serv">
-                <img src="../../../public/images/SimuladorContribuicoes-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">simulador de contribuições e aportes</span>
+                <img src="../../../public/images/SimuladorContribuicoes-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('simulador-renda')"><br>
+                <span class="IconsText__serv" @click="clickPage('simulador-renda')">simulador de contribuições e aportes</span>
             </div>
             <div class="TableIcons__serv">
-                <img src="../../../public/images/SimuladorEmprestimos-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">simulador de empréstimos</span>
+                <img src="../../../public/images/SimuladorEmprestimos-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('simulador-emprestimo')"><br>
+                <span class="IconsText__serv" @click="clickPage('simulador-emprestimo')">simulador de empréstimos</span>
             </div>
             <div class="TableIcons__serv">
-                <img src="../../../public/images/SimuladorRiscos-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">simulador de riscos</span>
+                <img src="../../../public/images/SimuladorRiscos-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('simulador-seguro')"><br>
+                <span class="IconsText__serv" @click="clickPage('simulador-seguro')">simulador de riscos</span>
             </div>
             <div class="TableIcons__serv">
-                <img src="../../../public/images/HistoricoServicos-IconS.png" width="120" height="120" style="cursor:pointer;"><br>
-                <span class="IconsText__serv">histórico de serviços</span>
+                <img src="../../../public/images/HistoricoServicos-IconS.png" width="120" height="120" style="cursor:pointer;" @click="clickPage('em-construcao')"><br>
+                <span class="IconsText__serv" @click="clickPage('em-construcao')">histórico de serviços</span>
             </div>
             <div class="TableIcons__serv"></div>
         </div>
@@ -59,46 +59,46 @@
         <!-- Tabela Histórico Serviços - Ícones Pequenos -->
         <div class="mdl-card__supporting-text mdl-card-container div-container grid-2Cs__serv">                         
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/SegundaViaBoleto-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/SegundaViaBoleto-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('historico-contribuicao')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">segunda via do boleto</span>
+                <span class="ListIconsText__serv" @click="clickPage('historico-contribuicao')">segunda via do boleto</span>
             </div>
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/SegundaViaIR-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/SegundaViaIR-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('em-construcao')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">segunda via do informe de rendimentos</span>
+                <span class="ListIconsText__serv" @click="clickPage('em-construcao')">segunda via do informe de rendimentos</span>
             </div>
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/ExtratoContribuicoes-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/ExtratoContribuicoes-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('historico-contribuicao')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">histórico de contribuições</span>
+                <span class="ListIconsText__serv" @click="clickPage('historico-contribuicao')">histórico de contribuições</span>
             </div>
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/SimuladorContribuicoes-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/SimuladorContribuicoes-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('simulador-renda')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">simulador de contribuições e aportes</span>
+                <span class="ListIconsText__serv" @click="clickPage('simulador-renda')">simulador de contribuições e aportes</span>
             </div>
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/SimuladorEmprestimos-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/SimuladorEmprestimos-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('simulador-emprestimo')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">simulador de empréstimos</span>
+                <span class="ListIconsText__serv" @click="clickPage('simulador-emprestimo')">simulador de empréstimos</span>
             </div>
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/SimuladorRiscos-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/SimuladorRiscos-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('simulador-seguro')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">simulador de riscos</span>
+                <span class="ListIconsText__serv" @click="clickPage('simulador-seguro')">simulador de riscos</span>
             </div>
             <div class="TableIconsList__serv">
-                <img src="../../../public/images/HistoricoServicos-IconS.png" width="55" height="55" style="cursor:pointer;">
+                <img src="../../../public/images/HistoricoServicos-IconS.png" width="55" height="55" style="cursor:pointer;" @click="clickPage('em-construcao')">
             </div>
             <div style="padding-top: 18px;">
-                <span class="ListIconsText__serv">histórico de solicitações de serviços</span>
+                <span class="ListIconsText__serv" @click="clickPage('em-construcao')">histórico de solicitações de serviços</span>
             </div>
         </div>
     </template>

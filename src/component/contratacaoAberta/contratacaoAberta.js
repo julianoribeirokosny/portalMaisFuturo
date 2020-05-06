@@ -52,7 +52,7 @@ export default {
     },
     methods: {             
         retornaHome(){
-            page('/home')
+            page(`/${sessionStorage.ultimaPagina}`)
         },
         cancelarContratacao() {            
             var contratacao = this.firebaseHelper.cancelarContratacao(this.dados.chave, this.id, this.tipo)            

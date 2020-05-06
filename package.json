@@ -73,6 +73,7 @@
     "vanilla-masker": "^1.2.0",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
+    "vue-material": "^1.0.0-beta-13",
     "vue-router": "~ 3.0",
     "vue-select": "^3.6.0",
     "vue-slider-component": "^3.1.1"

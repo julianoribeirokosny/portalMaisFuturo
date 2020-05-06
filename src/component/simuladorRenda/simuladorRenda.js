@@ -190,7 +190,7 @@ export default {
             this.simulador = value
         },
         voltar() {
-            page('/home')
+            page(`/${sessionStorage.ultimaPagina}`)
         },
         continuar(link) {
             page(`/${link}`)

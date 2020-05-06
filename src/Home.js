@@ -12,6 +12,8 @@ import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
+import emConstrucao from './component/emConstrucao/emConstrucao'
+import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
 import page from 'page';
 import {Erros} from './Erros';
 
@@ -103,6 +105,8 @@ export default class Home {
 
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.emprestimo_Solicitado
 
+    let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
+    
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
         mounted () {
@@ -192,7 +196,9 @@ export default class Home {
             simuladorRenda,
             contratacaoAberta,
             cadastro,
-            servicos
+            servicos,
+            emConstrucao,
+            historicoContribuicao
         },        
         data: {
             home: this.data_Home,
@@ -202,6 +208,7 @@ export default class Home {
             contribuicaoAberta: this.consulta_contribuicao,            
             rendaSimulador: dadosSimuladorRenda,
             emprestimoSimulador: dadosSimuladorEmprestimo,
+            historicoContribuicao: listaHistoricoContribuicao,
             dataSimulador: {
                 titulo: "Simulador </br>de Empréstimo",
                 descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
@@ -212,7 +219,10 @@ export default class Home {
                           step: 1
                         }
             }
-        },        
+        },  
+        created() {
+          sessionStorage.ultimaPagina = 'home'
+        },      
         methods: {          
             toggleCategory: function() {
               this.toggle = !this.toggle;
@@ -222,15 +232,19 @@ export default class Home {
                 firebaseHelper.removerCampanha(this.chave, campanha.nome)
             },
             contratarCampanha(link) {
+                sessionStorage.ultimaPagina = 'home'
                 page(`/${link}`)
             },
             simuladorSeguro(link) {
+                sessionStorage.ultimaPagina = 'home'
                 page(`/${link}`)
             },
-            simuladorRenda(link) {
+            simuladorRenda(link, origem) {
+                sessionStorage.ultimaPagina = origem
                 page(`/${link}`)
             },
             contratacaoAberta() {
+                sessionStorage.ultimaPagina = 'home'
                 page('/contratacao-aberta')               
             }
         }

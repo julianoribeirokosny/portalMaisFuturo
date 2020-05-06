@@ -3,10 +3,12 @@
 import servicos from './servicos.html';
 import './servicos.css';
 import page from 'page';
+//import emConstrucao from '../emConstrucao/emConstrucao';
 
 export default {  
-    template: servicos,    
-    props: { 
+    template: servicos,   
+    //components: { emConstrucao }, 
+    props: {
         
     },    
     data: function() {
@@ -15,8 +17,7 @@ export default {
         }        
     },
     created(){
-             
-    }, 
+    },
     mounted(){
         
     },
@@ -24,11 +25,15 @@ export default {
         
     },
     methods: { 
-        toggledisplayList(){
+        toggledisplayList() {
             this.displayIcon = false
         },
-        toggledisplayIcon(){
+        toggledisplayIcon() {
             this.displayIcon = true
+        },
+        clickPage(link) {  
+            sessionStorage.ultimaPagina = 'servicos'
+            page(`/${link}`)
         }
-    },
+    }, 
 }

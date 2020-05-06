@@ -2062,11 +2062,10 @@ dialog + .backdrop { /* polyfill */
     margin-top: 5px !important;
     margin-bottom: 2px !important;
 }
-.p_valor_simulado__se {
+p.p_valor_simulado__se {
     font-family: 'MaisFuturo-Bold' !important;
     line-height: 32px !important;
     font-size: 30px !important;
-    letter-spacing: -0.39px !important;
     color: #0C7BC6 !important;
     opacity: 1 !important;
     letter-spacing: -2px !important;

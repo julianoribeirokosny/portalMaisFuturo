@@ -1163,6 +1163,17 @@ export default class FirebaseHelper {
     })    
   }
 
+  async getHistoricoContribuicao(chave) {
+      let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
+      return ref.once('value').then((data) => {    
+          if (data.val()) {
+              return data.val()
+          } else {
+              return null
+          }
+      })
+  }
+
   async getDadosSimuladorRenda(chave, uid) {
     let usuario = await this.getParticipante(chave)
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)

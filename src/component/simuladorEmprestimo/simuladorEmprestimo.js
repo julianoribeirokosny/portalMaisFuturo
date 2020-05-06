@@ -239,7 +239,7 @@ export default {
             this.taxa_mensal = ((1 + this.dados.taxa_mensal/100) * (Math.pow(1 + (this.dados.indice_anterior/100), (dias / 30))) - 1) * 100;
         },        
         voltar() {
-            page('/homne')
+            page(`/${sessionStorage.ultimaPagina}`)
         },
         cancelarContratacao(value) {
             this.simulador = value
