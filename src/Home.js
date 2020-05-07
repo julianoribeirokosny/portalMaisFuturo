@@ -184,76 +184,96 @@ export default class Home {
               )
         }
     });
-    
+ 
+    Vue.config.errorHandler = function(err, vm, info) {
+        console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+        Erros.registraErro(auth, 'Vuejs Error', 'showHome')
+        page('/erro')
+    }
     //console.log('===> gráfico contribuicao ok')
 
-    if (!this.vueObj) {
-      this.vueObj = new Vue({
-        components: {
-            simuladorEmprestimo,
-            rentabilidade,
-            simuladorSeguro,
-            simuladorRenda,
-            contratacaoAberta,
-            cadastro,
-            servicos,
-            emConstrucao,
-            historicoContribuicao
-        },        
-        data: {
-            home: this.data_Home,
-            toggle: false,
-            chave: this.chave,
-            uid: this.auth.currentUser.uid,
-            contribuicaoAberta: this.consulta_contribuicao,            
-            rendaSimulador: dadosSimuladorRenda,
-            emprestimoSimulador: dadosSimuladorEmprestimo,
-            historicoContribuicao: listaHistoricoContribuicao,
-            dataSimulador: {
-                titulo: "Simulador </br>de Empréstimo",
-                descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
-                slider: { 
-                          min: 12,
-                          max: 60,
-                          value: 24,
-                          step: 1
-                        }
-            }
-        },  
-        created() {
-          sessionStorage.ultimaPagina = 'home'
-        },      
-        methods: {          
-            toggleCategory: function() {
-              this.toggle = !this.toggle;
-            },
-            removerCampanha: function(campanha) {
-                campanha.ativo = false                
-                firebaseHelper.removerCampanha(this.chave, campanha.nome)
-            },
-            contratarCampanha(link) {
-                sessionStorage.ultimaPagina = 'home'
-                page(`/${link}`)
-            },
-            simuladorSeguro(link) {
-                sessionStorage.ultimaPagina = 'home'
-                page(`/${link}`)
-            },
-            simuladorRenda(link, origem) {
-                sessionStorage.ultimaPagina = origem
-                page(`/${link}`)
-            },
-            contratacaoAberta() {
-                sessionStorage.ultimaPagina = 'home'
-                page('/contratacao-aberta')               
-            }
-        }
-      })
-      this.vueObj.$mount('#app'); 
-    } else {
-      this.vueObj.$forceUpdate(); 
-    }
+    let auth = this.auth.currentUser.uid    
     
+      if (!this.vueObj) {
+          this.vueObj = new Vue({
+            renderError (h, err) {
+              location.reload()
+            },
+            components: {
+                simuladorEmprestimo,
+                rentabilidade,
+                simuladorSeguro,
+                simuladorRenda,
+                contratacaoAberta,
+                cadastro,
+                servicos,
+                emConstrucao,
+                historicoContribuicao
+            },        
+            data: {
+                home: this.data_Home,
+                toggle: false,
+                chave: this.chave,
+                uid: this.auth.currentUser.uid,
+                contribuicaoAberta: this.consulta_contribuicao,            
+                rendaSimulador: dadosSimuladorRenda,
+                emprestimoSimulador: dadosSimuladorEmprestimo,
+                historicoContribuicao: listaHistoricoContribuicao,
+                dataSimulador: {
+                    titulo: "Simulador </br>de Empréstimo",
+                    descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
+                    slider: { 
+                              min: 12,
+                              max: 60,
+                              value: 24,
+                              step: 1
+                            }
+                }
+            },  
+            created() {
+
+              sessionStorage.ultimaPagina = 'home'
+            },      
+            methods: { 
+                error(){
+                  page('/erro')
+                },        
+                toggleCategory: function() {
+                  this.toggle = !this.toggle;
+                },
+                removerCampanha: function(campanha) {
+                    campanha.ativo = false                
+                    firebaseHelper.removerCampanha(this.chave, campanha.nome)
+                },
+                contratarCampanha(link) {
+                    sessionStorage.ultimaPagina = 'home'
+                    page(`/${link}`)
+                },
+                simuladorSeguro(link) {
+                    sessionStorage.ultimaPagina = 'home'
+                    page(`/${link}`)
+                },
+                simuladorRenda(link, origem) {
+                    sessionStorage.ultimaPagina = origem
+                    page(`/${link}`)
+                },
+                contratacaoAberta() {
+                    sessionStorage.ultimaPagina = 'home'
+                    page('/contratacao-aberta')               
+                }
+            },
+            errorCaptured:function(err, component, details) {
+              alert(err);
+              page('/erro')
+            }
+          })
+          
+          console.log('this.vueObj',this.vueObj)
+          this.vueObj.$mount('#app'); 
+          
+        } else {
+            this.vueObj.$forceUpdate(); 
+        }    
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
     firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
