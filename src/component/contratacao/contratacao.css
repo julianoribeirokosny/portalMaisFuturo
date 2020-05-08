@@ -1,4 +1,4 @@
-.grid {
+.grid_contratacao {
     display: grid;
     grid-template-columns: 65% 35%;
 }

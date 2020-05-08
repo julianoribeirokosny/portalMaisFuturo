@@ -1,0 +1,211 @@
+.div-container {
+    max-width: 500px; 
+    margin: auto;
+}
+.div-center {
+    display: flex; 
+    justify-content: center;
+}
+.Meu_Perfil_Class_v2 {    
+    overflow: visible;   
+    white-space: nowrap;
+    line-height: 29px;
+    margin-top: -2px;
+    text-align: center;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 25px;
+    color: rgba(59,60,62,1);
+}
+.TableHeader {
+	overflow: visible;
+	line-height: 23px;
+    padding-top: 10px;
+
+	width: 100%;
+	color: rgba rgba(3,49,102,1);
+	white-space: nowrap;
+	text-align: left;
+	font-family: Objectivity, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	font-weight: normal;
+	border: 0px;
+}
+.TableHeaderSelected {
+	overflow: visible;
+	line-height: 23px;
+    padding-top: 10px;
+
+	width: 100%;
+	color: #0C7BC6;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Objectivity, Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	font-weight: normal;
+	border: 0px;
+}
+.card_v2 {
+    box-shadow: 0 10px 30px 5px rgba(105, 160, 202, 0.14), 0 10px 30px 5px rgba(93, 147, 189, 0.14), 0 10px 30px 5px rgba(95, 154, 199, 0.14) !important;
+    border-radius: 25px; 
+    height: 120px;
+    display: flex;
+    align-items: center;
+}
+.card_left_v2 {
+    float: left; 
+    width: 120px;
+}
+.card_right_v2 {
+    float: right;
+    margin-left: 15px;
+}
+.UserFullName_Class_v2 {
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    color: rgba(19,23,33,1);
+}
+.NomedoPlano_Class_v2 {    
+    text-align: left;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: lighter;
+    font-size: 10px;
+    color: rgba(19,23,33,1);
+    overflow: visible;    
+}
+.img_card_v2 {
+    width:120px;
+    height:120px;
+    border-radius:60px;
+}
+.CameraIcon_fundo_v2 {    
+    margin-top: 3px;
+}
+.SectionTitle_v2{  
+    margin-top: 20px !important;
+    white-space: nowrap;
+    line-height: 38px;
+    margin-top: -1.5px;
+    text-align: left;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: lighter;
+    font-size: 35px;
+    color: rgba(59,60,62,1);
+    letter-spacing: -0.4px;
+}
+.SectionImg{  
+    white-space: nowrap;
+    align-content: right;
+    padding-top: 40px;
+}
+.div-formulario {
+    padding-top: 5px !important;
+}
+.Div_Campo_v2 {
+    border: silver solid 1px;
+    height: 40px;
+    border-radius: 20px;
+    padding-left: 15px;
+}
+.Div_Table-Desgin {
+    height: 20px;
+    border-radius: 20px;
+    margin-top: 5px;
+    /* padding-left: 15px;
+	padding-right: 15px; */
+    box-shadow: 0 0px 00px 0px rgba(105, 160, 202, 0.14), 0 0px 00px 0px rgba(93, 147, 189, 0.14), 0 3px 3px 1px rgba(95, 154, 199, 0.14) !important;
+}
+.TableText{
+	color: rgba rgba(3,49,102,1);
+	white-space: nowrap;
+	text-align: left;
+	font-family: Objectivity, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+    font-weight: normal;
+    padding-left: 15px;
+}
+.TableImg{
+    color: rgba rgba(3,49,102,1);
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+    align-content: right;
+    padding-right: 15px;
+    top: -5px;
+}
+.Span_Label_v2 {
+    font-size: 10px;
+}
+.Span_Text_v2 {
+    font-size: 14px;
+    color: grey;
+
+}
+.gridHeader {
+    display: grid;
+    grid-template-columns: 50% 35% 15%;
+}
+.grid {
+    display: grid;
+    grid-template-columns: 50% 35% 15%;
+}
+.Span_CarregarMais {
+    font-size: 12px;
+    color: #CCCCCC;
+    text-align: center;
+    align-self: center;
+}
+.gridTitle {
+    display: grid;
+    grid-template-columns: 85% 15%;
+}
+
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 20%;
+    border-radius: 20px;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }

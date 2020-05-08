@@ -1163,6 +1163,17 @@ export default class FirebaseHelper {
     })    
   }
 
+  async getHistoricoContribuicao(chave) {
+      let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
+      return ref.once('value').then((data) => {    
+          if (data.val()) {
+              return data.val()
+          } else {
+              return null
+          }
+      })
+  }
+
   async getDadosSimuladorRenda(chave, uid) {
     let usuario = await this.getParticipante(chave)
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
@@ -1245,8 +1256,12 @@ export default class FirebaseHelper {
       try {
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/`)          
           ref.update(contratacao)
-
-          if(contratacao.tipo === 'Contribuição mensal') {
+          let name = Object.getOwnPropertyNames(contratacao).sort()
+          let id = name[0]
+          let objeto = contratacao[id]
+          let tipo = objeto.tipo
+          console.log('Contratacao Tipo ====> ',tipo)
+          if(tipo == 'Contribuição mensal') {
             ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
             ref.update({vigente:false})
             ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
@@ -1300,7 +1315,7 @@ export default class FirebaseHelper {
   }
 
   async getContratacaoEmAberto(chave, tipo, status) {
-    let ref = this.database.ref(`usuarios/${chave}/home`)
+    let ref = this.database.ref(`usuarios/${chave}`)
     let snapshot = await ref.once('value')
     let ret = {}
     if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {

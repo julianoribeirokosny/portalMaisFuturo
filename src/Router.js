@@ -104,6 +104,12 @@ export default class Router {
     page('/servicos', () => {
       this.displayPage('servicos')
     });
+    page('/em-construcao', () => {
+      this.displayPage('em-construcao')
+    });
+    page('/historico-contribuicao', () => {
+      this.displayPage('historico-contribuicao')
+    });    
     page('/erro', () => {
       Erros.displayMensagemErro()
       this.displayPage('erro')
@@ -124,7 +130,9 @@ export default class Router {
    * A "page" é o elemento com o ID "page-<id>" na DOM.
    */
   async displayPage(pageId) {
+    console.log('PAGE_ID =====> ',pageId)
     this.pagesElements.each((index, element) => {
+      //console.log('ELEMENT.ID =====> ',element.id)
       if (element.id === 'page-' + pageId) {  
         $('#'+element.id).show()
       } else if (element.id === 'page-splash-login') {

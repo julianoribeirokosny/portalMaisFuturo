@@ -12,6 +12,8 @@ import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
+import emConstrucao from './component/emConstrucao/emConstrucao'
+import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
 import page from 'page';
 import {Erros} from './Erros';
 
@@ -41,12 +43,14 @@ export default class Home {
     this.chave = null
     this.contribuicao_Aberta = null
     this.emprestimo_Solicitado = null
+    this.seguro_Solicitado = null
     this.consulta_contribuicao = null
     this.consulta_emprestimo = null
+    this.consulta_seguro = null
   }  
 
   async showHome() {
-   
+    
     this.auth = firebase.auth();
     if (!this.auth.currentUser) {
       Erros.registraErro('', 'auth', 'showHome')
@@ -80,29 +84,55 @@ export default class Home {
     if (!data_Home.vigente) {
       Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome')
       return page('/erro')
-    }    
-
+    }
+    
     this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
     this.consulta_contribuicao = new Object()
     this.consulta_contribuicao.tipo = 'Contribuição mensal'
-    this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'    
+    this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
     this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
-    this.consulta_contribuicao.chave = this.chave    
-    //console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
+    this.consulta_contribuicao.chave = this.chave
+    console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
 
     this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
     this.consulta_emprestimo = new Object()
     this.consulta_emprestimo.tipo = 'Empréstimo'
     this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
-    this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null  
-    this.consulta_emprestimo.chave = this.chave    
-    //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
+    this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null
+    this.consulta_emprestimo.chave = this.chave
+    console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
+
+    this.seguro_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado')
+    this.consulta_seguro = new Object()
+    this.consulta_seguro.tipo = 'Seguro'
+    this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
+    this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
+    this.consulta_seguro.chave = this.chave
+    console.log('Consulta Seguro ====> ', this.consulta_seguro)
 
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
+    let dadosSimuladorSeguro = {
+      titulo: 'Simulador </br>de Seguro',
+      tipo: 'Seguro',
+      coberturaInvalidez: 150000,
+      minimoInvalidez: 15000,
+      maximoInvalidez: 1500000,
+      fatorInvalidez: 1.0163,
+      stepInvalidez: 15000,
+      coberturaMorte: 200000,
+      minimoMorte: 10000,
+      maximoMorte: 1500000,
+      fatorMorte: 1.1423,
+      stepMorte: 10000,
+      chave: this.chave,
+      uid: this.auth.currentUser.uid,
+      seguroSolicitado: this.consulta_seguro,
+  }
+    dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
 
-    dadosSimuladorEmprestimo.emprestimoSolicitado = this.emprestimo_Solicitado
-
+    let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
+    
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
         mounted () {
@@ -180,66 +210,104 @@ export default class Home {
               )
         }
     });
-    
+ 
+    Vue.config.errorHandler = function(err, vm, info) {
+        console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+        Erros.registraErro(auth, 'Vuejs Error', 'showHome')
+        page('/erro')
+    }
     //console.log('===> gráfico contribuicao ok')
 
-    if (!this.vueObj) {
-      this.vueObj = new Vue({
-        components: {
-            simuladorEmprestimo,
-            rentabilidade,
-            simuladorSeguro,
-            simuladorRenda,
-            contratacaoAberta,
-            cadastro,
-            servicos
-        },        
-        data: {
-            home: this.data_Home,
-            toggle: false,
-            chave: this.chave,
-            uid: this.auth.currentUser.uid,
-            contribuicaoAberta: this.consulta_contribuicao,            
-            rendaSimulador: dadosSimuladorRenda,
-            emprestimoSimulador: dadosSimuladorEmprestimo,
-            dataSimulador: {
-                titulo: "Simulador </br>de Empréstimo",
-                descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
-                slider: { 
-                          min: 12,
-                          max: 60,
-                          value: 24,
-                          step: 1
-                        }
-            }
-        },        
-        methods: {          
-            toggleCategory: function() {
-              this.toggle = !this.toggle;
-            },
-            removerCampanha: function(campanha) {
-                campanha.ativo = false                
-                firebaseHelper.removerCampanha(this.chave, campanha.nome)
-            },
-            contratarCampanha(link) {
-                page(`/${link}`)
-            },
-            simuladorSeguro(link) {
-                page(`/${link}`)
-            },
-            simuladorRenda(link) {
-                page(`/${link}`)
-            },
-            contratacaoAberta() {
-                page('/contratacao-aberta')               
-            }
-        }
-      })
-      this.vueObj.$mount('#app'); 
-    } else {
-      this.vueObj.$forceUpdate(); 
-    }
+    let auth = this.auth.currentUser.uid    
     
+      if (!this.vueObj) {
+          this.vueObj = new Vue({
+            renderError (h, err) {
+              location.reload()
+            },
+            components: {
+                simuladorEmprestimo,
+                rentabilidade,
+                simuladorSeguro,
+                simuladorRenda,
+                contratacaoAberta,
+                cadastro,
+                servicos,
+                emConstrucao,
+                historicoContribuicao
+            },        
+            data: {
+                componentKey: 0,
+                home: this.data_Home,
+                toggle: false,
+                chave: this.chave,
+                uid: this.auth.currentUser.uid,
+                contribuicaoAberta: this.consulta_contribuicao,            
+                rendaSimulador: dadosSimuladorRenda,
+                emprestimoSimulador: dadosSimuladorEmprestimo,
+                seguroSimulador: dadosSimuladorSeguro,
+                historicoContribuicao: listaHistoricoContribuicao,
+                dataSimulador: {
+                    titulo: "Simulador </br>de Empréstimo",
+                    descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
+                    slider: { 
+                              min: 12,
+                              max: 60,
+                              value: 24,
+                              step: 1
+                            }
+                }
+            },  
+            created() {
+                sessionStorage.ultimaPagina = 'home'
+            },      
+            methods: { 
+                forceRerender() {
+                    this.componentKey += 1;  
+                },
+                error(){
+                    page('/erro')
+                },        
+                toggleCategory: function() {
+                    this.toggle = !this.toggle;
+                },
+                removerCampanha: function(campanha) {
+                    campanha.ativo = false                
+                    firebaseHelper.removerCampanha(this.chave, campanha.nome)
+                },
+                contratarCampanha(link) {
+                    sessionStorage.ultimaPagina = 'home'
+                    page(`/${link}`)
+                },
+                simuladorSeguro(link) {
+                    sessionStorage.ultimaPagina = 'home'
+                    page(`/${link}`)
+                },
+                simuladorRenda(link, origem) {
+                    sessionStorage.ultimaPagina = origem
+                    page(`/${link}`)
+                },
+                contratacaoAberta() {
+                    sessionStorage.ultimaPagina = 'home'
+                    page('/contratacao-aberta')
+                }
+            },
+            errorCaptured:function(err, component, details) {
+                alert(err);
+                page('/erro')
+            }
+          })
+            this.vueObj.$mount('#app');           
+        } else {
+            this.vueObj.home = this.data_Home
+            this.vueObj.contribuicaoAberta = this.consulta_contribuicao
+            this.vueObj.rendaSimulador = dadosSimuladorRenda
+            this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
+            this.vueObj.seguroSimulador = dadosSimuladorSeguro
+            this.vueObj.$forceUpdate()   
+            this.vueObj.forceRerender()
+            console.log('this.vueObj',this.vueObj)
+        }    
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
     firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
@@ -262,7 +330,7 @@ export default class Home {
     })
 
     let p2 = new Promise((resolve, reject) => {
-      if (Object.keys(this.participante).length === 0) {
+      //if (Object.keys(this.participante).length === 0) {
         resolve(this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
           if (part===null) {
             return false
@@ -271,10 +339,10 @@ export default class Home {
             return true
           }
         }))  
-      } else {
-        resolve(this.participante)
-        return true
-      }
+      //} else {
+      //  resolve(this.participante)
+      //  return true
+      //}
     })
 
     return Promise.all([p1, p2]).then(async (retPromises) => {
@@ -308,27 +376,20 @@ export default class Home {
 
           // busca chave em usuario
           if (chave.substring(0,4) === 'usr_') {
+            // console.log('&&&& chave', chave)
+            // console.log('&&&& valor', part)
             valor = part
-
-            if (chave === 'usr_contribuicao.lista_itens_contribuicao') {
-              console.log('************** valor inicial', valor)
-            }
-  
-
             for (let i in caminho) {
+              //console.log('&&&& caminho[i]', caminho[i])              
               if (valor[caminho[i]]!==undefined) {
                 achouCaminhoPart = true
                 valor = valor[caminho[i]]
-                if (chave === 'usr_contribuicao.lista_itens_contribuicao') {
-                  console.log('************** valor indo...', valor)
+                if (chave === 'usr_projeto_vida.acao.vigente') {
+                  //console.log('===> ', valor)
                 }
     
               }
             }  
-          }
-
-          if (chave === 'usr_contribuicao.lista_itens_contribuicao') {
-            console.log('************** usr_contribuicao.lista_itens_contribuicao', valor)
           }
 
           // busca chave em segmento
@@ -356,14 +417,14 @@ export default class Home {
           }
         }
         this.data_Home = JSON.parse(stringHome)
-        console.log('this.data_Home', this.data_Home)
+        //console.log('this.data_Home', this.data_Home)
         return this.data_Home
       }
     })
   }
   
   'refreshHome'(item, vigente, origem, chave) {
-    console.log('====> refreshing home')
+    //console.log('====> refreshing home')
     return this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
       if (!vigente) { //se for para desligar, não precisa avaliar critério
         this.data_Home[item].vigente = vigente 

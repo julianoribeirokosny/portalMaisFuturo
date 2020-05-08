@@ -1,11 +1,11 @@
 'use strict';
 
-import VueSlider from 'vue-slider-component';
-import 'vue-slider-component/theme/antd.css';
-import page from 'page';
-import simuladorEmprestimo from './simuladorEmprestimo.html';
-import './simuladorEmprestimo.css';
-import Contratacao from '../contratacao/contratacao';
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/antd.css'
+import page from 'page'
+import simuladorEmprestimo from './simuladorEmprestimo.html'
+import './simuladorEmprestimo.css'
+import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 
 const financeiro = require('../../../functions/Financeiro')
@@ -120,8 +120,9 @@ export default {
         }
     },    
     created(){   
-        //console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)      
-        if(this.dados.emprestimoSolicitado != null) {
+        //console.log('this.dados.emprestimoSolicitado',this.dados)
+        //console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)
+        if(this.dados.emprestimoSolicitado.dados != null) {
             this.emprestimoSolicitado = true            
         } else {
             this.dados.pre_aprovado = financeiro.float_to_string(this.dados.pre_aprovado.toFixed(2))
@@ -239,7 +240,7 @@ export default {
             this.taxa_mensal = ((1 + this.dados.taxa_mensal/100) * (Math.pow(1 + (this.dados.indice_anterior/100), (dias / 30))) - 1) * 100;
         },        
         voltar() {
-            page('/homne')
+            page(`/${sessionStorage.ultimaPagina}`)
         },
         cancelarContratacao(value) {
             this.simulador = value

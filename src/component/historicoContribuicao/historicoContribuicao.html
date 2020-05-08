@@ -1,0 +1,35 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
+    <!--Historico de Contribuicao-->        
+   <div class="mdl-card__supporting-text mdl-card-container div-container gridTitle" style="margin-top: 20px;">
+      <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>
+      <!-- <div class="SectionImg"><img src="../../../public/images/Download_historico.png" width="66" height="70"/></div> -->
+   </div>
+   <!-- Tabela Histórico de Contribuição Div-->
+   <div class="mdl-card__supporting-text mdl-card-container div-container gridHeader">
+      <div class="TableHeader" style="color:#033166;font-weight: 600;">Competência </div>
+      <div class="TableHeader" style="color:#033166;font-weight: 600;">Valor (R$)</div>
+      <div class="TableHeader" style="color:#033166;font-weight: 600;">Status</div>
+   </div>
+   <div class="mdl-card__supporting-text mdl-card-container div-container grid Div_Table-Desgin" v-for="item in historico.slice().reverse()">
+      <div class="TableText" style="color:#033166;font-weight: 600;">{{item.anoMes}}</div>
+      <div class="TableText" style="color:#033166;font-weight: 600;">{{item.valor}}</div>
+      <template v-if="item.pago">
+         <div class="TableImg"><img src="../../../public/images/Check.png" width="14" height="10" alt=""/></div>
+      </template>
+      <template v-else>
+         <div class="TableImg" style="cursor: pointer;" @click="showModal">
+            <img src="../../../public/images/Boleto.png" width="30" height="20" alt="Boleto"/>            
+         </div>
+      </template>
+   </div>
+   <!-- The Modal -->
+   <div id="myModal" ref="myModal" class="modal" @click="closeModal">
+      <!-- Modal content -->
+      <div class="modal-content">
+         <span class="close" @click="closeModal">&times;</span>
+         <h3 style="margin: 12px 0;">Legal!!!</h3>
+         <p>Você esta acessando nosso novo porta em versão beta.</p>
+         <p>Nesse momento seu boleto não está disponível.</p>
+      </div>   
+   </div>   
+</div>    

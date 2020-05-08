@@ -61,7 +61,7 @@ export default {
             }            
         },
         retornar(){
-            page('/home')
+            page(`/${sessionStorage.ultimaPagina}`)
         }
     }
 }
