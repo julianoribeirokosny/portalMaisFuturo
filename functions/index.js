@@ -7,6 +7,9 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'pgCarga') {
   exports.pgCarga = require('./pgCarga').default;
 }
 
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'pgCargaHistContrib') {
+  exports.pgCargaHistContrib = require('./pgCargaHistContrib').default;
+} 
 
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'resetEmailVerified') {
   exports.resetEmailVerified = require('./resetEmailVerified').default;

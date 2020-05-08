@@ -21,6 +21,7 @@ const runtimeOpts = {
 var logProcessamento = {}
 var dataProcessamento
 var dataBase, anoMes
+const taxaAumentoSugestao = 1.20
 
 /*************************************************
 ***********
@@ -44,7 +45,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   }
 
   dataBase = change.after.val()
-  anoMes = dataBase.substring(5, 6) + '-' + dataBase.substring(0, 3)
+  anoMes = dataBase.substring(5, 7) + '/' + dataBase.substring(0, 4)
   let plano = context.params.plano
 
   // inclui parametro de data de competência nos Selects
@@ -55,6 +56,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
   dataProcessamento = utils.dateFormat(new Date(), true, false)
   logProcessamento[dataProcessamento] = {
+    tipo: 'Carga Mensal',
     plano: plano,
     inicio: dataProcessamento.substring(-8),
     fim: '',
@@ -140,11 +142,20 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       return false
     }
     let chave = '', usr
-    let listaItensContribuicaoChave = [], listaValoresContribuicaoChave = [], listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}, listaItensProjetoDeVidaProjecao = {}, listaItensProjetoDeVidaCoberturas = {},listaMesesProjetoDeVida = {}
+    let listaItensContribuicaoChave = {
+      participante: { eventos: [], nome: '', valor: 0},
+      patronal: { eventos: [], nome: '', valor: 0}, 
+      seguro: { eventos: [], nome: '', valor: 0}
+    }
+    let listaValoresContribuicaoChave = [], listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}, listaItensProjetoDeVidaProjecao = {}, listaItensProjetoDeVidaCoberturas = {},listaMesesProjetoDeVida = {}
     let usuarioContrib = {
       contribParticipante: 0,
       contribParticipantePlanoPatrocinado: 0,
       contribEmpresa: 0,
+      contribRisco: 0
+    }
+    let usuarioContribCadastro = {
+      contribParticipante: 0,
       contribRisco: 0
     }
     console.log('#pgCarga - iniciando forEach', retDadosPG)
@@ -170,6 +181,18 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         //console.log('====> Bloqueando participante: ', rowDados.chave, rowDados.cad_sitpart)
       } else {
         if (chave !== rowDados.chave) {
+
+          //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
+          if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
+            usuarioContrib.contribParticipante = usuarioContribCadastro.contribParticipante
+            if (usuarioContrib.contribRisco === 0) {
+              usuarioContrib.contribRisco = usuarioContribCadastro.contribRisco
+            }
+            if (usuarioTotalContr.valor === 0) {
+              usuarioTotalContr.valor = usuarioContribCadastro.contribParticipante + usuarioContribCadastro.contribRisco
+            }        
+          } 
+
           if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
             let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
             let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
@@ -191,23 +214,25 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensProjetoDeVidaProjecao[0] = {
               cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
               nome: 'Renda projetada',
-              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3],2)
+              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, true)
             }            
             listaItensProjetoDeVidaProjecao[1] = {
               cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
               nome: 'Reserva projetada',
-              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2],2)
+              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, true)
             }     
-  
+            
+            let valorContribProjetada = retGraficoReservaCompleto[4] 
+
             listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
   
             //salva informações acumuladas do usuário
             usuarios = incluiUsuarioCadastroJSON (usuarios, chave, usr)
             usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
             usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)            
-            usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
-            usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
-            usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
+            usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2, false)
+            usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2, false)
+            usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribProjetada)
           }
           //carrega dados novo registro do usuário
           chave = rowDados.chave              
@@ -244,7 +269,11 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           }
           
           //Bloco estrutura valores de contribuição
-          listaItensContribuicaoChave = []
+          listaItensContribuicaoChave = {
+            participante: { eventos: [], nome: '', valor: 0},
+            patronal: { eventos: [], nome: '', valor: 0}, 
+            seguro: { eventos: [], nome: '', valor: 0}
+          }
           listaValoresContribuicaoChave = []
           usuarioTotalContr =  {
             color: "<<seg_contribuicao.total.color>>",
@@ -255,6 +284,10 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             contribParticipante: 0,
             contribParticipantePlanoPatrocinado: 0,
             contribEmpresa: 0,
+            contribRisco: 0
+          }
+          usuarioContribCadastro = {
+            contribParticipante: 0,
             contribRisco: 0
           }
 
@@ -270,17 +303,17 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensReservaChave[0] = {
             cor: '<<seg_saldo_reserva.itens.0.cor>>',
             nome: rowDados.res_nomesaldototal,
-            valor: financeiro.valor_to_string_formatado(rowDados.res_saldototal,2)
+            valor: financeiro.valor_to_string_formatado(rowDados.res_saldototal, 2, false)
           }
           listaItensReservaChave[1] = {
             cor: '<<seg_saldo_reserva.itens.1.cor>>',
             nome: rowDados.res_nomesaldoparticipante,
-            valor: financeiro.valor_to_string_formatado(rowDados.res_saldoparticipante,2)
+            valor: financeiro.valor_to_string_formatado(rowDados.res_saldoparticipante, 2, false)
           }
           listaItensReservaChave[2] = {
             cor: '<<seg_saldo_reserva.itens.2.cor>>',
             nome: rowDados.res_nomesaldopj,
-            valor: financeiro.valor_to_string_formatado(rowDados.res_saldopj,2)
+            valor: financeiro.valor_to_string_formatado(rowDados.res_saldopj, 2, false)
           }
           listaValoresReservaChave[0] = rowDados.res_saldoparticipante
           listaValoresReservaChave[1] = rowDados.res_saldopj
@@ -292,14 +325,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
           //Bloco estrutura valores cobertura risco/seguro
           //MOrte
-          let capitalMorte = rowDados.cob_capitalmorte !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalmorte,2) : 0
+          let capitalMorte = rowDados.cob_capitalmorte !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalmorte, 2, false) : 0
           listaItensCoberturas[0] = {
             cor: '<<seg_coberturas.lista_itens_coberturas.0.cor>>',
             nome: rowDados.cob_nomecapitalmorte,
             valor: capitalMorte === 0 ? '(não contratado)' : capitalMorte
           }
           //Invalidez
-          let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalinvalidez,2) : 0
+          let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalinvalidez, 2, false) : 0
           listaItensCoberturas[1] = {
             cor: '<<seg_coberturas.lista_itens_coberturas.1.cor>>',
             nome: rowDados.cob_nomecapitalinvalidez,
@@ -325,7 +358,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaCoberturas[0] = {
             cor: '<<seg_projeto_vida.itens.coberturas.0.cor>>',
             nome: rowDados.cob_nomecapitalmorte,
-            valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte,2)
+            valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte, 2, false)
           }
   
           //cobertura por Invalidez
@@ -346,11 +379,17 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaCoberturas[1] = {
             cor: '<<seg_projeto_vida.itens.coberturas.1.cor>>',
             nome: rowDados.cob_nomecapitalinvalidez,
-            valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez,2)
+            valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez, 2, false)
           }            
   
         } 
   
+        usuarioContribCadastro.contribParticipante = rowDados.cad_valorcontr === null ? 0 : rowDados.cad_valorcontr
+        usuarioContribCadastro.contribRisco = rowDados.cob_premiomorte === null ? 0 : rowDados.cob_premiomorte
+        if (rowDados.cob_premioinvalidez !== null) {
+          usuarioContribCadastro.contribRisco += rowDados.cob_premioinvalidez
+        }
+
         let éContribSaldo = false, éContribSaldo13 = false, éContribSaldoPartPlanoPatroc = false, éContribSeguro = false, éContribPartEmpresa = false
 
         if (rowDados.contr_eventocod !== null) {
@@ -362,30 +401,60 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         }
         //console.log('***> rowDados.contr_eventocod', rowDados.contr_eventocod, contribSaldo, contribSaldo13, contribSaldoPartPlanoPatroc, contribSeguro)
         if (éContribSaldo || éContribSaldo13 || éContribSaldoPartPlanoPatroc || éContribSeguro || éContribPartEmpresa) {
-          listaItensContribuicaoChave.push({
-            cor: `<<seg_contribuicao.itens.${rowDados.contr_eventocod}.cor>>`,
-            nome: rowDados.contr_eventonome,
-            valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2)
-          })
-          listaValoresContribuicaoChave.push(rowDados.contr_valor)
           usuarioTotalContr.valor += rowDados.contr_valor
-          if (éContribSaldo || éContribSaldo13) { 
-            usuarioContrib.contribParticipante += rowDados.contr_valor
-          }  
+          listaValoresContribuicaoChave.push(rowDados.contr_valor)
           if (usr.tipoPlano === 'jmalucelli' && éContribSaldoPartPlanoPatroc) {
             usuarioContrib.contribParticipantePlanoPatrocinado += rowDados.contr_valor
           }
+
+          if (éContribSaldo || éContribSaldo13 || éContribSaldoPartPlanoPatroc) { 
+            usuarioContrib.contribParticipante += rowDados.contr_valor
+            listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
+            listaItensContribuicaoChave.participante.valor += rowDados.contr_valor
+            listaItensContribuicaoChave.participante.eventos.push({
+              cor: `<<seg_contribuicao.itens.${listaItensContribuicaoChave.participante.eventos.length}.cor>>`,
+              nome: rowDados.contr_eventonome,
+              valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
+            })  
+          }  
           if (éContribSeguro) {
             usuarioContrib.contribRisco += rowDados.contr_valor
+            listaItensContribuicaoChave.seguro.nome = 'Contribuição de risco'
+            listaItensContribuicaoChave.seguro.valor += rowDados.contr_valor            
+            listaItensContribuicaoChave.seguro.eventos.push({
+              cor: `<<seg_contribuicao.itens.${listaItensContribuicaoChave.seguro.eventos.length}.cor>>`,
+              nome: rowDados.contr_eventonome,
+              valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
+            })  
           }
           if (éContribPartEmpresa) {
             usuarioContrib.contribEmpresa += rowDados.contr_valor
+            listaItensContribuicaoChave.patronal.nome = 'Contribuição empresa'
+            listaItensContribuicaoChave.patronal.valor += rowDados.contr_valor                        
+            listaItensContribuicaoChave.patronal.eventos.push({
+              cor: `<<seg_contribuicao.itens.${listaItensContribuicaoChave.patronal.eventos.length}.cor>>`,
+              nome: rowDados.contr_eventonome,
+              valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
+            })  
           }
         }  
       } 
     })
 
     if (chave!=='') {
+      //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
+      if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
+        usuarioContrib.contribParticipante = usuarioContribCadastro.contribParticipante
+        listaItensContribuicaoChave.participante.valor = usuarioContribCadastro.contribParticipante
+        if (usuarioContrib.contribRisco === 0) {
+          usuarioContrib.contribRisco = usuarioContribCadastro.contribRisco
+          listaItensContribuicaoChave.seguro.valor = usuarioContribCadastro.contribRisco
+        }
+        if (usuarioTotalContr.valor === 0) {
+          usuarioTotalContr.valor = usuarioContribCadastro.contribParticipante + usuarioContribCadastro.contribRisco
+        }        
+      } 
+
       let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
       let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
       listaDatasetsProjetoDeVida[2] = {
@@ -405,13 +474,15 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaItensProjetoDeVidaProjecao[0] = {
         cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
         nome: 'Renda projetada',
-        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3],2)
+        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, true)
       }            
       listaItensProjetoDeVidaProjecao[1] = {
         cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
         nome: 'Reserva projetada',
-        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2],2)
+        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, true)
       }     
+
+      let valorContribProjetada = retGraficoReservaCompleto[4]
 
       listaMesesProjetoDeVida = retGraficoReservaCompleto[1]
 
@@ -419,22 +490,24 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       usuarios = incluiUsuarioCadastroJSON (usuarios, chave, usr)
       usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
       usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)
-      usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2)
-      usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2)
-      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida)
+      usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2, false)
+      usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2, false)
+      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribProjetada)
     }
     
     //insere registros de testes
     usuarios = insereRegistroTestesHome(usuarios, '9999-0001', 'Leandro')
-    usuarios = insereRegistroTestesHome(usuarios, '9999-0002', 'Juliano')
+    //usuarios = insereRegistroTestesHome(usuarios, '9999-0002', 'Juliano')
 
     //salva dados anteriores dos usuários em usuariosHistorico
     ref = admin.database().ref('usuariosHistorico')
     let usrHistorico = {}
     usrHistorico[dataProcessamento] = JSON.stringify(usrAnterior)
+    //return ref.remove()
+    //.then(() => {
     return ref.update(usrHistorico).then(() => {
       //ref = admin.database().ref('usuarios')
-      //return ref.remove() //apaga para garantir que somente participantes da base na competência terão valores disponiveis para o app
+      //return ref.remove() 
     //}).then(() => {      
       console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios))
       ref = admin.database().ref(`usuarios`)
@@ -467,7 +540,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
 })
 
-function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida) {
+function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribProjetada) {
   //carrega estrutura da Home
   usuarios[chave].home = {
     usr_vigente: true,
@@ -484,7 +557,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_taxaPadrao: usr.taxa,
     usr_contribuicao: {
       acao: {
-        valor_contribuicao_potencial: calculaContribuicaoPotencial(),
+        valor_contribuicao_potencial: calculaContribuicaoProjetada(valorContribProjetada),
         valor_deducao_potencial: calculaDeducaoPotencial(),
         vigente: true
       },
@@ -510,7 +583,8 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_projeto_vida : {
       acao: {
         valor_renda_potencial: calculaRendaPotencial(),
-        valor_reserva_potencial: calculaReservaPotencial(),
+        valor_reserva_potencial: calculaReservaPotencial(listaItensProjetoDeVidaProjecao[1].valor),
+        valor_contribuicao_projetada: valorContribProjetada,
         vigente: true
       },
       lista_datasets_projetoDeVida: listaDatasetsProjetoDeVida,
@@ -529,7 +603,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
 
 function incluiUsuarioValoresJSON (usuarios, chave, listaUsuarioContrib, reservaHoje, reservaFutura, rendaFutura, totalContrib) { 
   //carrega estrutura de informações
-  usuarios[chave].valores = {
+  usuarios[chave].data.valores = { 
     contribParticipante: listaUsuarioContrib.contribParticipante,
     contribParticipantePlanoPatrocinado: listaUsuarioContrib.contribParticipantePlanoPatrocinado,
     contribEmpresa: listaUsuarioContrib.contribEmpresa,
@@ -537,21 +611,49 @@ function incluiUsuarioValoresJSON (usuarios, chave, listaUsuarioContrib, reserva
     contribTotal: totalContrib,
     reservaTotalAtual: reservaHoje,
     reservaTotalFutura: reservaFutura,
-    rendaMensalFutura: rendaFutura
+    rendaMensalFutura: rendaFutura,
+    historicoContribuicao: usuarios[chave].valores && usuarios[chave].valores.historicoContribuicao ? usuarios[chave].valores.historicoContribuicao : ''
   }
 
   return usuarios
 }
 
 function incluiUsuarioHistContribJSON (usuarios, chave, listaUsuarioContrib, anoMes) { 
+
   //carrega estrutura de informações
-  let anoMesJson = {}
-  anoMesJson[anoMes] = {
-    valor: listaUsuarioContrib.contribParticipante + listaUsuarioContrib.contribParticipantePlanoPatrocinado + listaUsuarioContrib.contribRisco,
-    linkBoleto: '',
-    pago: true
+  let dataJson = {}
+  let valorTotalContrib = listaUsuarioContrib.contribParticipante + listaUsuarioContrib.contribParticipantePlanoPatrocinado + listaUsuarioContrib.contribRisco
+  let pago = valorTotalContrib > 0
+  dataJson = {
+    anoMes: anoMes,
+    valor: valorTotalContrib,
+    linkBoleto: pago ? '' : 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/usuarios%2F9999-0002%2Fboleto_201902.pdf?alt=media&token=9bc86daf-40c3-4384-96e7-d1c1e4dd6d80',
+    pago: pago
   }
-  usuarios[chave].valores.historicoContribuicoes = anoMesJson
+  let historicoMesJson 
+
+  if (usuarios[chave].data.valores.historicoContribuicao === undefined || usuarios[chave].data.valores.historicoContribuicao === '') {
+    historicoMesJson = {0: dataJson}
+  } else {
+    //procedimento abaixo para sempre manter a sequencia
+    historicoMesJson = {}
+    let item = 0 //usuarios[chave].valores.historicoContribuicao.length
+    let achou = false
+    //verifica se já não foi carregada
+    Object.keys(usuarios[chave].data.valores.historicoContribuicao).forEach((k) => {
+      historicoMesJson[item] = usuarios[chave].data.valores.historicoContribuicao[k]
+      if (historicoMesJson[item].anoMes === anoMes) {
+        historicoMesJson[item] = dataJson  //substitui
+        achou = true
+      }
+      item++
+    });
+    if (!achou) {
+      historicoMesJson[item] = dataJson
+    }
+  }
+
+  usuarios[chave].data.valores.historicoContribuicao = historicoMesJson
 
   return usuarios
 }
@@ -590,11 +692,11 @@ function incluiUsuarioCadastroJSON(usuarios, chave, usr) {
     }
   }
 
-  if (usuarios[chave]) { //se já há registro anterior do usuário, só atualiza
-    usuarios[chave].cadastro = cadastro
+  if (usuarios[chave] !== undefined && usuarios[chave].data !== undefined) { //se já há registro anterior do usuário, só atualiza
+    usuarios[chave].data.cadastro = cadastro
   } else { //caso contrário, cria o objeto dentro do usuario
     usuarios[chave] = {
-      cadastro: cadastro
+      data: {cadastro: cadastro}
     }
   }
 
@@ -611,23 +713,28 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
     0: "Adesão"
   }
 
-  //calculo da reserva aos 65 anos ou a idade + 5 se for mais velho que 65..
+  
+  //calculo de IdadeApos, datas e tempos
+  let idadeNaAdesao = utils.diffDatasEmAnos(dataNasc, dataAdesao)
   let idadeApos = 65
-  if (idade > '64') {
-    idadeApos = Number(idade) + 5
+  if (idadeNaAdesao > 55) {
+    idadeApos = idadeNaAdesao + 10
   }
-
-  //calculo de datas e tempos
+  if (idade > idadeApos) {
+    idadeApos = idade
+  }
+  let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
   let dataAposentadoria = financeiro.calculaDataInicioRenda(dataNasc, idadeApos)
   let difMesesHojeAposentadoria = utils.diffDatasEmMeses(new Date(), dataAposentadoria)
   let difMesesDaAdesaoAposentadoria = utils.diffDatasEmMeses(dataAdesao, dataAposentadoria)
-  let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
 
   let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
   //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
   let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxa, (15*12)) //calculo de renda por 15 anos            
   //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
   
+  let valorContribProjetada = financeiro.calculaContribProjetada(taxa, difMesesHojeAposentadoria, valorHoje, valorReservaAposentadoria)
+
   //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e idadeAposentadoria
   let crescPorFaixas = difMesesDaAdesaoAposentadoria / 5
   let aIdades = [
@@ -679,11 +786,11 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
     retDataset[5] = valorReservaAposentadoria    //inclui valor projetado de 65 anos na última faixa
   }
 
-  return [retDataset, retListaMeses, valorReservaAposentadoria, valorRendaAposentadoria]
+  return [retDataset, retListaMeses, valorReservaAposentadoria, valorRendaAposentadoria, valorContribProjetada]
 }
 
-function calculaContribuicaoPotencial() {
-  return 1000
+function calculaContribuicaoProjetada(valorContribProjetada) {
+  return utils.valorFormatoDesc(valorContribProjetada)
 }
 
 function calculaDeducaoPotencial() {
@@ -694,8 +801,12 @@ function calculaRendaPotencial() {
   return 5000
 }
 
-function calculaReservaPotencial() {
-  return '1,2 Mi'
+function calculaReservaPotencial(reservaProjetadaAtual) {
+  console.log('===> reservaProjetadaAtual', reservaProjetadaAtual)
+  reservaProjetadaAtual = parseFloat(reservaProjetadaAtual.replace('.','').replace(',','.'))
+  reservaProjetadaAtual = reservaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
+  console.log('===> reservaProjetadaAtual', reservaProjetadaAtual)
+  return utils.valorFormatoDesc(reservaProjetadaAtual)
 }
 
 function validaSegmento() {
@@ -930,8 +1041,29 @@ function insereRegistroTestesHome(usuarios, chave, apelido){
         "contribRisco": 88.52,
         "rendaMensalFutura" : 543.67,
         "reservaTotalAtual" : 34436.16,
-        "reservaTotalFutura" : 100468.42
-      },
+        "reservaTotalFutura" : 100468.42,
+        "historicoContribuicao" : 
+          [ {
+            "anoMes" : "01/2019",
+            "pago" : true,
+            "valor" : "40,96"
+          }, {
+            "anoMes" : "02/2019",
+            "pago" : false,
+            "linkBoleto": "https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/usuarios%2F9999-0002%2Fboleto_201902.pdf?alt=media&token=9bc86daf-40c3-4384-96e7-d1c1e4dd6d80",
+            "valor" : "47,56"
+          }, {
+            "anoMes" : "03/2019",
+            "pago" : false,
+            "linkBoleto": "https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/usuarios%2F9999-0002%2Fboleto_201902.pdf?alt=media&token=9bc86daf-40c3-4384-96e7-d1c1e4dd6d80",
+            "valor" : "51,56"
+          }, {
+            "anoMes" : "04/2019",
+            "pago" : true,
+            "valor" : "47,56"
+          } 
+        ]
+      },          
       "cadastro": {
         "dados_bancarios" : {
           "agencia" : "0001",

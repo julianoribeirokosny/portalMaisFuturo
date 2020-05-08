@@ -26,17 +26,57 @@ module.exports =  {
     //n: int
     //return: float.toFixed(2) 2 casas decimais
     pgto(pv, i, n) {
+        if (n===0) n = 1
         return  (pv * (i/100) * Math.pow(1 + (i/100), n) / (Math.pow(1 + (i/100), n) - 1 )).toFixed(2)
     },
+
+    pgto_com_Pv(i, n, pv, fv, type) {
+        var pmt, pvif;
+
+        fv || (fv = 0);
+        type || (type = 0);
+
+        n = Number(n)
+        pv = parseFloat(pv)
+        fv = parseFloat(fv)
+        i = parseFloat(i)
+    
+        if (n===0) n = 1
+        if (i === 0) return -(pv + fv)/n;
+    
+        pvif = Math.pow(1 + (i/100), n);
+        //console.log('===> n', n, '- i', i, ' - pv', pv, ' - pvif', pvif, ' - fv', fv )
+        pmt = (i/100) / (pvif - 1) * -(pv * pvif + fv);        
+        
+        //pmt = i * pv * (pvif + fv) / (pvif - 1);
+    
+        if (type === 1)
+            pmt /= (1 + (i/100));
+            
+        return (pmt * -1);
+    },    
 
     float_to_string(num) {    
         //num = num.toFixed(2)
         return String(String(num).replace('.',',')).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
     },
 
-    valor_to_string_formatado(num, casasDecimais) {
-        let numFormatado = num.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
-        numFormatado = numFormatado.replace(',','#').replace('.',',').replace('#','.')
+    valor_to_string_formatado(num, casasDecimais, incluiCifrao) {
+        console.log('===> num', num, ' - casasDecimais', casasDecimais)
+        let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
+        console.log('===> numFormatado0', numFormatado)
+        if (incluiCifrao) {
+            numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
+        } else {
+            numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
+        }
+        console.log('===> numFormatado1', numFormatado)
+        numFormatado = numFormatado.replace(',','#')
+        console.log('===> numFormatado2', numFormatado)
+        numFormatado = numFormatado.replace('.',',')
+        console.log('===> numFormatado3', numFormatado)
+        numFormatado = numFormatado.replace('#','.')
+        console.log('===> numFormatado4', numFormatado)
         return numFormatado
     },
 
@@ -74,15 +114,23 @@ module.exports =  {
         return qtdMeses <= 0 ? 0 : qtdMeses;
     },
 
-    calculaRendaFutura(reservaTotal, taxaAnual, qtdAnosRenda) {
+    calculaRendaFutura(reservaTotalFutura, taxaAnual, qtdAnosRenda) {
         let taxaMensal = this.calculaTaxaMensal(taxaAnual)
         //console.log('===> taxaMensal', taxaMensal)
-        let rendaMensal = this.pgto(reservaTotal, taxaMensal, (qtdAnosRenda*12))            
+        let rendaMensal = this.pgto(reservaTotalFutura, taxaMensal, (qtdAnosRenda*12))            
         return rendaMensal
     },
 
+    calculaContribProjetada(taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura) {
+        console.log('===> taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura', taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura)
+        let taxaMensal = this.calculaTaxaMensal(taxaAnual)
+        console.log('===> taxa mensal', taxaMensal)
+        let contribMensal = this.pgto_com_Pv(taxaMensal, qtdMesesAteHoje, reservaHoje, reservaTotalFutura, 1)
+        return contribMensal
+    },
+
     calculaTaxaMensal(taxaAnual) {
-        return Math.pow(taxaAnual/100+1, 1/12)-1
+        return (Math.pow(taxaAnual/100+1, 1/12)-1) * 100
     },
 
     calculaDataInicioRenda(dataNasc, idadeApos) {

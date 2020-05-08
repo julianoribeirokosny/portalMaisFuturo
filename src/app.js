@@ -91,44 +91,33 @@ const div_continue = document.querySelector('#div-continue');
 
 // if the app can be installed emit beforeinstallprompt
 window.addEventListener('beforeinstallprompt', e => {
-  div_continue.style.display = 'none';
-  div_install.style.display = 'block';
-
   // prevent default event
   e.preventDefault();
-
   // store install avaliable event
   window.deferredPrompt = e;
 
+  addTohome()
+});
+
+install_button.style.display = Utils.validaAppInstalado() ? 'none' : 'block'
+
+// do action when finished install
+window.addEventListener('appinstalled', e => {
+  console.log("success app install!");
+});
+
+function addTohome() {
+  div_continue.style.display = 'none';
+  div_install.style.display = 'block';
+
   // wait for click install button by user
   install_button.addEventListener('click', e => {
-    window.deferredPrompt.prompt();
-    window.deferredPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === 'accepted') {
-        // user accept the prompt
-        div_install.style.display = 'none';
-        div_continue.style.display = 'block';
-      } else {
-        console.log('User dismissed the prompt');
-      }
-      window.deferredPrompt = null;
-    });
+    promptAddHome()
   });
 
   // wait for click install button by user
   install_button.addEventListener('touchstart', e => {
-    window.deferredPrompt.prompt();
-    window.deferredPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === 'accepted') {
-        // user accept the prompt
-        install_button.style.display = 'none';
-        div_continue.style.display = 'block';
-        //continue_button.style.display = 'block';
-      } else {
-        console.log('User dismissed the prompt');
-      }
-      window.deferredPrompt = null;
-    });
+    promptAddHome()
   });
 
   continue_button.addEventListener('click', e => {
@@ -138,12 +127,21 @@ window.addEventListener('beforeinstallprompt', e => {
   install_button.addEventListener('touchstart', e => {
     page('/')
   });
+}
 
-});
-
-install_button.style.display = Utils.validaAppInstalado() ? 'none' : 'block'
-
-// do action when finished install
-window.addEventListener('appinstalled', e => {
-  console.log("success app install!");
-});
+function promptAddHome() {
+  if (!window.deferredPrompt) {
+    return
+  }
+  window.deferredPrompt.prompt();
+  window.deferredPrompt.userChoice.then(choiceResult => {
+    if (choiceResult.outcome === 'accepted') {
+      // user accept the prompt
+      div_install.style.display = 'none';
+      div_continue.style.display = 'block';
+    } else {
+      console.log('User dismissed the prompt');
+    }
+    window.deferredPrompt = null;
+  });
+}

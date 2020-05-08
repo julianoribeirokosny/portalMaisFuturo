@@ -68,11 +68,32 @@ module.exports =  {
     },
 
     diffDatasEmAnos : function (dataMenor, dataMaior) {
+        if (!(dataMaior instanceof Date)) {
+            dataMaior = new Date(dataMaior)
+        }
+        if (!(dataMenor instanceof Date)) {
+            dataMenor = new Date(dataMenor)
+        }
         let anos = (dataMaior.getFullYear() - dataMenor.getFullYear())
         if (dataMaior.getMonth() < dataMenor.getMonth()) { //se não completou aniversário
             anos--
         }
         return anos <= 0 ? 0 : anos;        
     },
+
+    valorFormatoDesc : function (num) {
+        let ret = ''
+        if (Math.abs(num) > 999) {
+            console.log('===> num', num)
+            console.log('===> Math.sign(num)', Math.sign(num))
+            console.log('===> (Math.abs(num)/1000)', (Math.abs(num)/1000))
+            ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'mil' 
+        } else if (Math.abs(num) > 999999) {
+            ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'Mi' 
+        } else {
+            Math.sign(num)*Math.abs(num)            
+        }
+        return ret
+    }
 
 }

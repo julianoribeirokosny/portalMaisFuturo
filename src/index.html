@@ -528,7 +528,7 @@
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                       <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px;">
-                          <template v-if="home.contribuicao.itens.participante.nome" v-for="contribuicao in home.contribuicao.itens.participante.eventos">                          
+                          <template v-if="home.contribuicao.itens.participante.nome !== ''" v-for="contribuicao in home.contribuicao.itens.participante.eventos">                          
                               <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
                                   <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
                                   <span class="span-contribuicao-2">R$</span>
@@ -536,7 +536,7 @@
                                   <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
                               </div>
                           </template>
-                          <template v-if="home.contribuicao.itens.patronal.nome" v-for="contribuicao in home.contribuicao.itens.patronal.eventos">                          
+                          <template v-if="home.contribuicao.itens.patronal.nome !== ''" v-for="contribuicao in home.contribuicao.itens.patronal.eventos">                          
                               <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
                                   <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
                                   <span class="span-contribuicao-2">R$</span>
@@ -544,7 +544,7 @@
                                   <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
                               </div>
                           </template>
-                          <template v-if="home.contribuicao.itens.seguro.nome" v-for="contribuicao in home.contribuicao.itens.seguro.eventos">                          
+                          <template v-if="home.contribuicao.itens.seguro.nome !== ''" v-for="contribuicao in home.contribuicao.itens.seguro.eventos">                          
                               <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
                                   <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
                                   <span class="span-contribuicao-2">R$</span>
