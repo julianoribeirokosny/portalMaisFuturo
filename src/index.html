@@ -343,9 +343,9 @@
                         <div class="mdl-card__supporting-text div_mensagem">
                           {{ home.mensagem }}
                         </div>
-                        <div class="mdl-card__supporting-text div_mensagem" v-if="home.plano && home.tipo_plano">   
+                        <!-- <div class="mdl-card__supporting-text div_mensagem" v-if="home.plano && home.tipo_plano">   
                             {{ home.plano }} {{ home.tipo_plano }} <template v-if="home.competencia"> - {{ home.competencia }}</template>
-                        </div>
+                        </div> -->
                     </div>
                   </div>
               </template>
@@ -463,7 +463,7 @@
                       <template v-else>
                           <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">
                               <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
-                                  <span class="span-card-botton-projeto-vida">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
+                                  <span class="span-card-botton-projeto-vida">Você tem uma alteração de contribuição que estará vigente a parir do proximo mês, veja aqui</span>&nbsp;
                                   <i class="material-icons icon-button">arrow_forward</i>
                               </div>
                           </div>
@@ -669,7 +669,7 @@
           <!--Simulador Emprestimo-->
           <section id="page-simulador-emprestimo" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <simulador-emprestimo v-bind:dados="emprestimoSimulador"></simulador-emprestimo>
+              <simulador-emprestimo v-bind:dados="emprestimoSimulador" :key="componentKey"></simulador-emprestimo>
           </section> 
 
           <!--Rentabilidade-->
@@ -681,19 +681,19 @@
           <!--Simulador Seguro -->
           <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <simulador-seguro></simulador-seguro>
+              <simulador-seguro v-bind:dados="seguroSimulador" :key="componentKey"></simulador-seguro>
           </section>     
 
           <!--Simulador Renda-->
           <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <simulador-renda v-bind:dados="rendaSimulador"></simulador-renda>
+              <simulador-renda v-bind:dados="rendaSimulador" :key="componentKey"></simulador-renda>
           </section>
           
           <!--Consulta Contratação em Aberto-->
           <section id="page-contratacao-aberta" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <contratacao-aberta v-bind:dados="contribuicaoAberta"></contratacao-aberta>
+              <contratacao-aberta v-bind:dados="contribuicaoAberta" :key="componentKey"></contratacao-aberta>
           </section>
 
           <!--Cadastro-->

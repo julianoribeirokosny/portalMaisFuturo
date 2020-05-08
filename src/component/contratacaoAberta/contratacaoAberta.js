@@ -31,28 +31,33 @@ export default {
             finalizado: false,
             error_banco: false
         }
-    },
+    },       
     created(){   
-        if(this.dados.dados){          
-            let name = Object.getOwnPropertyNames(this.dados.dados).sort()
-            //console.log('Let Name',name)
-            this.id = name[0]           
-            this.contratacao = this.dados.dados[this.id]
-            this.tipo = this.contratacao.tipo
-            //console.log('Contratação Solicitada ===>',this.contratacao)
-            if(this.contratacao.valor_anterior) {
-                this.valor_anterior = financeiro.float_to_string(this.contratacao.valor_anterior.toFixed(2))
+        console.log('ContrataçãoAberta Created ===> ',this.dados)
+        this.carregarDados()
+    },    
+    methods: {
+        carregarDados(){
+            if(this.dados.dados){
+                let name = Object.getOwnPropertyNames(this.dados.dados).sort()
+                //console.log('Let Name',name)
+                this.id = name[0]           
+                this.contratacao = this.dados.dados[this.id]
+                this.tipo = this.contratacao.tipo
+                //console.log('Contratação Solicitada ===>',this.contratacao)
+                if(this.contratacao.valor_anterior) {
+                    this.valor_anterior = financeiro.float_to_string(this.contratacao.valor_anterior.toFixed(2))
+                }
+                if(this.contratacao.valor_solicitado) {
+                    this.valor_atual = financeiro.float_to_string(this.contratacao.valor_solicitado.toFixed(2))
+                }
+            } else {
+                this.finalizado = true
             }
-            if(this.contratacao.valor_solicitado) {
-                this.valor_atual = financeiro.float_to_string(this.contratacao.valor_solicitado.toFixed(2))
-            }
-        } else {
-            this.finalizado = true
-        }
-    },
-    methods: {             
+        },         
         retornaHome(){
-            page(`/${sessionStorage.ultimaPagina}`)
+            console.log('this.dados.dados',this.dados.dados)
+            page(`/${sessionStorage.ultimaPagina}`)            
         },
         cancelarContratacao() {            
             var contratacao = this.firebaseHelper.cancelarContratacao(this.dados.chave, this.id, this.tipo)            
@@ -62,6 +67,9 @@ export default {
                 this.finalizado = false
                 this.error_banco = true
             }
+        },
+        atualizaDados(dados) {
+            console.log('DadosAtualizados',dados)
         }
     }
 }

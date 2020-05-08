@@ -1,8 +1,7 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
         <template v-if="simulador">
-            <div class="div_titulo_card margin-auto" v-html="dados.titulo">            
-            </div>
+            <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>            
             <!--Planos Instituidos-->
             <div style="margin-top: 40px;" v-if="dados.usr_tipo_plano == 'instituido'">
                 <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
@@ -40,8 +39,7 @@
                         </p>
                     </div>                    
                 </div>           
-            </div>            
-            
+            </div>
             <!--Plano JMalucelli-->
             <div style="margin-top: 40px;" v-if="dados.usr_tipo_plano == 'jmalucelli'">
                 <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
@@ -92,7 +90,6 @@
                     </div>                    
                 </div>           
             </div>
-
             <div class="mdl-card__supporting-text mdl-card-container">                
                 <template v-if="dados.minimoContribuicao == contribuicao">
                     <div class="mdl-shadow--2dp div_btn_contratar"  @click="continuar('home')">

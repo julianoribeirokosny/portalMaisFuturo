@@ -7,7 +7,7 @@
                 {{ dados.msg_inicial }}
                 </p>
             </div>
-            <div class="grid" v-if="dados.resumo" style="margin-top: 30px;">
+            <div class="grid_contratacao" v-if="dados.resumo" style="margin-top: 30px;">
                 <template v-for="item in dados.resumo">                
                     <div v-html="item.nome"></div>
                     <div v-html="item.valor"></div>                                                   
@@ -32,10 +32,10 @@
                 <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
             </div>        
             <div style="margin-top: 30px;">
-                <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar" style="margin-top: 30px;">
+                <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar">
                     {{ dados.label_button }}
                 </div>  
-                <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="cancelar" style="margin-top: 30px; background-color: brown;">
+                <div class="mdl-shadow--2dp div_btn_voltar"  @click.prevent="cancelar">
                     Cancelar
                 </div>    
             </div>
