@@ -119,9 +119,7 @@ export default {
             },
         }
     },    
-    created(){   
-        //console.log('this.dados.emprestimoSolicitado',this.dados)
-        //console.log('this.dados.emprestimoSolicitado',this.dados.emprestimoSolicitado)
+    created(){
         if(this.dados.emprestimoSolicitado.dados != null) {
             this.emprestimoSolicitado = true            
         } else {
@@ -132,21 +130,23 @@ export default {
             this.principal = (this.maximo / 2).toFixed(0)
         }
     },
-    mounted(){
-        this.calcula_taxa_mensal();
-    },
+    // mounted(){
+    //     this.calcula_taxa_mensal();
+    // },
     methods: {      
         calcularParcela(){    
             let principal = parseFloat(this.principal.toString().replace(/\./g,''))
             if (principal > this.maximo) {
                 this.valido_maximo = false
+                this.valido_minimo = true
                 this.parcela = '0'
             } else if (principal < this.minimo) {
                 this.valido_minimo = false
+                this.valido_maximo = true
                 this.parcela = '0'
             } else {                
                 this.valido_maximo = true
-                this.valido_minimo = true
+                this.valido_minimo = true                
                 this.parcela = financeiro.float_to_string(financeiro.pgto(principal, this.taxa_mensal, this.quantidade))
             }
         },
@@ -232,13 +232,13 @@ export default {
                 this.simulador = false
             }            
         },
-        calcula_taxa_mensal() {  
-            const data_liberacao = new Date();
-            const inicio = new Date(data_liberacao.getFullYear(), data_liberacao.getMonth(), 1);
-            const diferenca = Math.abs(data_liberacao.getTime() - inicio.getTime());
-            const dias = Math.ceil(diferenca / (1000 * 60 * 60 * 24)) - 1;
-            this.taxa_mensal = ((1 + this.dados.taxa_mensal/100) * (Math.pow(1 + (this.dados.indice_anterior/100), (dias / 30))) - 1) * 100;
-        },        
+        // calcula_taxa_mensal() {  
+        //     const data_liberacao = new Date();
+        //     const inicio = new Date(data_liberacao.getFullYear(), data_liberacao.getMonth(), 1);
+        //     const diferenca = Math.abs(data_liberacao.getTime() - inicio.getTime());
+        //     const dias = Math.ceil(diferenca / (1000 * 60 * 60 * 24)) - 1;
+        //     this.taxa_mensal = ((1 + this.dados.taxa_mensal/100) * (Math.pow(1 + (this.dados.indice_anterior/100), (dias / 30))) - 1) * 100;
+        // },        
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
         },

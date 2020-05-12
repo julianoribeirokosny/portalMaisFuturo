@@ -79,6 +79,7 @@ export default class Home {
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
     }    
+    data_Home.perfil_investimento = 'Agressivo'
     
     //participante com inabilitado para acessar o portal
     if (!data_Home.vigente) {
@@ -92,7 +93,7 @@ export default class Home {
     this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
     this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
     this.consulta_contribuicao.chave = this.chave
-    console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
+    //console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
 
     this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
     this.consulta_emprestimo = new Object()
@@ -100,7 +101,7 @@ export default class Home {
     this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
     this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null
     this.consulta_emprestimo.chave = this.chave
-    console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
+    //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
 
     this.seguro_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado')
     this.consulta_seguro = new Object()
@@ -108,18 +109,18 @@ export default class Home {
     this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
     this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
     this.consulta_seguro.chave = this.chave
-    console.log('Consulta Seguro ====> ', this.consulta_seguro)
+    ////console.log('Consulta Seguro ====> ', this.consulta_seguro)
 
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorSeguro = {
       titulo: 'Simulador </br>de Seguro',
       tipo: 'Seguro',
-      coberturaInvalidez: 150000,
-      minimoInvalidez: 15000,
+      coberturaInvalidez: 200000,
+      minimoInvalidez: 10000,
       maximoInvalidez: 1500000,
       fatorInvalidez: 1.0163,
-      stepInvalidez: 15000,
+      stepInvalidez: 10000,
       coberturaMorte: 200000,
       minimoMorte: 10000,
       maximoMorte: 1500000,
@@ -132,6 +133,16 @@ export default class Home {
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
 
     let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
+
+    let infoNomePlano = document.querySelector('#displayInfoNomePlano')
+    infoNomePlano.innerHTML = this.data_Home.plano
+    let infoTipoPlano = document.querySelector('#displayInfoTipoPlano')
+    infoTipoPlano.innerHTML = this.data_Home.tipo_plano
+    let infoCompetencia = document.querySelector('#displayInfoCompetencia')
+    infoCompetencia.innerHTML = this.data_Home.competencia
+    let infoPerfilInvestimento = document.querySelector('#displayInfoPerfilInvestimento')
+    infoPerfilInvestimento.innerHTML = this.data_Home.perfil_investimento
+
     
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
@@ -147,12 +158,11 @@ export default class Home {
                   borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
                   borderColor: data_Home.saldo_reserva.grafico.borderColor,
               }]}, {cutoutPercentage: 88,              
-                legend: false});
+                legend: false,
+                tooltips: false,
+              });
         }
     });
-
-    //console.log('===> gráfico reserva ok')
-
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,
         mounted () {            
@@ -160,9 +170,7 @@ export default class Home {
             gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
             gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
             gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
-            data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
-
-            //console.log('Projeto de vida:',data_Home.projeto_vida.grafico.datasets);
+            data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;          
 
             this.renderChart({
                 labels: data_Home.projeto_vida.grafico.labels,
@@ -171,6 +179,7 @@ export default class Home {
                     responsive: true, 
                     maintainAspectRatio: false,                    
                     legend: false,
+                    tooltips: false,
                     scales: {
                         yAxes: [{
                             ticks: {
@@ -184,9 +193,6 @@ export default class Home {
             )
         }
     });
-
-    //console.log('===> projeto vida ok')
-
     Vue.component('contribuicao', {
         extends: VueCharts.Doughnut,        
         //template: '#contribuicao',
@@ -210,14 +216,12 @@ export default class Home {
               )
         }
     });
- 
     Vue.config.errorHandler = function(err, vm, info) {
         console.log(`Error: ${err.toString()}\nInfo: ${info}`);
         Erros.registraErro(auth, 'Vuejs Error', 'showHome')
         page('/erro')
     }
-    //console.log('===> gráfico contribuicao ok')
-
+    console.log('this.data_Home',this.data_Home)
     let auth = this.auth.currentUser.uid    
     
       if (!this.vueObj) {
@@ -241,6 +245,7 @@ export default class Home {
                 home: this.data_Home,
                 toggle: false,
                 chave: this.chave,
+                url_foto: this.auth.currentUser.photoURL,
                 uid: this.auth.currentUser.uid,
                 contribuicaoAberta: this.consulta_contribuicao,            
                 rendaSimulador: dadosSimuladorRenda,

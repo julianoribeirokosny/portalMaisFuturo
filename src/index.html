@@ -48,6 +48,85 @@
   <meta name="msapplication-TileImage" content="/images/icon-144x144.png"> 
   <meta name="msapplication-TileColor" content="#3372DF">
   <meta name="msapplication-navbutton-color" content="#303F9F">  
+  <style>
+    /* Info Top Home */
+    .divHomeSimulator {
+        background-image:url("Top2.png");
+        background-repeat:no-repeat;
+        background-position:left top;
+        width: 350px;
+        height: 50px;
+    }
+    .InfoIcon_Position {
+        margin-right: 5px;
+    }
+    .Rectangle_InfoTop {
+        filter: drop-shadow(0px 3px 6px rgba(0,0, 0,0.133));
+        overflow: visible !important;
+        background-color:rgba(255,255,255,1);
+        border-radius: 30px;
+        width: 140px;
+        position: absolute;
+        top: 32px;
+        right: 203px;
+    }
+    .linhaDivisoria_TopInfo {
+        background-color:#E2E2E2;
+        width: 100%;
+        height: 1px;
+        text-align: center;
+    }
+    .PositionTopRet_TopInfo {
+        align-content: left;
+        padding-top: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 10px;
+    }
+    .limitLineCenter_TopInfo {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .InfoBase_TopInfo {
+        padding-left: 10px;
+        padding-top: 5px;
+        text-align: left;
+        font-family: Objectivity, Arial, Helvetica, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 10px;
+        color: rgba(59,60,62,0.6);
+        letter-spacing: -0.16071670532226562px;
+    }
+    .InfoDisplay_TopInfo {
+        padding-left: 10px;
+        padding-bottom: 5px;
+        margin-top:-3px;
+        text-align: left;
+        font-family: Objectivity, Arial, Helvetica, sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        color: rgba(59,60,62,1);
+        letter-spacing: -0.16071670532226562px;
+    }
+/* Fim CSSs TopHome Info */
+    .mdl-menu__container {
+      right: 94px !important;
+      top: 30px !important;
+      background-color:transparent;
+      border-radius: 30px;
+    }
+    .mdl-menu__container.is-visible {
+      border-radius: 30px !important;
+    }
+    .mdl-menu__outline {
+      border-radius: 30px !important;
+    }
+    .mdl-button {
+        height: 34px !important;
+    }
+  </style>
   <script type="text/javascript">
       function startTime() {
           let today = new Date();          
@@ -220,9 +299,52 @@
           </a>          
         </div>
       </nav>
-      
       <!-- Add spacer, to align navigation to the right -->
       <div class="mdl-layout-spacer"></div>
+     
+
+      <nav class="mdl-navigation">
+        <div id="menu" class="divHomeSimulator mdl-button mdl-js-button mdl-button--icon">
+          <div class="InfoIcon_Position">
+              <img src="../public/images/Info-Icon.png" width="25" height="25">
+          </div>
+      </div>
+      <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect Rectangle_InfoTop" for="menu">
+          <div class="PositionTopRet_TopInfo">
+              <div class="InfoBase_TopInfo">nome do plano</div>
+              <div id="displayInfoNomePlano" class="InfoDisplay_TopInfo"></div>
+              <div class="linhaDivisoria_TopInfo"></div>
+              <div class="InfoBase_TopInfo">tipo do plano</div>
+              <div id="displayInfoTipoPlano"class="InfoDisplay_TopInfo"></div>
+              <div class="linhaDivisoria_TopInfo"></div>
+              <div class="InfoBase_TopInfo">Competência</div>
+              <div id="displayInfoCompetencia" class="InfoDisplay_TopInfo">Maio de 2020</div>
+              <div class="linhaDivisoria_TopInfo"></div>
+              <div class="InfoBase_TopInfo">Perfil de Investimento</div>
+              <div id="displayInfoPerfilInvestimento" class="InfoDisplay_TopInfo">Agressivo</div>                    
+          </div>
+      </div>
+        <!-- <span id="menu" class="mdl-button mdl-js-button mdl-button--icon" style="height: 32px;">
+          <div class="fp-logo" style="text-align: right; margin-right: 10px; cursor: pointer;">
+            <img src="../public/images/Info-Icon.png" style="width: 25px;height: 25px;" alt="Portal Mais Futuro">
+          </div>
+        </span>
+        <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu" id="ul_container">
+          <span style="color: brown;">DropDownList</span>
+        </div> -->
+        
+     </nav>
+
+      <!-- <nav class="mdl-navigation">
+        
+          <span class="mdl-layout-title">
+            <div class="fp-logo" style="text-align: right; margin-right: 10px; cursor: pointer;">
+              <img src="../public/images/Info-Icon.png" style="width: 25px;height: 25px;" alt="Portal Mais Futuro">
+            </div>
+          </span>  
+                  
+      </nav> -->
+      
       
       <!-- Title -->
       <span class="mdl-layout-title">
@@ -233,21 +355,26 @@
     </div>
   </header>
   <div  class="mdl-layout__drawer div-menu-background">
-    <a href="/" class="fp-signed-out-only">
+    <!-- <a href="/" class="fp-signed-out-only">
       <button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button">
         <i class="material-icons">account_circle</i> Sign in
       </button>
-    </a>
-    <!-- HEADER DO MENU -->
-    <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 170px;">
-      <a class="fp-usernamelink">
+    </a> -->
+    <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 60px; padding: 5px;">
+      <a href="/home">      
         <img class="img-mais-amigos-1" src="../public/images/Component 44 ÔÇô 2@2x.png" alt="voltar" style="height: 60px; width: 60px; transform: rotate(180deg);"><br><br>
+      </a>
+    </div>
+    
+    <!-- HEADER DO MENU -->
+    <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 110px; padding-bottom: 0px;">
+      <a href="/home">        
         <img class="img-mais-amigos-1" src="../public/images/Component 54 1de2 2@2x.png" alt="maisAmigosLogo" style="height: 40px; width: 60px;"><br>
         <img class="img-mais-amigos-1" src="../public/images/Component 54 2de2 2@2x.png" alt="maisAmigosLogo" style="height: 60px; width: 90px;">        
       </a>
     </div>
+
     <nav class="mdl-navigation">
-      
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/home">Home</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/cadastro">Meu Cadastro</a>
@@ -258,14 +385,14 @@
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/servicos">Serviços</a>
       <hr class="hr-menu-nav"/>
-      <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Educação Financeira</a>
+      <!-- <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Educação Financeira</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Comunicados</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Documentos</a>
       <hr class="hr-menu-nav"/>
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav" href="/">Indique um Amigo</a>
-      <hr class="hr-menu-nav"/>    
+      <hr class="hr-menu-nav"/>     -->
       <a class="mdl-navigation__link is-active fp-signed-in-only a-menu-nav fp-sign-out">Sair</a>
       <hr class="hr-menu-nav"/>      
     </nav>
@@ -647,21 +774,30 @@
                       </div>
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <div class="mdl-card__supporting-text mdl-card-container">
-                          <video controls :src="home.educacao_financeira.url_video" width="100%"></video>    
+                      <div class="mdl-card__supporting-text mdl-card-container" style="height: 210px;">
+                          <!-- <video controls :src="home.educacao_financeira.url_video" width="100%"></video>     -->
+                          <!-- <video controls src="../public/videos/WhatsApp_Video_2020-04-22" width="100%"></video> -->
+                          <!-- <video controls src="https://www.youtube.com/watch?v=S_2NVoatYWE" width="100%"></video> -->
+                          <!-- <video controls src="../../portalMaisFuturo/public/videos/Reforma da Previdência - Com Renato Follador e Thiago Nieweglowski.mp4" width="100%"></video> -->
+                          <!-- <iframe width="100%" height="100%" src=""></iframe> -->
+                          <!-- <video width="320" height="240" controls>
+                            <source src="../public/videos/WhatsApp_Video_2020-04-22.mp4" type="video/mp4">                                                        
+                          </video> -->                      
+                          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+
                       </div>
                       <div class="mdl-card__supporting-text mdl-card-container div-educacao_financeira-titulo">
                           {{ home.educacao_financeira.titulo }}
                           A Nova Previdência - Renato Follador e Thiago Nieweglowski
                       </div>
-                      <div class="mdl-card__supporting-text mdl-card-container ">                      
+                      <!-- <div class="mdl-card__supporting-text mdl-card-container ">                      
                         <div class="mdl-card-campanha-button-right mdl-shadow--4dp div-educacao-financeira-button" @click.prevent="">
                           Ver mais vídeos &nbsp;&nbsp;
                           <div>
                               <i class="material-icons icon-button-add">add</i>
                           </div>
-                      </div>              
-                      </div>
+                      </div>               -->
+                      
                   </div>
               </template>  
           </section>
@@ -699,7 +835,7 @@
           <!--Cadastro-->
           <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <cadastro v-bind:chave_usuario="chave"></cadastro>              
+              <cadastro v-bind:chave_usuario="chave" v-bind:foto="url_foto"></cadastro>              
           </section>
 
           <!--Serviços-->
