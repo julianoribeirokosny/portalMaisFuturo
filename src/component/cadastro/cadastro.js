@@ -23,11 +23,11 @@ export default {
         vSelect
     },
     props: { 
+        foto:'',
         chave_usuario:""
     },    
     data: function() {
-        return {           
-            imageEdit: imageEdit,
+        return {   
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
             cep: null,
@@ -47,6 +47,7 @@ export default {
         }        
     },
     created(){
+        
         this.getParticipante()        
     }, 
     mounted(){

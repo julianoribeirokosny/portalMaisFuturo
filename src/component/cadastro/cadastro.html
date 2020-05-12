@@ -8,8 +8,7 @@
         <!--Resumo do Perfil (Box)-->          
         <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--8dp card_v2">
             <div class="card_left_v2">
-                <!--img class="img_card_v2" src="http://tfirdaus.github.io/mdl/images/laptop.jpg"/-->
-                <img class="img_card_v2" src="https://lh5.googleusercontent.com/-DLM8KnN-yms/AAAAAAAAAAI/AAAAAAAAAAA/AAKWJJNfchKL0_TqtOnzwAsruj6ADeKLkg/photo.jpg?sz=150"/>
+                <img class="img_card_v2" :src="foto"/>
             </div>
             <div class="card_right_v2">
                 <span class="UserFullName_Class_v2">{{ cadastro.informacoes_pessoais.nome}}</span></br>
@@ -47,21 +46,19 @@
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.sexo}}</span>
             </div>            
         </div>        
-        <div class="mdl-card-container div-container">
-            <div class="Div_vSelect_v2">
-                <span class="Span_Label_vSelect_v2">Estado Civil</span><br>
-                <v-select v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis" :reduce="option => option.value" style="line-height: 18px !important;"></v-select>
-                <div class="div-img-vSelect">
-                    <img class="img-editar" :src="imageEdit" alt=""/>
-                </div>            
-            </div>  
+        <div class="mdl-card-container Div_vSelect_v2 div-container">
+            <span class="Span_Label_vSelect_v2">Estado Civil</span><br>
+            <v-select v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis" :reduce="option => option.value" style="line-height: 18px !important;"></v-select>
+            <div class="div-img-vSelect">
+                <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
+            </div>            
         </div>        
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2" :class="classValid">
                 <span class="Span_Label_v2">E-mail Alternativo</span><br>
                 <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email" v-on:click="selectAll($event)">
                 <div class="div-img-input">
-                    <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
+                    <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
                 </div>
             </div>            
         </div>
@@ -71,7 +68,7 @@
                     <span class="Span_Label_v2">Telefone Fixo</span><br>
                     <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)">
                     <div class="div-img-input">
-                        <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
+                        <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
                     </div>
                 </div>
             </div>
@@ -80,7 +77,7 @@
                     <span class="Span_Label_v2">Celular</span><br>
                     <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)">
                     <div class="div-img-input">
-                        <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
+                        <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
                     </div>
                 </div>
             </div>                       
@@ -97,7 +94,7 @@
                 <span class="Span_Label_v2">CEP</span><br>
                 <input class="Input_Text_v2" autocomplete="off" v-mask="'##.###-###'" id="cep" ref="cep" type="text" v-model="cep" v-on:click="selectAll($event)">
                 <div class="div-img-input">
-                    <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
+                    <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
                 </div>
             </div>            
         </div>
@@ -113,7 +110,7 @@
                     <span class="Span_Label_v2">Número</span><br>
                     <input class="Input_Text_v2" type="text" id="numero" ref="numero" v-model="cadastro.endereco.numero" v-on:click="selectAll($event)">
                     <div class="div-img-input">
-                        <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
+                        <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
                     </div>
                 </div>
             </div>
@@ -122,7 +119,7 @@
                     <span class="Span_Label_v2">Complemento</span><br>
                     <input class="Input_Text_v2" autocomplete="off" type="text" id="complemento" ref="complemento" v-model="cadastro.endereco.complemento" v-on:click="selectAll($event)">
                     <div class="div-img-input">
-                        <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
+                        <img class="img-editar" :src="'../../../public/images/Editar.png'" alt=""/>
                     </div>
                 </div>
             </div>                       
