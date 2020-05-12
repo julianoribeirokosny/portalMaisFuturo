@@ -80,7 +80,7 @@ export default class Home {
       return page('/erro')
     }    
     data_Home.perfil_investimento = 'Agressivo'
-    data_Home.educacao_financeira.url_video = '../../portalMaisFuturo/public/videos/Reforma_da_PrevidênciaCom_Renato_Follador_e_Thiago_Nieweglowski.mp4'
+    data_Home.educacao_financeira.url_video = '../../portalMaisFuturo/public/videos/WhatsApp_Video_2020-04-22.mp4'
     
     //participante com inabilitado para acessar o portal
     if (!data_Home.vigente) {
