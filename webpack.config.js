@@ -67,11 +67,16 @@ module.exports = (env, argv) => {
         {
           test: /\.html$/,
           use: 'html-loader',
-        },
+        },   
         {
           test: /\.(sa|sc|c)ss$/,
           use: [
-            MiniCssExtractPlugin.loader,
+            {
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                hmr: devMode,
+              },
+            },
             'css-loader',
             'sass-loader',
           ],
@@ -112,7 +117,7 @@ module.exports = (env, argv) => {
             search: '@font-face {',
             replace: '@font-face {font-display: fallback;',
           },
-        }        
+        }  
       ]  
     },
     node: {
@@ -137,10 +142,31 @@ module.exports = (env, argv) => {
         new PurifyCSSPlugin({
           // Give paths to all assets that generate DOM content.
           paths: glob.sync([
+            path.join(__dirname, 'src/component/cadastro/*.js'),
+            path.join(__dirname, 'src/component/contratacao/*.js'),
+            path.join(__dirname, 'src/component/contratacaoAberta/*.js'),
+            path.join(__dirname, 'src/component/emConstrucao/*.js'),
+            path.join(__dirname, 'src/component/historicoContribuicao/*.js'),
+            path.join(__dirname, 'src/component/rentabilidade/*.js'),
+            path.join(__dirname, 'src/component/servicos/*.js'),
+            path.join(__dirname, 'src/component/simuladorEmprestimo/*.js'),
+            path.join(__dirname, 'src/component/simuladorRenda/*.js'),
+            path.join(__dirname, 'src/component/simuladorSeguro/*.js'),
             path.join(__dirname, 'src/*.js'),
             path.join(__dirname, 'node_modules/firebaseui/dist/firebaseui.js'),
             path.join(__dirname, 'node_modules/material-design-lite/material.js'),
+            path.join(__dirname, 'node_modules/vue-select/dist/vue-select.js'),
             path.join(__dirname, 'src/index.html'),
+            path.join(__dirname, 'src/component/cadastro/cadastro.html'),
+            path.join(__dirname, 'src/component/contratacao/contratacao.html'),
+            path.join(__dirname, 'src/component/contratacaoAberta/contratacaoAberta.html'),
+            path.join(__dirname, 'src/component/emConstrucao/emConstrucao.html'),
+            path.join(__dirname, 'src/component/historicoContribuicao/historicoContribuicao.html'),
+            path.join(__dirname, 'src/component/rentabilidade/rentabilidade.html'),
+            path.join(__dirname, 'src/component/servicos/servicos.html'),
+            path.join(__dirname, 'src/component/simuladorEmprestimo/simuladorEmprestimo.html'),
+            path.join(__dirname, 'src/component/simuladorRenda/simuladorRenda.html'),
+            path.join(__dirname, 'src/component/simuladorSeguro/simuladorSeguro.html'),
           ]),
         }),
       ],
