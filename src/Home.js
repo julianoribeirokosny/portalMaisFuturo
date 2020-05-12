@@ -241,6 +241,7 @@ export default class Home {
                 historicoContribuicao
             },        
             data: {
+                video: '../../portalMaisFuturo/public/videos/Reforma_da_PrevidênciaCom_Renato_Follador_e_Thiago_Nieweglowski.mp4',
                 componentKey: 0,
                 home: this.data_Home,
                 toggle: false,
@@ -265,6 +266,7 @@ export default class Home {
             },  
             created() {
                 sessionStorage.ultimaPagina = 'home'
+                
             },      
             methods: { 
                 forceRerender() {

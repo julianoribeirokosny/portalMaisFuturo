@@ -774,17 +774,10 @@
                       </div>
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <div class="mdl-card__supporting-text mdl-card-container" style="height: 210px;">
-                          <!-- <video controls :src="home.educacao_financeira.url_video" width="100%"></video>     -->
-                          <!-- <video controls src="../public/videos/WhatsApp_Video_2020-04-22" width="100%"></video> -->
-                          <!-- <video controls src="https://www.youtube.com/watch?v=S_2NVoatYWE" width="100%"></video> -->
-                          <!-- <video controls src="../../portalMaisFuturo/public/videos/Reforma da Previdência - Com Renato Follador e Thiago Nieweglowski.mp4" width="100%"></video> -->
-                          <!-- <iframe width="100%" height="100%" src=""></iframe> -->
-                          <!-- <video width="320" height="240" controls>
-                            <source src="../public/videos/WhatsApp_Video_2020-04-22.mp4" type="video/mp4">                                                        
-                          </video> -->                      
-                          <iframe width="100%" height="100%" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
-
+                      <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: center;">
+                          <video controls autoplay style="width: 100%; height: 100%;">
+                              <source :src="video" type="video/mp4">
+                          </video>                          
                       </div>
                       <div class="mdl-card__supporting-text mdl-card-container div-educacao_financeira-titulo">
                           {{ home.educacao_financeira.titulo }}
