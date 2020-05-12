@@ -80,6 +80,7 @@ export default class Home {
       return page('/erro')
     }    
     data_Home.perfil_investimento = 'Agressivo'
+    data_Home.educacao_financeira.url_video = '../../portalMaisFuturo/public/videos/Reforma_da_PrevidênciaCom_Renato_Follador_e_Thiago_Nieweglowski.mp4'
     
     //participante com inabilitado para acessar o portal
     if (!data_Home.vigente) {
@@ -240,8 +241,7 @@ export default class Home {
                 emConstrucao,
                 historicoContribuicao
             },        
-            data: {
-                video: '../../portalMaisFuturo/public/videos/Reforma_da_PrevidênciaCom_Renato_Follador_e_Thiago_Nieweglowski.mp4',
+            data: {                
                 componentKey: 0,
                 home: this.data_Home,
                 toggle: false,
@@ -297,7 +297,7 @@ export default class Home {
                 contratacaoAberta() {
                     sessionStorage.ultimaPagina = 'home'
                     page('/contratacao-aberta')
-                    
+
                 }
             },
             errorCaptured:function(err, component, details) {
