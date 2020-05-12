@@ -297,6 +297,7 @@ export default class Home {
                 contratacaoAberta() {
                     sessionStorage.ultimaPagina = 'home'
                     page('/contratacao-aberta')
+                    
                 }
             },
             errorCaptured:function(err, component, details) {
