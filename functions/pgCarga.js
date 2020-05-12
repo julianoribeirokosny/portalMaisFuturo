@@ -22,6 +22,7 @@ var logProcessamento = {}
 var dataProcessamento
 var dataBase, anoMes
 const taxaAumentoSugestao = 1.20
+var select
 
 /*************************************************
 ***********
@@ -47,12 +48,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   dataBase = change.after.val()
   anoMes = dataBase.substring(5, 7) + '/' + dataBase.substring(0, 4)
   let plano = context.params.plano
-
-  // inclui parametro de data de competência nos Selects
-  let select = jsonDataSelects.dadosPortal
-  select = select.replace(/--data_base_carga--/g, dataBase)
-  select = select.replace(/--nome_plano--/g, plano)
-  console.log('===> select', select)
 
   dataProcessamento = utils.dateFormat(new Date(), true, false)
   logProcessamento[dataProcessamento] = {
@@ -127,6 +122,20 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaContribExtraordinaria = listaContribExtraordinaria.split(';')
       listaSituacoesValidas = listaSituacoesValidas.split(';')
 
+      // Monta comando select com os parametros
+      console.log('===> verificando se há chaves específicas para a carga.')
+      if (snapshotParent.hasChild('lista_chaves_carga')) {
+        console.log('===> dadosPortalLista!')
+        select = jsonDataSelects.dadosPortalLista
+        select = select.replace(/--lista_dados_carga--/g, snapshotParent.child('lista_chaves_carga').val())
+        console.log('===> select', select)        
+      } else {
+        console.log('===> dadosPortal Geral!')
+        select = jsonDataSelects.dadosPortal
+      }
+      select = select.replace(/--data_base_carga--/g, dataBase)
+      select = select.replace(/--nome_plano--/g, plano)
+      console.log('===> select', select)        
     }
     ref = admin.database().ref('usuarios')
     return ref.orderByChild('home/usr_plano').equalTo(plano).once('value')
@@ -194,8 +203,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           } 
 
           if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
-            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
-            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
+            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)          
+            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)                    
             listaDatasetsProjetoDeVida[2] = {
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -264,6 +273,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             nasc: utils.dateFormat(rowDados.cad_nasc, false, false),
             dataadesao: utils.dateFormat(rowDados.cad_dataadesao, false, false),
             taxa: 5.000000,
+            taxaAposentadoria: 4.500000,
             idade: rowDados.cad_idade,
             sitPart: rowDados.cad_sitpart
           }
@@ -407,8 +417,11 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             usuarioContrib.contribParticipantePlanoPatrocinado += rowDados.contr_valor
           }
 
-          if (éContribSaldo || éContribSaldo13 || éContribSaldoPartPlanoPatroc) { 
+          if (éContribSaldo || éContribSaldo13) { 
             usuarioContrib.contribParticipante += rowDados.contr_valor
+          }  
+
+          if (éContribSaldo || éContribSaldo13 || éContribSaldoPartPlanoPatroc) { 
             listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
             listaItensContribuicaoChave.participante.valor += rowDados.contr_valor
             listaItensContribuicaoChave.participante.eventos.push({
@@ -417,6 +430,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
               valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
             })  
           }  
+
           if (éContribSeguro) {
             usuarioContrib.contribRisco += rowDados.contr_valor
             listaItensContribuicaoChave.seguro.nome = 'Contribuição de risco'
@@ -455,8 +469,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         }        
       } 
 
-      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano)          
-      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano)                    
+      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)          
+      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)                    
       listaDatasetsProjetoDeVida[2] = {
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -582,7 +596,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     },
     usr_projeto_vida : {
       acao: {
-        valor_renda_potencial: calculaRendaPotencial(),
+        valor_renda_potencial: calculaRendaPotencial(listaItensProjetoDeVidaProjecao[0].valor),
         valor_reserva_potencial: calculaReservaPotencial(listaItensProjetoDeVidaProjecao[1].valor),
         valor_contribuicao_projetada: valorContribProjetada,
         vigente: true
@@ -704,7 +718,7 @@ function incluiUsuarioCadastroJSON(usuarios, chave, usr) {
   return usuarios
 }
   
-function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano) {
+function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano, taxaAposentadoria) {
 
   let retDataset = {
     0: 0    
@@ -730,7 +744,7 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
 
   let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
   //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
-  let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxa, (15*12)) //calculo de renda por 15 anos            
+  let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos            
   //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
   
   let valorContribProjetada = financeiro.calculaContribProjetada(taxa, difMesesHojeAposentadoria, valorHoje, valorReservaAposentadoria)
@@ -797,15 +811,19 @@ function calculaDeducaoPotencial() {
   return 300
 }
 
-function calculaRendaPotencial() {
-  return 5000
+function calculaRendaPotencial(rendaProjetadaAtual) {
+  rendaProjetadaAtual = rendaProjetadaAtual.replace('.','').replace(',','.')
+  rendaProjetadaAtual = rendaProjetadaAtual.replace('R$','')
+  rendaProjetadaAtual = parseFloat(rendaProjetadaAtual)
+  rendaProjetadaAtual = rendaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
+  return utils.valorFormatoDesc(rendaProjetadaAtual)
 }
 
 function calculaReservaPotencial(reservaProjetadaAtual) {
-  console.log('===> reservaProjetadaAtual', reservaProjetadaAtual)
-  reservaProjetadaAtual = parseFloat(reservaProjetadaAtual.replace('.','').replace(',','.'))
+  reservaProjetadaAtual = reservaProjetadaAtual.replace('.','').replace(',','.')
+  reservaProjetadaAtual = reservaProjetadaAtual.replace('R$','')
+  reservaProjetadaAtual = parseFloat(reservaProjetadaAtual)
   reservaProjetadaAtual = reservaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
-  console.log('===> reservaProjetadaAtual', reservaProjetadaAtual)
   return utils.valorFormatoDesc(reservaProjetadaAtual)
 }
 

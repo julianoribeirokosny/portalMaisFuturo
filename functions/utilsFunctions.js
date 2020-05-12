@@ -87,9 +87,9 @@ module.exports =  {
             console.log('===> num', num)
             console.log('===> Math.sign(num)', Math.sign(num))
             console.log('===> (Math.abs(num)/1000)', (Math.abs(num)/1000))
-            ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'mil' 
+            ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + ' mil' 
         } else if (Math.abs(num) > 999999) {
-            ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'Mi' 
+            ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + ' Mi' 
         } else {
             Math.sign(num)*Math.abs(num)            
         }

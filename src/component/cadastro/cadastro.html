@@ -8,7 +8,8 @@
         <!--Resumo do Perfil (Box)-->          
         <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--8dp card_v2">
             <div class="card_left_v2">
-                <img class="img_card_v2" src="http://tfirdaus.github.io/mdl/images/laptop.jpg"/>
+                <!--img class="img_card_v2" src="http://tfirdaus.github.io/mdl/images/laptop.jpg"/-->
+                <img class="img_card_v2" src="https://lh5.googleusercontent.com/-DLM8KnN-yms/AAAAAAAAAAI/AAAAAAAAAAA/AAKWJJNfchKL0_TqtOnzwAsruj6ADeKLkg/photo.jpg?sz=150"/>
             </div>
             <div class="card_right_v2">
                 <span class="UserFullName_Class_v2">{{ cadastro.informacoes_pessoais.nome}}</span></br>
@@ -46,12 +47,14 @@
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.sexo}}</span>
             </div>            
         </div>        
-        <div class="mdl-card-container Div_vSelect_v2 div-container">
-            <span class="Span_Label_vSelect_v2">Estado Civil</span><br>
-            <v-select v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis" :reduce="option => option.value" style="line-height: 18px !important;"></v-select>
-            <div class="div-img-vSelect">
-                <img class="img-editar" src="../../../public/images/Editar.png" alt=""/>
-            </div>            
+        <div class="mdl-card-container div-container">
+            <div class="Div_vSelect_v2">
+                <span class="Span_Label_vSelect_v2">Estado Civil</span><br>
+                <v-select v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis" :reduce="option => option.value" style="line-height: 18px !important;"></v-select>
+                <div class="div-img-vSelect">
+                    <img class="img-editar" :src="imageEdit" alt=""/>
+                </div>            
+            </div>  
         </div>        
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2" :class="classValid">

@@ -78,7 +78,7 @@
     margin-top: 5px;
 }
 .Div_vSelect_v2 {
-    width: 90%;
+    /*width: 90%;*/
     border: silver solid 1px;
     height: 40px;
     border-radius: 20px;
@@ -150,6 +150,7 @@
 .Span_Label_v2 {
     font-size: 10px;
 }
+
 .Span_Label_vSelect_v2 {
     color: rgba(0, 0, 0, 0.54);
     padding-left: 16px;

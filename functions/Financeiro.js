@@ -17,7 +17,9 @@ module.exports =  {
     //pmt: float
     //return: float.toFixed(2) 2 casas decimais
     valorFuturo(pv, i, n, pmt) {
+        if (n===0) n = 1
         let pow = Math.pow(1 + (i/100), n)
+        console.log('===> pmt, i, pow, pv', pmt, i, pow, pv)
         return ((pmt*(1+(i/100)*0)*(1-pow)/(i/100))-pv*pow).toFixed(2)*(-1)
     },
 
@@ -25,9 +27,22 @@ module.exports =  {
     //i: float
     //n: int
     //return: float.toFixed(2) 2 casas decimais
-    pgto(pv, i, n) {
+    pgto(pv, i, n, tem13o) {
         if (n===0) n = 1
         return  (pv * (i/100) * Math.pow(1 + (i/100), n) / (Math.pow(1 + (i/100), n) - 1 )).toFixed(2)
+    },
+
+    pgtoMaisFuturo(pv, i, n, tem13o) {
+        console.log('==> pv, i, n, tem13o', pv, i, n, tem13o)
+        let vlr13o = 0
+        if (tem13o) {
+            vlr13o = ((1-(Math.pow( 1+(i/100), -(n/12))))/(i/100))
+                    
+            console.log('==> vlr13o', vlr13o)
+        }
+        let ret = pv * (1/(((1-(Math.pow((1+(Math.pow((1+(i/100)),(1/12))-1)),(-n))))/(Math.pow((1+(i/100)),(1/12))-1))+vlr13o))
+        return ret.toFixed(2)
+
     },
 
     pgto_com_Pv(i, n, pv, fv, type) {
@@ -62,26 +77,24 @@ module.exports =  {
     },
 
     valor_to_string_formatado(num, casasDecimais, incluiCifrao) {
-        console.log('===> num', num, ' - casasDecimais', casasDecimais)
         let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
-        console.log('===> numFormatado0', numFormatado)
         if (incluiCifrao) {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
         } else {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
         }
-        console.log('===> numFormatado1', numFormatado)
         numFormatado = numFormatado.replace(',','#')
-        console.log('===> numFormatado2', numFormatado)
         numFormatado = numFormatado.replace('.',',')
-        console.log('===> numFormatado3', numFormatado)
         numFormatado = numFormatado.replace('#','.')
-        console.log('===> numFormatado4', numFormatado)
         return numFormatado
     },
 
     calculaReservaFutura (reservaTotal, taxaAnual, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataInicioRenda, tipoPlano) {
-        let qtdMeses = this.calculaQuantidadeMeses(dataInicioRenda)
+        //let qtdMeses = this.calculaQuantidadeMeses(dataInicioRenda)
+        let qtdMeses = utils.diffDatasEmMeses(new Date(), dataInicioRenda)
+
+        console.log('===> qtdMeses, dataInicioRenda', qtdMeses, dataInicioRenda)
+
         let taxaMensal = this.calculaTaxaMensal(taxaAnual)
         let reservaFutura = this.valorFuturo(
             reservaTotal,
@@ -106,18 +119,21 @@ module.exports =  {
         return reservaFutura.toFixed(2)
     },
 
-    calculaQuantidadeMeses(dataInicioRenda) {
+    /*calculaQuantidadeMeses(dataInicioRenda) {
         let dateNow = new Date()
         let qtdMeses = (dataInicioRenda.getFullYear() - dateNow.getFullYear()) * 12;
         qtdMeses -= dateNow.getMonth();
         qtdMeses += dataInicioRenda.getMonth();
         return qtdMeses <= 0 ? 0 : qtdMeses;
-    },
+    },*/
 
-    calculaRendaFutura(reservaTotalFutura, taxaAnual, qtdAnosRenda) {
-        let taxaMensal = this.calculaTaxaMensal(taxaAnual)
+    calculaRendaFutura(reservaTotalFutura, taxaAnual, qtdAnosRenda, tipoPlano) {
+        //let taxaMensal = this.calculaTaxaMensal(taxaAnual)
         //console.log('===> taxaMensal', taxaMensal)
-        let rendaMensal = this.pgto(reservaTotalFutura, taxaMensal, (qtdAnosRenda*12))            
+        //rendaMensal = this.pgto(reservaTotalFutura, taxaMensal, (qtdAnosRenda*12))      
+
+        let rendaMensal = this.pgtoMaisFuturo(reservaTotalFutura, taxaAnual, qtdAnosRenda * 12, tipoPlano==='jmalucelli')
+
         return rendaMensal
     },
 
