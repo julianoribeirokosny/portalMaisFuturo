@@ -18,8 +18,8 @@
 const path = require('path');
 const glob = require('glob-all');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const PurifyCSSPlugin = require('purifycss-webpack');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const PurifyCSSPlugin = require('purifycss-webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
@@ -93,7 +93,7 @@ module.exports = (env, argv) => {
               },
             },
           ],
-        },
+        }, 
         {
           test: /\.(jpe?g|png|svg)$/,
           use: {
