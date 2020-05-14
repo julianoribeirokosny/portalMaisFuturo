@@ -94,6 +94,14 @@ module.exports =  {
             Math.sign(num)*Math.abs(num)            
         }
         return ret
-    }
+    },
 
+    idade_hoje(nascimento) {
+        let hoje = new Date()
+        var diferencaAnos = hoje.getFullYear() - nascimento.getFullYear();
+        if ( new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()) < 
+             new Date(hoje.getFullYear(), nascimento.getMonth(), nascimento.getDate()) )
+            diferencaAnos--;
+        return diferencaAnos;
+    }
 }

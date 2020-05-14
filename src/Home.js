@@ -78,8 +78,7 @@ export default class Home {
     if (data_Home===null) {
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
-    }    
-    data_Home.perfil_investimento = 'Agressivo'
+    }
     data_Home.educacao_financeira.url_video = ''
     
     //participante com inabilitado para acessar o portal
@@ -114,23 +113,27 @@ export default class Home {
 
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
-    let dadosSimuladorSeguro = {
-      titulo: 'Simulador </br>de Seguro',
-      tipo: 'Seguro',
-      coberturaInvalidez: 200000,
-      minimoInvalidez: 10000,
-      maximoInvalidez: 1500000,
-      fatorInvalidez: 1.0163,
-      stepInvalidez: 10000,
-      coberturaMorte: 200000,
-      minimoMorte: 10000,
-      maximoMorte: 1500000,
-      fatorMorte: 1.1423,
-      stepMorte: 10000,
-      chave: this.chave,
-      uid: this.auth.currentUser.uid,
-      seguroSolicitado: this.consulta_seguro,
-  }
+    let dadosSimuladorSeguro =  await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
+    // {
+    //     titulo: 'Simulador </br>de Seguro',
+    //     tipo: 'Seguro',  
+
+    //     minimoMorte: 10000,
+    //     maximoMorte: 1500000,
+    //     stepMorte: 10000,
+    //     minimoInvalidez: 10000,
+    //     maximoInvalidez: 1500000,
+    //     stepInvalidez: 10000,
+        
+    //     fatorMorte: 1.1423,
+    //     fatorInvalidez: 1.0163,
+    //     coberturaInvalidez: 200000,
+    //     coberturaMorte: 200000,
+    //     chave: this.chave,
+    //     uid: this.auth.currentUser.uid,
+    //     seguroSolicitado: this.consulta_seguro,
+    // }
+    dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
 
     let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
@@ -241,7 +244,8 @@ export default class Home {
                 emConstrucao,
                 historicoContribuicao
             },        
-            data: {                
+            data: {
+                video:'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
                 componentKey: 0,
                 home: this.data_Home,
                 toggle: false,
@@ -301,6 +305,9 @@ export default class Home {
                 }
             },
             errorCaptured:function(err, component, details) {
+                console.log('error',err)
+                console.log('component',component)
+                console.log('details',details)
                 alert(err);
                 page('/erro')
             }
@@ -314,7 +321,7 @@ export default class Home {
             this.vueObj.seguroSimulador = dadosSimuladorSeguro
             this.vueObj.$forceUpdate()   
             this.vueObj.forceRerender()
-            console.log('this.vueObj',this.vueObj)
+            //console.log('this.vueObj',this.vueObj)
         }    
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
@@ -354,6 +361,7 @@ export default class Home {
     })
 
     return Promise.all([p1, p2]).then(async (retPromises) => {
+      
       if (!retPromises[0] || !retPromises[1]) {
         return null
       } else {

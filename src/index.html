@@ -47,86 +47,7 @@
   <!-- Tile icon for Win8 -->
   <meta name="msapplication-TileImage" content="/images/icon-144x144.png"> 
   <meta name="msapplication-TileColor" content="#3372DF">
-  <meta name="msapplication-navbutton-color" content="#303F9F">  
-  <style>
-    /* Info Top Home */
-    .divHomeSimulator {
-        background-image:url("Top2.png");
-        background-repeat:no-repeat;
-        background-position:left top;
-        width: 350px;
-        height: 50px;
-    }
-    .InfoIcon_Position {
-        margin-right: 5px;
-    }
-    .Rectangle_InfoTop {
-        filter: drop-shadow(0px 3px 6px rgba(0,0, 0,0.133));
-        overflow: visible !important;
-        background-color:rgba(255,255,255,1);
-        border-radius: 30px;
-        width: 140px;
-        position: absolute;
-        top: 32px;
-        right: 203px;
-    }
-    .linhaDivisoria_TopInfo {
-        background-color:#E2E2E2;
-        width: 100%;
-        height: 1px;
-        text-align: center;
-    }
-    .PositionTopRet_TopInfo {
-        align-content: left;
-        padding-top: 10px;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-bottom: 10px;
-    }
-    .limitLineCenter_TopInfo {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-    .InfoBase_TopInfo {
-        padding-left: 10px;
-        padding-top: 5px;
-        text-align: left;
-        font-family: Objectivity, Arial, Helvetica, sans-serif;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 10px;
-        color: rgba(59,60,62,0.6);
-        letter-spacing: -0.16071670532226562px;
-    }
-    .InfoDisplay_TopInfo {
-        padding-left: 10px;
-        padding-bottom: 5px;
-        margin-top:-3px;
-        text-align: left;
-        font-family: Objectivity, Arial, Helvetica, sans-serif;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 13px;
-        color: rgba(59,60,62,1);
-        letter-spacing: -0.16071670532226562px;
-    }
-/* Fim CSSs TopHome Info */
-    .mdl-menu__container {
-      right: 94px !important;
-      top: 30px !important;
-      background-color:transparent;
-      border-radius: 30px;
-    }
-    .mdl-menu__container.is-visible {
-      border-radius: 30px !important;
-    }
-    .mdl-menu__outline {
-      border-radius: 30px !important;
-    }
-    .mdl-button {
-        height: 34px !important;
-    }
-  </style>
+  <meta name="msapplication-navbutton-color" content="#303F9F">    
   <script type="text/javascript">
       function startTime() {
           let today = new Date();          
@@ -257,29 +178,33 @@
 </section>
 
 <!-- Splash screen da Instalação -->
-<section id="page-splash-instalacao" class="page-splash">
-  <div style="margin: 5px 0 50px 0;">
-    <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
-  </div>
-  <div style="max-width: 500px; text-align: center;">    
-    <div id="div-install" style="display: none; text-align: center;">
-      <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="margin: 0 auto;">
-        <span class="mdl-color-text--white">Instalar o aplicativo</span>
-      </button>
-      <div id="div-prevdigi" style="padding-top: 20px; text-align: center;">
-        <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
-      </div>  
+<section id="page-splash-instalacao" class="page-splash">    
+    <div style="margin: 5px 0 50px 0;">
+        <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
     </div>
-    <div id="div-continue" style="display: none; text-align: center;">
-      <div class="fp-caption">Parabéns!</div> 
-      <div class="fp-caption2">O portal foi instalado e está pronto para uso.<br> A partir de agora acesse o portal através do aplicativo instalado em seu dispositivo.</div>
-      <div style="padding-top: 20px;">
-        <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-continue">
-          <span class="mdl-color-text--white">Abrir o aplicativo</span>
-        </button>  
-      </div>
+    <div style="max-width: 500px; text-align: center;">    
+        <div id="div-install" style="display: none; text-align: center;">
+            <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="margin: 0 auto;">
+              <span class="mdl-color-text--white">Instalar o aplicativo</span>
+            </button>
+            <div id="div-prevdigi" style="padding-top: 20px; text-align: center;">
+              <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
+            </div>  
+        </div>
+        <div  id="div-continue" style="display: none; text-align: center;">
+            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                <div class="mdl-card__supporting-text mdl-card-container" style="margin:auto;">      
+                    <div class="fp-caption">Parabéns!</div> 
+                    <div class="fp-caption2">O portal foi instalado e está pronto para uso.<br> A partir de agora acesse o portal através do aplicativo instalado em seu dispositivo.</div>
+                    <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: center; padding-top: 20px; margin:auto;">
+                        <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-continue" style="width: 90%;margin-top: 10px;">
+                            <span class="mdl-color-text--white">Abrir o aplicativo</span>
+                        </button>  
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -290,7 +215,7 @@
       <nav class="mdl-navigation">
         <div class="fp-signed-in-user-container fp-signed-in-only">
           <a class="mdl-button mdl-js-button" href="/home" style="padding: 0px 5px;">
-            <img src="../public/images/Component 52 ÔÇô 2@2x.png" alt="Voltar" style="height: 45px;width: 45px;">
+            <img src="../public/images/Component 52 ÔÇô 2@2x.png" alt="Voltar" style="height: 38px;width: 38px;">
           </a>
         </div>
         <div class="fp-signed-in-user-container fp-signed-in-only">
@@ -303,7 +228,7 @@
       <div class="mdl-layout-spacer"></div>
      
 
-      <nav class="mdl-navigation">
+      <nav class="mdl-navigation" style="width: 38px;">
         <div id="menu" class="divHomeSimulator mdl-button mdl-js-button mdl-button--icon">
           <div class="InfoIcon_Position">
               <img src="../public/images/Info-Icon.png" width="25" height="25">
@@ -775,8 +700,8 @@
                   </div>
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                       <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: center;">
-                          <video controls autoplay style="width: 100%; height: 100%;">
-                              <source :src="home.educacao_financeira.url_video" type="video/mp4">
+                          <video controls style="width: 100%; height: 100%;">
+                              <source :src="video" type="video/mp4">
                           </video>                          
                       </div>
                       <div class="mdl-card__supporting-text mdl-card-container div-educacao_financeira-titulo">

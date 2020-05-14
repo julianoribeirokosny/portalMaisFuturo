@@ -9,6 +9,8 @@ import {Utils} from './Utils';
 import $ from 'jquery';
 import {Erros} from './Erros';
 
+const utils = require('../functions/utilsFunctions')
+
 /**
  * Handles all Firebase interactions.
  */
@@ -1163,6 +1165,17 @@ export default class FirebaseHelper {
     })    
   }
 
+  getSimuladorSeguroSettings(plano) {
+    let ref = this.database.ref(`settings/simulador_seguro/${plano}`)
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })    
+  }
+
   async getHistoricoContribuicao(chave) {
       let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
       return ref.once('value').then((data) => {    
@@ -1224,6 +1237,31 @@ export default class FirebaseHelper {
       emprestimoSolicitado: ''
     }
     return dadosSimuladorEmprestimo
+  }
+
+  async getDadosSimuladorSeguro(chave, uid) {
+      let usuario = await this.getParticipante(chave)    
+      let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
+      let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)    
+      let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)
+
+      let dadosSimuladorSeguro = {
+          titulo: 'Simulador </br>de Seguro',
+          tipo: 'Seguro',
+          minimoMorte: simuladorSeguroSettings.minimo_morte,
+          maximoMorte: simuladorSeguroSettings.maximo_morte,
+          stepMorte: simuladorSeguroSettings.step_morte,
+          minimoInvalidez: simuladorSeguroSettings.minimo_invalidez,
+          maximoInvalidez: simuladorSeguroSettings.maximo_invalidez,
+          stepInvalidez: simuladorSeguroSettings.step_invalidez,      
+          fatorMorte: fator_idade_seguro.fator_morte,
+          fatorInvalidez: fator_idade_seguro.fator_invalidez,
+          coberturaInvalidez: 200000,
+          coberturaMorte: 200000,      
+          chave: chave,
+          uid: uid
+      }
+      return dadosSimuladorSeguro
   }
 
   getUserClaims(user) {
@@ -1333,11 +1371,21 @@ export default class FirebaseHelper {
 
   solicitaDadosSinqia(chave) {
     let ref = this.database.ref(`usuarios/${chave}/home`)
-
   }
 
   logErros(uid, data, codErro, origem) {
     let ref = this.database.ref(`logErros/${uid}/${data}`)
     ref.update({erro: codErro, origem: origem})
+  }
+
+  async getFatorSimuladorSeguro(idade) {
+      let ref = this.database.ref(`settings/simulador_seguro/fator_idade/${idade}`)
+      return ref.once('value').then((data) => {    
+          if (data.val()) {
+              return data.val()
+          } else {
+              return null
+          }
+      })
   }
 };

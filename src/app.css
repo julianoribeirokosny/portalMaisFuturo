@@ -350,6 +350,7 @@ button.firebaseui-idp-password {
   margin-top: 0;
 }
 
+
 /* Navigation Bar */
 
 .fp-header .mdl-tab {
@@ -2130,4 +2131,80 @@ p.p_valor_simulado__se {
     .p_valor_simulado__se {     
         font-size: 20px;
     }
+}
+/* Info Top Home */
+.divHomeSimulator {
+    /* background-image:url("Top2.png"); */
+    background-repeat:no-repeat;
+    background-position:left top;
+    width: 350px;
+    height: 50px;
+}
+.InfoIcon_Position {
+    margin-right: 5px;
+}
+.Rectangle_InfoTop {
+    filter: drop-shadow(0px 3px 6px rgba(0,0, 0,0.133));
+    overflow: visible !important;
+    background-color:rgba(255,255,255,1);
+    border-radius: 30px;
+    width: 140px;
+    position: absolute;
+    right: 203px;
+}
+.linhaDivisoria_TopInfo {
+    background-color:#E2E2E2;
+    width: 100%;
+    height: 1px;
+    text-align: center;
+}
+.PositionTopRet_TopInfo {
+    align-content: left;
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+}
+.limitLineCenter_TopInfo {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.InfoBase_TopInfo {
+    padding-left: 10px;
+    padding-top: 5px;
+    text-align: left;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 10px;
+    color: rgba(59,60,62,0.6);
+    letter-spacing: -0.16071670532226562px;
+}
+.InfoDisplay_TopInfo {
+    padding-left: 10px;
+    padding-bottom: 5px;
+    margin-top:-3px;
+    text-align: left;
+    font-family: Objectivity, Arial, Helvetica, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    color: rgba(59,60,62,1);
+    letter-spacing: -0.16071670532226562px;
+}
+/* Fim CSSs TopHome Info */
+.mdl-menu__container {
+  right: 94px !important;
+  top: 30px !important;
+  background-color:transparent;
+  border-radius: 30px;
+}
+.mdl-menu__container.is-visible {
+  border-radius: 30px !important;
+}
+.mdl-menu__outline {
+  border-radius: 30px !important;
+}
+.mdl-button {
+    height: 34px !important;
 }

@@ -247,5 +247,4 @@ export class Utils {
 
     return isInStandaloneMode
   }
-
 }

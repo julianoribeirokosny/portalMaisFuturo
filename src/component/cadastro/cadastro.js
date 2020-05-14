@@ -12,6 +12,8 @@ import { VueMaskDirective } from 'v-mask'
 
 Vue.directive('mask', VueMaskDirective);
 
+const img_editar = require('../../../public/images/Editar.png')
+
 export default {  
     template: cadastro,
     components: { 
@@ -22,14 +24,14 @@ export default {
         chave_usuario:""
     },    
     data: function() {
-        return {   
-                    
+        return {                       
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
             cep: null,
             email: null,
             finalizado: false,
             error_banco: false,
+            img_editar: img_editar,
             reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
             estados_civis: [{ label: 'Casado', value: 'Casado' }, 
                             { label: 'Solteiro', value: 'Solteiro' },
@@ -42,12 +44,8 @@ export default {
             }
         }        
     },
-    created(){
-        
+    created(){        
         this.getParticipante()        
-    }, 
-    mounted(){
-        
     },
     watch: {     
         cep(val){
