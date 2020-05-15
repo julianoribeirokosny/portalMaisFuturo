@@ -19,7 +19,7 @@ module.exports =  {
     valorFuturo(pv, i, n, pmt) {
         if (n===0) n = 1
         let pow = Math.pow(1 + (i/100), n)
-        console.log('===> pmt, i, pow, pv', pmt, i, pow, pv)
+        //console.log('===> pmt, i, pow, pv', pmt, i, pow, pv)
         return ((pmt*(1+(i/100)*0)*(1-pow)/(i/100))-pv*pow).toFixed(2)*(-1)
     },
 
@@ -33,12 +33,11 @@ module.exports =  {
     },
 
     pgtoMaisFuturo(pv, i, n, tem13o) {
-        console.log('==> pv, i, n, tem13o', pv, i, n, tem13o)
+        //console.log('==> pv, i, n, tem13o', pv, i, n, tem13o)
         let vlr13o = 0
         if (tem13o) {
-            vlr13o = ((1-(Math.pow( 1+(i/100), -(n/12))))/(i/100))
-                    
-            console.log('==> vlr13o', vlr13o)
+            vlr13o = ((1-(Math.pow( 1+(i/100), -(n/12))))/(i/100))        
+            //console.log('==> vlr13o', vlr13o)
         }
         let ret = pv * (1/(((1-(Math.pow((1+(Math.pow((1+(i/100)),(1/12))-1)),(-n))))/(Math.pow((1+(i/100)),(1/12))-1))+vlr13o))
         return ret.toFixed(2)
@@ -77,6 +76,7 @@ module.exports =  {
     },
 
     valor_to_string_formatado(num, casasDecimais, incluiCifrao) {
+        console.log('==> num, casasDecimais, incluiCifrao', num, casasDecimais, incluiCifrao)
         let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
         if (incluiCifrao) {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
@@ -93,7 +93,7 @@ module.exports =  {
         //let qtdMeses = this.calculaQuantidadeMeses(dataInicioRenda)
         let qtdMeses = utils.diffDatasEmMeses(new Date(), dataInicioRenda)
 
-        console.log('===> qtdMeses, dataInicioRenda', qtdMeses, dataInicioRenda)
+        //console.log('===> qtdMeses, dataInicioRenda', qtdMeses, dataInicioRenda)
 
         let taxaMensal = this.calculaTaxaMensal(taxaAnual)
         let reservaFutura = this.valorFuturo(
@@ -138,9 +138,9 @@ module.exports =  {
     },
 
     calculaContribProjetada(taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura) {
-        console.log('===> taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura', taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura)
+        //console.log('===> taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura', taxaAnual, qtdMesesAteHoje, reservaHoje, reservaTotalFutura)
         let taxaMensal = this.calculaTaxaMensal(taxaAnual)
-        console.log('===> taxa mensal', taxaMensal)
+        //console.log('===> taxa mensal', taxaMensal)
         let contribMensal = this.pgto_com_Pv(taxaMensal, qtdMesesAteHoje, reservaHoje, reservaTotalFutura, 1)
         return contribMensal
     },

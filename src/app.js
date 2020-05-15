@@ -22,11 +22,8 @@ import Auth from './Auth';
 import Router from './Router';
 import 'material-design-lite';
 import {Utils} from './Utils';
-import page from 'page';
-
-
-//import Mdl-ext from 'mdl-ext/lib';
-
+import pwaInstallPrompt from "pwa-install-prompt";
+ 
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-amaranth/index.css';
@@ -48,18 +45,53 @@ import './app.css';
  * The rest of the app is loaded asynchroneously and passed to the router.
  * Google Analytics is asynchroneously loaded.
  */
+ 
+const isIos = Utils.isIos()
+var appInstalado = Utils.validaAppInstalado()
+var beforeInstallPromptOK = false
+
+const install_button = document.querySelector('#bt-install');
+const divPrevdigi = document.querySelector('#div-prevdigi');
+const div_install = document.querySelector('#div-install');
+const bt_install_text = document.querySelector('#bt-install-text');
+const msgInstalacao = document.querySelector('#msg-instalacao');
+const msgInicial = document.querySelector('#msg-inicial');
+
+//------------------------------------------------------------------------------------------------------
+// BLOCO: Instalação do APP
+window.deferredPrompt = {};
+window.addEventListener('beforeinstallprompt', e => {
+  if (!beforeInstallPromptOK) { //necessário para prevenir que entre 2 vezes (isso estava ocorrendo no Android)
+    beforeInstallPromptOK = true
+    bt_install_text.innerHTML = 'Instalar o aplicativo'
+    // prevent default event
+    e.preventDefault();
+    // store install avaliable event
+    window.deferredPrompt = e;
+  }
+});
 
 // Configure Firebase.
 firebase.initializeApp(firebaseConfig.result);
 // Make firebase reachable through the console.
 window.firebase = firebase;
 
-
 // Load the app.
 $(document).ready(() => {
-  const auth = new Auth();
-  // Starts the router.
-  window.fpRouter = new Router(auth);
+  console.log('beforeInstallPromptOK || isIos || appInstalado', beforeInstallPromptOK , isIos , appInstalado)
+  if (appInstalado) { //fluxo normal do app após a instalação
+    const auth = new Auth();
+    // Starts the router.
+    window.fpRouter = new Router(auth);  
+  } else {
+    div_install.style.display = 'block'    
+    install_button.style.display = 'block'
+  }
+
+  if (isIos || appInstalado) {
+    install_button.style.display = 'none'
+  }
+
 });
 
 // Register the Service Worker that enables offline.
@@ -79,69 +111,39 @@ import(/* webpackPrefetch: true */ 'universal-ga').then((analytics) => {
 // Start the offline indicator listener.
 Utils.startOfflineListener();
 
-//------------------------------------------------------------------------------------------------------
-// BLOCO: Instalação do APP
-window.deferredPrompt = {};
-
 // get button with id
-const install_button = document.querySelector('#bt-install');
-const continue_button = document.querySelector('#bt-continue');
-const div_install = document.querySelector('#div-install');
-const div_continue = document.querySelector('#div-continue');
-
-// if the app can be installed emit beforeinstallprompt
-window.addEventListener('beforeinstallprompt', e => {
-  // prevent default event
-  e.preventDefault();
-  // store install avaliable event
-  window.deferredPrompt = e;
-
-  addTohome()
-});
-
-install_button.style.display = Utils.validaAppInstalado() ? 'none' : 'block'
-
-// do action when finished install
-window.addEventListener('appinstalled', e => {
-  console.log("success app install!");
-});
-
-function addTohome() {
-  div_continue.style.display = 'none';
-  div_install.style.display = 'block';
-
-  // wait for click install button by user
+if (!isIos) {
   install_button.addEventListener('click', e => {
     promptAddHome()
   });
-
-  // wait for click install button by user
-  install_button.addEventListener('touchstart', e => {
-    promptAddHome()
-  });
-
-  continue_button.addEventListener('click', e => {
-    page('/')
-  });
-
-  install_button.addEventListener('touchstart', e => {
-    page('/')
+  // if the app can be installed emit beforeinstallprompt
+  // do action when finished install
+  window.addEventListener('appinstalled', e => {
+    msgInicial.innerHTML = "Legal!"
+    msgInstalacao.innerHTML = "Instalação concluída.<br> A partir de agora acesse nosso portal através do aplicativo instalado em seu dispositivo. "
+    install_button.style.display = 'none'
+    divPrevdigi.style.display = 'none'
+    console.log("success app install!");
   });
 }
-
+  
 function promptAddHome() {
   if (!window.deferredPrompt) {
+    console.log('-> !window.deferredPrompt')
     return
   }
+  console.log('-> true window.deferredPrompt')
   window.deferredPrompt.prompt();
+  console.log('-> Prompt')
   window.deferredPrompt.userChoice.then(choiceResult => {
+    console.log('-> userChoice.then')
+    console.log('-> choiceResult.outcome', choiceResult.outcome)
     if (choiceResult.outcome === 'accepted') {
       // user accept the prompt
-      div_install.style.display = 'none';
-      div_continue.style.display = 'block';
+      console.log('OK');
     } else {
       console.log('User dismissed the prompt');
     }
     window.deferredPrompt = null;
-  });
+  });  
 }

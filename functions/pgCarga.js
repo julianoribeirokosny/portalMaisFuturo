@@ -167,6 +167,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       contribParticipante: 0,
       contribRisco: 0
     }
+    let capitalMorte, capitalInvalidez
     console.log('#pgCarga - iniciando forEach', retDadosPG)
     retDadosPG.forEach((rowDados) => {
       //primeiro verifica se está em situação do plano válida para o portal:
@@ -237,7 +238,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
             //salva informações acumuladas do usuário
             usuarios = incluiUsuarioCadastroJSON (usuarios, chave, usr)
-            usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
+            usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor, capitalMorte, capitalInvalidez)
             usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)            
             usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2, false)
             usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2, false)
@@ -308,6 +309,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaProjecao = {}
           listaItensProjetoDeVidaCoberturas = {}
           listaMesesProjetoDeVida = {}
+          capitalMorte = 0
+          capitalInvalidez = 0
   
           //Bloco estrutura valores de Reserva
           listaItensReservaChave[0] = {
@@ -335,18 +338,18 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
           //Bloco estrutura valores cobertura risco/seguro
           //MOrte
-          let capitalMorte = rowDados.cob_capitalmorte !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalmorte, 2, false) : 0
+          capitalMorte = rowDados.cob_capitalmorte !== null ? rowDados.cob_capitalmorte : 0
           listaItensCoberturas[0] = {
             cor: '<<seg_coberturas.lista_itens_coberturas.0.cor>>',
             nome: rowDados.cob_nomecapitalmorte,
-            valor: capitalMorte === 0 ? '(não contratado)' : capitalMorte
+            valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte, 2, false)
           }
           //Invalidez
-          let capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? financeiro.valor_to_string_formatado(rowDados.cob_capitalinvalidez, 2, false) : 0
+          capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? rowDados.cob_capitalinvalidez : 0
           listaItensCoberturas[1] = {
             cor: '<<seg_coberturas.lista_itens_coberturas.1.cor>>',
             nome: rowDados.cob_nomecapitalinvalidez,
-            valor: capitalInvalidez === 0 ? '(não contratado)' : capitalInvalidez
+            valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez, 2, false)
           }
   
           //Bloco estrutura valores projeto de vida
@@ -502,7 +505,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
       //salva informações acumuladas do usuário
       usuarios = incluiUsuarioCadastroJSON (usuarios, chave, usr)
-      usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor)
+      usuarios = incluiUsuarioValoresJSON (usuarios, chave, usuarioContrib, usrReservaTotal.valor, Number(retGraficoReservaCompleto[2]), Number(retGraficoReservaCompleto[3]), usuarioTotalContr.valor, capitalMorte, capitalInvalidez)
       usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)
       usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2, false)
       usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2, false)
@@ -568,6 +571,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_dtadesao: usr.dataadesao,
     usr_situacao_plano: usr.sitPart,
     segmento: validaSegmento(chave),
+    usr_perfil_investimento: usr.perfil,
     usr_taxaPadrao: usr.taxa,
     usr_contribuicao: {
       acao: {
@@ -615,7 +619,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
 }
 
 
-function incluiUsuarioValoresJSON (usuarios, chave, listaUsuarioContrib, reservaHoje, reservaFutura, rendaFutura, totalContrib) { 
+function incluiUsuarioValoresJSON (usuarios, chave, listaUsuarioContrib, reservaHoje, reservaFutura, rendaFutura, totalContrib, capitalMorte, capitalInvalidez) { 
   //carrega estrutura de informações
   usuarios[chave].data.valores = { 
     contribParticipante: listaUsuarioContrib.contribParticipante,
@@ -626,7 +630,10 @@ function incluiUsuarioValoresJSON (usuarios, chave, listaUsuarioContrib, reserva
     reservaTotalAtual: reservaHoje,
     reservaTotalFutura: reservaFutura,
     rendaMensalFutura: rendaFutura,
-    historicoContribuicao: usuarios[chave].valores && usuarios[chave].valores.historicoContribuicao ? usuarios[chave].valores.historicoContribuicao : ''
+    historicoContribuicao: usuarios[chave].valores && usuarios[chave].valores.historicoContribuicao ? usuarios[chave].valores.historicoContribuicao : '',
+    coberturaMorte: capitalMorte,
+    coberturaInvalidez: capitalInvalidez
+  
   }
 
   return usuarios
@@ -888,6 +895,8 @@ function insereRegistroTestesHome(usuarios, chave, apelido){
       "usr_plano" : "Mais Futuro",
       "usr_dtnasc" : '10/03/1978',  
       "usr_taxaPadrao" : 5.0000,  
+      "usr_competencia": anoMes,
+      "usr_perfil_investimento": "Agressivo",
       "usr_campanhas" : {
         "aporte" : {
           "ativo" : true,

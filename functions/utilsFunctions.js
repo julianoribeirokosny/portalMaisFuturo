@@ -60,9 +60,11 @@ module.exports =  {
         if (!(dataMenor instanceof Date)) {
             dataMenor = new Date(dataMenor)
         }
+        let diminuiMes = dataMenor.getDate() > dataMaior.getDate() ? 1 : 0
         let months;
         months = (dataMaior.getFullYear() - dataMenor.getFullYear()) * 12;
-        months -= dataMenor.getMonth() + 1;
+        months -= dataMenor.getMonth();
+        months -= diminuiMes
         months += dataMaior.getMonth();
         return months <= 0 ? 0 : months;        
     },

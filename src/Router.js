@@ -52,8 +52,6 @@ export default class Router {
       if (Utils.validaAppInstalado()) {
         this.displayPage('splash-login');
         this.redirectHomeIfSignedIn();  
-      } else { 
-        this.displayPage('splash-instalacao');
       }
     });
     page('/home', async () => {
