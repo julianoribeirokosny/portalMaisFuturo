@@ -1,8 +1,7 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
     <!--Historico de Contribuicao-->        
    <div class="mdl-card__supporting-text mdl-card-container div-container gridTitle" style="margin-top: 20px;">
-      <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>
-      <!-- <div class="SectionImg"><img src="../../../public/images/Download_historico.png" width="66" height="70"/></div> -->
+      <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>      
    </div>
    <!-- Tabela Histórico de Contribuição Div-->
    <div class="mdl-card__supporting-text mdl-card-container div-container gridHeader">
@@ -14,11 +13,11 @@
       <div class="TableText" style="color:#033166;font-weight: 600;">{{item.anoMes}}</div>
       <div class="TableText" style="color:#033166;font-weight: 600;">{{item.valor}}</div>
       <template v-if="item.pago">
-         <div class="TableImg"><img src="../../../public/images/Check.png" width="14" height="10" alt=""/></div>
+         <div class="TableImg"><img v-bind:src="img_check" width="14" height="10" alt=""/></div>
       </template>
       <template v-else>
          <div class="TableImg" style="cursor: pointer;" @click="showModal">
-            <img src="../../../public/images/Boleto.png" width="30" height="20" alt="Boleto"/>            
+            <img v-bind:src="img_boleto" width="30" height="20" alt="Boleto"/>            
          </div>
       </template>
    </div>

@@ -4,6 +4,9 @@ import page from 'page';
 import historicoContribuicao from './historicoContribuicao.html';
 import './historicoContribuicao.css';
 
+const img_boleto = require('../../../public/images/Boleto.png')
+const img_check = require('../../../public/images/Check.png')
+
 export default {
     template: historicoContribuicao,
     props: { 
@@ -12,7 +15,9 @@ export default {
     data: function() {
         return {      
             titulo: 'Histórico de<br/>contribuição',
-            showDialog: false
+            showDialog: false,
+            img_boleto: img_boleto,
+            img_check: img_check
         }
     },
     mounted(){        
