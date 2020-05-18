@@ -178,12 +178,12 @@
 <section id="page-confirmacao-dados" class="primeiro-login">
     <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
     <br><br>
-    <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br>Por favor informe abaixo o seu cpf.</div>
-    
+    <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br></div> 
+    <div class="fp-caption2" style="max-width: 500px;">Por favor informe abaixo o seu cpf.</div>
     <div class="mdl-card__supporting-text">
         <div style="max-width: 500px; text-align: center; margin: auto;">      
             <div style="margin-bottom: 20px;">
-                <input class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
+                <input pattern="[0-9]*" inputmode="numeric" class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
                 <div id="confirma-dados-input-cpf-erro" style="color: red; font-size: 12px; display:none;"></div>
             </div>
             <div style="display: flex; align-items: center; justify-content: center;">
@@ -220,7 +220,7 @@
       <div class="fp-caption" style="display: block" id="msg-inicial">Bem vindo!</div> 
       <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal clicando abaixo. Após concluída, acesse-o através do aplicativo que será instalado em seu dispositivo.</div> 
       <div id="bt-install" style="display: block; padding-top: 15px;">
-        <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="margin: 0 auto">
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 80%; margin: auto;">
           <span id="bt-install-text" class="mdl-color-text--white">Aguarde. Preparando instalação...</span>
         </button>
       </div>
@@ -234,81 +234,52 @@
 
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="fp-header mdl-layout__header mdl-color--white">
-    <div class="mdl-layout__header-row fp-titlebar">
-      <!-- Navigation -->
-      <nav class="mdl-navigation">
-        <div class="fp-signed-in-user-container fp-signed-in-only">
-          <a class="mdl-button mdl-js-button" href="/home" style="padding: 0px 5px;">
-            <img src="../public/images/Component 52 ÔÇô 2@2x.png" alt="Voltar" style="height: 38px;width: 38px;">
-          </a>
-        </div>
-        <div class="fp-signed-in-user-container fp-signed-in-only">
-          <a class="fp-usernamelink mdl-button mdl-js-button">
-              <div class="fp-avatar"></div>
-          </a>          
-        </div>
-      </nav>
-      <!-- Add spacer, to align navigation to the right -->
-      <div class="mdl-layout-spacer"></div>
-     
-
-      <nav class="mdl-navigation" style="width: 38px;">
-        <div id="menu" class="divHomeSimulator mdl-button mdl-js-button mdl-button--icon">
-          <div class="InfoIcon_Position">
-              <img src="../public/images/Info-Icon.png" width="25" height="25">
-          </div>
-      </div>
-      <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect Rectangle_InfoTop" for="menu">
-          <div class="PositionTopRet_TopInfo">
-              <div class="InfoBase_TopInfo">nome do plano</div>
-              <div id="displayInfoNomePlano" class="InfoDisplay_TopInfo"></div>
-              <div class="linhaDivisoria_TopInfo"></div>
-              <div class="InfoBase_TopInfo">tipo do plano</div>
-              <div id="displayInfoTipoPlano"class="InfoDisplay_TopInfo"></div>
-              <div class="linhaDivisoria_TopInfo"></div>
-              <div class="InfoBase_TopInfo">Competência</div>
-              <div id="displayInfoCompetencia" class="InfoDisplay_TopInfo">Maio de 2020</div>
-              <div class="linhaDivisoria_TopInfo"></div>
-              <div class="InfoBase_TopInfo">Perfil de Investimento</div>
-              <div id="displayInfoPerfilInvestimento" class="InfoDisplay_TopInfo">Agressivo</div>                    
-          </div>
-      </div>
-        <!-- <span id="menu" class="mdl-button mdl-js-button mdl-button--icon" style="height: 32px;">
-          <div class="fp-logo" style="text-align: right; margin-right: 10px; cursor: pointer;">
-            <img src="../public/images/Info-Icon.png" style="width: 25px;height: 25px;" alt="Portal Mais Futuro">
-          </div>
-        </span>
-        <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu" id="ul_container">
-          <span style="color: brown;">DropDownList</span>
-        </div> -->
-        
-     </nav>
-
-      <!-- <nav class="mdl-navigation">
-        
-          <span class="mdl-layout-title">
-            <div class="fp-logo" style="text-align: right; margin-right: 10px; cursor: pointer;">
-              <img src="../public/images/Info-Icon.png" style="width: 25px;height: 25px;" alt="Portal Mais Futuro">
+      <div class="mdl-layout__header-row fp-titlebar">
+          <!-- Navigation -->
+          <nav class="mdl-navigation">
+            <div id="divbuttonhome" class="fp-signed-in-user-container fp-signed-in-only">
+              <a class="mdl-button mdl-js-button" href="/home" style="padding: 0px 5px;">
+                <img src="../public/images/Component 52 ÔÇô 2@2x.png" alt="Voltar" style="height: 38px;width: 38px;">
+              </a>
             </div>
-          </span>  
-                  
-      </nav> -->
-      
-      
-      <!-- Title -->
-      <span class="mdl-layout-title">
-        <div class="fp-logo" style="text-align: right;">
-          <img src="../public/images/icon-120x120.png" alt="Portal Mais Futuro">
-        </div>
-      </span>      
-    </div>
+            <div id="divavatar" class="fp-signed-in-user-container fp-signed-in-only">
+              <a class="fp-usernamelink mdl-button mdl-js-button">
+                  <div class="fp-avatar"></div>
+              </a>          
+            </div>            
+          </nav>
+          <!-- Add spacer, to align navigation to the right -->
+          <div class="mdl-layout-spacer"></div>     
+
+          <nav class="mdl-navigation" style="width: 50px; justify-content: center;">
+              <div id="menu" class="divHomeSimulator mdl-button mdl-js-button mdl-button--icon" style="width: 34px; height: 34px !important;">
+                  <img src="../public/images/Info-Icon.png" width="25" height="25">          
+              </div>
+              <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect Rectangle_InfoTop" for="menu">
+                  <div class="PositionTopRet_TopInfo">
+                      <div class="InfoBase_TopInfo">nome do plano</div>
+                      <div id="displayInfoNomePlano" class="InfoDisplay_TopInfo"></div>
+                      <div class="linhaDivisoria_TopInfo"></div>
+                      <div class="InfoBase_TopInfo">tipo do plano</div>
+                      <div id="displayInfoTipoPlano"class="InfoDisplay_TopInfo"></div>
+                      <div class="linhaDivisoria_TopInfo"></div>
+                      <div class="InfoBase_TopInfo">Competência</div>
+                      <div id="displayInfoCompetencia" class="InfoDisplay_TopInfo">Maio de 2020</div>
+                      <div class="linhaDivisoria_TopInfo"></div>
+                      <div class="InfoBase_TopInfo">Perfil de Investimento</div>
+                      <div id="displayInfoPerfilInvestimento" class="InfoDisplay_TopInfo">Agressivo</div>                    
+                  </div>
+              </div>
+          </nav>      
+          <!-- Title -->
+          <span class="mdl-layout-title">
+              <div class="fp-logo" style="text-align: right;">
+                  <img src="../public/images/icon-120x120.png" alt="Portal Mais Futuro">
+              </div>
+          </span>      
+      </div>
   </header>
-  <div  class="mdl-layout__drawer div-menu-background">
-    <!-- <a href="/" class="fp-signed-out-only">
-      <button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button">
-        <i class="material-icons">account_circle</i> Sign in
-      </button>
-    </a> -->
+  <div class="mdl-layout__drawer div-menu-background">
     <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 60px; padding: 5px;">
       <a href="/home">      
         <img class="img-mais-amigos-1" src="../public/images/Component 44 ÔÇô 2@2x.png" alt="voltar" style="height: 60px; width: 60px; transform: rotate(180deg);"><br><br>
@@ -346,6 +317,7 @@
       <hr class="hr-menu-nav"/>      
     </nav>
   </div>
+
 
   <!--Modal dialog-->
   <dialog id="termo-servico-dialog" class="mdl-dialog">
@@ -726,7 +698,7 @@
                       <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: center;">
                           <video controls style="width: 100%; height: 100%;">
                               <source :src="video" type="video/mp4">
-                          </video>                          
+                          </video>
                       </div>
                       <div class="mdl-card__supporting-text mdl-card-container div-educacao_financeira-titulo">
                           {{ home.educacao_financeira.titulo }}
@@ -864,6 +836,13 @@
               </div>
             </template>
             <historico-contribuicao v-bind:historico="historicoContribuicao"></historico-contribuicao>            
+          </section>
+
+          <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
+            <a></a>            
+            <p>
+              Troca de chave
+            </p>
           </section>
 
           <!--Página em Construção-->

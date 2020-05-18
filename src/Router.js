@@ -117,7 +117,7 @@ export default class Router {
       this.displayPage('erro')
     })
     page('/terms', () => {this.displayPage('terms');});
-    page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('user-info');});
+    page('/user/:userId', (context) => {loadUser(context.params.userId); this.displayPage('troca-chave');});
     page('*', () => {
       page('/')
     });
@@ -132,7 +132,18 @@ export default class Router {
    * A "page" é o elemento com o ID "page-<id>" na DOM.
    */
   async displayPage(pageId) {
-    console.log('PAGE_ID =====> ',pageId)
+    //sessionStorage.paginaAtual = pageId
+    let divbuttonhome = document.querySelector('#divbuttonhome')
+    let divavatar = document.querySelector('#divavatar')    
+    if(pageId === 'home') {
+      divbuttonhome.style.display = 'none'
+      divavatar.style.display = 'block'
+    } else {
+      divbuttonhome.style.display = 'block'
+      divavatar.style.display = 'none'
+    }
+
+    //console.log('PAGE_ID =====> ',pageId)
     this.pagesElements.each((index, element) => {
       //console.log('ELEMENT.ID =====> ',element.id)
       if (element.id === 'page-' + pageId) {  

@@ -16,6 +16,7 @@ import emConstrucao from './component/emConstrucao/emConstrucao'
 import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
 import page from 'page';
 import {Erros} from './Erros';
+import {Utils} from './Utils';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -61,12 +62,17 @@ export default class Home {
     //registra login com sucesso
     firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
 
-    //ATENÇÃO!!!!!!!!!!!!!!
-    // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
-    //    usuário no menu de seleção de visualizar participações!!!!!!!
-    this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
-    //console.log('=====> CHAVE: ', this.chave)
-    if (this.chave===null) {
+    console.log('=====> currentUser: ', this.auth.currentUser)
+    if (!sessionStorage.chave || sessionStorage.chave==="undefined" || sessionStorage.chave === '') {
+      let token = await this.auth.currentUser.getIdToken();
+      let tokenInfo = Utils.parseJwt(token)
+      console.log('==> tokenInfo', tokenInfo)
+      sessionStorage.chave = tokenInfo.chavePrincipal
+    }
+    this.chave = sessionStorage.chave
+    //this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
+    console.log('=====> CHAVE: ', sessionStorage.chave)
+    if (this.chave===null || this.chave ==='') {
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
     }
@@ -114,25 +120,7 @@ export default class Home {
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorSeguro =  await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
-    // {
-    //     titulo: 'Simulador </br>de Seguro',
-    //     tipo: 'Seguro',  
-
-    //     minimoMorte: 10000,
-    //     maximoMorte: 1500000,
-    //     stepMorte: 10000,
-    //     minimoInvalidez: 10000,
-    //     maximoInvalidez: 1500000,
-    //     stepInvalidez: 10000,
-        
-    //     fatorMorte: 1.1423,
-    //     fatorInvalidez: 1.0163,
-    //     coberturaInvalidez: 200000,
-    //     coberturaMorte: 200000,
-    //     chave: this.chave,
-    //     uid: this.auth.currentUser.uid,
-    //     seguroSolicitado: this.consulta_seguro,
-    // }
+    
     dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
 
@@ -304,12 +292,9 @@ export default class Home {
 
                 }
             },
-            errorCaptured:function(err, component, details) {
-                console.log('error',err)
-                console.log('component',component)
-                console.log('details',details)
-                alert(err);
-                page('/erro')
+            errorCaptured(err, component, details) {
+                Erros.registraErro(err, 'vuejs', '')
+                return page('/erro')
             }
           })
             this.vueObj.$mount('#app');           

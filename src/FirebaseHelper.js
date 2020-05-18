@@ -1245,28 +1245,61 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorSeguro(chave, uid) {
+
       let usuario = await this.getParticipante(chave)    
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)    
-      let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)
+      let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)  
+      console.log('simuladorSeguroSettings',simuladorSeguroSettings)
+      let minimoMorte = this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, usuario.data.valores.coberturaMorte)
+      let maximoSemSDPSMorte = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.maximo_morte, usuario.data.valores.coberturaMorte, simuladorSeguroSettings.regra_dps)     
+      let stepMorte = simuladorSeguroSettings.step_morte
+      let minimoInvalidez = this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez)
+      let maximoSemDPSInvalidez = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez)      
+      let stepInvalidez = simuladorSeguroSettings.step_invalidez
 
       let dadosSimuladorSeguro = {
           titulo: 'Simulador </br>de Seguro',
           tipo: 'Seguro',
-          minimoMorte: simuladorSeguroSettings.minimo_morte,
+          minimoMorte: minimoMorte,
+          maximoSemDpsMorte: maximoSemSDPSMorte,
           maximoMorte: simuladorSeguroSettings.maximo_morte,
-          stepMorte: simuladorSeguroSettings.step_morte,
-          minimoInvalidez: simuladorSeguroSettings.minimo_invalidez,
+          stepMorte: stepMorte,
+          minimoInvalidez: minimoInvalidez,
+          maximoSemDpsInvalidez: maximoSemDPSInvalidez,
           maximoInvalidez: simuladorSeguroSettings.maximo_invalidez,
-          stepInvalidez: simuladorSeguroSettings.step_invalidez,      
+          stepInvalidez: stepInvalidez,
           fatorMorte: fator_idade_seguro.fator_morte,
           fatorInvalidez: fator_idade_seguro.fator_invalidez,
-          coberturaInvalidez: 200000,
-          coberturaMorte: 200000,      
+          coberturaInvalidez: usuario.data.valores.coberturaInvalidez,
+          coberturaMorte: usuario.data.valores.coberturaMorte,
           chave: chave,
           uid: uid
       }
       return dadosSimuladorSeguro
+  }
+
+  calculaMinimoSeguro(setting, contratado) {      
+      if (contratado) {          
+          return contratado >= setting ? contratado : setting
+      } else {          
+          return setting
+      }      
+  }
+
+  calculaMaximoSemDPSSeguro(setting, contratado, regra) {      
+      if (contratado) {
+          let dps = setting
+          regra.forEach(rgr => {
+            let limite = contratado + rgr.limite
+            let perc = contratado * (rgr.percentual / 100 + 1)
+            let menorValor = perc > limite ? limite : perc
+            dps = menorValor > dps ? dps : menorValor
+          })          
+          return dps
+      } else {          
+          return 0
+      }
   }
 
   getUserClaims(user) {

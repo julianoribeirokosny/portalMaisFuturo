@@ -7,13 +7,13 @@
                     <div class="div_descricao margin-auto" v-html="dados.descricao"></div>            
                     <div style="float: left; width: 75% !important; height: 400px;">
                         
-                        <p class="p_label_seguro">Por Invalidez</p>
+                        <p class="p_label_seguro">Cobertura por invalidez</p>
                         <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
                             <p style="margin-bottom: 1px;">
                                 <span class='line span_cobertura_valor2' style="color:#8BCF7B">
                                     <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}<span id='text-bottom'>,00</span></span></p>
                         </div>
-                        <p class="p_label_seguro">Por Morte</p>
+                        <p class="p_label_seguro">Cobertura por morte</p>
                         <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaMorte > 0">
                             <p>
                                 <span class='line span_cobertura_valor2' style="color:#003366">
@@ -21,14 +21,7 @@
                         </div>
 
                         <div style="margin-top: 50px; margin-left: 20px;">
-                            <!-- <p class="p_label_seguro" style="padding-left: 0px;">Valor total do prêmio mensal</p>
-                            <div style="margin-left: 2px;margin-right: 20px;">
-                                <p style="margin-bottom: 1px;">
-                                    <span class='line span_premio_valor'>
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ premioTelaTotal }}<span id='text-bottom'>,00</span></span>
-                                </p>
-                            </div>                 -->
-                            <p class="p_label_seguro">Por Invalidez</p>
+                            <p class="p_label_seguro">Prêmio por invalidez</p>
                             <div style="margin-left: 2px;margin-right: 20px;">
                                 <p style="margin-bottom: 1px; padding-left: 0px;">
                                     <span class='span_premio_valor2' style="color:#8BCF7B !important;">
@@ -36,7 +29,7 @@
                                     </span>
                                 </p>
                             </div>                
-                            <p class="p_label_seguro">Por Morte</p>
+                            <p class="p_label_seguro">Prêmio por morte</p>
                             <div style="margin-left: 2px;margin-right: 20px;">
                                 <p style="padding-left: 0px;">
                                     <span class='span_premio_valor2' style="color:#003366 !important;">
@@ -44,7 +37,7 @@
                                     </span>
                                 </p>
                             </div>
-                            <p class="p_label_seguro" style="padding-left: 0px;">Valor total do prêmio mensal</p>
+                            <p class="p_label_seguro" style="padding-left: 0px;">Prêmio total mensal</p>
                             <div style="margin-left: 2px;margin-right: 20px;">
                                 <p style="margin-bottom: 1px;">
                                     <span class='line span_premio_valor'>
