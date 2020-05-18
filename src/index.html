@@ -95,6 +95,11 @@
                     <span class="mdl-color-text--white">Confirmar</span>
                 </button>
             </div>
+            <div style="display: flex; align-items: center; justify-content: center; padding-top: 20px;">
+              <button class="mdl-button mdl-js-button fp-cancelar-dados">
+                  <span class="mdl-color-text--white">Cancelar</span>
+              </button>
+          </div>
         </div>      
     </div>
 </section>
@@ -113,7 +118,31 @@
           <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
         </button>
       </div>        
+      <div style="display: flex; align-items: center; justify-content: center; padding-top: 20px;">
+        <button class="mdl-button mdl-js-button fp-cancelar-dados">
+            <span class="mdl-color-text--white">Cancelar</span>
+        </button>
     </div>      
+  </div>
+</section>
+
+<section id="page-erro-confirmacao-dados" class="primeiro-login">
+  <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+  <br><br>
+  <div class="mdl-card__supporting-text">
+    <div style="max-width: 500px; text-align: center; margin: auto;">
+      <div class="fp-caption">Puxa vida!</div> 
+      <div class="fp-caption2">Não conseguimos identificar seu dados em nossa base de participantes.</div>     
+      <div class="fp-caption2">Caso você realmente seja participante, por favor envie um e-mail para <b>contato@maisfuturo.com.br</b>, e aguarde que resolveremos tudo rapidinho para você!</div> 
+    </div>    
+    <div style="display: flex; align-items: center; justify-content: center;"> 
+      <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-erro-sair">
+          <span class="mdl-color-text--white">Sair</span>
+      </button>
+    </div>                      
+    <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display: block">
+      <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é participante? Faça uma simulação.</a>        
+    </div>  
   </div>
 </section>
 
@@ -132,25 +161,29 @@
           <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
         </button>
       </div>
-      <div style="padding-top: 30px; display:none" id="div-nao-reconhece-email">
+      <!--div style="padding-top: 30px; display:none" id="div-nao-reconhece-email">
         <div class="fp-caption2" id="msg-participante3" style="padding-bottom: 10px;"></div>     
         <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-aviso-validacao" id="btn-nao-reconhece-email"  style="margin: 0 auto;">
           <span class="mdl-color-text--white" id='btn-nao-reconhece-email-texto'>Solicitar a troca do e-mail</span>
         </button>
-      </div>        
-    </div>      
+      </div-->        
+      <div style="display: flex; align-items: center; justify-content: center; padding-top: 30px;">
+        <button class="mdl-button mdl-js-button fp-cancelar-dados">
+            <span class="mdl-color-text--white">Sair</span>
+        </button>
+      </div>      
   </div>
 </section>
 
 <section id="page-confirmacao-dados" class="primeiro-login">
     <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
     <br><br>
-    <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br>Por favor informe abaixo o seu cpf.</div>
-    
+    <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br></div> 
+    <div class="fp-caption2" style="max-width: 500px;">Por favor informe abaixo o seu cpf.</div>
     <div class="mdl-card__supporting-text">
         <div style="max-width: 500px; text-align: center; margin: auto;">      
             <div style="margin-bottom: 20px;">
-                <input class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
+                <input pattern="[0-9]*" inputmode="numeric" class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
                 <div id="confirma-dados-input-cpf-erro" style="color: red; font-size: 12px; display:none;"></div>
             </div>
             <div style="display: flex; align-items: center; justify-content: center;">
@@ -159,7 +192,7 @@
                 </button>
             </div>
             <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
-              <button class="mdl-button mdl-js-button mdl-color-text--grey-600 fp-confirm-voltar">
+              <button class="mdl-button mdl-js-button fp-confirm-voltar">
                 <span class="mdl-color-text--white">Voltar</span>
               </button>
             </div>
@@ -177,38 +210,29 @@
   <div id="firebaseui-auth-container"></div>
 </section>
 
-<!-- Splash screen da Instalação -->
-<section id="page-splash-instalacao" class="page-splash">    
-    <div style="margin: 5px 0 50px 0;">
-        <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+<!-- Splash screen da Instalação - ANDROID -->
+<section id="page-instalacao" class="page-splash">
+  <div style="margin: 5px 0 50px 0;">
+    <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+  </div>
+  <div style="max-width: 500px; text-align: center;">    
+    <div id="div-install" style="display: none; text-align: center;">
+      <div class="fp-caption" style="display: block" id="msg-inicial">Bem vindo!</div> 
+      <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal clicando abaixo. Após concluída, acesse-o através do aplicativo que será instalado em seu dispositivo.</div> 
+      <div id="bt-install" style="display: block; padding-top: 15px;">
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 80%; margin: auto;">
+          <span id="bt-install-text" class="mdl-color-text--white">Aguarde. Preparando instalação...</span>
+        </button>
+      </div>
+      <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display: block">
+        <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
+      </div>  
     </div>
-    <div style="max-width: 500px; text-align: center;">    
-        <div id="div-install" style="display: none; text-align: center;">
-            <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-install" style="display:flex;justify-content: center; width: 80%; margin: auto;">
-              <span class="mdl-color-text--white">Instalar o aplicativo</span>
-            </button>
-            <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display:flex;justify-content: center; width: 80%; margin: auto;">
-              <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
-            </div>  
-        </div>
-        <div  id="div-continue" style="display: none; text-align: center;">
-            <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                <div class="mdl-card__supporting-text mdl-card-container" style="margin:auto;">      
-                    <div class="fp-caption">Parabéns!</div> 
-                    <div class="fp-caption2">O portal foi instalado e está pronto para uso.<br> A partir de agora acesse o portal através do aplicativo instalado em seu dispositivo.</div>
-                    <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: center; padding-top: 20px; margin:auto;">
-                        <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="bt-continue" style="width: 90%;margin-top: 10px;">
-                            <span class="mdl-color-text--white">Abrir o aplicativo</span>
-                        </button>  
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
 </section>
 
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="fp-header mdl-layout__header mdl-color--white">
       <div class="mdl-layout__header-row fp-titlebar">
           <!-- Navigation -->

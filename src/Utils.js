@@ -235,11 +235,8 @@ export class Utils {
   static validaAppInstalado() {
     // Detects if device is in standalone mode
     let isInStandaloneMode
-    const isIos = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      return /iphone|ipad|ipod/.test( userAgent );
-    }    
-    if (isIos()) {
+    
+    if (this.isIos()) {
       isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
     } else {
       isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
@@ -247,4 +244,17 @@ export class Utils {
 
     return isInStandaloneMode
   }
+
+  static isIos () {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    //alert('==> userAgent'+userAgent)
+    return /iphone|ipad|ipod/.test( userAgent );
+  }
+
+  static parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(window.atob(base64));
+  }
+  
 }

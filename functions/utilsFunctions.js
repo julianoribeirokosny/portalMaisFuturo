@@ -60,9 +60,11 @@ module.exports =  {
         if (!(dataMenor instanceof Date)) {
             dataMenor = new Date(dataMenor)
         }
+        let diminuiMes = dataMenor.getDate() > dataMaior.getDate() ? 1 : 0
         let months;
         months = (dataMaior.getFullYear() - dataMenor.getFullYear()) * 12;
-        months -= dataMenor.getMonth() + 1;
+        months -= dataMenor.getMonth();
+        months -= diminuiMes
         months += dataMaior.getMonth();
         return months <= 0 ? 0 : months;        
     },
@@ -87,9 +89,9 @@ module.exports =  {
             console.log('===> num', num)
             console.log('===> Math.sign(num)', Math.sign(num))
             console.log('===> (Math.abs(num)/1000)', (Math.abs(num)/1000))
-            ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'mil' 
+            ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + ' mil' 
         } else if (Math.abs(num) > 999999) {
-            ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + 'Mi' 
+            ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + ' Mi' 
         } else {
             Math.sign(num)*Math.abs(num)            
         }

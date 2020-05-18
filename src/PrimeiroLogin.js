@@ -47,6 +47,7 @@ export default class PrimeiroLogin {
                 //porém, verifica se já não fez outro login que tenha cadastrado o email ou telefone que está tentando agora
                 let usuarioOutroLogin = await this.firebaseHelper.getUsuarioListaParticipacoes(usr, sessionStorage.tipoLogin, '', '')
                 if (!usuarioOutroLogin || !usuarioOutroLogin.data_ultimo_login || usuarioOutroLogin.data_ultimo_login !== '') { 
+                    this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
                     ret = true
                 } else { 
                     //se achou em outra conta pelo e-mail ou celular do primeiro login, indica que já fez login com outra conta, cadastrando e-mail ou celular
@@ -64,12 +65,15 @@ export default class PrimeiroLogin {
     async aguardaValidaLinkPrimeiroLogin() {
         if (this.auth.currentUser) {
             var intervalId = setInterval(() => {  //Aguarda até ter a verificação
-                this.auth.currentUser.reload()
-                if (this.auth.currentUser.emailVerified) {
-                    clearInterval(intervalId);
-                    this.firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
-                    return page('/home') //joga para splash page para depois ir para a home
-                }  
+                firebase.auth().currentUser.reload().then(() => {
+                    this.auth = firebase.auth()
+                    console.log('===> this.auth.currentUser.emailVerified', this.auth.currentUser.emailVerified)
+                    if (this.auth.currentUser.emailVerified) {
+                        clearInterval(intervalId);
+                        this.firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
+                        return page('/home') //joga para splash page para depois ir para a home
+                    }  
+                    })                
             }, 5000)
         }
     }  
@@ -186,21 +190,21 @@ export default class PrimeiroLogin {
             let emailAlternativo = sessionStorage.emailAlternativo
             let btnReenviaVerificacao = $('#btn-reenvia-verificacao')
             let btnNaoReconhece = $('#btn-nao-reconhece-email')
-            let divNaoReconhece = $('#div-nao-reconhece-email')
+            //let divNaoReconhece = $('#div-nao-reconhece-email')
             let msgPart1 = $('#msg-participante1')
             let msgPart2 = $('#msg-participante2')
-            let msgPart3 = $('#msg-participante3')
+            //let msgPart3 = $('#msg-participante3')
             if (emailCadastro === emailAlternativo) {
                 msgPart1.text(`Identificamos que o e-mail ${emailAlternativo} informado já consta em nossa base da dados.`)
                 msgPart2.texto(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para este e-mail.`)
                 msgPart3.text(`_`)            
-                divNaoReconhece.hide()            
+                //divNaoReconhece.hide()            
             } else {
-                divNaoReconhece.show()
+                //divNaoReconhece.show()
                 btnReenviaVerificacao.click(() => {
                     this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro)
                 })    
-                msgPart3.text(`Não reconhece ou não usa mais o e-mail ${emailCadastro}?`)
+                //msgPart3.text(`Não reconhece ou não usa mais o e-mail ${emailCadastro}?`)
                 msgPart2.text(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para seu e-mail cadastrado: ${emailCadastro}`)                
                 if (emailAlternativo !== '') {
                     msgPart1.text(`Nenhum dos e-mails informados (${this.auth.currentUser.email} e ${emailAlternativo}) foram identificados em nossa base de dados.`)

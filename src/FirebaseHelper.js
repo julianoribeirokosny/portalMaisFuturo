@@ -921,6 +921,11 @@ export default class FirebaseHelper {
     ref.update({data_ultimo_login: dataHoje})
   }
 
+  resetEmailVerified(uid) {
+    let ref = this.database.ref(`login/${uid}`)    
+    ref.update({resetEmailVerified: false})
+  }
+
   validaRegistroLogin(uid) {
     let ref = this.database.ref(`login/${uid}`)
     return ref.once('value').then((data) => {

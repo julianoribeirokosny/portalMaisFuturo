@@ -62,6 +62,7 @@ export default class Auth {
     this.mobileUploadButton = $('button#add-floating');
     this.preConsentCheckbox = $('#fp-pre-consent');
     this.confirmDadosButton = $('.fp-confirm-dados')
+    this.cancelarDadosButton = $('.fp-cancelar-dados')
     this.confirmVoltarButton = $('.fp-confirm-voltar')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
     this.confirmDadosButton2 = $('.fp-confirm-dados2')   
@@ -96,6 +97,9 @@ export default class Auth {
       let celular = $('.fp-input-celular').val()
       let email = $('.fp-input-email').val()
       this.primeiroLogin.confirmEmailFone(celular, email);
+    });
+    this.cancelarDadosButton.click(() => {
+      this.signOut()
     });
     this.confirmVoltarButton.click(() => {
       page('/primeiro-login')

@@ -971,7 +971,7 @@ button.firebaseui-idp-password {
   padding-right: 20px;
   opacity: 0.8;
 }
-.page-splash .fp-skip {  
+.fp-skip {  
   font-size: 13px;
   letter-spacing: 0;
   color: white;
@@ -982,7 +982,7 @@ button.firebaseui-idp-password {
   cursor: pointer;
   text-decoration: underline;
 }
-.page-splash .fp-skip:HOVER {
+.fp-skip:HOVER {
   text-decoration: underline;
 }
 
@@ -2108,6 +2108,28 @@ p.p_valor_simulado__se {
   background-color: rgb(173, 175, 175);  
 }
 
+.fp-cancelar-dados {
+  height: 40px;
+  cursor: pointer;
+  background-color: rgb(150, 151, 151);
+  color: #FFFFFF;
+  text-align: center;
+  margin-top: 30px;
+}
+.fp-cancelar-dados:hover { 
+  background-color: rgb(150, 151, 151);
+}
+.fp-confirm-voltar {
+  height: 40px;
+  cursor: pointer;
+  background-color: rgb(150, 151, 151);
+  color: #FFFFFF;
+  text-align: center;
+  margin-top: 30px;
+}
+.fp-confirm-voltar:hover { 
+  background-color: rgb(150, 151, 151);
+}
 
 @media screen and (max-width: 425px) {
     .p_label__se {        

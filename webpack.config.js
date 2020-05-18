@@ -26,10 +26,10 @@ const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
 
 module.exports = (env, argv) => {
-  mode: argv.mode  
+  mode: "development" // argv.mode  
 
   console.log('========================> argv.mode', argv.mode, '<====================')
-  const devMode = argv.mode !== 'production';
+  const devMode = true //argv.mode !== 'production';
   return {    
     entry: {
       app: './src/app.js',

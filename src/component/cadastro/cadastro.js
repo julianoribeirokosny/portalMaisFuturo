@@ -1,12 +1,15 @@
 'use strict';
 
 import Vue from 'vue/dist/vue.esm.js'
+
+import vSelect from 'vue-select'; 
+import 'vue-select/dist/vue-select.css'
+
 import cadastro from './cadastro.html';
 import './cadastro.css';
+
 import page from 'page';
 import FirebaseHelper from '../../FirebaseHelper';
-import vSelect from 'vue-select'; 
-import 'vue-select/dist/vue-select.css';
 import cep from 'cep-promise'
 import { VueMaskDirective } from 'v-mask'
 

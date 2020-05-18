@@ -17,6 +17,7 @@ import historicoContribuicao from './component/historicoContribuicao/historicoCo
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import page from 'page';
 import {Erros} from './Erros';
+import {Utils} from './Utils';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
@@ -66,12 +67,17 @@ export default class Home {
     //registra login com sucesso
     firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
 
-    //ATENÇÃO!!!!!!!!!!!!!!
-    // AQUI o último campo de getUsuarioChave deve trazer a opção da visualição da participação feita pelo
-    //    usuário no menu de seleção de visualizar participações!!!!!!!
-    this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
-    //console.log('=====> CHAVE: ', this.chave)
-    if (this.chave===null) {
+    console.log('=====> currentUser: ', this.auth.currentUser)
+    if (!sessionStorage.chave || sessionStorage.chave==="undefined" || sessionStorage.chave === '') {
+      let token = await this.auth.currentUser.getIdToken();
+      let tokenInfo = Utils.parseJwt(token)
+      console.log('==> tokenInfo', tokenInfo)
+      sessionStorage.chave = tokenInfo.chavePrincipal
+    }
+    this.chave = sessionStorage.chave
+    //this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
+    console.log('=====> CHAVE: ', sessionStorage.chave)
+    if (this.chave===null || this.chave ==='') {
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
     }

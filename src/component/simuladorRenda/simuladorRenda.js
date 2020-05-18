@@ -2,11 +2,14 @@
 
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
-import simuladorRenda from './simuladorRenda.html';
-import './simuladorRenda.css';
-import page from 'page';
+
 import vSelect from 'vue-select'; 
 import 'vue-select/dist/vue-select.css';
+
+import simuladorRenda from './simuladorRenda.html';
+import './simuladorRenda.css';
+
+import page from 'page';
 import Contratacao from '../contratacao/contratacao';
 
 const financeiro = require('../../../functions/Financeiro')
@@ -246,7 +249,8 @@ export default {
                 financeiro.calculaRendaFutura(
                     this.reservaTotal,
                     this.dados.taxa_anual_simulacao,
-                    this.tempo
+                    this.tempo,
+                    this.dados.usr_tipo_plano
                 )
             )
         },
