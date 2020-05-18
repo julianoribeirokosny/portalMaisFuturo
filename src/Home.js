@@ -14,6 +14,7 @@ import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
 import emConstrucao from './component/emConstrucao/emConstrucao'
 import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
+import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import page from 'page';
 import {Erros} from './Erros';
 
@@ -50,12 +51,16 @@ export default class Home {
   }  
 
   async showHome() {
-    
+
     this.auth = firebase.auth();
+    
     if (!this.auth.currentUser) {
       Erros.registraErro('', 'auth', 'showHome')
       return page('/erro')
     }
+
+    sessionStorage.url_foto = this.auth.currentUser.photoURL
+
     let firebaseHelper = this.firebaseHelper
 
     //registra login com sucesso
@@ -224,7 +229,8 @@ export default class Home {
                 cadastro,
                 servicos,
                 emConstrucao,
-                historicoContribuicao
+                historicoContribuicao,
+                trocaParticipacao
             },        
             data: {
                 video:'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
@@ -232,7 +238,7 @@ export default class Home {
                 home: this.data_Home,
                 toggle: false,
                 chave: this.chave,
-                url_foto: this.auth.currentUser.photoURL,
+                url_foto: sessionStorage.url_foto,
                 uid: this.auth.currentUser.uid,
                 contribuicaoAberta: this.consulta_contribuicao,            
                 rendaSimulador: dadosSimuladorRenda,
