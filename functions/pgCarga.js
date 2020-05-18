@@ -21,7 +21,7 @@ const runtimeOpts = {
 var logProcessamento = {}
 var dataProcessamento
 var dataBase, anoMes
-const taxaAumentoSugestao = 1.20
+var taxaAumentoSugestao = 1.20
 var select
 
 /*************************************************
@@ -122,6 +122,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaContribExtraordinaria = listaContribExtraordinaria.split(';')
       listaSituacoesValidas = listaSituacoesValidas.split(';')
 
+      taxaAumentoSugestao = snapshotParent.child('taxa_aumento_sugestao')
+      
       // Monta comando select com os parametros
       console.log('===> verificando se há chaves específicas para a carga.')
       if (snapshotParent.hasChild('lista_chaves_carga')) {

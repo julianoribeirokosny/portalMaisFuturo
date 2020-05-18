@@ -71,6 +71,7 @@ export default class Router {
     });    
     page('/rentabilidade', () => {
       this.displayPage('rentabilidade');
+      console.log('===> ')
     });
     page('/simulador-seguro', () => {
       this.displayPage('simulador-seguro');
@@ -90,6 +91,9 @@ export default class Router {
     });
     page('/confirmacao-dados', () => {
       this.displayPage('confirmacao-dados')
+    });
+    page('/erro-confirmacao-dados', () => {
+      this.displayPage('erro-confirmacao-dados')
     });
     page('/confirmacao-dados-final', () => {
       telaConfirmacaoDadosFinalConfig()

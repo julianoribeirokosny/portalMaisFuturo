@@ -14,9 +14,6 @@ export default {
             titulo: 'Histórico de<br/>contribuição',
             showDialog: false
         }
-    },    
-    created(){    
-        console.log('historico ++++++++>>',this.historico)
     },
     mounted(){        
     },

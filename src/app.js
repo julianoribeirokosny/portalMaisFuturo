@@ -22,7 +22,6 @@ import Auth from './Auth';
 import Router from './Router';
 import 'material-design-lite';
 import {Utils} from './Utils';
-import pwaInstallPrompt from "pwa-install-prompt";
  
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
@@ -86,6 +85,7 @@ $(document).ready(() => {
   } else {
     div_install.style.display = 'block'    
     install_button.style.display = 'block'
+    divPrevdigi.style.display = 'block'
   }
 
   if (isIos || appInstalado) {
