@@ -114,25 +114,7 @@ export default class Home {
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorSeguro =  await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
-    // {
-    //     titulo: 'Simulador </br>de Seguro',
-    //     tipo: 'Seguro',  
-
-    //     minimoMorte: 10000,
-    //     maximoMorte: 1500000,
-    //     stepMorte: 10000,
-    //     minimoInvalidez: 10000,
-    //     maximoInvalidez: 1500000,
-    //     stepInvalidez: 10000,
-        
-    //     fatorMorte: 1.1423,
-    //     fatorInvalidez: 1.0163,
-    //     coberturaInvalidez: 200000,
-    //     coberturaMorte: 200000,
-    //     chave: this.chave,
-    //     uid: this.auth.currentUser.uid,
-    //     seguroSolicitado: this.consulta_seguro,
-    // }
+    
     dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
 
@@ -304,12 +286,9 @@ export default class Home {
 
                 }
             },
-            errorCaptured:function(err, component, details) {
-                console.log('error',err)
-                console.log('component',component)
-                console.log('details',details)
-                alert(err);
-                page('/erro')
+            errorCaptured(err, component, details) {
+                Erros.registraErro(err, 'vuejs', '')
+                return page('/erro')
             }
           })
             this.vueObj.$mount('#app');           

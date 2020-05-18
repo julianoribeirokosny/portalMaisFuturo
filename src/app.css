@@ -2140,9 +2140,6 @@ p.p_valor_simulado__se {
     width: 350px;
     height: 50px;
 }
-.InfoIcon_Position {
-    margin-right: 5px;
-}
 .Rectangle_InfoTop {
     filter: drop-shadow(0px 3px 6px rgba(0,0, 0,0.133));
     overflow: visible !important;
@@ -2204,7 +2201,4 @@ p.p_valor_simulado__se {
 }
 .mdl-menu__outline {
   border-radius: 30px !important;
-}
-.mdl-button {
-    height: 34px !important;
 }
