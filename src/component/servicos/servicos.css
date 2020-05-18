@@ -28,7 +28,7 @@
 }
 .grid-2Cs__serv {
     display: grid;
-    grid-template-columns: 10% 90%;
+    grid-template-columns: 55px 1fr;
 }
 .TableIcons__serv {
     text-align: center;
@@ -48,10 +48,12 @@
     cursor: pointer;
 }
 .TableIconsList__serv {
-    padding-bottom: 25px;    
+    /* padding-bottom: 25px;     */
+    height: 90px;
+    display:flex;
+    align-items: center;
 }
-.ListIconsText__serv {
-    padding-left: 20px;
+.ListIconsText__serv {    
     text-align: left;
     font-family: Objectivity, Arial, Helvetica, sans-serif;
     font-style: normal;

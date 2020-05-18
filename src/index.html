@@ -213,16 +213,16 @@
       <div class="mdl-layout__header-row fp-titlebar">
           <!-- Navigation -->
           <nav class="mdl-navigation">
-            <div class="fp-signed-in-user-container fp-signed-in-only">
+            <div id="divbuttonhome" class="fp-signed-in-user-container fp-signed-in-only">
               <a class="mdl-button mdl-js-button" href="/home" style="padding: 0px 5px;">
                 <img src="../public/images/Component 52 ÔÇô 2@2x.png" alt="Voltar" style="height: 38px;width: 38px;">
               </a>
             </div>
-            <div class="fp-signed-in-user-container fp-signed-in-only">
+            <div id="divavatar" class="fp-signed-in-user-container fp-signed-in-only">
               <a class="fp-usernamelink mdl-button mdl-js-button">
                   <div class="fp-avatar"></div>
               </a>          
-            </div>
+            </div>            
           </nav>
           <!-- Add spacer, to align navigation to the right -->
           <div class="mdl-layout-spacer"></div>     
@@ -255,12 +255,7 @@
           </span>      
       </div>
   </header>
-  <div  class="mdl-layout__drawer div-menu-background">
-    <!-- <a href="/" class="fp-signed-out-only">
-      <button class="fp-disabled-when-offline fp-sign-in-button mdl-button mdl-js-button">
-        <i class="material-icons">account_circle</i> Sign in
-      </button>
-    </a> -->
+  <div class="mdl-layout__drawer div-menu-background">
     <div class="fp-signed-in-user-container fp-signed-in-only" style="height: 60px; padding: 5px;">
       <a href="/home">      
         <img class="img-mais-amigos-1" src="../public/images/Component 44 ÔÇô 2@2x.png" alt="voltar" style="height: 60px; width: 60px; transform: rotate(180deg);"><br><br>
@@ -298,6 +293,7 @@
       <hr class="hr-menu-nav"/>      
     </nav>
   </div>
+
 
   <!--Modal dialog-->
   <dialog id="termo-servico-dialog" class="mdl-dialog">
@@ -816,6 +812,13 @@
               </div>
             </template>
             <historico-contribuicao v-bind:historico="historicoContribuicao"></historico-contribuicao>            
+          </section>
+
+          <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
+            <a></a>            
+            <p>
+              Troca de chave
+            </p>
           </section>
 
           <!--Página em Construção-->
