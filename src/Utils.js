@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+//'use strict';
 
 import $ from 'jquery';
 
@@ -239,7 +239,7 @@ export class Utils {
     if (this.isIos()) {
       isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
     } else {
-      isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true);
+      isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || window.location.href.indexOf('mode=select') >=0);
     }
 
     return isInStandaloneMode

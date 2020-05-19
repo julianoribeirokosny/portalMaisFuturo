@@ -49,7 +49,7 @@ export default class Router {
 
     // Configuring routes.
     page('/', () => {
-      if (Utils.validaAppInstalado()) {
+      if (sessionStorage.appInstalado==="true") {
         this.displayPage('splash-login');
         this.redirectHomeIfSignedIn();  
       }

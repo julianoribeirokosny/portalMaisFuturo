@@ -69,8 +69,8 @@
       ".read": "auth.token.admin === true",
       ".write": "false",
       "$chave": {
-        ".read": "root.child('login/'+auth.uid+'/lista_chaves/'+$chave).val() >= 0",
-        ".write": "root.child('login/'+auth.uid+'/lista_chaves/'+$chave).val() >= 0"
+        ".read": "root.child('login/'+auth.uid+'/lista_chaves').hasChild($chave)",
+        ".write": "root.child('login/'+auth.uid+'/lista_chaves').hasChild($chave)"
       }
     },
     // histórico das cargas para cada usuário

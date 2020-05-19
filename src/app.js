@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+//'use strict';
 
 import $ from 'jquery';
 import firebase from 'firebase/app';
@@ -45,8 +45,6 @@ import './app.css';
  * Google Analytics is asynchroneously loaded.
  */
  
-const isIos = Utils.isIos()
-var appInstalado = Utils.validaAppInstalado()
 var beforeInstallPromptOK = false
 
 const install_button = document.querySelector('#bt-install');
@@ -77,8 +75,8 @@ window.firebase = firebase;
 
 // Load the app.
 $(document).ready(() => {
-  console.log('beforeInstallPromptOK || isIos || appInstalado', beforeInstallPromptOK , isIos , appInstalado)
-  if (appInstalado) { //fluxo normal do app após a instalação
+  console.log('beforeInstallPromptOK || isIos || appInstalado', beforeInstallPromptOK , sessionStorage.isIos , sessionStorage.appInstalado)
+  if (sessionStorage.appInstalado==="true") { //fluxo normal do app após a instalação
     const auth = new Auth();
     // Starts the router.
     window.fpRouter = new Router(auth);  
@@ -88,7 +86,7 @@ $(document).ready(() => {
     divPrevdigi.style.display = 'block'
   }
 
-  if (isIos || appInstalado) {
+  if (sessionStorage.isIos==="true" || sessionStorage.appInstalado==="true") {
     install_button.style.display = 'none'
   }
 
@@ -111,8 +109,14 @@ import(/* webpackPrefetch: true */ 'universal-ga').then((analytics) => {
 // Start the offline indicator listener.
 Utils.startOfflineListener();
 
+sessionStorage.isIos = Utils.isIos()
+
+if (!sessionStorage.appInstalado || sessionStorage.appInstalado==="false" || sessionStorage.appInstalado === "") {
+  sessionStorage.appInstalado = Utils.validaAppInstalado()
+}
+
 // get button with id
-if (!isIos) {
+if (sessionStorage.isIos==="false") {
   install_button.addEventListener('click', e => {
     promptAddHome()
   });

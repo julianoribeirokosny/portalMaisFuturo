@@ -83,7 +83,7 @@
     <div class="mdl-card__supporting-text">
         <div style="max-width: 500px; text-align: center; margin: auto;">      
             <div style="margin-bottom: 20px;">
-                <input class="fp-input-celular" id="celular" name="celular" autocomplete="off" value="" style="color: white; margin: auto;">
+                <input pattern="[0-9]*" inputmode="numeric" class="fp-input-celular" id="celular" name="celular" autocomplete="off" value="" style="color: white; margin: auto;">
                 <div id="primeiro-login-input-celular-erro" style="color: red; font-size: 12px; display:none;"></div>
             </div>
             <div style="margin-bottom: 20px;">
@@ -220,8 +220,8 @@
       <div class="fp-caption" style="display: block" id="msg-inicial">Bem vindo!</div> 
       <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal clicando abaixo. Após concluída, acesse-o através do aplicativo que será instalado em seu dispositivo.</div> 
       <div id="bt-install" style="display: block; padding-top: 15px;">
-        <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 80%; margin: auto;">
-          <span id="bt-install-text" class="mdl-color-text--white">Aguarde. Preparando instalação...</span>
+        <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 90%; margin: auto;">
+          <span id="bt-install-text" class="mdl-color-text--white">Preparando instalação...</span>
         </button>
       </div>
       <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display: block">
@@ -333,7 +333,9 @@
                   </label>
                 </p>
               </form>
-              <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 300px;">Continuar</button>
+              <div style="width: 95%; text-align: center;">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 80%;">Continuar</button>
+              </div>
           </div>
       </div>
   </dialog>

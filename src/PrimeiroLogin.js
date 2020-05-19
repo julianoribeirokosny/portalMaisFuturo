@@ -35,7 +35,7 @@ export default class PrimeiroLogin {
         let ret = false
         let usr = this.auth.currentUser
         if (usr) { //Not empty
-            if (usr.phoneNumber && usr.phoneNumber !== "") { //login celular
+            if (this.validaSeLoginCelular(usr)) {
                 sessionStorage.tipoLogin = 'celular'
             } else { //login por email
                 sessionStorage.tipoLogin = 'email'
@@ -47,16 +47,21 @@ export default class PrimeiroLogin {
                 //porém, verifica se já não fez outro login que tenha cadastrado o email ou telefone que está tentando agora
                 let usuarioOutroLogin = await this.firebaseHelper.getUsuarioListaParticipacoes(usr, sessionStorage.tipoLogin, '', '')
                 if (!usuarioOutroLogin || !usuarioOutroLogin.data_ultimo_login || usuarioOutroLogin.data_ultimo_login !== '') { 
-                    this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
-                    ret = true
+                    let loginGoogle = usr.providerData[0].providerId === "google.com"
+                    ret = true    
+                    if (!loginGoogle) { //se google não precisa resetar email
+                        this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
+                    }
                 } else { 
                     //se achou em outra conta pelo e-mail ou celular do primeiro login, indica que já fez login com outra conta, cadastrando e-mail ou celular
                     this.firebaseHelper.gravaDadosPrimeiroLogin(usuarioOutroLogin, usr.uid) 
                     this.firebaseHelper.gravaLoginSucesso(usr.uid) //loga data-hora do login
                     ret = false
                 }
-            } else if (!usr.phoneNumber || usr.phoneNumber === '') { //se for de celular não valida email
-                ret = !usr.emailVerified
+            } else if (!this.validaSeLoginCelular(usr)) { //se for de celular não valida email
+                ret =  !usr.emailVerified
+            } else { //se login celular
+                ret = false
             }
         }
         return ret
@@ -97,6 +102,7 @@ export default class PrimeiroLogin {
         }
         if(validacao) {
             sessionStorage.emailAlternativo = email
+            sessionStorage.chave = '' 
             //um usuário criado pode ter 1 ou mais participações!
             let participacoes = await this.firebaseHelper.getUsuarioListaParticipacoesPrimeiroLogin(usr, celular, email)
             let listaChaves = participacoes.listaChavesRetorno
@@ -109,9 +115,9 @@ export default class PrimeiroLogin {
                     chave_principal: chavePrincipal, 
                     lista_chaves: listaChaves, 
                     email_principal: usr.email && usr.email !== '' ? usr.email : email,
-                    celular_principal: usr.phoneNumber && usr.phoneNumber !== '' ? usr.phoneNumber : celular,
+                    celular_principal: this.validaSeLoginCelular(usr) ? usr.phoneNumber : celular,
                     tipo_login: sessionStorage.tipoLogin,
-                    celular_alternativo: usr.phoneNumber && usr.phoneNumber !== '' ? celular : '', // só grava email alternativo se houver o emailPrincipal. Caso contrário o email alternativo será o principal...
+                    celular_alternativo: this.validaSeLoginCelular(usr) ? celular : '', // só grava email alternativo se houver o emailPrincipal. Caso contrário o email alternativo será o principal...
                     email_alternativo: usr.email && usr.email !== '' ? email : '',  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
                     full_name: nome
                 }
@@ -150,7 +156,7 @@ export default class PrimeiroLogin {
                     chave_principal: chavePrincipal, 
                     lista_chaves: listaChaves, 
                     email_principal: usr.email && usr.email !== '' ? usr.email : sessionStorage.emailCadastro,
-                    celular_principal: usr.phoneNumber && usr.phoneNumber !== '' ? usr.phoneNumber : '',
+                    celular_principal: this.validaSeLoginCelular(usr) ? usr.phoneNumber : '',
                     tipo_login: sessionStorage.tipoLogin,
                     celular_alternativo: '',
                     email_alternativo: usr.email && usr.email !== '' ? sessionStorage.emailCadastro : '',  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
@@ -160,6 +166,7 @@ export default class PrimeiroLogin {
                 //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)        
                 let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro)
                 if (enviouEmail) { //envia email
+                    this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
                     page('/confirmacao-dados-final')      
                 } else {
                     //não registra erro aqui pq já registrou dentro de enviarEmailLinkValidacao
@@ -171,7 +178,7 @@ export default class PrimeiroLogin {
     //configura tela de primeiro login de acordo com o tipo do primeiro login feito
     telaPrimeiroLoginConfig() {
         console.log('===>firebase.auth().currentUser', this.auth.currentUser)
-        if (this.auth.currentUser.phoneNumber && this.auth.currentUser.phoneNumber !== "") {
+        if (this.validaSeLoginCelular(this.auth.currentUser)) {
             $('.fp-input-celular').attr('placeholder', 'Outro celular de contato (opcional)')
             $('.fp-input-email').attr('placeholder', 'E-mail (obrigatório)')
             $('.fp-input-celular').prop('required', 'false')
@@ -213,6 +220,10 @@ export default class PrimeiroLogin {
                 }
             }
         }
+    }
+
+    validaSeLoginCelular(usr) {
+        return usr.phoneNumber && usr.phoneNumber !== "" && (!usr.email || usr.email==="")
     }
 
     validaCelularObrigatorio(celular) {
