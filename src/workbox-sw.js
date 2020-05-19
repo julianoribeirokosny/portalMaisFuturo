@@ -22,7 +22,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 // Register routes for user uploaded images.
 workbox.routing.registerRoute(
-  /\.(?:png|gif|jpg|jpeg|svg)$/,
+  /\.(?:png|gif|jpg|jpeg|svg|mp4)$/,
   workbox.strategies.cacheFirst({
     cacheName: 'images',
     plugins: [
@@ -37,12 +37,16 @@ workbox.routing.registerRoute(
 // Routes for all dynamic HTML pages.
 workbox.routing.registerRoute(
   // Cache HTML files
-  /[^\.]*/,
-  // Use cache but update in the background ASAP
-  workbox.strategies.staleWhileRevalidate({
+  /[^\.]*/, 
+  new workbox.strategies.NetworkFirst({  // .staleWhileRevalidate({
     // Use a custom cache name
     cacheName: 'html-cache',
   })
+  // Use cache but update in the background ASAP
+  //workbox.strategies.staleWhileRevalidate({
+  //  // Use a custom cache name
+  //  cacheName: 'html-cache',
+  //})
 );
 
 // Special routes to enable offline for Google Analytics.

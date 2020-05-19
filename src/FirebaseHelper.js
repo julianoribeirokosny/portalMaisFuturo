@@ -906,14 +906,14 @@ export default class FirebaseHelper {
     ref.update(primeiroLogin)
   }
 
-  gravaListaChaves(uid, listaChaves) {
+  /*gravaListaChaves(uid, listaChaves) {
     let ref = this.database.ref(`login/${uid}`)
     let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave
     ref.update({
       chave_principal: chavePrincipal, 
       lista_chaves: listaChaves
     })
-  }
+  }*/
 
   gravaLoginSucesso(uid) {
     let dataHoje = Utils.dateFormat(new Date(), true)
@@ -1050,8 +1050,12 @@ export default class FirebaseHelper {
             let listaChaves = {}
             let i = 0  
             snapshot.forEach((snap) => {
-              nomeP1 = snap.child('nome').val()
-              listaChaves[snap.child('chave').val()] = i
+              nomeP1 = snap.child('nomeParticipantePrincipal').val()
+              listaChaves[snap.child('chave').val()] = {
+                nome: snap.child('nome').val(),
+                plano: snap.child('plano').val(),
+                segmento: snap.child('segmento').val(),
+              }
               i++
             })
             if (Object.keys(listaChaves).length > 0) {
@@ -1077,8 +1081,12 @@ export default class FirebaseHelper {
             let listaChaves = {}
             let i = 0  
             snapshot.forEach((snap) => {
-              nomeP2 = snap.child('nome').val()
-              listaChaves[snap.child('chave').val()] = i
+              nomeP2 = snap.child('nomeParticipantePrincipal').val()
+              listaChaves[snap.child('chave').val()] = {
+                nome: snap.child('nome').val(),
+                plano: snap.child('plano').val(),
+                segmento: snap.child('segmento').val(),
+              }
               i++
             })
             return resolve(Object.keys(listaChaves).length > 0 ? listaChaves : false)
@@ -1099,16 +1107,14 @@ export default class FirebaseHelper {
         let j = 0
         if (retPromises[0]) {
           $.each(retPromises[0], (key, val) => {
-            listaChavesRetorno[key] = j
-            console.log('===> retPromises[0] - key - j', key, j)
+            listaChavesRetorno[key] = val
             j++
           });  
         }
         if (retPromises[1]) {
           $.each(retPromises[1], (key, val) => {
             if (listaChavesRetorno[key]===undefined) { //se ainda não foi incluido
-              listaChavesRetorno[key] = j
-              console.log('===> retPromises[1] - key - j', key, j)
+              listaChavesRetorno[key] = val
               j++  
             }
           });  
@@ -1133,10 +1139,14 @@ export default class FirebaseHelper {
         let nome = ''
         snapshot.forEach((snap) => {
           if (emailCadastro === '') { //pega somente o primeiro
-            nome = snap.child('nome').val()
+            nome = snap.child('nomeParticipanteCadastro').val()
             emailCadastro = snap.child('emailCadastro').val()
           }
-          listaChaves[snap.child('chave').val()] = i
+          listaChaves[snap.child('chave').val()] = {
+            nome: snap.child('nome').val(),
+            plano: snap.child('plano').val(),
+            segmento: snap.child('segmento').val(),
+          }
           i++    
         })
         if (Object.keys(listaChaves).length > 0) {
@@ -1325,6 +1335,9 @@ export default class FirebaseHelper {
       } else {
         return null
       }
+    }).catch((e) => {
+      Erros.registraErro(this.auth.currentUser.uid, 'erroPerm', 'getParticipante')
+      return null
     })
   }
 
@@ -1388,6 +1401,17 @@ export default class FirebaseHelper {
       }
     })
     return ret
+  }
+
+  async getUsuarioChavePrincipal(uid) {
+    let ref = this.database.ref(`login/${uid}/chave_principal`)
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
   }
 
   async getContratacaoEmAberto(chave, tipo, status) {

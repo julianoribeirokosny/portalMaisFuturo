@@ -62,13 +62,10 @@ export default class Home {
     firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
     console.log('=====> currentUser: ', this.auth.currentUser)
     if (!sessionStorage.chave || sessionStorage.chave==="undefined" || sessionStorage.chave === '') {
-      let token = await this.auth.currentUser.getIdToken();
-      let tokenInfo = Utils.parseJwt(token)
-      console.log('==> tokenInfo', tokenInfo)
-      sessionStorage.chave = tokenInfo.chavePrincipal 
+      sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
     }
     this.chave = sessionStorage.chave
-    //this.chave = await firebaseHelper.getUsuarioChave(this.auth.currentUser.uid, 0)
+
     console.log('=====> CHAVE: ', sessionStorage.chave)
     if (this.chave===null || this.chave ==='') {
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
@@ -76,10 +73,12 @@ export default class Home {
     }
 
     //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
-    firebaseHelper.solicitaDadosSinqia(this.chave) //loga data-hora do login
+    firebaseHelper.solicitaDadosSinqia(this.chave) 
 
     let data_Home = await this.dadosHome(this.chave)
     if (data_Home===null) {
+      //zera a session para tentar carregar em próximas vezes
+      sessionStorage.chave = ''
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
     }
