@@ -12,3 +12,79 @@
     font-size: 25px;
     color: rgba(59,60,62,1);
 }
+.card_tp {
+    box-shadow: 1px 2px 4px 2px rgba(105, 160, 202, 0.14), 1px 2px 4px 2px rgba(93, 147, 189, 0.14), 1px 2px 4px 2px rgba(95, 154, 199, 0.14) !important;
+    border-radius: 25px; 
+    height: 100px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0px !important;
+    cursor: pointer;
+}
+.card_tp:hover {
+    box-shadow: 1px 4px 8px 4px rgba(105, 160, 202, 0.14), 1px 4px 8px 4px rgba(93, 147, 189, 0.14), 1px 4px 8px 4px rgba(95, 154, 199, 0.14) !important;
+}
+.card_left_tp {    
+    float: left; 
+    width: 100px;
+    height: 100px;    
+}
+.card_right_tp {
+    float: right;   
+    padding-left: 5px; 
+}
+.img_card_tp {
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    margin: 15px;
+}
+p.name_tp {
+    line-height: 18px;
+    text-align: left;
+    font-size: 16px;
+    font-family: 'MaisFuturo-Medium';
+    letter-spacing: 0px;
+    color: #131721;
+    opacity: 1;
+    margin-bottom: 2px !important;
+}
+p.plano_tp {
+    line-height: 14px;
+    text-align: left;
+    letter-spacing: 0px;    
+    font-size: 12px;
+    font-family: 'MaisFuturo-Regular';    
+    color: #131721;
+    opacity: 1;
+    margin-bottom: 0px !important;
+}
+.div_button_confirmar {    
+    background-color: #1a6bb6;
+    height: 40px;
+    border-radius: 20px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color:white;
+}
+.div_button_confirmar:hover {    
+    background-color: #165fa3;
+}
+.div_button_cancelar {
+    background-color: rgb(170, 169, 169);    
+    height: 40px;
+    border-radius: 20px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color:white;
+}
+.div_button_cancelar:hover {   
+    background-color: rgb(161, 160, 160);     
+}

@@ -2224,3 +2224,9 @@ p.p_valor_simulado__se {
 .mdl-menu__outline {
   border-radius: 30px !important;
 }
+
+footer.fixar-rodape {  
+  bottom: 0;
+  width: 100%;
+  margin-top: 40px;
+}

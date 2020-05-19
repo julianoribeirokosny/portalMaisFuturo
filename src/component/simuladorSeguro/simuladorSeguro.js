@@ -183,7 +183,7 @@ export default {
         }
     },
     created(){
-        console.log('this.dados_Seguro',this.dados)
+        //console.log('this.dados_Seguro',this.dados)
         if(this.dados.seguroSolicitado.dados != null) {
             this.seguroSolicitado = true
         } else {
@@ -195,7 +195,7 @@ export default {
             this.premioTelaMorte = this.thousands_separators(this.premioMorte)
             this.calculaTotal()
             this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
-            console.log('this.premioInicio',this.premioInicio)
+            //console.log('this.premioInicio',this.premioInicio)
         }
     }, 
     mounted(){

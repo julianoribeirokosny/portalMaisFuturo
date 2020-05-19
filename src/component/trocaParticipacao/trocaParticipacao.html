@@ -5,18 +5,33 @@
             Meu Perfil
         </div>  
 
-        <!--Resumo do Perfil (Box)-->          
-        <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--2dp card_v2">
-            <div class="card_left_v2">
-                <img class="img_card_v2" :src="foto"/>
-            </div>            
-        </div>
-
-        <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--2dp card_v2">
-            <div class="card_left_v2">
-                <img class="img_card_v2" :src="foto"/>
-            </div>            
-        </div>
-
+        <!--Cards Participações-->
+        <template v-if="listaChaves" v-for="chave in listaChaves">          
+            <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--2dp card_tp" @click="showModal(chave)">
+                <div class="card_left_tp">
+                    <img class="img_card_tp" :src="foto"/>
+                </div>   
+                <div class="card_right_tp">
+                    <p class="name_tp">{{chave.nome}}</p>
+                    <p class="plano_tp">{{chave.plano}}</p>
+                </div>                     
+            </div>
+        </template>
     </template>
+    <!-- The Modal -->
+   <div id="Modal_tp" ref="Modal_tp" class="modal" @click="closeModal">
+    <!-- Modal content -->
+    <div class="modal-content" v-if="novaChave">
+        <span class="close" @click="closeModal">&times;</span>
+        <p class="name_tp" style="margin:10px">Alterar visualização para:</p>
+        <div class="mdl-card__supporting-text" style="margin:20px">
+            <p class="name_tp">{{novaChave.nome}}</p>
+            <p class="plano_tp">{{novaChave.plano}}</p>
+        </div>
+        <div class="mdl-card__supporting-text" style="margin:20px">
+            <div class="div_button_confirmar" style="float: left; width: 48%;" @click="selecionarNovaChave(novaChave.chave)">confirmar</div>
+            <div class="div_button_cancelar" style="float: right; width: 48%;">cancelar</div>
+        </div>        
+    </div>   
+ </div>   
 </div>

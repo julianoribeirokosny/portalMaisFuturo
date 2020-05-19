@@ -842,7 +842,7 @@
 
           <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
             <a></a>            
-            <troca-participacao></troca-participacao>
+            <troca-participacao v-bind:uid="uid"></troca-participacao>
           </section>
 
           <!--Página em Construção-->
@@ -1020,28 +1020,29 @@
       <button type="button" class="mdl-snackbar__action"></button>
     </div>
 
-    <!--Rodapé-->
-    <footer id="home_rodape" class="mdl-mini-footer" style="margin-top: 40px;">      
-        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">        
-            <div class="mdl-card__supporting-text mdl-card-container">
-                <div class="mdl-logo div-footer-text" style="margin-bottom: 3px !important;">Política de Privacidade</div>
-                <div class="mdl-logo div-footer-text" style="margin-bottom: 10px !important;">Informações de Suporte</div>            
-            </div>
-            <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: space-between;">
-                <div class="mdl-mini-footer__left-section">
-                    <a href="#"><img class="img-logo-footer" src="../public/images/Component 41 ÔÇô 2@2x.png"></a>
-                </div>
-                <div class="mdl-mini-footer__right-section" style="display: flex; justify-content: flex-end;">
-                    <a href="#"><img class="img-redes-footer" src="../public/images/Component 42 ÔÇô 2@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#"><img class="img-redes-footer" src="../public/images/WA Logo@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#"><img class="img-redes-footer" src="../public/images/Component 43 ÔÇô 2@2x.png"/></a>
-                </div>
-            </div>      
-        </div>      
-    </footer>
-
+        <!--Rodapé-->
+             
     </div>
   </main>
+  <footer id="home_rodape" class="mdl-mini-footer fixar-rodape">      
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">        
+        <div class="mdl-card__supporting-text mdl-card-container">
+            <div class="mdl-logo div-footer-text" style="margin-bottom: 3px !important;">Política de Privacidade</div>
+            <div class="mdl-logo div-footer-text" style="margin-bottom: 10px !important;">Informações de Suporte</div>            
+        </div>
+        <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: space-between;">
+            <div class="mdl-mini-footer__left-section">
+                <a href="#"><img class="img-logo-footer" src="../public/images/Component 41 ÔÇô 2@2x.png"></a>
+            </div>
+            <div class="mdl-mini-footer__right-section" style="display: flex; justify-content: flex-end;">
+                <a href="#"><img class="img-redes-footer" src="../public/images/Component 42 ÔÇô 2@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#"><img class="img-redes-footer" src="../public/images/WA Logo@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#"><img class="img-redes-footer" src="../public/images/Component 43 ÔÇô 2@2x.png"/></a>
+            </div>
+        </div>      
+    </div>      
+</footer> 
+<div class="mdl-layout__obfuscator"></div>
 </div>  
 </body>
 </html>
