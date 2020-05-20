@@ -21,6 +21,7 @@ export default {
         }
     },
     mounted(){        
+        console.log('HISTORICO',this.historico)
     },
     methods: {
         voltar() {
