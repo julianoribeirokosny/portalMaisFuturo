@@ -40,6 +40,10 @@ export default class Router {
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
     const verificaPrimeiroLogin = async () => (await loadComponents).primeiroLogin.verificaPrimeiroLogin();
+    //const verificaPrimeiroLogin = async () => {
+    //  alert('entrei em verificaPrimeiroLogin')
+    //  return true
+    //}
     const telaPrimeiroLoginConfig = async () => (await loadComponents).primeiroLogin.telaPrimeiroLoginConfig();
     const aguardaValidaLinkPrimeiroLogin = async () => (await loadComponents).primeiroLogin.aguardaValidaLinkPrimeiroLogin();
     const telaConfirmacaoDadosFinalConfig = async () => (await loadComponents).primeiroLogin.telaConfirmacaoDadosFinalConfig();
@@ -49,19 +53,30 @@ export default class Router {
 
     // Configuring routes.
     page('/', () => {
-      if (sessionStorage.appInstalado==="true") {
+      if (localStorage.isPwaInstalled==="true") {
+        alert('page / testando se Signed In')
         this.displayPage('splash-login');
         this.redirectHomeIfSignedIn();  
       }
     });
     page('/home', async () => {
-      if (await verificaPrimeiroLogin()) {
+      alert('page /home testando se primeiro Login')
+      let primeiroLogin = await verificaPrimeiroLogin()
+      alert('primeiroLogin? '+primeiroLogin)
+      if (primeiroLogin===null) {
+        Erros.registraErro('sem_uid', 'auth', 'showHome')
+        return page('/erro')  
+      } else if (primeiroLogin) {
         telaPrimeiroLoginConfig()
+        alert(`indo para this.displayPage('primeiro-login')`)
         this.displayPage('primeiro-login');
       } else {
+        alert('chamando showHome')
         showHome();       
+        alert(`indo para this.displayPage('home')`)
         this.displayPage('home', true);        
       }
+      alert('saindo page /home')
     });    
     page('/signout', () => {
       this.displayPage('splash-login');
@@ -166,7 +181,8 @@ export default class Router {
    */
   redirectHomeIfSignedIn() {
     if (firebase.auth().currentUser) {
-        page('/home');
+      alert('firebase.auth().currentUser TRUE')
+      page('/home');
     }
   }
 

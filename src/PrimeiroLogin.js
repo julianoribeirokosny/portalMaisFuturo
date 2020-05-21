@@ -32,16 +32,22 @@ export default class PrimeiroLogin {
     }  
 
     async verificaPrimeiroLogin() {
-        let ret = false
+        alert('Entrei em verifica Primeiro Login')
+        let ret = null
         let usr = this.auth.currentUser
+        alert('Dentro de verificaPrimeiroLogin: '+usr.uid)
         if (usr) { //Not empty
+            alert('Validando tipo de login')
             if (this.validaSeLoginCelular(usr)) {
                 sessionStorage.tipoLogin = 'celular'
             } else { //login por email
                 sessionStorage.tipoLogin = 'email'
             }
-            console.log('====> emailVerified', usr.emailVerified)
+            alert('Tipo de Login: '+sessionStorage.tipoLogin)
+            alert('Tipo de Login: '+sessionStorage.tipoLogin)
+            alert('emailVerified: '+usr.emailVerified)
             let temRegistroPrimeiroLogin = await this.firebaseHelper.validaRegistroLogin(usr.uid)
+            alert('temRegistroPrimeiroLogin? '+temRegistroPrimeiroLogin)
             if (!temRegistroPrimeiroLogin) { //se não achou registro do login no BD, precisa seguir fluxo do primeiro login
                 //é primeiro login... ou pelo menos não finalizou na primeira vez...
                 //porém, verifica se já não fez outro login que tenha cadastrado o email ou telefone que está tentando agora
@@ -177,7 +183,7 @@ export default class PrimeiroLogin {
     }
     //configura tela de primeiro login de acordo com o tipo do primeiro login feito
     telaPrimeiroLoginConfig() {
-        console.log('===>firebase.auth().currentUser', this.auth.currentUser)
+        alert('telaPrimeiroLoginConfig - this.auth.currentUser: '+this.auth.currentUser)
         if (this.validaSeLoginCelular(this.auth.currentUser)) {
             $('.fp-input-celular').attr('placeholder', 'Outro celular de contato (opcional)')
             $('.fp-input-email').attr('placeholder', 'E-mail (obrigatório)')

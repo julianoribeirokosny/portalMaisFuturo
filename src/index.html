@@ -45,7 +45,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
 
   <!-- Tile icon for Win8 -->
-  <meta name="msapplication-TileImage" content="/images/icon-144x144.png"> 
+  <meta name="msapplication-TileImage" content="/images/icon-180x180.png"> 
   <meta name="msapplication-TileColor" content="#3372DF">
   <meta name="msapplication-navbutton-color" content="#303F9F">    
   <script type="text/javascript">
@@ -348,8 +348,8 @@
 
           <!-- Show home -->
           <section id="page-home" class="mdl-grid fp-content" style="display: none;">
-              <a></a>              
-
+              <a></a>
+              <!-- <base-spinner></base-spinner> -->
               <!--Campanha-->
               <template v-for="campanha in home.campanhas" v-if="home.campanhas.vigente && campanha.ativo">
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
@@ -388,8 +388,8 @@
                   <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
                         <div class="mdl-card__supporting-text div_titulo_card">
-                          Olá {{ home.apelido }}!
-                        </div>
+                          Olá {{ home.apelido }}!                          
+                        </div>                                                
                         <div class="mdl-card__supporting-text div_mensagem">
                           {{ home.mensagem }}
                         </div>
@@ -727,7 +727,7 @@
           <!--Rentabilidade-->
           <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <rentabilidade></rentabilidade>
+              <rentabilidade :key="componentKey"></rentabilidade>
           </section>
 
           <!--Simulador Seguro -->
@@ -751,13 +751,13 @@
           <!--Cadastro-->
           <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
               <a></a>
-              <cadastro v-bind:chave_usuario="chave" v-bind:foto="url_foto"></cadastro>              
+              <cadastro v-bind:chave_usuario="chave" v-bind:foto="url_foto" :key="componentKey"></cadastro>              
           </section>
 
           <!--Serviços-->
           <section id="page-servicos" class="mdl-grid fp-content" style="display: none;">
             <a></a>            
-            <servicos></servicos>            
+            <servicos :key="componentKey"></servicos>            
           </section>
 
           <!--Histórico de Contribuição-->
@@ -837,12 +837,12 @@
                   </template>
               </div>
             </template>
-            <historico-contribuicao v-bind:historico="historicoContribuicao"></historico-contribuicao>            
+            <historico-contribuicao v-bind:historico="historicoContribuicao" :key="componentKey"></historico-contribuicao>            
           </section>
 
           <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
             <a></a>            
-            <troca-participacao></troca-participacao>
+            <troca-participacao v-bind:uid="uid"></troca-participacao>
           </section>
 
           <!--Página em Construção-->
@@ -1020,28 +1020,36 @@
       <button type="button" class="mdl-snackbar__action"></button>
     </div>
 
-    <!--Rodapé-->
-    <footer id="home_rodape" class="mdl-mini-footer" style="margin-top: 40px;">      
-        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">        
-            <div class="mdl-card__supporting-text mdl-card-container">
-                <div class="mdl-logo div-footer-text" style="margin-bottom: 3px !important;">Política de Privacidade</div>
-                <div class="mdl-logo div-footer-text" style="margin-bottom: 10px !important;">Informações de Suporte</div>            
-            </div>
-            <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: space-between;">
-                <div class="mdl-mini-footer__left-section">
-                    <a href="#"><img class="img-logo-footer" src="../public/images/Component 41 ÔÇô 2@2x.png"></a>
-                </div>
-                <div class="mdl-mini-footer__right-section" style="display: flex; justify-content: flex-end;">
-                    <a href="#"><img class="img-redes-footer" src="../public/images/Component 42 ÔÇô 2@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#"><img class="img-redes-footer" src="../public/images/WA Logo@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#"><img class="img-redes-footer" src="../public/images/Component 43 ÔÇô 2@2x.png"/></a>
-                </div>
-            </div>      
-        </div>      
-    </footer>
-
+        <!--Rodapé-->
+             
     </div>
   </main>
+  <footer id="home_rodape" class="mdl-mini-footer fixar-rodape">      
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">        
+        <div class="mdl-card__supporting-text mdl-card-container">
+            <div class="mdl-logo div-footer-text" style="margin-bottom: 3px !important;">Política de Privacidade</div>
+            <div class="mdl-logo div-footer-text" style="margin-bottom: 10px !important;">Informações de Suporte</div>            
+        </div>
+        <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: space-between;">
+            <div class="mdl-mini-footer__left-section">
+                <a href="#"><img class="img-logo-footer" src="../public/images/Component 41 ÔÇô 2@2x.png"></a>
+            </div>
+            <div class="mdl-mini-footer__right-section" style="display: flex; justify-content: flex-end;">
+                <a href="#"><img class="img-redes-footer" src="../public/images/Component 42 ÔÇô 2@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#"><img class="img-redes-footer" src="../public/images/WA Logo@2x.png"/></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#"><img class="img-redes-footer" src="../public/images/Component 43 ÔÇô 2@2x.png"/></a>
+            </div>
+        </div>      
+    </div>      
+</footer> 
+<div class="mdl-layout__obfuscator"></div>
 </div>  
+
+<div id="base_spinner" class="base_spinner">
+  <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+      <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+  </svg>  
+</div> 
+
 </body>
 </html>

@@ -175,12 +175,12 @@ export default class Auth {
     }
 
     //verifica se App já está instalado
-    let appInstalado = Utils.validaAppInstalado()
+    //let appInstalado = Utils.validaAppInstalado()
 
     const div_install = document.querySelector('#div-install');
-    if (!appInstalado) {
-      div_install.style.display = 'block';   
-    } else {
+    if (localStorage.isPwaInstalled==="true") {
+    //  div_install.style.display = 'block';   
+    //} else {
       div_install.style.display = 'none';   
     }
 

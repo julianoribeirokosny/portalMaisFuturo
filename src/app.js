@@ -1,18 +1,3 @@
-/**
- * Copyright 2018 Google Inc. All Rights Reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 //'use strict';
 
 import $ from 'jquery';
@@ -22,7 +7,8 @@ import Auth from './Auth';
 import Router from './Router';
 import 'material-design-lite';
 import {Utils} from './Utils';
- 
+import page from 'page';
+
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-amaranth/index.css';
@@ -32,20 +18,26 @@ import 'mdl-ext/lib/mdl-ext.min.css';
 import 'firebaseui/dist/firebaseui.css';
 import './app.css';
 
-/**
- * This loads the critical path of the app to speed up first draw.
- * The following components are initially loaded:
- *  - IP Filter for EU countries features.
- *  - CSS styling.
- *  - Auth to know if the user is signed-in.
- *  - The App's router which can display the Splash page.
- *  - Enable Offline.
- * 
- * The rest of the app is loaded asynchroneously and passed to the router.
- * Google Analytics is asynchroneously loaded.
- */
- 
-var beforeInstallPromptOK = false
+alert('INICIANDO APP.JS 14')
+
+const checkIfIsIos = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  return /iphone|ipad|ipod/.test( userAgent );
+}
+
+const checkIfIsSamsungBrowser = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  return /samsungbrowser/.test( userAgent );  
+}
+
+const checkIfIsPwaInstalled = (isIos) => { 
+  if (isIos==="false") {
+    var displayModes = ["fullscreen", "standalone", "minimal-ui"]; 
+    return displayModes.some((displayMode) => window.matchMedia('(display-mode: ' + displayMode + ')').matches) || window.navigator.standalone === true;   
+  } else {
+    return ('standalone' in window.navigator) && (window.navigator.standalone);
+  }
+}
 
 const install_button = document.querySelector('#bt-install');
 const divPrevdigi = document.querySelector('#div-prevdigi');
@@ -54,19 +46,67 @@ const bt_install_text = document.querySelector('#bt-install-text');
 const msgInstalacao = document.querySelector('#msg-instalacao');
 const msgInicial = document.querySelector('#msg-inicial');
 
+localStorage.isIos = checkIfIsIos()
+localStorage.isSamsungBrowser = checkIfIsSamsungBrowser()
+
+if (!localStorage.isPwaInstalled || localStorage.isPwaInstalled==="false" || localStorage.isPwaInstalled === "") {
+  localStorage.isPwaInstalled = checkIfIsPwaInstalled(localStorage.isIos) || detectStandalone()
+}
+
 //------------------------------------------------------------------------------------------------------
-// BLOCO: Instalação do APP
-window.deferredPrompt = {};
-window.addEventListener('beforeinstallprompt', e => {
-  if (!beforeInstallPromptOK) { //necessário para prevenir que entre 2 vezes (isso estava ocorrendo no Android)
-    beforeInstallPromptOK = true
-    bt_install_text.innerHTML = 'Instalar o aplicativo'
-    // prevent default event
-    e.preventDefault();
-    // store install avaliable event
-    window.deferredPrompt = e;
-  }
+// BLOCO: Instalação do APP - Android
+localStorage.beforeInstallPromptOK = ""
+if (localStorage.isIos === "false") {
+  //seta evento before install prompt - somente para Android
+  window.deferredPrompt = {};
+  window.addEventListener('beforeinstallprompt', e => {
+    if (localStorage.beforeInstallPromptOK==="false" || localStorage.beforeInstallPromptOK ==="") { //necessário para prevenir que entre 2 vezes (isso estava ocorrendo no Android)
+      localStorage.beforeInstallPromptOK = "true"
+      bt_install_text.innerHTML = 'Instalar o aplicativo'
+      // prevent default event
+      e.preventDefault();
+      // store install avaliable event
+      window.deferredPrompt = e;
+    }
+  })
+
+  //seta click listener para o botão de instalação
+  install_button.addEventListener('click', e => {
+    if (!window.deferredPrompt) {
+      return
+    }
+
+    window.deferredPrompt.prompt().then(() => {
+      window.deferredPrompt.userChoice.then(choiceResult => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('OK');
+        } else {
+          console.log('User dismissed the prompt');
+        }
+        window.deferredPrompt = null;
+      });  
+    });  
+
+    if (localStorage.isSamsungBrowser) {
+      var intervalId = setInterval(() => { 
+        clearInterval(intervalId);
+      }, 3000)
+      install_button.style.display = 'none'
+      divPrevdigi.style.display = 'none'    
+    }
+  });
+
+}
+
+//seta evento para verificar se App instalado
+window.addEventListener('appinstalled', e => {
+  msgInicial.innerHTML = "Legal!"
+  msgInstalacao.innerHTML = "Instalação concluída.<br> A partir de agora acesse nosso portal através do aplicativo instalado em seu dispositivo. "
+  install_button.style.display = 'none'
+  divPrevdigi.style.display = 'none'
+  console.log("success app install!");
 });
+
 
 // Configure Firebase.
 firebase.initializeApp(firebaseConfig.result);
@@ -75,19 +115,18 @@ window.firebase = firebase;
 
 // Load the app.
 $(document).ready(() => {
-  console.log('beforeInstallPromptOK || isIos || appInstalado', beforeInstallPromptOK , sessionStorage.isIos , sessionStorage.appInstalado)
-  if (sessionStorage.appInstalado==="true") { //fluxo normal do app após a instalação
+  if (localStorage.isPwaInstalled==="true") {
     const auth = new Auth();
     // Starts the router.
     window.fpRouter = new Router(auth);  
-  } else {
-    div_install.style.display = 'block'    
-    install_button.style.display = 'block'
-    divPrevdigi.style.display = 'block'
-  }
-
-  if (sessionStorage.isIos==="true" || sessionStorage.appInstalado==="true") {
-    install_button.style.display = 'none'
+  } else {  
+    if (localStorage.isIos==="false") {
+      install_button.style.display = 'block'
+      divPrevdigi.style.display = 'block'
+    }  else {
+      install_button.style.display = 'none'
+    }  
+    div_install.style.display = 'block'  
   }
 
 });
@@ -107,47 +146,31 @@ import(/* webpackPrefetch: true */ 'universal-ga').then((analytics) => {
 });
 
 // Start the offline indicator listener.
-Utils.startOfflineListener();
+Utils.startOfflineListener();  
 
-sessionStorage.isIos = Utils.isIos()
+function detectStandalone() {
+  const hash = window.location.hash;
+  let standalone = false;
 
-if (!sessionStorage.appInstalado || sessionStorage.appInstalado==="false" || sessionStorage.appInstalado === "") {
-  sessionStorage.appInstalado = Utils.validaAppInstalado()
-}
+  if (hash === '#:standalone:') {
+    // first run (open app) in standalone mode
+    // cache state in sessionStorage
 
-// get button with id
-if (sessionStorage.isIos==="false") {
-  install_button.addEventListener('click', e => {
-    promptAddHome()
-  });
-  // if the app can be installed emit beforeinstallprompt
-  // do action when finished install
-  window.addEventListener('appinstalled', e => {
-    msgInicial.innerHTML = "Legal!"
-    msgInstalacao.innerHTML = "Instalação concluída.<br> A partir de agora acesse nosso portal através do aplicativo instalado em seu dispositivo. "
-    install_button.style.display = 'none'
-    divPrevdigi.style.display = 'none'
-    console.log("success app install!");
-  });
-}
-  
-function promptAddHome() {
-  if (!window.deferredPrompt) {
-    console.log('-> !window.deferredPrompt')
-    return
+    standalone = true;
+    sessionStorage.setItem(':standalone:', '1');
+    // remove hash part from the url before actual app start,
+    // in case if your app uses hash (#) routing
+    history.replaceState(history.state, '', '/');
+  } else if (sessionStorage.getItem(':standalone:')) {
+    // second and subsequent runs (reloads)
+    // sessionStorage is unique per tab and Home Screen app is just a
+    // chrome-less tab. So it's safe to assume
+    // that user is still in standalone mode
+
+    standalone = true;
+  } else {
+    // neither first, nor subsequent standalone runs, normal mode
+    // do nothing
   }
-  console.log('-> true window.deferredPrompt')
-  window.deferredPrompt.prompt();
-  console.log('-> Prompt')
-  window.deferredPrompt.userChoice.then(choiceResult => {
-    console.log('-> userChoice.then')
-    console.log('-> choiceResult.outcome', choiceResult.outcome)
-    if (choiceResult.outcome === 'accepted') {
-      // user accept the prompt
-      console.log('OK');
-    } else {
-      console.log('User dismissed the prompt');
-    }
-    window.deferredPrompt = null;
-  });  
+  return standalone;
 }

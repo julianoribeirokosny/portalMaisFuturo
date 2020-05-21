@@ -232,25 +232,6 @@ export class Utils {
     return ret
   }
 
-  static validaAppInstalado() {
-    // Detects if device is in standalone mode
-    let isInStandaloneMode
-    
-    if (this.isIos()) {
-      isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-    } else {
-      isInStandaloneMode = (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || window.location.href.indexOf('mode=select') >=0);
-    }
-
-    return isInStandaloneMode
-  }
-
-  static isIos () {
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    //alert('==> userAgent'+userAgent)
-    return /iphone|ipad|ipod/.test( userAgent );
-  }
-
   static parseJwt (token) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace('-', '+').replace('_', '/');

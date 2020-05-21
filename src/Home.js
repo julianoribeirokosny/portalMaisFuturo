@@ -56,7 +56,7 @@ export default class Home {
     this.auth = firebase.auth();
     
     if (!this.auth.currentUser) {
-      Erros.registraErro('', 'auth', 'showHome')
+      Erros.registraErro('sem_uid', 'auth', 'showHome')
       return page('/erro')
     }
 
@@ -65,6 +65,7 @@ export default class Home {
     let firebaseHelper = this.firebaseHelper
     //registra login com sucesso
     firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
+    
     console.log('=====> currentUser: ', this.auth.currentUser)
     if (!sessionStorage.chave || sessionStorage.chave==="undefined" || sessionStorage.chave === '') {
       sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
