@@ -1255,34 +1255,32 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorSeguro(chave, uid) {
-
       let usuario = await this.getParticipante(chave)    
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)    
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)  
-      console.log('simuladorSeguroSettings',simuladorSeguroSettings)
+      //console.log('simuladorSeguroSettings',simuladorSeguroSettings)
       let minimoMorte = this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, usuario.data.valores.coberturaMorte)
       let maximoSemSDPSMorte = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.maximo_morte, usuario.data.valores.coberturaMorte, simuladorSeguroSettings.regra_dps)     
       let stepMorte = simuladorSeguroSettings.step_morte
       let minimoInvalidez = this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez)
       let maximoSemDPSInvalidez = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez)      
       let stepInvalidez = simuladorSeguroSettings.step_invalidez
-
       let dadosSimuladorSeguro = {
           titulo: 'Simulador </br>de Seguro',
           tipo: 'Seguro',
           minimoMorte: minimoMorte,
-          maximoSemDpsMorte: maximoSemSDPSMorte,
+          maximoSemDpsMorte: maximoSemSDPSMorte === 0 ? minimoMorte : maximoSemSDPSMorte,
           maximoMorte: simuladorSeguroSettings.maximo_morte,
           stepMorte: stepMorte,
           minimoInvalidez: minimoInvalidez,
-          maximoSemDpsInvalidez: maximoSemDPSInvalidez,
+          maximoSemDpsInvalidez: maximoSemDPSInvalidez === 0 ? minimoInvalidez : maximoSemDPSInvalidez,
           maximoInvalidez: simuladorSeguroSettings.maximo_invalidez,
           stepInvalidez: stepInvalidez,
           fatorMorte: fator_idade_seguro.fator_morte,
           fatorInvalidez: fator_idade_seguro.fator_invalidez,
-          coberturaInvalidez: usuario.data.valores.coberturaInvalidez,
-          coberturaMorte: usuario.data.valores.coberturaMorte,
+          coberturaInvalidez: usuario.data.valores.coberturaInvalidez === undefined ? minimoInvalidez : usuario.data.valores.coberturaInvalidez,
+          coberturaMorte: usuario.data.valores.coberturaMorte === undefined ? minimoMorte : usuario.data.valores.coberturaMorte,
           chave: chave,
           uid: uid
       }
@@ -1448,5 +1446,28 @@ export default class FirebaseHelper {
               return null
           }
       })
+  }
+
+  async getProfissaoParticipante(chave) {
+    let ref = this.database.ref(`usuarios/${chave}/data/cadastro/informacoes_pessoais/profissao`)
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
+  getProfissoes() {    
+    //return ['Analista de Sistemas','Marceneiro','Piloto moto']
+    let ref = this.database.ref(`settings/simulador_seguro/limite_cobertura_profissao`)
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
   }
 };

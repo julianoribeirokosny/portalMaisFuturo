@@ -1,5 +1,7 @@
 'use strict';
 
+//import Vue from 'vue/dist/vue.esm.js'
+import vSelect from 'vue-select'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
 import page from 'page'
@@ -7,35 +9,29 @@ import simuladorSeguro from './simuladorSeguro.html'
 import './simuladorSeguro.css'
 import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
+import FirebaseHelper from '../../FirebaseHelper'
+
+const img_editar = require('../../../public/images/Editar.png')
 
 export default {
     template: simuladorSeguro,
     components: { 
-        VueSlider, Contratacao, ContratacaoAberta
+        VueSlider, Contratacao, ContratacaoAberta, vSelect
     },
     props: { 
         dados: {
             type: Object,
             default: () => { 
-                return {
-                    titulo: '',
-                    tipo: 'Seguro',
-                    coberturaInvalidez: 100,
-                    minimoInvalidez: 10,
-                    maximoInvalidez: 10,
-                    fatorInvalidez: 1.0163,
-                    stepInvalidez: 10,                    
-                    coberturaMorte: 20,
-                    minimoMorte: 10,
-                    maximoMorte: 10,
-                    fatorMorte: 1.1423,
-                    stepMorte: 10,
+                return {                    
+                    tipo: 'Seguro'                    
                 }
             }
         }
     },    
     data: function() {
         return {
+            firebaseHelper: new FirebaseHelper(),
+            img_editar: img_editar,
             premioInicio: '',
             simulador: true,
             seguroSolicitado: false,
@@ -51,9 +47,11 @@ export default {
             coberturaTelaInvalidez: '0',
             premioInvalidez: 0,
             premioTelaInvalidez: '0',
+            maximoSemDpsInvalidezTela: '0',
             corMorte: '#8BCF7B',
             coberturaMorte: this.dados.coberturaMorte,
             coberturaTelaMorte: '0',
+            maximoSemDpsMorteTela: '0',
             premioMorte: 0,
             premioTelaMorte: '0',
             money: {
@@ -180,13 +178,20 @@ export default {
                 label_button:'',
                 tipo: ''
             },
+            profissao: null,
+            profissoes: null
         }
     },
-    created(){
-        //console.log('this.dados_Seguro',this.dados)
+    created(){        
+        //console.log('this.dados_Seguro',this.dados)        
         if(this.dados.seguroSolicitado.dados != null) {
             this.seguroSolicitado = true
         } else {
+            this.getProfissaoParticipante(this.dados.chave)
+
+            this.maximoSemDpsInvalidezTela = this.thousands_separators(this.dados.maximoSemDpsInvalidez)
+            //console.log('this.maximoSemDpsInvalidezTela',this.maximoSemDpsInvalidezTela)
+            this.maximoSemDpsMorteTela = this.thousands_separators(this.dados.maximoSemDpsMorte)
             this.calculaPremioInvalidez()
             this.coberturaTelaInvalidez = this.thousands_separators(this.coberturaInvalidez)
             this.premioTelaInvalidez = this.thousands_separators(this.premioInvalidez)
@@ -197,8 +202,6 @@ export default {
             this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
             //console.log('this.premioInicio',this.premioInicio)
         }
-    }, 
-    mounted(){
     },
     watch: {
         coberturaInvalidez(newVal, oldVal) {
@@ -216,9 +219,41 @@ export default {
                 this.premioTelaMorte = this.thousands_separators(this.premioMorte)
                 this.calculaTotal()
             }
+        },
+        profissao(newVal){
+            if(newVal) {
+                this.$refs.salvar.style.pointerEvents = 'visible'
+                this.$refs.salvar.style.opacity = 1
+            } else {
+                this.$refs.salvar.style.pointerEvents = 'none'
+                this.$refs.salvar.style.opacity = 0.6
+            }
         }
     },
     methods: {
+        showModal() {
+            this.$refs.ModalProfissao.style.display = "block";
+        },
+        closeModal() {
+            this.$refs.ModalProfissao.style.display = "none";
+        },
+        getProfissaoParticipante(chave){
+            return this.firebaseHelper.getProfissaoParticipante(chave)
+                .then(profissao => {
+                    if (!profissao) {          
+                        this.profissao = profissao
+                        this.$refs.salvar.style.pointerEvents = 'none'
+                        this.$refs.salvar.style.opacity = 0.6
+                        this.showModal()
+                        return this.firebaseHelper.getProfissoes()
+                            .then(ret => {
+                                this.profissoes = ret
+                            }
+                        )                        
+                    }
+                }
+            )
+        },
         cancelarContratacao(value) {
             this.simulador = value
         },
@@ -230,11 +265,11 @@ export default {
         },
         calculaPremioInvalidez(){
             this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(0)
-            console.log('this.premioInvalidez',this.premioInvalidez)
+            //console.log('this.premioInvalidez',this.premioInvalidez)
         },
         calculaPremioMorte(){
             this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(0)
-            console.log('this.premioMorte',this.premioMorte)
+            //console.log('this.premioMorte',this.premioMorte)
         },
         thousands_separators(num) {
             let numero = String(num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
@@ -245,7 +280,10 @@ export default {
         },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
-        },        
+        },   
+        modalvoltar() {            
+            page(`/${sessionStorage.ultimaPagina}`)
+        },    
         contratar() {
             var d = new Date()
             var month = new Array()

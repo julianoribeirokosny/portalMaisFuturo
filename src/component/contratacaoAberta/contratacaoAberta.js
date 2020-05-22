@@ -32,20 +32,17 @@ export default {
             error_banco: false
         }
     },       
-    created(){   
-        console.log('ContrataçãoAberta Created ===> ',this.dados)
+    created() {        
         this.carregarDados()
     },    
     methods: {
         carregarDados(){
-            if(this.dados.dados){
-                let name = Object.getOwnPropertyNames(this.dados.dados).sort()
-                //console.log('Let Name',name)
+            if(this.dados.dados) {
+                let name = Object.getOwnPropertyNames(this.dados.dados).sort()                
                 this.id = name[0]           
                 this.contratacao = this.dados.dados[this.id]
                 this.tipo = this.contratacao.tipo
-                //console.log('Contratação Solicitada ===>',this.contratacao)
-                if(this.contratacao.valor_anterior) {
+                if (this.contratacao.valor_anterior) {
                     this.valor_anterior = financeiro.float_to_string(this.contratacao.valor_anterior.toFixed(2))
                 }
                 if(this.contratacao.valor_solicitado) {
@@ -55,8 +52,7 @@ export default {
                 this.finalizado = true
             }
         },         
-        retornaHome(){
-            console.log('this.dados.dados',this.dados.dados)
+        retornaHome() {
             page(`/${sessionStorage.ultimaPagina}`)            
         },
         cancelarContratacao() {            
@@ -67,9 +63,7 @@ export default {
                 this.finalizado = false
                 this.error_banco = true
             }
-        },
-        atualizaDados(dados) {
-            console.log('DadosAtualizados',dados)
+            
         }
     }
 }

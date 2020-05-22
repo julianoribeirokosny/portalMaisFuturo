@@ -179,15 +179,19 @@ export default class PrimeiroLogin {
     telaPrimeiroLoginConfig() {
         console.log('===>firebase.auth().currentUser', this.auth.currentUser)
         if (this.validaSeLoginCelular(this.auth.currentUser)) {
-            $('.fp-input-celular').attr('placeholder', 'Outro celular de contato (opcional)')
-            $('.fp-input-email').attr('placeholder', 'E-mail (obrigatório)')
+            //$('.fp-input-celular').attr('placeholder', 'Outro celular de contato (opcional)')
+            //$('.fp-input-email').attr('placeholder', 'E-mail (obrigatório)')
             $('.fp-input-celular').prop('required', 'false')
             $('.fp-input-email').prop('required', 'true')
+            document.querySelector('#celular').placeholder = "Outro celular de contato (opcional)"
+            document.querySelector('#email').placeholder = "E-mail (obrigatório)"
         } else {
-            $('.fp-input-celular').attr('placeholder', 'Celular (obrigatório)')
-            $('.fp-input-email').attr('placeholder', 'Outro e-mail de contato (opcional)')
+            //$('.fp-input-celular').attr('placeholder', 'Celular (obrigatório)')
+            //$('.fp-input-email').attr('placeholder', 'Outro e-mail de contato (opcional)')
             $('.fp-input-celular').prop('required', 'true')
             $('.fp-input-email').prop('required', 'false')
+            document.querySelector('#celular').placeholder = "Celular (obrigatório)"
+            document.querySelector('#email').placeholder = "Outro e-mail de contato (opcional)"
         }
     }
 

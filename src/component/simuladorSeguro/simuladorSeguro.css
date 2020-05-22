@@ -31,6 +31,19 @@
     height: 14px;
     margin-bottom: 5px;
 }
+.p_label_seguro_dps {
+    margin-bottom: 2px; 
+    margin-left: 2px;
+    font-size: 10px;
+    font-family: 'MaisFuturo-Medium';    
+    letter-spacing: -1px;
+    opacity: 0.7;
+    height: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-end;
+    color: crimson;
+}
 
 .p_espaco_150 {
     margin-top: 150px;
@@ -64,4 +77,13 @@ span#text-top {
 span#text-bottom {
     vertical-align: text-bottom;
     font-size: 24px;
+}
+.vue-slider-dot {
+    z-index: 1 !important;
+}
+
+@media screen and (max-width: 425px) {
+    .span_cobertura_valor2 {
+        font-size: 28px;
+    }
 }
