@@ -13,7 +13,7 @@ import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
 import emConstrucao from './component/emConstrucao/emConstrucao'
-import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
+import historicoContribuicao from './component/historicoContribui\cao/historicoContribuicao'
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import page from 'page';
 import {Erros} from './Erros';
@@ -240,7 +240,7 @@ export default class Home {
                 servicos,
                 emConstrucao,
                 historicoContribuicao,
-                trocaParticipacao 
+                trocaParticipacao
             },        
             data: {
                 video:'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
@@ -254,17 +254,7 @@ export default class Home {
                 rendaSimulador: dadosSimuladorRenda,
                 emprestimoSimulador: dadosSimuladorEmprestimo,
                 seguroSimulador: dadosSimuladorSeguro,
-                historicoContribuicao: listaHistoricoContribuicao,
-                dataSimulador: {
-                    titulo: "Simulador </br>de Empréstimo",
-                    descricao: "Você tem até R$ 8.500,00 </br>pré aprovado.",
-                    slider: { 
-                              min: 12,
-                              max: 60,
-                              value: 24,
-                              step: 1
-                            }
-                }
+                historicoContribuicao: listaHistoricoContribuicao                
             },  
             created() {
                 sessionStorage.ultimaPagina = 'home'
@@ -324,8 +314,11 @@ export default class Home {
             this.vueObj.forceRerender()
             //console.log('this.vueObj',this.vueObj)
         }    
-
-        base_spinner.style.display = 'none'
+        
+        setTimeout(function () {
+          base_spinner.style.display = 'none'
+        }, 20)
+        
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
     firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))

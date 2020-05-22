@@ -129,10 +129,7 @@ export default {
             this.str_minimo = financeiro.float_to_string(this.minimo.toFixed(2))
             this.principal = (this.maximo / 2).toFixed(0)
         }
-    },
-    // mounted(){
-    //     this.calcula_taxa_mensal();
-    // },
+    },    
     methods: {      
         calcularParcela(){    
             let principal = parseFloat(this.principal.toString().replace(/\./g,''))
@@ -227,24 +224,14 @@ export default {
                 this.contratacao.uid = this.dados.uid
                 this.contratacao.label_button = 'Solicitar'
                 this.contratacao.tipo = 'Empréstimo'
-
-                //console.log('Novo Valor Emprestimos',this.contratacao.valor_novo)
                 this.simulador = false
             }            
-        },
-        // calcula_taxa_mensal() {  
-        //     const data_liberacao = new Date();
-        //     const inicio = new Date(data_liberacao.getFullYear(), data_liberacao.getMonth(), 1);
-        //     const diferenca = Math.abs(data_liberacao.getTime() - inicio.getTime());
-        //     const dias = Math.ceil(diferenca / (1000 * 60 * 60 * 24)) - 1;
-        //     this.taxa_mensal = ((1 + this.dados.taxa_mensal/100) * (Math.pow(1 + (this.dados.indice_anterior/100), (dias / 30))) - 1) * 100;
-        // },        
+        },            
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
         },
         cancelarContratacao(value) {
             this.simulador = value
-        },
-
+        }
     },
 }

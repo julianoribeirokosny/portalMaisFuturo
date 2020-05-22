@@ -19,10 +19,7 @@ export default {
             img_boleto: img_boleto,
             img_check: img_check
         }
-    },
-    mounted(){        
-        console.log('HISTORICO',this.historico)
-    },
+    },    
     methods: {
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)

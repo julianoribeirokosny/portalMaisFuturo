@@ -46,9 +46,9 @@ export default {
             page('/home')  
         },
         showModal(chave) {
-            console.log('chave',chave)
+            //console.log('chave',chave)
             this.novaChave = chave
-            console.log('this.chave',this.chave)
+            //console.log('this.chave',this.chave)
             this.$refs.Modal_tp.style.display = "block";
         },
         closeModal() {

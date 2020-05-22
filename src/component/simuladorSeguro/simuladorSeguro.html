@@ -2,7 +2,7 @@
     <template v-if="!seguroSolicitado">
         <template v-if="simulador">
             <div class="mdl-card__supporting-text mdl-card-container div_margem_card">        
-                <div class="div_titulo_card margin-auto" autofocus v-html="dados.titulo"></div>
+                <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
                 <div style="margin-top: 20px;">                    
                     <div class="div_descricao margin-auto" v-html="dados.descricao"></div>            
                     <div style="float: left; width: 75% !important; height: 400px;">
@@ -11,14 +11,18 @@
                         <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
                             <p style="margin-bottom: 1px;">
                                 <span class='line span_cobertura_valor2' style="color:#8BCF7B">
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}<span id='text-bottom'>,00</span></span></p>
-                        </div>
+                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}<span id='text-bottom'>,00</span></span>
+                            </p>
+                        </div>            
+                        <p class="p_label_seguro_dps" v-if="coberturaInvalidez >= dados.maximoSemDpsInvalidez">Preencher nova DPS a partir de R$ {{ maximoSemDpsInvalidezTela }}</p>
                         <p class="p_label_seguro">Cobertura por morte</p>
                         <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaMorte > 0">
-                            <p>
+                            <p style="margin-bottom: 1px;">
                                 <span class='line span_cobertura_valor2' style="color:#003366">
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaMorte }}<span id='text-bottom'>,00</span></span></p>
+                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaMorte }}<span id='text-bottom'>,00</span></span>
+                            </p>
                         </div>
+                        <p class="p_label_seguro_dps" v-if="coberturaMorte >= dados.maximoSemDpsMorte">Preencher nova DPS a partir de R$ {{ maximoSemDpsMorteTela }}</p>
 
                         <div style="margin-top: 50px; margin-left: 20px;">
                             <p class="p_label_seguro">Prêmio por invalidez</p>
@@ -94,4 +98,24 @@
     <template v-else>
         <contratacao-aberta v-bind:dados="dados.seguroSolicitado"></contratacao-aberta>
     </template>
+    <!-- The Modal -->
+    <div id="ModalProfissao" ref="ModalProfissao" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" style="height: auto">
+            <div class="mdl-card-container div-container" style="width: 90%; margin-top: 30px;">
+                <p>Para continuar vc precisa selecionar sua profissão:</p>
+            </div>
+            <div class="mdl-card-container div_vSelect_cadastro div-container" style="margin-top: 20px;">
+                <span class="Span_Label_vSelect_v2">Profissão</span><br>
+                <!-- <v-select v-if="profissoes" v-model="profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select> -->
+                <div class="div-img-input" style="margin-top: -35px;">
+                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
+                </div>
+            </div>    
+            <div class="mdl-card__supporting-text" style="margin:20px">                
+                <div class="div_button_cancelar" style="float: left; width: 48%;" @click="modalvoltar()">voltar</div>
+                <div class="div_button_confirmar" style="float: right; width: 48%;" @click="" ref="salvar">salvar</div>
+            </div>          
+        </div>
+    </div>    
 </div>
