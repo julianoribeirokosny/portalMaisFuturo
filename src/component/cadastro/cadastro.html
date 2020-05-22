@@ -45,8 +45,8 @@
                 <span class="Span_Label_v2">Sexo</span><br>
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.sexo}}</span>
             </div>            
-        </div>        
-        <div class="mdl-card-container Div_vSelect_v2 div-container">
+        </div>
+        <div class="mdl-card-container div_vSelect_cadastro div-container">
             <span class="Span_Label_vSelect_v2">Estado Civil</span><br>
             <v-select v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis" :reduce="option => option.value" style="line-height: 18px !important;"></v-select>
             <div class="div-img-vSelect">
@@ -62,27 +62,31 @@
                 </div>
             </div>            
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div style="float:left; width: 47%;">
-                <div class="Div_Campo_v2">
-                    <span class="Span_Label_v2">Telefone Fixo</span><br>
-                    <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)">
-                    <div class="div-img-input">
-                        <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                    </div>
+        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">            
+            <div class="Div_Campo_v2">
+                <span class="Span_Label_v2">Telefone Fixo</span><br>
+                <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)">
+                <div class="div-img-input">
+                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
                 </div>
             </div>
-            <div style="float: right;width: 47%;">
-                <div class="Div_Campo_v2">
-                    <span class="Span_Label_v2">Celular</span><br>
-                    <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)">
-                    <div class="div-img-input">
-                        <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                    </div>
-                </div>
-            </div>                       
         </div>
-
+        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div class="Div_Campo_v2">
+                <span class="Span_Label_v2">Celular</span><br>
+                <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)">
+                <div class="div-img-input">
+                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
+                </div>
+            </div>                               
+        </div>
+        <div class="mdl-card-container div_vSelect_cadastro div-container">
+            <span class="Span_Label_vSelect_v2">Profissão</span><br>
+            <v-select v-model="cadastro.informacoes_pessoais.profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select>
+            <div class="div-img-vSelect">
+                <img class="img-editar" v-bind:src="img_editar" alt=""/>
+            </div>            
+        </div>
         <!--Endereço-->
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">

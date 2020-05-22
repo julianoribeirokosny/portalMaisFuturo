@@ -52,11 +52,14 @@ export default class Home {
   }  
 
   async showHome() {
+    let base_spinner = document.querySelector('#base_spinner')
+    base_spinner.style.display = 'flex'
 
     this.auth = firebase.auth();
     
     if (!this.auth.currentUser) {
       Erros.registraErro('sem_uid', 'auth', 'showHome')
+      base_spinner.style.display = 'none'
       return page('/erro')
     }
 
@@ -74,6 +77,7 @@ export default class Home {
 
     console.log('=====> CHAVE: ', sessionStorage.chave)
     if (this.chave===null || this.chave ==='') {
+      base_spinner.style.display = 'none'
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
       return page('/erro')
     }
@@ -84,6 +88,7 @@ export default class Home {
     let data_Home = await this.dadosHome(this.chave)
     if (data_Home===null) {
       //zera a session para tentar carregar em próximas vezes
+      base_spinner.style.display = 'none'
       sessionStorage.chave = ''
       Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
       return page('/erro')
@@ -92,6 +97,7 @@ export default class Home {
     
     //participante com inabilitado para acessar o portal
     if (!data_Home.vigente) {
+      base_spinner.style.display = 'none'
       Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome')
       return page('/erro')
     }
@@ -234,7 +240,7 @@ export default class Home {
                 servicos,
                 emConstrucao,
                 historicoContribuicao,
-                trocaParticipacao
+                trocaParticipacao 
             },        
             data: {
                 video:'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
@@ -269,6 +275,7 @@ export default class Home {
                     this.componentKey += 1;  
                 },
                 error(){
+                  base_spinner.style.display = 'none'
                     page('/erro')
                 },        
                 toggleCategory: function() {
@@ -297,6 +304,7 @@ export default class Home {
                 }
             },
             errorCaptured(err, component, details) {
+              base_spinner.style.display = 'none'
                 Erros.registraErro(err, 'vuejs', '')
                 return page('/erro')
             }
@@ -307,11 +315,17 @@ export default class Home {
             this.vueObj.contribuicaoAberta = this.consulta_contribuicao
             this.vueObj.rendaSimulador = dadosSimuladorRenda
             this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
-            this.vueObj.seguroSimulador = dadosSimuladorSeguro
+            this.vueObj.seguroSimulador = dadosSimuladorSeguro            
+            this.vueObj.chave = this.chave
+            this.vueObj.url_foto = sessionStorage.url_foto
+            this.vueObj.uid = this.auth.currentUser.uid
+            this.vueObj.historicoContribuicao = listaHistoricoContribuicao         
             this.vueObj.$forceUpdate()   
             this.vueObj.forceRerender()
             //console.log('this.vueObj',this.vueObj)
         }    
+
+        base_spinner.style.display = 'none'
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
     firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))

@@ -1,13 +1,10 @@
 'use strict';
 
 import Vue from 'vue/dist/vue.esm.js'
-
 import vSelect from 'vue-select'; 
 import 'vue-select/dist/vue-select.css'
-
 import cadastro from './cadastro.html';
 import './cadastro.css';
-
 import page from 'page';
 import FirebaseHelper from '../../FirebaseHelper';
 import cep from 'cep-promise'
@@ -24,7 +21,7 @@ export default {
     },
     props: { 
         foto:'',
-        chave_usuario:""
+        chave_usuario:''        
     },    
     data: function() {
         return {                       
@@ -44,7 +41,8 @@ export default {
             classValid: {
                 'hasvalid': false,
                 'hasinvalid': false
-            }
+            },
+            profissoes: [ 'Apple', 'Banana', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple'],
         }        
     },
     created(){        
@@ -125,6 +123,6 @@ export default {
                 }                
             })
             .catch(console.log)
-        }
-    },
+        }        
+    }
 }

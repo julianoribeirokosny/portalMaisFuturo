@@ -1391,16 +1391,15 @@ export default class FirebaseHelper {
       }
   }
 
-  async getUsuarioChave(uid, numItemParticipacao) {
+  async getUsuarioChave(uid) {
     let ref = this.database.ref(`login/${uid}/lista_chaves`)
-    let snapshot = await ref.once('value')
-    let ret = null
-    snapshot.forEach((snap) => {
-      if (snap.val()===numItemParticipacao) {
-        ret = snap.key
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
       }
     })
-    return ret
   }
 
   async getUsuarioChavePrincipal(uid) {

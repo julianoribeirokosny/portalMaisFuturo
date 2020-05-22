@@ -11,7 +11,7 @@
    </div>
    <div class="mdl-card__supporting-text mdl-card-container div-container grid Div_Table-Desgin" v-for="item in historico.slice().reverse()">
       <div class="TableText" style="color:#033166;font-weight: 600;">{{item.anoMes}}</div>
-      <div class="TableText" style="color:#033166;font-weight: 600;">{{item.valor}}</div>
+      <div class="TableText" style="color:#033166;font-weight: 600;">{{(item.valor).toLocaleString('pt-BR')}}</div>
       <template v-if="item.pago">
          <div class="TableImg"><img v-bind:src="img_check" width="14" height="10" alt=""/></div>
       </template>
@@ -21,13 +21,18 @@
          </div>
       </template>
    </div>
+   <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+      <div class="mdl-shadow--2dp div_btn_voltar" @click="voltar()">
+         Voltar
+      </div>   
+   </div>
    <!-- The Modal -->
    <div id="myModal" ref="myModal" class="modal" @click="closeModal">
       <!-- Modal content -->
       <div class="modal-content">
          <span class="close" @click="closeModal">&times;</span>
          <h3 style="margin: 12px 0;">Legal!!!</h3>
-         <p>Você esta acessando nosso novo portal em versão beta.</p>ss
+         <p>Você esta acessando nosso novo portal em versão beta.</p>
          <p>No momento seu boleto não está disponível.</p>
       </div>   
    </div>   

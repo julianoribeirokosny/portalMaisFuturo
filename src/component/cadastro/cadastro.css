@@ -78,8 +78,8 @@
     padding-left: 15px;
     margin-top: 5px;
 }
-.Div_vSelect_v2 {
-    /*width: 90%;*/
+.div_vSelect_cadastro {
+    width: 90%;
     border: silver solid 1px;
     height: 40px;
     border-radius: 20px;
@@ -95,7 +95,10 @@
     width: 99%
 }
 .vs__search {
-    display: none !important;
+    /* display: none !important; */
+    margin-left: 10px !important;
+    line-height: 14px;
+    margin-top: 0 !important;
 }
 .vs__selected {
     margin: 0 !important;
