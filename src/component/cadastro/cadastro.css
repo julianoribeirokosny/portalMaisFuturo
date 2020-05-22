@@ -32,6 +32,7 @@
 .card_right_v2 {
     float: right;   
     padding-left: 5px; 
+    padding-right: 10px;
 }
 .UserFullName_Class_v2 {
     font-family: Objectivity, Arial, Helvetica, sans-serif;

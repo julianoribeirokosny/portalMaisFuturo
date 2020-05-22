@@ -82,7 +82,7 @@
         </div>
         <div class="mdl-card-container div_vSelect_cadastro div-container">
             <span class="Span_Label_vSelect_v2">Profissão</span><br>
-            <v-select v-if="profissoes" v-model="cadastro.informacoes_pessoais.profissao" width="200px" :options="profissoes[0]" style="line-height: 18px !important;"></v-select>
+            <v-select v-if="profissoes" v-model="profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select>
             <div class="div-img-vSelect">
                 <img class="img-editar" v-bind:src="img_editar" alt=""/>
             </div>            

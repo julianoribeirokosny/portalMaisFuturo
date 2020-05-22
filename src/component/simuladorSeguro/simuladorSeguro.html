@@ -107,14 +107,14 @@
             </div>
             <div class="mdl-card-container div_vSelect_cadastro div-container" style="margin-top: 20px;">
                 <span class="Span_Label_vSelect_v2">Profissão</span><br>
-                <!-- <v-select v-if="profissoes" v-model="profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select> -->
+                <v-select v-if="profissoes" v-model="profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select>
                 <div class="div-img-input" style="margin-top: -35px;">
                     <img class="img-editar" v-bind:src="img_editar" alt=""/>
                 </div>
             </div>    
             <div class="mdl-card__supporting-text" style="margin:20px">                
                 <div class="div_button_cancelar" style="float: left; width: 48%;" @click="modalvoltar()">voltar</div>
-                <div class="div_button_confirmar" style="float: right; width: 48%;" @click="" ref="salvar">salvar</div>
+                <div class="div_button_confirmar" style="float: right; width: 48%;" @click="salvarProfissao()" ref="salvar">salvar</div>
             </div>          
         </div>
     </div>    

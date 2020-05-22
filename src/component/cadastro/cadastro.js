@@ -43,7 +43,8 @@ export default {
                 'hasinvalid': false
             },
             profissoes: [],
-            optionsProfissoes: []
+            listaProfissoes: [],
+            profissao: ''
         }
     },
     created(){
@@ -81,19 +82,13 @@ export default {
         }
     },
     methods: {
-        getProfissoes() {
-            //this.profissoes = this.firebaseHelper.getProfissoes()
+        getProfissoes() {            
             return this.firebaseHelper.getProfissoes()
                 .then(ret => {                                    
-                    this.profissoes = Object.entries(ret) 
-                    this.profissoes.foreach(prof => {
-                        this.optionsProfissoes.push(prof[0])
-                    })    
-                    console.log('Retorno getProfissoes',this.optionsProfissoes)
-                    // let array = new Array()
-                    // array.push(ret)
-                    // console.log('Array getProfissoes',ret)
-                    //this.profissoes = ret
+                    this.listaProfissoes = Object.entries(ret) 
+                    this.listaProfissoes.forEach(prof => {
+                        this.profissoes.push(prof[0])
+                    })                        
                 }
             )
         },
@@ -111,6 +106,10 @@ export default {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
                     this.email = this.cadastro.informacoes_pessoais.email
+                    this.profissao = ''
+                    if (this.cadastro.informacoes_pessoais.profissao) {
+                        this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
+                    }
                 }
             )
         },
@@ -118,6 +117,15 @@ export default {
             page('/home')
         },
         salvar() {
+            let profissao = this.listaProfissoes.filter(p => { 
+                                                                if (p[0] === this.profissao)
+                                                                    return Object.entries(p)                                             
+                                                            }
+                                                        )          
+            this.cadastro.informacoes_pessoais.profissao =  {
+                                                                nome: profissao[0][0],
+                                                                seguro: profissao[0][1]
+                                                            }            
             this.cadastro.informacoes_pessoais.email = this.email
             var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
             if(cadastro) {
