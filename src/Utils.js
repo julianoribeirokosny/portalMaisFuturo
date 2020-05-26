@@ -191,7 +191,7 @@ export class Utils {
     if ('Notification' in window && navigator.serviceWorker) {
         return true;
     }
-    console.error('PWA: This browser does not support Notifications.');
+    console.log('PWA: This browser does not support Notifications.');
     return false;
   }
 

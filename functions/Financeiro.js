@@ -70,22 +70,29 @@ module.exports =  {
         return (pmt * -1);
     },    
 
-    float_to_string(num) {    
+    /*float_to_string(num) {    
         //num = num.toFixed(2)
         return String(String(num).replace('.',',')).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-    },
+    },*/
 
-    valor_to_string_formatado(num, casasDecimais, incluiCifrao) {
-        console.log('==> num, casasDecimais, incluiCifrao', num, casasDecimais, incluiCifrao)
+    valor_to_string_formatado(num, casasDecimais, incluiCifrao, fromWeb) {
+        console.log('==> num, casasDecimais, incluiCifrao', num, casasDecimais, incluiCifrao, fromWeb)
         let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
+        console.log('==> numFormatado', numFormatado)
         if (incluiCifrao) {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
         } else {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
         }
-        numFormatado = numFormatado.replace(',','#')
-        numFormatado = numFormatado.replace('.',',')
-        numFormatado = numFormatado.replace('#','.')
+        console.log('==> numFormatado2', numFormatado)
+        if (!fromWeb) {
+            numFormatado = numFormatado.replace(',','#')
+            console.log('==> numFormatado3', numFormatado)
+            numFormatado = numFormatado.replace('.',',')
+            console.log('==> numFormatado4', numFormatado)
+            numFormatado = numFormatado.replace('#','.')
+            console.log('==> numFormatado5', numFormatado)    
+        }
         return numFormatado
     },
 

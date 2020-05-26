@@ -17,7 +17,6 @@ import historicoContribuicao from './component/historicoContribui\cao/historicoC
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import page from 'page';
 import {Erros} from './Erros';
-import {Utils} from './Utils';
 
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})

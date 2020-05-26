@@ -157,19 +157,19 @@ export default {
     },
     created(){        
         this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
-        this.contribuicaoTela = financeiro.float_to_string(this.dados.minimoContribuicao.toFixed(2))
-        this.reservaTotalTela = financeiro.float_to_string(this.dados.reservaTotalFutura)
-        this.rendaMensalTela = financeiro.float_to_string(this.dados.rendaMensalFutura)
-        this.contribuicaoFixaTela = financeiro.float_to_string(this.dados.contribuicaoFixa.toFixed(2))
-        this.contribuicaoTotalTela = financeiro.float_to_string((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2))
+        this.contribuicaoTela = financeiro.valor_to_string_formatado(this.dados.minimoContribuicao.toFixed(2), 2, false, true)
+        this.reservaTotalTela = financeiro.valor_to_string_formatado(this.dados.reservaTotalFutura, 2, false, true)
+        this.rendaMensalTela = financeiro.valor_to_string_formatado(this.dados.rendaMensalFutura, 2, false, true)
+        this.contribuicaoFixaTela = financeiro.valor_to_string_formatado(this.dados.contribuicaoFixa.toFixed(2), 2, false, true)
+        this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2), 2, false, true)
     }, 
     mounted(){
     },
     watch: {
         contribuicao(newVal, oldVal) {
             if(newVal !== oldVal) {
-                this.contribuicaoTela = financeiro.float_to_string(newVal.toFixed(2))
-                this.contribuicaoTotalTela = financeiro.float_to_string((newVal + this.dados.contribuicaoFixa).toFixed(2))
+                this.contribuicaoTela = financeiro.valor_to_string_formatado(newVal.toFixed(2), 2, false, true)
+                this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((newVal + this.dados.contribuicaoFixa).toFixed(2), 2, false, true)
                 this.calculaReservaFutura()
                 this.calculaRendaFutura()
             }
@@ -242,16 +242,17 @@ export default {
                 this.dados.usr_tipo_plano
             )
 
-            this.reservaTotalTela = financeiro.float_to_string(this.reservaTotal)
+            this.reservaTotalTela = financeiro.valor_to_string_formatado(this.reservaTotal, 2, false, true)
         },
         calculaRendaFutura() {
-            this.rendaMensalTela = financeiro.float_to_string(
+            this.rendaMensalTela = financeiro.valor_to_string_formatado(
                 financeiro.calculaRendaFutura(
                     this.reservaTotal,
                     this.dados.taxa_anual_simulacao,
                     this.tempo,
                     this.dados.usr_tipo_plano
-                )
+                ), 
+                2, false, true
             )
         },
     },

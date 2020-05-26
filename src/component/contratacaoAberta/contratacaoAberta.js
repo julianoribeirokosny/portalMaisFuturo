@@ -43,10 +43,10 @@ export default {
                 this.contratacao = this.dados.dados[this.id]
                 this.tipo = this.contratacao.tipo
                 if (this.contratacao.valor_anterior) {
-                    this.valor_anterior = financeiro.float_to_string(this.contratacao.valor_anterior.toFixed(2))
+                    this.valor_anterior = financeiro.valor_to_string_formatado((this.contratacao.valor_anterior.toFixed(2)), 2, false, true)
                 }
                 if(this.contratacao.valor_solicitado) {
-                    this.valor_atual = financeiro.float_to_string(this.contratacao.valor_solicitado.toFixed(2))
+                    this.valor_atual = financeiro.valor_to_string_formatado(this.contratacao.valor_solicitado.toFixed(2), 2, false, true)
                 }
             } else {
                 this.finalizado = true

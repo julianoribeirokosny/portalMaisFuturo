@@ -12,6 +12,7 @@ import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
 
 const img_editar = require('../../../public/images/Editar.png')
+const financeiro = require('../../../functions/Financeiro')
 
 export default {
     template: simuladorSeguro,
@@ -189,15 +190,15 @@ export default {
         } else {
             this.getProfissaoParticipante(this.dados.chave)
 
-            this.maximoSemDpsInvalidezTela = this.thousands_separators(this.dados.maximoSemDpsInvalidez)
+            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)
             //console.log('this.maximoSemDpsInvalidezTela',this.maximoSemDpsInvalidezTela)
-            this.maximoSemDpsMorteTela = this.thousands_separators(this.dados.maximoSemDpsMorte)
+            this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
             this.calculaPremioInvalidez()
-            this.coberturaTelaInvalidez = this.thousands_separators(this.coberturaInvalidez)
-            this.premioTelaInvalidez = this.thousands_separators(this.premioInvalidez)
+            this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
+            this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
             this.calculaPremioMorte()
-            this.coberturaTelaMorte = this.thousands_separators(this.coberturaMorte)
-            this.premioTelaMorte = this.thousands_separators(this.premioMorte)
+            this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
+            this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
             this.calculaTotal()
             this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
             //console.log('this.premioInicio',this.premioInicio)
@@ -207,16 +208,16 @@ export default {
         coberturaInvalidez(newVal, oldVal) {
             if(newVal !== oldVal) {
                 this.calculaPremioInvalidez()
-                this.coberturaTelaInvalidez = this.thousands_separators(newVal)
-                this.premioTelaInvalidez = this.thousands_separators(this.premioInvalidez)
+                this.coberturaTelaInvalidez = this.valor_to_string_formatado(newVal)
+                this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
                 this.calculaTotal()
             }
         },
         coberturaMorte(newVal, oldVal) {
             if(newVal !== oldVal) {
                 this.calculaPremioMorte()
-                this.coberturaTelaMorte = this.thousands_separators(newVal)
-                this.premioTelaMorte = this.thousands_separators(this.premioMorte)
+                this.coberturaTelaMorte = this.valor_to_string_formatado(newVal)
+                this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
             }
         },
@@ -259,9 +260,9 @@ export default {
         },
         calculaTotal(){
             let premio = parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)
-            this.premioTelaTotal = this.thousands_separators(premio)
+            this.premioTelaTotal = this.valor_to_string_formatado(premio)
             let cobertura = parseFloat(this.coberturaInvalidez) + parseFloat(this.coberturaMorte)
-            this.coberturaTelaTotal = this.thousands_separators(cobertura)
+            this.coberturaTelaTotal = this.valor_to_string_formatado(cobertura)
         },
         calculaPremioInvalidez(){
             this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(0)
@@ -271,9 +272,11 @@ export default {
             this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(0)
             //console.log('this.premioMorte',this.premioMorte)
         },
-        thousands_separators(num) {
-            let numero = String(num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-            return numero
+        valor_to_string_formatado(num) {
+            return financeiro.valor_to_string_formatado(num, 2, false, true)
+            //let numero = String(num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+            //return numero
+            //return num
         },
         toggleCategory(){
             this.toggle = !this.toggle;

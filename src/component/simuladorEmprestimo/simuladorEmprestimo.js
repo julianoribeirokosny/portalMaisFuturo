@@ -123,10 +123,10 @@ export default {
         if(this.dados.emprestimoSolicitado.dados != null) {
             this.emprestimoSolicitado = true            
         } else {
-            this.dados.pre_aprovado = financeiro.float_to_string(this.dados.pre_aprovado.toFixed(2))
-            this.dados.saldo_devedor = financeiro.float_to_string(this.dados.saldo_devedor.toFixed(2))
-            this.str_maximo = financeiro.float_to_string(this.maximo.toFixed(2))
-            this.str_minimo = financeiro.float_to_string(this.minimo.toFixed(2))
+            this.dados.pre_aprovado = financeiro.valor_to_string_formatado(this.dados.pre_aprovado.toFixed(2), 2, false, true)
+            this.dados.saldo_devedor = financeiro.valor_to_string_formatado(this.dados.saldo_devedor.toFixed(2), 2, false, true)
+            this.str_maximo = financeiro.valor_to_string_formatado(this.maximo.toFixed(2), 2, false, true)
+            this.str_minimo = financeiro.valor_to_string_formatado(this.minimo.toFixed(2), 2, false, true)
             this.principal = (this.maximo / 2).toFixed(0)
         }
     },    
@@ -144,7 +144,7 @@ export default {
             } else {                
                 this.valido_maximo = true
                 this.valido_minimo = true                
-                this.parcela = financeiro.float_to_string(financeiro.pgto(principal, this.taxa_mensal, this.quantidade))
+                this.parcela = financeiro.valor_to_string_formatado(financeiro.pgto(principal, this.taxa_mensal, this.quantidade), 2, false, true)
             }
         },
         alteraPrincipal(){
@@ -162,7 +162,7 @@ export default {
                                                 { nome:'DADOS DO EMPRÉSTIMO:', valor:'' },
                                                 { nome:'Quantidade de parcelas:', valor: this.quantidade },
                                                 { nome:'Valor da parcela:', valor: `R$ ${this.parcela}` },
-                                                { nome:'(a) Valor bruto contratado:', valor: `R$ ${financeiro.float_to_string(principal)}` },
+                                                { nome:'(a) Valor bruto contratado:', valor: `R$ ${financeiro.valor_to_string_formatado(principal, 2, false, true)}` },
                                                 { nome:'&nbsp;', valor:'' },
                                                 { nome:'DEDUÇÕES:', valor:'' }
                                             )
@@ -173,8 +173,8 @@ export default {
                     risco = principal * this.dados.fundo_risco / 100
                     taxa_adm = principal * this.dados.taxa_adm / 100
                     this.contratacao.resumo.push(
-                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.float_to_string(taxa_adm.toFixed(2))}`},
-                                                    {nome:'(c) Fundo de risco:', valor: `R$ ${financeiro.float_to_string(risco.toFixed(2))}`}
+                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm.toFixed(2), 2, false, true)}`},
+                                                    {nome:'(c) Fundo de risco:', valor: `R$ ${financeiro.valor_to_string_formatado(risco.toFixed(2), 2, false, true)}`}
                                                 )
                     liquido = principal - risco - taxa_adm
                     if(this.saldo_devedor !== 0) {
@@ -182,18 +182,18 @@ export default {
                         this.contratacao.resumo.push(
                                     { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                                    { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
                         )
                     } else {
                         this.contratacao.resumo.push(
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
                         )
                     }                    
                 } else {                    
                     taxa_adm = principal * this.dados.taxa_adm / 100
                     this.contratacao.resumo.push(
-                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.float_to_string(taxa_adm.toFixed(2))}`},
+                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm.toFixed(2), 2, false, true)}`},
                                                 )
                     liquido = principal - taxa_adm
                     if(this.saldo_devedor !== 0) {
@@ -201,12 +201,12 @@ export default {
                         this.contratacao.resumo.push(
                                     { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
                         )
                     } else {
                         this.contratacao.resumo.push(
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b):', valor:`R$ ${financeiro.float_to_string(liquido.toFixed(2))}*`}
+                                    { nome:'VALOR FINAL (a - b):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2))}*`}
                         )
                     }
                 }                                                
@@ -215,7 +215,7 @@ export default {
                 this.contratacao.msg_novo_valor = ''
                 this.contratacao.observacao = '*Sobre este valor incidirá IOF, calculado na data da assinatura do contrato.'
                 this.contratacao.valor_novo = parseFloat(principal)
-                this.contratacao.valor_novo_Tela = financeiro.float_to_string(principal)
+                this.contratacao.valor_novo_Tela = financeiro.valor_to_string_formatado(principal, 2, false, true)
                 this.contratacao.valor_antigo = parseFloat(this.dados.saldo_devedor.toString().replace(/\./g,''))
                 this.contratacao.titulo_finalizacao = 'Solicitação </br> de empréstimo </br>encaminhada'
                 this.contratacao.finalizacao_msg = 'Em breve entraremos em contato para assinatura do contrato.'

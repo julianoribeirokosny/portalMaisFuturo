@@ -1,34 +1,46 @@
 {
   "name": "Portal Mais Futuro",
   "short_name": "Portal Mais Futuro",
-  "icons": [{
-    "src": "/images/icon-128x128.png",
-    "sizes": "128x128",
-    "type": "image/png"
-  }, {
-    "src": "/images/icon-180x180.png",
-    "sizes": "180x180",
-    "type": "image/png"
-  }, {
-    "src": "/images/icon-android-144x144.png",
-    "sizes": "144x144",
-    "type": "image/png"
-  }, {
-    "src": "/images/icon-192x192.png",
-    "sizes": "192x192",
-    "type": "image/png"
-  }, {
-    "src": "/images/icon-512x512.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }],
-  "start_url": "/",
+  "icons": [
+    {
+      "src": "/images/manifest-icon-120.png",
+      "sizes": "120x120",
+      "type": "image/png"
+    },    
+    {
+      "src": "/images/manifest-icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/manifest-icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/manifest-icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/manifest-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/manifest-splash-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/#:standalone:",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0288d1",
   "theme_color": "#039be5",
   "gcm_sender_id": "103953800507",
-  "permissions":[
-    "https://www.google.com/","https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/"
+  "permissions": [
+    "https://www.google.com/",
+    "https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/"
   ]
 }

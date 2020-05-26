@@ -32,7 +32,7 @@ export default class PrimeiroLogin {
     }  
 
     async verificaPrimeiroLogin() {
-        alert('Entrei em verifica Primeiro Login')
+        alert('Entrei verificaPrimeiroLogin')
         let ret = null
         let usr = this.auth.currentUser
         alert('Dentro de verificaPrimeiroLogin: '+usr.uid)

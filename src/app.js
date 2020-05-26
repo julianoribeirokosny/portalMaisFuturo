@@ -7,7 +7,6 @@ import Auth from './Auth';
 import Router from './Router';
 import 'material-design-lite';
 import {Utils} from './Utils';
-import page from 'page';
 
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
@@ -18,7 +17,7 @@ import 'mdl-ext/lib/mdl-ext.min.css';
 import 'firebaseui/dist/firebaseui.css';
 import './app.css';
 
-alert('INICIANDO APP.JS 14')
+console.log('INICIANDO APP.JS 14')
 
 const checkIfIsIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
@@ -52,6 +51,10 @@ localStorage.isSamsungBrowser = checkIfIsSamsungBrowser()
 if (!localStorage.isPwaInstalled || localStorage.isPwaInstalled==="false" || localStorage.isPwaInstalled === "") {
   localStorage.isPwaInstalled = checkIfIsPwaInstalled(localStorage.isIos) || detectStandalone()
 }
+
+console.log('IOS?', localStorage.isIos)
+console.log('Samsung Browser?', localStorage.isSamsungBrowser)
+console.log('PWA instalado?', localStorage.isPwaInstalled)
 
 //------------------------------------------------------------------------------------------------------
 // BLOCO: Instalação do APP - Android
