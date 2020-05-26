@@ -1525,13 +1525,13 @@ dialog + .backdrop { /* polyfill */
   }
   .div-contribuicao-row {
     float:left;
-    width: 70%; 
+    width: 75%; 
     line-height: 30px;
   }
 
   .div-contribuicao-nome {
     float:left;
-    width: 70%;
+    width: 80%;
     display: flex;
     align-items: center;
     font-size: 16px;
@@ -1546,7 +1546,7 @@ dialog + .backdrop { /* polyfill */
 
   .div-contribiucao-valor {
     float: right;
-    width: 30%; 
+    width: 20%; 
     text-align: right;
     font-size: 16px;
   }
@@ -1575,7 +1575,7 @@ dialog + .backdrop { /* polyfill */
 
   .div-contribuicao-total {
     float: right;
-    width: 30%;
+    width: 25%;
     text-align: right;
     display: flex;
     justify-content: flex-end;
@@ -1920,10 +1920,10 @@ dialog + .backdrop { /* polyfill */
           font-size: 14px;
       }    
       .div-contribuicao-nome {    
-        font-size: 14px;
+        font-size: 13px;
       }
       .div-contribiucao-valor {   
-          font-size: 14px;
+          font-size: 13px;
       }
       .dd_contribuicao-total {      
           font-size: 14px; 
@@ -2039,10 +2039,10 @@ dialog + .backdrop { /* polyfill */
           font-size: 12px;
       }
       .div-contribuicao-nome {    
-        font-size: 12px;
+        font-size: 11px;
       }
       .div-contribiucao-valor {   
-          font-size: 12px;
+          font-size: 11px;
       }
       .dd_contribuicao-total {      
           font-size: 12px; 

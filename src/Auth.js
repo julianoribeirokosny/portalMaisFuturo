@@ -93,9 +93,9 @@ export default class Auth {
       }
       
     })
-    this.confirmDadosButton.click(() => {
-      let celular = $('.fp-input-celular').val()
-      let email = $('.fp-input-email').val()
+    this.confirmDadosButton.click(() => {      
+      let celular = document.querySelector('#celular').value
+      let email = document.querySelector('#email').value      
       this.primeiroLogin.confirmEmailFone(celular, email);
     });
     this.cancelarDadosButton.click(() => {
