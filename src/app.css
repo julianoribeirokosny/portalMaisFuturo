@@ -1516,6 +1516,72 @@ dialog + .backdrop { /* polyfill */
       color: #3B3C3E;
       opacity: 0.7;
   }
+  .span-contribuicao-titulo {
+      font-family: 'MaisFuturo-Medium';
+      font-size: 16px;
+      letter-spacing: -0.19px;
+      color: rgb(36, 36, 37);
+      opacity: 0.7;
+  }
+  .div-contribuicao-row {
+    float:left;
+    width: 75%; 
+    line-height: 30px;
+  }
+
+  .div-contribuicao-nome {
+    float:left;
+    width: 80%;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .div-contribiucao-dot {
+    width: 10px;
+    height: 27px;
+    display: inline-block;
+    margin-right: 2px;
+  }
+
+  .div-contribiucao-valor {
+    float: right;
+    width: 20%; 
+    text-align: right;
+    font-size: 16px;
+  }
+
+  .dl-contribuicao-total {
+    margin:0 !important
+  }
+  .dt_contribuicao-total {
+      color: #3B3C3E;
+      font-family: 'MaisFuturo-Medium';
+      line-height: 10px;
+      font-size: 9px;
+      font-weight: 300;
+      padding-left: 20px;
+  }
+  .dd_contribuicao-total {
+      font-family: 'MaisFuturo-Bold';      
+      font-weight: 700;
+      padding-left: 20px;
+      margin: auto;
+      margin-inline-start: 0px !important;
+      padding-bottom: 1px;       
+      font-size: 16px; 
+      line-height: 16px;
+  }
+
+  .div-contribuicao-total {
+    float: right;
+    width: 25%;
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
 
   .span_reserva_legenda_1 {
       vertical-align: top; 
@@ -1853,6 +1919,19 @@ dialog + .backdrop { /* polyfill */
       .span-contribuicao-4 {        
           font-size: 14px;
       }    
+      .div-contribuicao-nome {    
+        font-size: 13px;
+      }
+      .div-contribiucao-valor {   
+          font-size: 13px;
+      }
+      .dd_contribuicao-total {      
+          font-size: 14px; 
+          line-height: 14px;
+      }
+      .span-contribuicao-titulo {
+          font-size: 14px;
+      }
       .img-mais-amigos-1 {
         width: 170px;
       }      
@@ -1957,6 +2036,19 @@ dialog + .backdrop { /* polyfill */
           font-size: 16px;        
       }
       .span-contribuicao-4 {        
+          font-size: 12px;
+      }
+      .div-contribuicao-nome {    
+        font-size: 11px;
+      }
+      .div-contribiucao-valor {   
+          font-size: 11px;
+      }
+      .dd_contribuicao-total {      
+          font-size: 12px; 
+          line-height: 12px;
+      }
+      .span-contribuicao-titulo {
           font-size: 12px;
       }
       .img-mais-amigos-1 {

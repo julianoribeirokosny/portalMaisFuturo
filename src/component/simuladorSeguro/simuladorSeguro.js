@@ -180,7 +180,9 @@ export default {
                 tipo: ''
             },
             profissao: null,
-            profissoes: null
+            profissoes: [],
+            listaProfissoes: [],
+            cadastro: {profissao: null}
         }
     },
     created(){        
@@ -232,6 +234,28 @@ export default {
         }
     },
     methods: {
+        salvarProfissao() {
+            let profissao = this.listaProfissoes.filter(p => { 
+                if (p[0] === this.profissao)
+                    return Object.entries(p)                                             
+                }
+            )          
+            this.cadastro.profissao =  {
+                nome: profissao[0][0],
+                seguro: profissao[0][1]
+            }
+
+            console.log('Cadastro Profissao',this.cadastro.profissao)
+            var cadastro = this.firebaseHelper.salvarCadastro(this.dados.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
+            if(cadastro) {
+                this.sliderInvalidez.max = profissao[0][1].Invalidez
+                this.sliderMorte.max = profissao[0][1].Morte
+                this.closeModal()
+                page(`/home`)
+            } else {
+                alert('error')
+            }
+        },
         showModal() {
             this.$refs.ModalProfissao.style.display = "block";
         },
@@ -248,7 +272,10 @@ export default {
                         this.showModal()
                         return this.firebaseHelper.getProfissoes()
                             .then(ret => {
-                                this.profissoes = ret
+                                this.listaProfissoes = Object.entries(ret) 
+                                this.listaProfissoes.forEach(prof => {
+                                    this.profissoes.push(prof[0])
+                                })                        
                             }
                         )                        
                     }

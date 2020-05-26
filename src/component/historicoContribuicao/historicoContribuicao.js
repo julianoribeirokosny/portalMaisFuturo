@@ -19,7 +19,7 @@ export default {
             img_boleto: img_boleto,
             img_check: img_check
         }
-    },    
+    },        
     methods: {
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
