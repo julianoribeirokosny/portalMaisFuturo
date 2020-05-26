@@ -256,9 +256,25 @@ export default class Home {
                 historicoContribuicao: listaHistoricoContribuicao                
             },  
             created() {
-                sessionStorage.ultimaPagina = 'home'
-                
+                sessionStorage.ultimaPagina = 'home'                              
             },      
+            mounted() {
+                let rowParticipante = document.querySelector('#div-contribuicao-row-participante').clientHeight
+                let rowParticipanteTotal = document.querySelector('#div-contribuicao-row-participante-total')
+                rowParticipanteTotal.style.height = rowParticipante + "px"
+                let rowPatronal = document.querySelector('#div-contribuicao-row-patronal').clientHeight
+                let rowPatronalTotal = document.querySelector('#div-contribuicao-row-patronal-total')
+                rowPatronalTotal.style.height = rowPatronal + "px"
+                let rowSeguro = document.querySelector('#div-contribuicao-row-seguro').clientHeight
+                let rowSeguroTotal = document.querySelector('#div-contribuicao-row-seguro-total')
+                rowSeguroTotal.style.height = rowSeguro + "px"                                
+                let rowParticipanteTotalh = document.querySelector('#div-contribuicao-row-participante-totalh')
+                rowParticipanteTotalh.style.height = rowParticipante + "px"                
+                let rowPatronalTotalh = document.querySelector('#div-contribuicao-row-patronal-totalh')
+                rowPatronalTotalh.style.height = rowPatronal + "px"                
+                let rowSeguroTotalh = document.querySelector('#div-contribuicao-row-seguro-totalh')
+                rowSeguroTotalh.style.height = rowSeguro + "px"
+            },
             methods: { 
                 forceRerender() {
                     this.componentKey += 1;  
