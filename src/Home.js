@@ -168,7 +168,7 @@ export default class Home {
                 tooltips: false,
               });
         }
-    });
+    })
     Vue.component('projeto-vida', {
         extends: VueCharts.Line,
         mounted () {            
@@ -198,7 +198,7 @@ export default class Home {
                 }
             )
         }
-    });
+    })
     Vue.component('contribuicao', {
         extends: VueCharts.Doughnut,        
         //template: '#contribuicao',
@@ -221,130 +221,131 @@ export default class Home {
                 }
               )
         }
-    });
+    })
     Vue.config.errorHandler = function(err, vm, info) {
         console.log(`Error: ${err.toString()}\nInfo: ${info}`);
         Erros.registraErro(auth, 'Vuejs Error', 'showHome')
         page('/erro')
     }
+
     console.log('this.data_Home',this.data_Home)
     let auth = this.auth.currentUser.uid    
     
-      if (!this.vueObj) {
-          this.vueObj = new Vue({
-            renderError (h, err) {
-              location.reload()
-            },
-            components: {
-                simuladorEmprestimo,
-                rentabilidade,
-                simuladorSeguro,
-                simuladorRenda,
-                contratacaoAberta,
-                cadastro,
-                servicos,
-                emConstrucao,
-                historicoContribuicao,
-                trocaParticipacao
-            },        
-            data: {
-                video:'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
-                componentKey: 0,
-                home: this.data_Home,
-                toggle: false,
-                chave: this.chave,
-                url_foto: sessionStorage.url_foto,
-                uid: this.auth.currentUser.uid,
-                contribuicaoSimulador: this.consulta_contribuicao,            
-                rendaSimulador: dadosSimuladorRenda,
-                emprestimoSimulador: dadosSimuladorEmprestimo,
-                seguroSimulador: dadosSimuladorSeguro,
-                historicoContribuicao: listaHistoricoContribuicao                
-            },  
-            created() {
-                sessionStorage.ultimaPagina = 'home'                              
-            },      
-            mounted() {
-              let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
-              if (rowParticipante) {
-                let rowParticipanteTotal = document.querySelector('#div-contribuicao-row-participante-total')
-                rowParticipanteTotal.style.height = rowParticipante.clientHeight + "px"
-                let rowParticipanteTotalh = document.querySelector('#div-contribuicao-row-participante-totalh')
-                rowParticipanteTotalh.style.height = rowParticipante.clientHeight + "px"
-              }
-              let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
-              if (rowPatronal) {
-                let rowPatronalTotal = document.querySelector('#div-contribuicao-row-patronal-total')
-                rowPatronalTotal.style.height = rowPatronal.clientHeight + "px"
-                let rowPatronalTotalh = document.querySelector('#div-contribuicao-row-patronal-totalh')
-                rowPatronalTotalh.style.height = rowPatronal.clientHeight + "px"
-              }
-              let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
-              if (rowSeguro) {
-                let rowSeguroTotal = document.querySelector('#div-contribuicao-row-seguro-total')
-                rowSeguroTotal.style.height = rowSeguro.clientHeight + "px"
-                let rowSeguroTotalh = document.querySelector('#div-contribuicao-row-seguro-totalh')
-                rowSeguroTotalh.style.height = rowSeguro.clientHeight + "px"
-              }
-            },
-            methods: { 
-                forceRerender() {
-                    this.componentKey += 1;  
-                },
-                error(){
-                  base_spinner.style.display = 'none'
-                    page('/erro')
-                },        
-                toggleCategory: function() {
-                    this.toggle = !this.toggle;
-                },
-                removerCampanha: function(campanha) {
-                    campanha.ativo = false                
-                    firebaseHelper.removerCampanha(this.chave, campanha.nome)
-                },
-                contratarCampanha(link) {
-                    sessionStorage.ultimaPagina = 'home'
-                    page(`/${link}`)
-                },
-                simuladorSeguro(link) {
-                    sessionStorage.ultimaPagina = 'home'
-                    page(`/${link}`)
-                },
-                simuladorRenda(link, origem) {
-                    sessionStorage.ultimaPagina = origem
-                    page(`/${link}`)
-                },
-                contratacaoAberta() {
-                    sessionStorage.ultimaPagina = 'home'
-                    page('/contratacao-aberta')
-
-                }
-            },
-            errorCaptured(err, component, details) {
-              base_spinner.style.display = 'none'
-                Erros.registraErro(err, 'vuejs', '')
-                return page('/erro')
+    if (!this.vueObj) {
+        this.vueObj = new Vue({
+          renderError (h, err) {
+            location.reload()
+          },
+          components: {
+              simuladorEmprestimo,
+              rentabilidade,
+              simuladorSeguro,
+              simuladorRenda,
+              contratacaoAberta,
+              cadastro,
+              servicos,
+              emConstrucao,
+              historicoContribuicao,
+              trocaParticipacao
+          },        
+          data: {
+              video:'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
+              componentKey: 0,
+              home: this.data_Home,
+              toggle: false,
+              chave: this.chave,
+              url_foto: sessionStorage.url_foto,
+              uid: this.auth.currentUser.uid,
+              contribuicaoSimulador: this.consulta_contribuicao,            
+              rendaSimulador: dadosSimuladorRenda,
+              emprestimoSimulador: dadosSimuladorEmprestimo,
+              seguroSimulador: dadosSimuladorSeguro,
+              historicoContribuicao: listaHistoricoContribuicao                
+          },  
+          created() {
+              sessionStorage.ultimaPagina = 'home'                              
+          },      
+          mounted() {
+            let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
+            if (rowParticipante) {
+              let rowParticipanteTotal = document.querySelector('#div-contribuicao-row-participante-total')
+              rowParticipanteTotal.style.height = rowParticipante.clientHeight + "px"
+              let rowParticipanteTotalh = document.querySelector('#div-contribuicao-row-participante-totalh')
+              rowParticipanteTotalh.style.height = rowParticipante.clientHeight + "px"
             }
-          })
-            this.vueObj.$mount('#app');           
-        } else {
-            this.vueObj.home = this.data_Home
-            this.vueObj.contribuicaoAberta = this.consulta_contribuicao
-            this.vueObj.rendaSimulador = dadosSimuladorRenda
-            this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
-            this.vueObj.seguroSimulador = dadosSimuladorSeguro            
-            this.vueObj.chave = this.chave
-            this.vueObj.url_foto = sessionStorage.url_foto
-            this.vueObj.uid = this.auth.currentUser.uid
-            this.vueObj.historicoContribuicao = listaHistoricoContribuicao         
-            this.vueObj.$forceUpdate()   
-            this.vueObj.forceRerender()
-            //console.log('this.vueObj',this.vueObj)
-        }    
-        
-        setTimeout(function () {
-          base_spinner.style.display = 'none'
-        }, 20)
+            let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
+            if (rowPatronal) {
+              let rowPatronalTotal = document.querySelector('#div-contribuicao-row-patronal-total')
+              rowPatronalTotal.style.height = rowPatronal.clientHeight + "px"
+              let rowPatronalTotalh = document.querySelector('#div-contribuicao-row-patronal-totalh')
+              rowPatronalTotalh.style.height = rowPatronal.clientHeight + "px"
+            }
+            let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
+            if (rowSeguro) {
+              let rowSeguroTotal = document.querySelector('#div-contribuicao-row-seguro-total')
+              rowSeguroTotal.style.height = rowSeguro.clientHeight + "px"
+              let rowSeguroTotalh = document.querySelector('#div-contribuicao-row-seguro-totalh')
+              rowSeguroTotalh.style.height = rowSeguro.clientHeight + "px"
+            }
+          },
+          methods: { 
+              forceRerender() {
+                  this.componentKey += 1;  
+              },
+              error(){
+                base_spinner.style.display = 'none'
+                  page('/erro')
+              },        
+              toggleCategory: function() {
+                  this.toggle = !this.toggle;
+              },
+              removerCampanha: function(campanha) {
+                  campanha.ativo = false                
+                  firebaseHelper.removerCampanha(this.chave, campanha.nome)
+              },
+              contratarCampanha(link) {
+                  sessionStorage.ultimaPagina = 'home'
+                  page(`/${link}`)
+              },
+              simuladorSeguro(link) {
+                  sessionStorage.ultimaPagina = 'home'
+                  page(`/${link}`)
+              },
+              simuladorRenda(link, origem) {
+                  sessionStorage.ultimaPagina = origem
+                  page(`/${link}`)
+              },
+              contratacaoAberta() {
+                  sessionStorage.ultimaPagina = 'home'
+                  page('/contratacao-aberta')
+
+              }
+          },
+          errorCaptured(err, component, details) {
+            base_spinner.style.display = 'none'
+              Erros.registraErro(err, 'vuejs', '')
+              return page('/erro')
+          }
+        })
+          this.vueObj.$mount('#app');           
+    } else {
+        this.vueObj.home = this.data_Home
+        this.vueObj.contribuicaoAberta = this.consulta_contribuicao
+        this.vueObj.rendaSimulador = dadosSimuladorRenda
+        this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
+        this.vueObj.seguroSimulador = dadosSimuladorSeguro            
+        this.vueObj.chave = this.chave
+        this.vueObj.url_foto = sessionStorage.url_foto
+        this.vueObj.uid = this.auth.currentUser.uid
+        this.vueObj.historicoContribuicao = listaHistoricoContribuicao         
+        this.vueObj.$forceUpdate()   
+        this.vueObj.forceRerender()
+        //console.log('this.vueObj',this.vueObj)
+    }    
+    
+    setTimeout(function () {
+      base_spinner.style.display = 'none'
+    }, 20)
         
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
@@ -358,6 +359,7 @@ export default class Home {
     let p1 = new Promise((resolve, reject) => {
       resolve(this.firebaseHelper.getHome().then((data) => {
         if (data) {
+          //console.log('DATA-HOME:',data)
           this.home = data
           homeAux = data
           return true
@@ -374,6 +376,7 @@ export default class Home {
             return false
           } else {
             this.participante = part
+            console.log('PARTICIPANTE:',this.participante)
             return true
           }
         }))  
