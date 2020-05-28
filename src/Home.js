@@ -65,9 +65,13 @@ export default class Home {
     sessionStorage.url_foto = this.auth.currentUser.photoURL
 
     let firebaseHelper = this.firebaseHelper
-    //registra login com sucesso
-    firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
     
+    //registra login com sucesso
+    if (!sessionStorage.dataUltimoLogin || sessionStorage.dataUltimoLogin==="") {
+      firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
+      sessionStorage.dataUltimoLogin = new Date()
+    }
+
     console.log('=====> currentUser: ', this.auth.currentUser)
     if (!sessionStorage.chave || sessionStorage.chave==="undefined" || sessionStorage.chave === '') {
       sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)

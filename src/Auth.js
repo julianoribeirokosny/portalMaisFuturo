@@ -174,13 +174,8 @@ export default class Auth {
       Router.reloadPage();
     }
 
-    //verifica se App já está instalado
-    //let appInstalado = Utils.validaAppInstalado()
-
     const div_install = document.querySelector('#div-install');
     if (localStorage.isPwaInstalled==="true") {
-    //  div_install.style.display = 'block';   
-    //} else {
       div_install.style.display = 'none';   
     }
 

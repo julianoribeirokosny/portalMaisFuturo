@@ -36,6 +36,9 @@ input {
   transition: background 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
   resize: none;
   overflow: hidden;
+  -webkit-user-select: text; /* Chrome, Opera, Safari */
+  -moz-user-select: text; /* Firefox 2+ */
+  -ms-user-select: text; /* IE 10+ */
 }
 input:focus::-webkit-input-placeholder {
   color: #03a9f4;
@@ -344,6 +347,7 @@ button.firebaseui-idp-password {
 }
 .mdl-button .material-icons {
   margin-top: -2px;
+  cursor: pointer;
 }
 .mdl-button.mdl-button--icon .material-icons,
 .mdl-button.mdl-button--fab .material-icons {
@@ -1223,6 +1227,7 @@ button.firebaseui-idp-password {
 .mdl-dialog {
   width: 90%;
   max-width: 500px;
+  z-index: 11000;
 }
 
 dialog::backdrop { /* native */
@@ -1230,6 +1235,10 @@ dialog::backdrop { /* native */
 }
 dialog + .backdrop { /* polyfill */
   background-color: rgba(0,0,0,.5);;
+}
+
+_dialog_overlay {
+  z-index: 10500;
 }
 
 .fp-non-eu, .fp-eu {

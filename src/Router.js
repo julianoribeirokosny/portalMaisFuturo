@@ -7,17 +7,6 @@ import {MaterialUtils} from './Utils';
 import {Erros} from './Erros';
 import page from 'page';
 
-//var express = require('express')
-//var cors = require('cors')
-//var app = express()
-
-// var corsOptions = {
-//   origin: 'http://localhost:5000',
-//   optionsSuccessStatus: 200
-// }
-
-//app.use(cors(corsOptions))
-
 /**
  * Handles the pages/routing.
  */
@@ -49,29 +38,22 @@ export default class Router {
     // Configuring routes.
     page('/', () => {
       if (localStorage.isPwaInstalled==="true") {
-        console.log('page / testando se Signed In')
         this.displayPage('splash-login');
         this.redirectHomeIfSignedIn();  
       }
     });
     page('/home', async () => {
-      console.log('page /home testando se primeiro Login')
       verificaPrimeiroLogin().then((primeiroLogin) => {
-        console.log('primeiroLogin? '+primeiroLogin)
         if (primeiroLogin===null) {
           Erros.registraErro('sem_uid', 'auth', 'showHome')
           return page('/erro')  
         } else if (primeiroLogin) {
           telaPrimeiroLoginConfig()
-          console.log(`indo para this.displayPage('primeiro-login')`)
           this.displayPage('primeiro-login');
         } else {
-          console.log('chamando showHome')
           showHome();       
-          console.log(`indo para this.displayPage('home')`)
           this.displayPage('home', true);        
         }
-        console.log('saindo page /home')  
       }).catch((e) => {
         console.log('Erro!', e)
       })
@@ -84,7 +66,6 @@ export default class Router {
     });    
     page('/rentabilidade', () => {
       this.displayPage('rentabilidade');
-      console.log('===> ')
     });
     page('/simulador-seguro', () => {
       this.displayPage('simulador-seguro');
@@ -179,7 +160,6 @@ export default class Router {
    */
   redirectHomeIfSignedIn() {
     if (firebase.auth().currentUser) {
-      console.log('firebase.auth().currentUser TRUE')
       page('/home');
     }
   }

@@ -71,7 +71,6 @@ export default class PrimeiroLogin {
             var intervalId = setInterval(() => {  //Aguarda até ter a verificação
                 firebase.auth().currentUser.reload().then(() => {
                     this.auth = firebase.auth()
-                    console.log('===> this.auth.currentUser.emailVerified', this.auth.currentUser.emailVerified)
                     if (this.auth.currentUser.emailVerified) {
                         clearInterval(intervalId);
                         this.firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
@@ -176,7 +175,6 @@ export default class PrimeiroLogin {
     }
     //configura tela de primeiro login de acordo com o tipo do primeiro login feito
     telaPrimeiroLoginConfig() {
-        console.log('===>firebase.auth().currentUser', this.auth.currentUser)
         let labelCelular = document.querySelector('#label-primeiro-login-celular')
         let labelEmail = document.querySelector('#label-primeiro-login-email')
         if (this.validaSeLoginCelular(this.auth.currentUser)) {            
@@ -381,14 +379,14 @@ export default class PrimeiroLogin {
     }
 
     montaMascaras() {
-        let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
-        var celular = document.querySelector('#celular');    
-        VMasker(celular).maskPattern(celularMask[0]);
-        celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
+        //let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+        //var celular = document.querySelector('#celular');    
+        //VMasker(celular).maskPattern(celularMask[0]);
+        //celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
     
-        let cpfMask = '999.999.999-99'
-        var cpf = document.querySelector('#cpf');    
-        VMasker(cpf).maskPattern(cpfMask);    
+        //let cpfMask = '999.999.999-99'
+        //var cpf = document.querySelector('#cpf');    
+        //VMasker(cpf).maskPattern(cpfMask);    
     }
 
     inputHandler(masks, max, event) {

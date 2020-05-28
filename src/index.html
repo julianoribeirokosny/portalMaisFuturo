@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Seu Projeto de Vida na palma da mão.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0">
     <title>Portal Mais Futuro - Previdência privada</title>
     <link rel="shortcut icon" href="../public/images/favicon.jpg">
     <link rel="preconnect" href="https://www.gstatic.com">
@@ -53,10 +53,11 @@
     <link rel="apple-touch-startup-image" href="../public/images/apple-splash-1334-750.jpg" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">
     <link rel="apple-touch-startup-image" href="../public/images/apple-splash-640-1136.jpg" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
     <link rel="apple-touch-startup-image" href="../public/images/apple-splash-1136-640.jpg" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)">  
-    <link rel="apple-touch-icon" sizes="180x180" href="../public/images/apple-icon-180.jpg">
-    <link rel="apple-touch-icon" sizes="167x167" href="../public/images/apple-icon-167.jpg">
-    <link rel="apple-touch-icon" sizes="152x152" href="../public/images/apple-icon-152.jpg">
-    <link rel="apple-touch-icon" sizes="120x120" href="../public/images/apple-icon-120.jpg">
+    <link rel="apple-touch-icon" sizes="192x192" href="../public/images/apple-icon-192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../public/images/apple-icon-180.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="../public/images/apple-icon-167.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../public/images/apple-icon-152.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../public/images/apple-icon-120.png">
 
     <!-- Add to home screen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -65,17 +66,38 @@
     <link rel="icon" sizes="192x192" href="../public/images/Component 54 ÔÇô 2.png">
     
     <!-- Tile icon for Win8 -->
-    <meta name="msapplication-TileImage" content="../public/images/manifest-icon-180.jpg"> 
+    <meta name="msapplication-TileImage" content="../public/images/manifest-icon-192.jpg"> 
     <meta name="msapplication-TileColor" content="#3372DF">
     <meta name="msapplication-navbutton-color" content="#303F9F">    
   </head>
 
-  <body class="fp-auth-state-unknown">
+  <!--body class="fp-auth-state-unknown"-->
+  <body>
 
-    <!-- Theatre mode viewer -->
-    <div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div>
+          <!--Modal dialog-->
+          <dialog id="termo-servico-dialog" class="mdl-dialog">
+              <div class="mdl-card__supporting-text mdl-card-container">
+                  <h4 class="mdl-dialog__title" style="margin-left: 5px;font-size: 31px;">Nós protegemos sua privacidade!</h4>
+                  <div class="mdl-dialog__content">
+                      <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
+                      <form class="col s12">
+                        <p style="display: flex;">
+                          <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico" style="width:120px;"/>
+                          <label for="allow-data-termo-servico">
+                            Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
+                          </label>
+                        </p>
+                      </form>
+                      <div style="width: 95%; text-align: center;">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 80%;">Continuar</button>
+                      </div>
+                  </div>
+              </div>
+          </dialog>
 
-      <section id="page-primeiro-login"  class="primeiro-login">
+      <!-- Theatre mode viewer -->
+      <!--div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div-->
+      <section id="page-primeiro-login" class="primeiro-login" style="display: none;">
         <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
         <br><br><br>
         <div class="fp-caption" style="max-width: 500px; margin: 0px 15px;">Olá! Precisamos de mais alguns dados seus, tudo bem?</div>
@@ -83,26 +105,26 @@
         <div class="mdl-card__supporting-text">
             <div style="max-width: 500px; text-align: center; margin: auto;">      
                 <div style="margin-top:20px; margin-bottom: 20px;">
-                  <div class="Div_Campo_v2" style="text-align: left; max-width: 380px; margin:auto;">
+                  <div class="Div_Campo_v2" style="text-align: left; max-width: 380px; margin:auto;" >
                     <span id="label-primeiro-login-celular" class="Span_Label_v2" style="color:white"></span><br>
-                    <input class="Input_Text_v2" pattern="[0-9]*" inputmode="numeric" class="fp-input-celular" id="celular" name="celular" autocomplete="off" value="" style="color: white;">
+                    <input class="Input_Text_v2" pattern="[0-9]*" inputmode="numeric" class="fp-input-celular" id="celular" name="celular" autocomplete="off" value="" style="color: white; z-index:10">
                     <div id="primeiro-login-input-celular-erro" style="color: red; font-size: 12px; display:none;"></div>
                   </div>
                 </div>
                 <div style="margin-bottom: 20px;">
-                  <div class="Div_Campo_v2" style="text-align: left; max-width: 380px; margin:auto;">
+                  <div class="Div_Campo_v2" style="text-align: left; max-width: 380px; margin:auto; ">
                     <span id="label-primeiro-login-email" class="Span_Label_v2" style="color:white"></span><br>
-                    <input class="Input_Text_v2" id="email" name="email" autocomplete="off" type="email" value="" style="color: white;" onblur="this.setAttribute('value', this.value);">
+                    <input class="Input_Text_v2" id="email" name="email" autocomplete="off" type="email" value="" style="color: white; z-index:10" onblur="this.setAttribute('value', this.value);">
                     <div id="primeiro-login-input-email-erro" style="color: red; font-size: 12px; display:none;"></div>
                   </div>
                 </div>
-                <div style="margin-top: 40px; display: flex; align-items: center; justify-content: center;">
-                    <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados">
+                <div style="margin-top: 40px; display: flex; align-items: center; justify-content: center;" >
+                    <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados" style="z-index:10">
                         <span class="mdl-color-text--white">Confirmar</span>
                     </button>
                 </div>
                 <div style="display: flex; align-items: center; justify-content: center;">
-                  <button class="mdl-button mdl-js-button fp-cancelar-dados">
+                  <button class="mdl-button mdl-js-button fp-cancelar-dados" style="z-index:10">
                       <span class="mdl-color-text--white">Cancelar</span>
                   </button>
               </div>
@@ -110,7 +132,7 @@
         </div>
     </section>
 
-    <section id="page-aviso-validacao" class="primeiro-login">
+    <section id="page-aviso-validacao" class="primeiro-login" style="display: none;">
       <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       <br><br><br>
       <div class="mdl-card__supporting-text">
@@ -132,7 +154,7 @@
       </div>
     </section>
 
-    <section id="page-erro-confirmacao-dados" class="primeiro-login">
+    <section id="page-erro-confirmacao-dados" class="primeiro-login"  style="display: none;">
       <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       <br><br>
       <div class="mdl-card__supporting-text">
@@ -152,7 +174,7 @@
       </div>
     </section>
 
-    <section id="page-confirmacao-dados-final" class="primeiro-login">
+    <section id="page-confirmacao-dados-final" class="primeiro-login" style="display: none;">
       <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       <br><br>
       <div class="mdl-card__supporting-text">
@@ -181,7 +203,7 @@
       </div>
     </section>
 
-    <section id="page-confirmacao-dados" class="primeiro-login">
+    <section id="page-confirmacao-dados" class="primeiro-login" style="display: none;">
         <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
         <br><br>
         <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br></div> 
@@ -237,26 +259,26 @@
       </div>
     </section>
 
-<!-- Splash screen da Instalação - ANDROID -->
-<section id="page-instalacao-ios" class="page-splash">
-  <div style="margin: 5px 0 50px 0;">
-    <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
-  </div>
-  <div style="max-width: 500px; text-align: center;">    
-    <div id="div-install" style="display: none; text-align: center;">
-      <div class="fp-caption" style="display: block" id="msg-inicial">Bem vindo!</div> 
-      <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal clicando abaixo. Após concluída, acesse-o através do aplicativo que será instalado em seu dispositivo.</div> 
-      <div id="bt-install" style="display: block; padding-top: 15px;">
-        <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 90%; margin: auto;">
-          <span id="bt-install-text" class="mdl-color-text--white">Preparando instalação...</span>
-        </button>
+    <!-- Splash screen da Instalação - IOS -->
+    <!--section id="page-instalacao-ios" class="page-splash">
+      <div style="margin: 5px 0 50px 0;">
+        <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       </div>
-      <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display: block">
-        <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
-      </div>  
-    </div>
-  </div>
-</section>
+      <div style="max-width: 500px; text-align: center;">    
+        <div id="div-install" style="display: none; text-align: center;">
+          <div class="fp-caption" style="display: block" id="msg-inicial">Bem vindo!</div> 
+          <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal clicando abaixo. Após concluída, acesse-o através do aplicativo que será instalado em seu dispositivo.</div> 
+          <div id="bt-install" style="display: block; padding-top: 15px;">
+            <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 90%; margin: auto;">
+              <span id="bt-install-text" class="mdl-color-text--white">Preparando instalação...</span>
+            </button>
+          </div>
+          <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display: block">
+            <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
+          </div>  
+        </div>
+      </div>
+    </section -->
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="fp-header mdl-layout__header mdl-color--white">
@@ -283,10 +305,10 @@
                   </div>
                   <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect Rectangle_InfoTop" for="menu">
                       <div class="PositionTopRet_TopInfo">
-                          <div class="InfoBase_TopInfo">nome do plano</div>
+                          <div class="InfoBase_TopInfo">Nome do plano</div>
                           <div id="displayInfoNomePlano" class="InfoDisplay_TopInfo"></div>
                           <div class="linhaDivisoria_TopInfo"></div>
-                          <div class="InfoBase_TopInfo">tipo do plano</div>
+                          <div class="InfoBase_TopInfo">Tipo do plano</div>
                           <div id="displayInfoTipoPlano"class="InfoDisplay_TopInfo"></div>
                           <div class="linhaDivisoria_TopInfo"></div>
                           <div class="InfoBase_TopInfo">Competência</div>
@@ -343,32 +365,7 @@
           <hr class="hr-menu-nav"/>      
         </nav>
       </div>
-
-
-      <!--Modal dialog-->
-      <dialog id="termo-servico-dialog" class="mdl-dialog">
-          <div class="mdl-card__supporting-text mdl-card-container">
-              <h4 class="mdl-dialog__title" style="margin-left: 5px;font-size: 31px;">Nós protegemos sua privacidade!</h4>
-              <div class="mdl-dialog__content">
-                  <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
-                  <form class="col s12">
-                    <p style="display: flex;">
-                      <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico" style="width:90px;"/>
-                      <label for="allow-data-termo-servico">
-                        Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
-                      </label>
-                    </p>
-                  </form>
-                  <div style="width: 95%; text-align: center;">
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 80%;">Continuar</button>
-                  </div>
-              </div>
-          </div>
-      </dialog>
-
-
       <main class="mdl-layout__content mdl-color--white">
-
           <!--Home Vuejs-->
           <div id="app">
 
