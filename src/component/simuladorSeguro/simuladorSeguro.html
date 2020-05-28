@@ -11,7 +11,7 @@
                         <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
                             <p style="margin-bottom: 1px;">
                                 <span class='line span_cobertura_valor2' style="color:#8BCF7B">
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}<span id='text-bottom'>,00</span></span>
+                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}</span>
                             </p>
                         </div>            
                         <p class="p_label_seguro_dps" v-if="coberturaInvalidez >= dados.maximoSemDpsInvalidez">Preencher nova DPS a partir de R$ {{ maximoSemDpsInvalidezTela }}</p>
@@ -19,7 +19,7 @@
                         <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaMorte > 0">
                             <p style="margin-bottom: 1px;">
                                 <span class='line span_cobertura_valor2' style="color:#003366">
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaMorte }}<span id='text-bottom'>,00</span></span>
+                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaMorte }}</span>
                             </p>
                         </div>
                         <p class="p_label_seguro_dps" v-if="coberturaMorte >= dados.maximoSemDpsMorte">Preencher nova DPS a partir de R$ {{ maximoSemDpsMorteTela }}</p>
@@ -29,7 +29,7 @@
                             <div style="margin-left: 2px;margin-right: 20px;">
                                 <p style="margin-bottom: 1px; padding-left: 0px;">
                                     <span class='span_premio_valor2' style="color:#8BCF7B !important;">
-                                        R$ {{ premioTelaInvalidez }},00
+                                        R$ {{ premioTelaInvalidez }}
                                     </span>
                                 </p>
                             </div>                
@@ -37,7 +37,7 @@
                             <div style="margin-left: 2px;margin-right: 20px;">
                                 <p style="padding-left: 0px;">
                                     <span class='span_premio_valor2' style="color:#003366 !important;">
-                                        R$ {{ premioTelaMorte }},00
+                                        R$ {{ premioTelaMorte }}
                                     </span>
                                 </p>
                             </div>
@@ -45,7 +45,7 @@
                             <div style="margin-left: 2px;margin-right: 20px;">
                                 <p style="margin-bottom: 1px;">
                                     <span class='line span_premio_valor'>
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ premioTelaTotal }}<span id='text-bottom'>,00</span></span>
+                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ premioTelaTotal }}</span>
                                 </p>
                             </div>
                         </div>

@@ -1205,18 +1205,32 @@ export default class FirebaseHelper {
   async getDadosSimuladorRenda(chave, uid) {
     let usuario = await this.getParticipante(chave)
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
-    let maximoContribuicao = (usuario.data.valores.contribParticipante === 0 ? usuario.data.valores.contribParticipantePlanoPatrocinado : usuario.data.valores.contribParticipante) * 3
-    let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
-    if (qtdStep % 1 !== 0) {
-      qtdStep = Math.round(qtdStep)
-      maximoContribuicao = simuladorRendaSettings.step_contribuicao * qtdStep
+    let minimoContribuicao = 0
+    if (usuario.home.usr_tipo_plano === 'instituido') {
+      minimoContribuicao = usuario.data.valores.contribParticipante
+    } else {
+      minimoContribuicao = usuario.data.valores.contribParticipantePlanoPatrocinado
     }
-    
+    // let maximoContribuicao = (usuario.data.valores.contribParticipante === 0 ? usuario.data.valores.contribParticipantePlanoPatrocinado : usuario.data.valores.contribParticipante) * 3
+    // let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
+    // if (qtdStep % 1 !== 0) {
+    //   qtdStep = Math.round(qtdStep)
+    //   maximoContribuicao = simuladorRendaSettings.step_contribuicao * qtdStep
+    // }
+    let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 20)
+    // let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
+    // if (qtdStep % 1 !== 0) {
+    //   qtdStep = Math.round(qtdStep)
+    //   maximoContribuicao = simuladorRç endaSettings.step_contribuicao * qtdStep
+    // }
+    console.log('maximoContribuicao',maximoContribuicao)
+    console.log('minimoContribuicao',minimoContribuicao)
+
     let dadosSimuladorRenda = {
       usr_tipo_plano: usuario.home.usr_tipo_plano,
       taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
       titulo: 'Defina sua</br>contribuição</br>mensal',
-      minimoContribuicao: usuario.data.valores.contribParticipante,
+      minimoContribuicao: minimoContribuicao,
       contribuicaoFixa: usuario.data.valores.contribParticipantePlanoPatrocinado,
       contribuicaoPatronal: usuario.data.valores.contribEmpresa,
       maximoContribuicao: maximoContribuicao,
@@ -1256,7 +1270,7 @@ export default class FirebaseHelper {
 
   async getDadosSimuladorSeguro(chave, uid) {
       let usuario = await this.getParticipante(chave)  
-      console.log('usuario',usuario)  
+      console.log('getDadosSimuladorSeguro',usuario)  
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)    
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)  
@@ -1270,8 +1284,8 @@ export default class FirebaseHelper {
       let maximoMorte = 0      
       let maximoInval = 0
       if(usuario.data.cadastro.informacoes_pessoais.profissao) {
-        maximoMorte = usuario.data.cadastro.informacoes_pessoais.profissao.seguro.Morte
-        maximoInval = usuario.data.cadastro.informacoes_pessoais.profissao.seguro.Invalidez
+        maximoMorte = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
+        maximoInval = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
       }      
       let dadosSimuladorSeguro = {
           titulo: 'Simulador </br>de Seguro',
@@ -1466,10 +1480,9 @@ export default class FirebaseHelper {
     })
   }
 
-  getProfissoes() {    
-    //return ['Analista de Sistemas','Marceneiro','Piloto moto']
-    let ref = this.database.ref(`settings/simulador_seguro/limite_cobertura_profissao`)
-    return ref.once('value').then((data) => {    
+  getProfissoes() {
+    let ref = this.database.ref(`settings/simulador_seguro/teto_cobertura_profissao`)
+    return ref.once('value').then((data) => {
       if (data.val()) {
         return data.val()
       } else {

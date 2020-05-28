@@ -155,13 +155,16 @@ export default {
             }
         }
     },
-    created(){        
+    created(){    
+        console.log('this.dados - CONTRIBUICAO',this.dados)
+        
         this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
-        this.contribuicaoTela = financeiro.valor_to_string_formatado(this.dados.minimoContribuicao.toFixed(2), 2, false, true)
+        this.contribuicaoTela = financeiro.valor_to_string_formatado(this.contribuicao.toFixed(2), 2, false, true)
         this.reservaTotalTela = financeiro.valor_to_string_formatado(this.dados.reservaTotalFutura, 2, false, true)
         this.rendaMensalTela = financeiro.valor_to_string_formatado(this.dados.rendaMensalFutura, 2, false, true)
         this.contribuicaoFixaTela = financeiro.valor_to_string_formatado(this.dados.contribuicaoFixa.toFixed(2), 2, false, true)
         this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2), 2, false, true)
+        
     }, 
     mounted(){
     },

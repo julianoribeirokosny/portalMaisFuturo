@@ -602,47 +602,97 @@
                               </div>
                           </div>
                       </div>
-                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                          <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px;">
-                              <template v-if="home.contribuicao.itens.participante.nome !== ''" v-for="contribuicao in home.contribuicao.itens.participante.eventos">                          
-                                  <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
-                                      <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
-                                      <span class="span-contribuicao-2">R$</span>
-                                      <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
-                                      <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
-                                  </div>
-                              </template>
-                              <template v-if="home.contribuicao.itens.patronal.nome !== ''" v-for="contribuicao in home.contribuicao.itens.patronal.eventos">                          
-                                  <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
-                                      <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
-                                      <span class="span-contribuicao-2">R$</span>
-                                      <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
-                                      <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
-                                  </div>
-                              </template>
-                              <template v-if="home.contribuicao.itens.seguro.nome !== ''" v-for="contribuicao in home.contribuicao.itens.seguro.eventos">                          
-                                  <div style="display: flex;justify-content: flex-start; margin: 10px 5px;">
-                                      <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
-                                      <span class="span-contribuicao-2">R$</span>
-                                      <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
-                                      <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
-                                  </div>
-                              </template>
 
-                            
-                              <!-- <template v-for="contribuicao in home.contribuicao.itens">                            
-                                  <p class="p-contribuicao-lista">
-                                      <span class="dot" v-bind:style="contribuicao.cor" style="vertical-align: text-bottom;"></span>
-                                      <span class="span-contribuicao-2">R$</span>
-                                      <span class="span-contribuicao-3">{{ contribuicao.valor }}</span>
-                                      <span class="span-contribuicao-4">{{ contribuicao.nome }}</span>
-                                  </p>                          
-                              </template>                       -->
-                          </div>  
+
+                      <!--Participante--> 
+                  <template v-if="home.contribuicao.itens.participante.valor !== 0">
+                    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto" 
+                    style="display: flex; justify-content: center;">
+                        <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px; margin: 0px !important;">
+                              <div class="mdl-card-container">                              
+                                  <span class="span-contribuicao-titulo">Participante</span>
+                              </div>                             
+                              <div id="div-contribuicao-row-participante" class="div-contribuicao-row">
+                                <template  v-for="participante in home.contribuicao.itens.participante.eventos">
+                                  <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>                                    
+                                    {{participante.nome }}
+                                  </div>
+                                  <div class="div-contribiucao-valor">
+                                    {{participante.valor }}
+                                  </div>    
+                                </template>                          
+                              </div>
+                              <div id="div-contribuicao-row-participante-total" class="div-contribuicao-total">
+                                <dl class="dl-contribuicao-total">                                  
+                                    <dt class="dt_contribuicao-total">Total participante</dt>
+                                    <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.participante.valor }}</dd>                                                    
+                                </dl>                                  
+                              </div>  
+                        </div>
+                    </div>
+                  </template>
+                  <!--Patronal-->
+                  <template v-if="home.contribuicao.itens.patronal.valor !== 0">
+                    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto"
+                    style="display: flex; justify-content: center;">
+                        <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px; margin: 0px !important;">
+                            <div class="mdl-card-container">
+                              <span class="span-contribuicao-titulo">Patrocinador</span>
+                            </div>                             
+                            <div id="div-contribuicao-row-patronal" class="div-contribuicao-row">
+                              <template v-for="patronal in home.contribuicao.itens.patronal.eventos">
+                                <div class="div-contribuicao-nome">
+                                  <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
+                                  {{patronal.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor">
+                                  {{patronal.valor }}
+                                </div>    
+                              </template>                          
+                            </div>
+                            <div id="div-contribuicao-row-patronal-total" class="div-contribuicao-total">
+                              <dl class="dl-contribuicao-total">                                  
+                                  <dt class="dt_contribuicao-total">Total patronal</dt>
+                                  <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.patronal.valor }}</dd>                                                    
+                              </dl>                                  
+                            </div>
+                          </div>
+                        </div>
+                  </template>
+                  <!--Seguro-->
+                  <template v-if="home.contribuicao.itens.seguro.valor !== 0">
+                    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto"
+                    style="display: flex; justify-content: center;">
+                      <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px;margin: 0px !important;">
+                    
+                        <div class="mdl-card-container">
+                            <span class="span-contribuicao-titulo">Prêmios riscos</span>
+                        </div>                             
+                        <div id="div-contribuicao-row-seguro" class="div-contribuicao-row">
+                          <template  v-for="seguro in home.contribuicao.itens.seguro.eventos">
+                            <div class="div-contribuicao-nome">
+                              <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>                                    
+                              {{seguro.nome }}
+                            </div>
+                            <div class="div-contribiucao-valor">
+                              {{seguro.valor }}
+                            </div>    
+                          </template>                          
+                        </div>
+                        <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
+                          <dl class="dl-contribuicao-total">                                  
+                              <dt class="dt_contribuicao-total">Total prêmios</dt>
+                              <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.seguro.valor }}</dd>                                                    
+                          </dl>                                  
+                        </div>
                       </div>
+                    </div>
+                  </template>
+
                       <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                           <template v-if="home.contribuicao.acao.vigente">
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">
                                   <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background"
                                   style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
                                       <span class="span-card-botton-projeto-vida">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
@@ -651,7 +701,7 @@
                               </div>
                           </template>  
                           <template v-else>
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;margin-top: 20px;" @click.prevent="contratacaoAberta">
                                   <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
                                       <span class="span-card-botton-projeto-vida">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
                                       <i class="material-icons icon-button">arrow_forward</i>
@@ -771,7 +821,7 @@
               <!--Consulta Contratação em Aberto-->
               <section id="page-contratacao-aberta" class="mdl-grid fp-content" style="display: none;">
                   <a></a>
-                  <contratacao-aberta v-bind:dados="contribuicaoAberta" :key="componentKey"></contratacao-aberta>
+                  <contratacao-aberta v-bind:dados="contribuicaoSimulador" :key="componentKey"></contratacao-aberta>
               </section>
 
               <!--Cadastro-->

@@ -245,7 +245,7 @@ export default {
                 seguro: profissao[0][1]
             }
 
-            console.log('Cadastro Profissao',this.cadastro.profissao)
+            //console.log('Cadastro Profissao',this.cadastro.profissao)
             var cadastro = this.firebaseHelper.salvarCadastro(this.dados.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
             if(cadastro) {
                 this.sliderInvalidez.max = profissao[0][1].Invalidez

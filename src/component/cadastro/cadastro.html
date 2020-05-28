@@ -65,7 +65,8 @@
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">            
             <div class="Div_Campo_v2">
                 <span class="Span_Label_v2">Telefone Fixo</span><br>
-                <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)">
+                <the-mask class="Input_Text_v2" autocomplete="off" :mask="['(##) ####-####', '(##) #####-####']" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)"/>
+                <!-- <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)"> -->
                 <div class="div-img-input">
                     <img class="img-editar" v-bind:src="img_editar" alt=""/>
                 </div>
@@ -74,7 +75,8 @@
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2">
                 <span class="Span_Label_v2">Celular</span><br>
-                <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)">
+                <the-mask class="Input_Text_v2" autocomplete="off" :mask="['(##) ####-####', '(##) #####-####']" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)"/>
+                <!-- <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)"> -->
                 <div class="div-img-input">
                     <img class="img-editar" v-bind:src="img_editar" alt=""/>
                 </div>

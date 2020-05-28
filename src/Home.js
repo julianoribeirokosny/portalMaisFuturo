@@ -129,6 +129,8 @@ export default class Home {
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorSeguro =  await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
     
+    console.log('dadosSimuladorRenda',dadosSimuladorRenda)
+
     dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
 
@@ -249,7 +251,7 @@ export default class Home {
                 chave: this.chave,
                 url_foto: sessionStorage.url_foto,
                 uid: this.auth.currentUser.uid,
-                contribuicaoAberta: this.consulta_contribuicao,            
+                contribuicaoSimulador: this.consulta_contribuicao,            
                 rendaSimulador: dadosSimuladorRenda,
                 emprestimoSimulador: dadosSimuladorEmprestimo,
                 seguroSimulador: dadosSimuladorSeguro,
@@ -259,26 +261,26 @@ export default class Home {
                 sessionStorage.ultimaPagina = 'home'                              
             },      
             mounted() {
-              let rowParticipante = document.querySelector('#div-contribuicao-row-participante').clientHeight
+              let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
               if (rowParticipante) {
                 let rowParticipanteTotal = document.querySelector('#div-contribuicao-row-participante-total')
-                rowParticipanteTotal.style.height = rowParticipante + "px"
+                rowParticipanteTotal.style.height = rowParticipante.clientHeight + "px"
                 let rowParticipanteTotalh = document.querySelector('#div-contribuicao-row-participante-totalh')
-                rowParticipanteTotalh.style.height = rowParticipante + "px"
+                rowParticipanteTotalh.style.height = rowParticipante.clientHeight + "px"
               }
-              let rowPatronal = document.querySelector('#div-contribuicao-row-patronal').clientHeight
+              let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
               if (rowPatronal) {
                 let rowPatronalTotal = document.querySelector('#div-contribuicao-row-patronal-total')
-                rowPatronalTotal.style.height = rowPatronal + "px"
+                rowPatronalTotal.style.height = rowPatronal.clientHeight + "px"
                 let rowPatronalTotalh = document.querySelector('#div-contribuicao-row-patronal-totalh')
-                rowPatronalTotalh.style.height = rowPatronal + "px"
+                rowPatronalTotalh.style.height = rowPatronal.clientHeight + "px"
               }
-              let rowSeguro = document.querySelector('#div-contribuicao-row-seguro').clientHeight
+              let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
               if (rowSeguro) {
                 let rowSeguroTotal = document.querySelector('#div-contribuicao-row-seguro-total')
-                rowSeguroTotal.style.height = rowSeguro + "px"
+                rowSeguroTotal.style.height = rowSeguro.clientHeight + "px"
                 let rowSeguroTotalh = document.querySelector('#div-contribuicao-row-seguro-totalh')
-                rowSeguroTotalh.style.height = rowSeguro + "px"
+                rowSeguroTotalh.style.height = rowSeguro.clientHeight + "px"
               }
             },
             methods: { 

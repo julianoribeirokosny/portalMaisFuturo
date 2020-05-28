@@ -9,6 +9,7 @@ import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { VueMaskDirective } from 'v-mask'
+import {TheMask} from 'vue-the-mask'
 
 Vue.directive('mask', VueMaskDirective)
 
@@ -17,7 +18,8 @@ const img_editar = require('../../../public/images/Editar.png')
 export default {
     template: cadastro,
     components: {
-        vSelect
+        vSelect,
+        TheMask
     },
     props: {
         foto:'',
@@ -85,9 +87,9 @@ export default {
         getProfissoes() {            
             return this.firebaseHelper.getProfissoes()
                 .then(ret => {                                    
-                    this.listaProfissoes = Object.entries(ret) 
+                    this.listaProfissoes = Object.entries(ret)                    
                     this.listaProfissoes.forEach(prof => {
-                        this.profissoes.push(prof[0])
+                         this.profissoes.push(prof[0])
                     })                        
                 }
             )
