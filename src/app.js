@@ -23,8 +23,8 @@ console.log('INICIANDO APP.JS 14')
 const checkIfIsIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   console.log('userAgent: ', userAgent)
-  return /iphone|ipad|ipod|macintosh/.test( userAgent );
-  //return true
+  //return /iphone|ipad|ipod|macintosh/.test( userAgent );
+  return true
 }
 
 const checkIfIsSamsungBrowser = () => {
