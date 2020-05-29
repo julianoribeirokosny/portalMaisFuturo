@@ -48,9 +48,9 @@ export default {
             simulador: true,
             emprestimoSolicitado: false,
             money: {
-                decimal: '',
+                decimal: ',',
                 thousands: '.',
-                prefix: '',
+                prefix: 'R$ ',
                 suffix: ' ',
                 precision: 0,
                 masked: false /* doesn't work with directive */
@@ -132,6 +132,7 @@ export default {
     },    
     methods: {      
         calcularParcela(){    
+            this.principal = this.principal.replace('R$','')
             let principal = parseFloat(this.principal.toString().replace(/\./g,''))
             if (principal > this.maximo) {
                 this.valido_maximo = false

@@ -19,7 +19,7 @@ export default {
     template: servicos,
     data: function() {
         return {           
-            displayIcon: true,
+            displayIcon: false,
             icon_list: icon_list,
             icon_view: icon_view,
             icon_segunda_via_boleto: icon_segunda_via_boleto,

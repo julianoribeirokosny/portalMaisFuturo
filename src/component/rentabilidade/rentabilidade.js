@@ -20,7 +20,7 @@ export default {
             type: Object,
             default: () => { 
                 return {
-                    titulo:'Confira a rentabilidade <br> dos planos',                    
+                    titulo:'Confira a rentabilidade <br>do seu plano',
                     legenda_perfil: [
                         {
                             nome: 'Renda Fixa',
@@ -304,9 +304,9 @@ export default {
             }
         }
     },
-    data() {
+    data: function() {
         return {
-            grafico_benchmark: {"labels":'', 'dataset':''},
+            grafico_benchmark:null,
             size: 12,
             indices:'',
             acumulado:'',
@@ -314,20 +314,22 @@ export default {
             lista_quantidade_meses: ['Ult. 12 meses','Ult. 24 meses','Ult. 36 meses','Ult. 48 meses','Ult. 60 meses']
         }
     },
-    watch: {
-        quantidade_meses(val) {
-            this.size = parseInt(val.replace('Ult. ', '').replace(' meses', ''))
-            this.alteraQuantidadeMeses()
-        }
-    },
     mounted() {
         this.alteraQuantidadeMeses()
     },
+    watch: {
+        quantidade_meses(newVal, oldVal) {            
+            if (newVal !== oldVal) {
+                this.size = parseInt(newVal.replace('Ult. ', '').replace(' meses', ''))
+                this.alteraQuantidadeMeses()
+            }            
+        }
+    },   
     methods: {
         alteraQuantidadeMeses() {
             this.indices = this.dados.indices[0].valores.slice(0,this.size)
             this.calcularIndiceAcumulado()
-            this.graficoBenchmark()
+            this.graficoBenchmark(this.size)
         },
         calcularIndiceAcumulado(){
             var res = 1
@@ -338,12 +340,13 @@ export default {
             }
             this.acumulado = parseFloat((res -1)*100).toFixed(2).toString().replace('.',',')
         },
-        graficoBenchmark() {
+        graficoBenchmark(size) {
+            console.log('size',size)
             let grafico = new Object()
             let arr = new Array()
             let labels = new Array()
             for(var i = 0; i <= this.dados.indices.length - 1; i++) {
-                let auxReg = this.dados.indices[i].valores.slice(0, this.size)
+                let auxReg = this.dados.indices[i].valores.slice(0, size)
                 if(i == 0) {
                     for(var j = auxReg.length - 1; j >= 0; j--) {
                         labels.push(auxReg[j].anomes)
@@ -375,6 +378,7 @@ export default {
             grafico.dataset = arr;
             grafico.labels = labels;
             this.grafico_benchmark = grafico;
+            console.log('this.grafico_benchmark',this.grafico_benchmark)
         }
     },
 }

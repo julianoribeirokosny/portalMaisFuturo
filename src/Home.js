@@ -18,6 +18,8 @@ import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import page from 'page';
 import {Erros} from './Erros';
 
+const financeiro = require('../functions/Financeiro')
+
 // register directive v-money and component <money>
 Vue.use(money, {precision: 4})
 //Vue.use(VueMask);
@@ -148,7 +150,6 @@ export default class Home {
     infoCompetencia.innerHTML = this.data_Home.competencia
     let infoPerfilInvestimento = document.querySelector('#displayInfoPerfilInvestimento')
     infoPerfilInvestimento.innerHTML = this.data_Home.perfil_investimento
-
     
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
@@ -228,6 +229,19 @@ export default class Home {
         page('/erro')
     }
 
+    if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {      
+      console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
+      this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
+    }
+
+    if (this.data_Home.contribuicao.itens.patronal.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.patronal.valor)) {
+      this.data_Home.contribuicao.itens.patronal.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.patronal.valor.toFixed(2), 2, false, true)
+    }
+
+    if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
+      this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
+    }
+
     console.log('this.data_Home',this.data_Home)
     let auth = this.auth.currentUser.uid    
     
@@ -266,27 +280,21 @@ export default class Home {
               sessionStorage.ultimaPagina = 'home'                              
           },      
           mounted() {
-            let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
-            if (rowParticipante) {
-              let rowParticipanteTotal = document.querySelector('#div-contribuicao-row-participante-total')
-              rowParticipanteTotal.style.height = rowParticipante.clientHeight + "px"
-              let rowParticipanteTotalh = document.querySelector('#div-contribuicao-row-participante-totalh')
-              rowParticipanteTotalh.style.height = rowParticipante.clientHeight + "px"
-            }
-            let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
-            if (rowPatronal) {
-              let rowPatronalTotal = document.querySelector('#div-contribuicao-row-patronal-total')
-              rowPatronalTotal.style.height = rowPatronal.clientHeight + "px"
-              let rowPatronalTotalh = document.querySelector('#div-contribuicao-row-patronal-totalh')
-              rowPatronalTotalh.style.height = rowPatronal.clientHeight + "px"
-            }
-            let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
-            if (rowSeguro) {
-              let rowSeguroTotal = document.querySelector('#div-contribuicao-row-seguro-total')
-              rowSeguroTotal.style.height = rowSeguro.clientHeight + "px"
-              let rowSeguroTotalh = document.querySelector('#div-contribuicao-row-seguro-totalh')
-              rowSeguroTotalh.style.height = rowSeguro.clientHeight + "px"
-            }
+              let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
+              if (rowParticipante) {
+                  document.querySelector('#div-contribuicao-row-participante-total').style.height = rowParticipante.clientHeight + "px"
+                  document.querySelector('#div-contribuicao-row-participante-totalh').style.height = rowParticipante.clientHeight + "px"              
+              }
+              let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
+              if (rowPatronal) {
+                  document.querySelector('#div-contribuicao-row-patronal-total').style.height = rowPatronal.clientHeight + "px"
+                  document.querySelector('#div-contribuicao-row-patronal-totalh').style.height = rowPatronal.clientHeight + "px"
+              }
+              let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
+              if (rowSeguro) {
+                  document.querySelector('#div-contribuicao-row-seguro-total').style.height = rowSeguro.clientHeight + "px"
+                  document.querySelector('#div-contribuicao-row-seguro-totalh').style.height = rowSeguro.clientHeight + "px"
+              }
           },
           methods: { 
               forceRerender() {
@@ -350,6 +358,10 @@ export default class Home {
     //Escuta por alterações na home ou no usuario
     firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
     firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
+  }
+
+  isFloat(n){
+      return n != "" && !isNaN(n) && Math.round(n) != n;
   }
 
   async dadosHome(chave) {

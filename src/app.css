@@ -46,7 +46,7 @@ input:focus::-webkit-input-placeholder {
 input:focus, input:valid {
   box-shadow: none;
   outline: none;
-  background-position: 0 0;
+  /* background-position: 0 0; */
 }
 input:focus::-webkit-input-placeholder, textarea:focus::-webkit-input-placeholder, input:valid::-webkit-input-placeholder, textarea:valid::-webkit-input-placeholder {
   font-size: 0.8em;
@@ -2149,16 +2149,17 @@ _dialog_overlay {
     padding-right: 5px;
 }
 .input_principal__se {
-    width: 70% !important;
+    width: 80% !important;
     font-family: 'MaisFuturo-Black';
-    font-size: 44px;
+    font-size: 36px;
     color: #0C7BC6;
-    padding-top: 3px;
+    /*padding-top: 3px;*/
     letter-spacing: -3px;
     text-align: end;
     border-bottom: none;
-    background: none;
+    text-decoration: underline #0C7BC6;
     max-width: 300px;
+    background-position: none !important;
 }
 .span_input_sufixo__se {
     font-family: 'MaisFuturo-Black'; 
@@ -2253,8 +2254,8 @@ p.p_valor_simulado__se {
         padding-top: 15px;        
     }
     .input_principal__se {                
-        font-size: 34px;
-        padding-top: 12px;        
+        font-size: 30px;
+        /* padding-top: 12px;         */
     }
     .span_input_sufixo__se {        
         font-size: 18px; 

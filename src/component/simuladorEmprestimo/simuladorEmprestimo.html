@@ -19,9 +19,9 @@
                     <p class="p_espaco_50__se"></p>
                     <p class="p_label__se">Altere o valor do empréstimo</p>
                     <div style="margin-left: 20px;margin-right: 20px;display: flex;">
-                        <span class="span_input_prefixo__se">R$</span>
+                        <!-- <span class="span_input_prefixo__se">R$</span> -->
                         <input class="input_principal__se" inputmode="numeric" ref="inputprincipal" v-money="money" v-model="principal" v-on:change="alteraPrincipal" v-on:click="selectAll">
-                        <span class="span_input_sufixo__se">,00</span>
+                        <!-- <span class="span_input_sufixo__se">,00</span> -->
                     </div>                  
                     <p class="p_mensagem_invalido__se" v-show="!valido_maximo">Valor excede o máximo permitido!</p>
                     <p class="p_mensagem_invalido__se" v-show="!valido_minimo">Valor menor que o mínimo permitido!</p>                              
@@ -30,7 +30,7 @@
                     <p class="p_slider__se">
                         <vue-slider v-model="quantidade" ref="slider" v-bind="sliderOptions" :tooltip-formatter="formatter1"></vue-slider>
                     </p>
-                    <p class="p_valor_simulado__se">{{ quantidade }} x de R$ {{ parcela }}</p>
+                    <p class="p_valor_simulado__se">{{ quantidade }} x R$ {{ parcela }}</p>
                     <p class="p_label__se">* Valor calculado para primeira parcela</p>
                     <p class="p_espaco_30__se"></p>
                     <div class="mdl-shadow--2dp div_btn_contratar" ref="botao" @click="solicitarEmprestimo">
