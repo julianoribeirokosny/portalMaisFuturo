@@ -184,7 +184,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           usr_tipoPlano: rowDados.cad_tipo_plano,
           segmento: validaSegmento(chave),
           usr_competencia: dataBase.substring(0,7),
-          usr_dtnasc: utils.dateFormat(rowDados.cad_nasc, false, false),
+          usr_dtnasc: utils.dateFormat(rowDados.cad_nasc, false, false, true),
           usr_dtadesao: rowDados.cad_dataadesao,
           usr_vigente: false,
           motivo_bloqueio_carga: naoAchouSituacaoPlano ? 'situação não permitida para carga' : 'sem saldo total',
@@ -273,8 +273,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             tipoPlano: rowDados.cad_tipo_plano,
             segmento: validaSegmento(chave),
             competencia: dataBase.substring(0,7),
-            nasc: utils.dateFormat(rowDados.cad_nasc, false, false),
-            dataadesao: utils.dateFormat(rowDados.cad_dataadesao, false, false),
+            nasc: utils.dateFormat(rowDados.cad_nasc, false, false, true),
+            dataadesao: utils.dateFormat(rowDados.cad_dataadesao, false, false, true),
             taxa: 5.000000,
             taxaAposentadoria: 4.500000,
             idade: rowDados.cad_idade,
@@ -430,7 +430,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
             listaItensContribuicaoChave.participante.valor += rowDados.contr_valor
             listaItensContribuicaoChave.participante.eventos.push({
-              cor: `<<seg_contribuicao.itens.${listaItensContribuicaoChave.participante.eventos.length}.cor>>`,
+              cor: `<<seg_contribuicao.itens.participante.${listaItensContribuicaoChave.participante.eventos.length}.cor>>`,
               nome: rowDados.contr_eventonome,
               valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
             })  
@@ -441,7 +441,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensContribuicaoChave.seguro.nome = 'Contribuição de risco'
             listaItensContribuicaoChave.seguro.valor += rowDados.contr_valor            
             listaItensContribuicaoChave.seguro.eventos.push({
-              cor: `<<seg_contribuicao.itens.${listaItensContribuicaoChave.seguro.eventos.length}.cor>>`,
+              cor: `<<seg_contribuicao.seguro.itens.${listaItensContribuicaoChave.seguro.eventos.length}.cor>>`,
               nome: rowDados.contr_eventonome,
               valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
             })  
@@ -451,7 +451,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensContribuicaoChave.patronal.nome = 'Contribuição empresa'
             listaItensContribuicaoChave.patronal.valor += rowDados.contr_valor                        
             listaItensContribuicaoChave.patronal.eventos.push({
-              cor: `<<seg_contribuicao.itens.${listaItensContribuicaoChave.patronal.eventos.length}.cor>>`,
+              cor: `<<seg_contribuicao.itens.patronal.${listaItensContribuicaoChave.patronal.eventos.length}.cor>>`,
               nome: rowDados.contr_eventonome,
               valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
             })  
@@ -535,10 +535,10 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //salva usuário processados com sucesso
       return ref.update(usuarios)
     }).then(() => {
-      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Finalizado com sucesso'
       logProcessamento[dataProcessamento].qtd_participantes_carregados = Object.keys(usuarios).length
-      logProcessamento[dataProcessamento].qtd_participantes_bloqueados = Object.keys(usuariosBloquear).length
+      logProcessamento[dataProcessamento].qtd_participantes_bloqueados = (!usuariosBloquear) ? 0 : Object.keys(usuariosBloquear).length
       logProcessamento[dataProcessamento].msg = 'Processamento finalizado com sucesso.'
       let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          

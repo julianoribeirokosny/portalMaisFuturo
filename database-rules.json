@@ -65,7 +65,7 @@
     },
     // dados do usuário
     "usuarios": {
-      ".indexOn": "usr_plano",
+      ".indexOn": "home/usr_plano",
       ".read": "auth.token.admin === true",
       ".write": "false",
       "$chave": {
