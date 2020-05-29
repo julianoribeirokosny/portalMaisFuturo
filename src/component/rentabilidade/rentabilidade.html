@@ -63,32 +63,13 @@
         </div>        
         <div class="mdl-card-right div_titulo_acumulado">
             <span class="span_titulo_acumulado">Acumulado {{ quantidade_meses }}</span>
-            <p style="text-align: right;">
-                <span class="span_titulo_acumulado">Agressivo</span>
-                <span class="span_indice_acumulado">
-                    {{ acumulado }}%
-                </span>
-            </p>            
-            <p style="text-align: right;">
-                <span class="span_titulo_acumulado">Agressivo</span>
-                <span class="span_indice_acumulado">
-                    {{ acumulado }}%
+            <p style="text-align: right;" v-for="acumulado in acumulados" v-if="acumulado">
+                <span class="span_label_acumulado"> {{ acumulado.nome }} </span>
+                <span class="span_indice_acumulado" v-bind:style="acumulado.cor">
+                    {{ acumulado.indice }}%
                 </span>
             </p>
-            <p style="text-align: right;">
-                <span class="span_titulo_acumulado">Agressivo</span>
-                <span class="span_indice_acumulado">
-                    {{ acumulado }}%
-                </span>
-            </p>
-            <p style="text-align: right;">
-                <span class="span_titulo_acumulado">Agressivo</span>
-                <span class="span_indice_acumulado">
-                    {{ acumulado }}%
-                </span>
-            </p>
-        </div>     
-        
+        </div>
         <!-- <div class="mdl-card__supporting-text mdl-card-container" style="padding-top:20px !important;">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar, 
             justo non dictum hendrerit, tortor erat iaculis turpis, ac varius leo augue at felis. 
@@ -101,9 +82,7 @@
             vel, elementum quis felis. Maecenas eu dolor rhoncus risus molestie faucibus. 
             Donec efficitur scelerisque commodo. Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
             In pulvinar, justo non dictum hendrerit, tortor erat iaculis turpis.
-              
         </div>         -->
-        
     </div>
 </div>
 

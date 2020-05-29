@@ -101,12 +101,23 @@
     font-size: 13px; 
     display:flex;
     justify-content: center;
+    margin-bottom: 10px;
+}
+
+.span_label_acumulado {
+    color: #3B3C3E; 
+    opacity: 0.7; 
+    font-family: 'MaisFuturo-Medium'; 
+    font-size: 12px; 
+    display:flex;
+    justify-content: left;
+    padding-left: 30px;
 }
 .span_indice_acumulado {
-    font-size: 34px; 
+    font-size: 30px; 
     font-family: 'MaisFuturo-Black';
-    line-height: 40px;
-    color: #1E77C6 !important; 
+    line-height: 32px;
+    /* color: #1E77C6 !important;  */
     opacity: 1 !important; 
     letter-spacing: -2;
 }

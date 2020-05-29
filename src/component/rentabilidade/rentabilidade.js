@@ -19,7 +19,7 @@ export default {
         dados: {
             type: Object,
             default: () => { 
-                return {
+                return {                    
                     titulo:'Confira a rentabilidade <br>do seu plano',
                     legenda_perfil: [
                         {
@@ -306,6 +306,7 @@ export default {
     },
     data: function() {
         return {
+            acumulados: [],
             grafico_benchmark:null,
             size: 12,
             indices:'',
@@ -315,33 +316,46 @@ export default {
         }
     },
     mounted() {
-        this.alteraQuantidadeMeses()
+        this.alteraQuantidadeMeses(this.size)
     },
     watch: {
         quantidade_meses(newVal, oldVal) {            
             if (newVal !== oldVal) {
                 this.size = parseInt(newVal.replace('Ult. ', '').replace(' meses', ''))
-                this.alteraQuantidadeMeses()
+                this.alteraQuantidadeMeses(this.size)
             }            
         }
     },   
     methods: {
-        alteraQuantidadeMeses() {
-            this.indices = this.dados.indices[0].valores.slice(0,this.size)
-            this.calcularIndiceAcumulado()
-            this.graficoBenchmark(this.size)
+        alteraQuantidadeMeses(size) {
+            //this.indices = this.dados.indices[0].valores.slice(0,this.size)
+            this.calcularIndiceAcumulado(size)
+            this.graficoBenchmark(size)
         },
-        calcularIndiceAcumulado(){
-            var res = 1
-            var aux = 1
-            for(var i = 0; i < this.indices.length; i++) {
-                aux = this.indices[i].indice / 100 + 1
-                res *= aux
+        calcularIndiceAcumulado(size) {   
+            this.acumulados = []
+            for(var j = 0; j < this.dados.indices.length; j++) {
+                let objeto = {}
+                let res = 1
+                let aux = 1
+                objeto.nome = this.dados.indices[j].nome
+                objeto.cor = `color:${this.dados.indices[j].cor}`
+                // console.log(`this.dados.indices[${j}]:`,this.dados.indices[j])
+                this.indices = this.dados.indices[j].valores.slice(0,size)
+                // console.log('this.indices:',this.indices)
+                for(var i = 0; i < this.indices.length; i++) {
+                    aux = this.indices[i].indice / 100 + 1
+                    res *= aux
+                }
+                objeto.indice = parseFloat((res -1)*100).toFixed(2).toString().replace('.',',')
+                //console.log('objeto:',objeto)
+                this.acumulados.push(objeto)
             }
-            this.acumulado = parseFloat((res -1)*100).toFixed(2).toString().replace('.',',')
+            //this.acumulado = parseFloat((res -1)*100).toFixed(2).toString().replace('.',',')
+            //console.log('this.acumulados:',this.acumulados)
         },
         graficoBenchmark(size) {
-            console.log('size',size)
+            //console.log('size',size)
             let grafico = new Object()
             let arr = new Array()
             let labels = new Array()
@@ -378,7 +392,7 @@ export default {
             grafico.dataset = arr;
             grafico.labels = labels;
             this.grafico_benchmark = grafico;
-            console.log('this.grafico_benchmark',this.grafico_benchmark)
+            //console.log('this.grafico_benchmark',this.grafico_benchmark)
         }
     },
 }
