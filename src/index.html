@@ -95,9 +95,9 @@
           </div>
       </dialog>
 
-      <!-- Theatre mode viewer -->
-      <!--div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div-->
-      <section id="page-primeiro-login" class="primeiro-login" style="display: none;">
+    <!-- Theatre mode viewer -->
+    <!--div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div-->
+    <section id="page-primeiro-login" class="primeiro-login" style="display: none;">
         <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
         <br><br><br>
         <div class="fp-caption" style="max-width: 500px; margin: 0px 15px;">Olá! Precisamos de mais alguns dados seus, tudo bem?</div>
@@ -209,11 +209,18 @@
         <div class="fp-caption" style="max-width: 500px;">Falta pouco!<br></div> 
         <div class="fp-caption2" style="max-width: 500px;">Por favor informe abaixo o seu cpf.</div>
         <div class="mdl-card__supporting-text">
-            <div style="max-width: 500px; text-align: center; margin: auto;">      
+            <div style="max-width: 500px; text-align: center; margin: auto;">  
                 <div style="margin-bottom: 20px;">
+                  <div class="Div_Campo_v2" style="text-align: left; max-width: 380px; margin:auto;" >
+                    <span class="Span_Label_v2" style="color:white">CPF</span><br>                  
+                    <input class="Input_Text_v2 fp-input-cpf" pattern="[0-9]*" inputmode="numeric" class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" type="text" value="" style="color: white; margin: auto;">
+                    <div id="confirma-dados-input-cpf-erro" style="color: red; font-size: 12px; display:none;"></div>
+                  </div>
+                </div>    
+                <!-- <div style="margin-bottom: 20px;">
                     <input pattern="[0-9]*" inputmode="numeric" class="fp-input-cpf" id="cpf" name="cpf" autocomplete="off" placeholder="CPF" type="text" value="" style="color: white; margin: auto;">
                     <div id="confirma-dados-input-cpf-erro" style="color: red; font-size: 12px; display:none;"></div>
-                </div>
+                </div> -->
                 <div style="display: flex; align-items: center; justify-content: center;">
                     <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-confirm-dados2">
                         <span class="mdl-color-text--white">Confirmar</span>
@@ -326,16 +333,13 @@
                   <div class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect Rectangle_InfoTop" for="menu">
                       <div class="PositionTopRet_TopInfo">
                           <div class="InfoBase_TopInfo">Nome do plano</div>
-                          <div id="displayInfoNomePlano" class="InfoDisplay_TopInfo"></div>
-                          <div class="linhaDivisoria_TopInfo"></div>
-                          <div class="InfoBase_TopInfo">Tipo do plano</div>
-                          <div id="displayInfoTipoPlano"class="InfoDisplay_TopInfo"></div>
+                          <div id="displayInfoNomePlano" class="InfoDisplay_TopInfo"></div>                                                    
                           <div class="linhaDivisoria_TopInfo"></div>
                           <div class="InfoBase_TopInfo">Competência</div>
-                          <div id="displayInfoCompetencia" class="InfoDisplay_TopInfo">Maio de 2020</div>
+                          <div id="displayInfoCompetencia" class="InfoDisplay_TopInfo"></div>
                           <div class="linhaDivisoria_TopInfo"></div>
                           <div class="InfoBase_TopInfo">Perfil de Investimento</div>
-                          <div id="displayInfoPerfilInvestimento" class="InfoDisplay_TopInfo">Agressivo</div>                    
+                          <div id="displayInfoPerfilInvestimento" class="InfoDisplay_TopInfo"></div>
                       </div>
                   </div>
               </nav>      

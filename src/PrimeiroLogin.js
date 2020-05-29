@@ -379,14 +379,14 @@ export default class PrimeiroLogin {
     }
 
     montaMascaras() {
-        //let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
-        //var celular = document.querySelector('#celular');    
-        //VMasker(celular).maskPattern(celularMask[0]);
-        //celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
+        let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+        var celular = document.querySelector('#celular');    
+        VMasker(celular).maskPattern(celularMask[0]);
+        celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
     
-        //let cpfMask = '999.999.999-99'
-        //var cpf = document.querySelector('#cpf');    
-        //VMasker(cpf).maskPattern(cpfMask);    
+        let cpfMask = '999.999.999-99'
+        var cpf = document.querySelector('#cpf');    
+        VMasker(cpf).maskPattern(cpfMask);    
     }
 
     inputHandler(masks, max, event) {

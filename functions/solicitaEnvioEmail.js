@@ -30,6 +30,8 @@ exports.default = functions.database.ref('login/{uid}/emails/{dataEnvio}')
         let fs = require('fs');
         corpoHtml = fs.readFileSync('./html/'+dadosEmail.corpoHtml, 'utf8') 
         corpoHtml = corpoHtml.replace('{{linkWeb}}', dadosEmail.linkWeb)
+        console.log('dadosEmail.nome',dadosEmail.nome)
+        corpoHtml = corpoHtml.replace('{{nome}}', dadosEmail.nome)
         console.log('===> corpoHtml', corpoHtml)
     } else {
         corpoHtml = dadosEmail.corpoHtml

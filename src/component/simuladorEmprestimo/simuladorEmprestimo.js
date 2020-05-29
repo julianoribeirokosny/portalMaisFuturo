@@ -42,6 +42,7 @@ export default {
             minimo: this.dados.saldo_devedor,
             str_minimo: '',
             principal: 0,
+            valorprincipal:0,
             valido_maximo: true,
             valido_minimo: true,
             parcela: 0,
@@ -129,11 +130,21 @@ export default {
             this.str_minimo = financeiro.valor_to_string_formatado(this.minimo.toFixed(2), 2, false, true)
             this.principal = (this.maximo / 2).toFixed(0)
         }
-    },    
+    },  
+    watch: {
+        principal(newValue, oldValue) {
+            this.valorprincipal = newValue.replace('R$','')
+            this.calcularParcela(parseFloat(this.valorprincipal.toString().replace(/\./g,'')))
+        },
+        quantidade() {
+            this.calcularParcela(parseFloat(this.valorprincipal.toString().replace(/\./g,'')))
+        }
+    },  
     methods: {      
-        calcularParcela(){    
-            this.principal = this.principal.replace('R$','')
-            let principal = parseFloat(this.principal.toString().replace(/\./g,''))
+        calcularParcela(principal){    
+            //console.log('principal',principal)
+            //this.principal = this.principal.replace('R$','')
+            //let principal = parseFloat(this.principal.toString().replace(/\./g,''))
             if (principal > this.maximo) {
                 this.valido_maximo = false
                 this.valido_minimo = true
@@ -147,10 +158,10 @@ export default {
                 this.valido_minimo = true                
                 this.parcela = financeiro.valor_to_string_formatado(financeiro.pgto(principal, this.taxa_mensal, this.quantidade), 2, false, true)
             }
-        },
-        alteraPrincipal(){
-            this.calcularParcela();
         },        
+        // alteraPrincipal(){
+        //     this.calcularParcela();
+        // },        
         selectAll() {
             this.$refs.inputprincipal.select();
         },
