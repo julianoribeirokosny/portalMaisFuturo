@@ -266,25 +266,40 @@
     </section>
 
     <!-- Splash screen da Instalação - IOS -->
-    <!--section id="page-instalacao-ios" class="page-splash">
+    <section id="page-instalacao-ios" class="page-splash" style="display:none">
+      <!--div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
+        <div class="mdl-card__supporting-text mdl-card-container div-container Meu_Perfil_Class_v2 logoPosition">
+            <img src="../public/images/LogoiOSInstall.png" width="250" height="83" alt=""/>
+        </div>  
+        <div class="mdl-card__supporting-text mdl-card-container div-container">     
+            <div class="InstalliOSTitle">
+                <span>Bem-vindo<br/>
+                    ao portal<br/>
+                    maisfuturo</span>
+            </div>               
+        </div>
+        <div class="mdl-card__supporting-text mdl-card-container div-container gridInstalliOS">                         
+            <div><img src="../public/images/App-IconiOSInstall.png"></div>
+            <div class="iOSTextInstructions">Para ter fácil acesso a esse app,
+                adicione ele à sua tela inicial. <br/>
+                Toque no ícone <span class="iOSFontIcons">􀈂</span> e depois
+                “Adicionar à Tela de Início”.</div>
+            </div>
+        </div>
+      </div-->  
       <div style="margin: 5px 0 50px 0;">
         <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       </div>
       <div style="max-width: 500px; text-align: center;">    
-        <div id="div-install" style="display: none; text-align: center;">
+        <div id="div-install" style="display: block; text-align: center;">
           <div class="fp-caption" style="display: block" id="msg-inicial">Bem vindo!</div> 
-          <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal clicando abaixo. Após concluída, acesse-o através do aplicativo que será instalado em seu dispositivo.</div> 
-          <div id="bt-install" style="display: block; padding-top: 15px;">
-            <button class="mdl-button mdl-js-button mdl-color--light-blue-800"  style="display:flex;justify-content: center; width: 90%; margin: auto;">
-              <span id="bt-install-text" class="mdl-color-text--white">Preparando instalação...</span>
-            </button>
-          </div>
+          <div class="fp-caption2" style="display: block;" id="msg-instalacao">Efetue a instalação do portal em seu dispositivo Apple.</div> 
           <div id="div-prevdigi" style="padding-top: 20px; text-align: center; display: block">
             <a class="fp-skip" href="http://previdenciadigital.com.br" style="padding-top: 30px;">Ainda não é cliente? Faça uma simulação.</a>        
           </div>  
         </div>
       </div>
-    </section -->
+    </section>
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="fp-header mdl-layout__header mdl-color--white">
@@ -767,7 +782,7 @@
                       </div>
                       <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                           <div class="mdl-card__supporting-text mdl-card-container" style="display: flex; justify-content: center;">
-                              <video controls style="width: 100%; height: 100%;">
+                              <video controls playsinline style="width: 100%; height: 100%;">
                                   <source :src="video" type="video/mp4">
                               </video>
                           </div>

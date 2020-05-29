@@ -161,7 +161,7 @@ export default class PrimeiroLogin {
                     full_name: nome
                 }
                 this.firebaseHelper.gravaDadosPrimeiroLogin(primeiroLogin, usr.uid) 
-                //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)                
+                //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)        
                 let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro, nome)
                 if (enviouEmail) { //envia email
                     this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
@@ -208,7 +208,7 @@ export default class PrimeiroLogin {
             } else {
                 //divNaoReconhece.show()
                 btnReenviaVerificacao.click(() => {
-                    this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro)
+                    this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro, "")
                 })    
                 //msgPart3.text(`Não reconhece ou não usa mais o e-mail ${emailCadastro}?`)
                 msgPart2.text(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para seu e-mail cadastrado: ${emailCadastro}`)                
