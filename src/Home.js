@@ -143,9 +143,7 @@ export default class Home {
     let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
 
     let infoNomePlano = document.querySelector('#displayInfoNomePlano')
-    infoNomePlano.innerHTML = this.data_Home.plano
-    let infoTipoPlano = document.querySelector('#displayInfoTipoPlano')
-    infoTipoPlano.innerHTML = this.data_Home.tipo_plano
+    infoNomePlano.innerHTML = this.data_Home.plano    
     let infoCompetencia = document.querySelector('#displayInfoCompetencia')
     infoCompetencia.innerHTML = this.data_Home.competencia
     let infoPerfilInvestimento = document.querySelector('#displayInfoPerfilInvestimento')

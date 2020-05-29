@@ -161,8 +161,8 @@ export default class PrimeiroLogin {
                     full_name: nome
                 }
                 this.firebaseHelper.gravaDadosPrimeiroLogin(primeiroLogin, usr.uid) 
-                //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)        
-                let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro)
+                //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)                
+                let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro, nome)
                 if (enviouEmail) { //envia email
                     this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
                     page('/confirmacao-dados-final')      
@@ -379,14 +379,14 @@ export default class PrimeiroLogin {
     }
 
     montaMascaras() {
-        //let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
-        //var celular = document.querySelector('#celular');    
-        //VMasker(celular).maskPattern(celularMask[0]);
-        //celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
+        let celularMask = ['(99) 9999-9999', '(99) 99999-9999'];
+        var celular = document.querySelector('#celular');    
+        VMasker(celular).maskPattern(celularMask[0]);
+        celular.addEventListener('input', this.inputHandler.bind(undefined, celularMask, 14), false);
     
-        //let cpfMask = '999.999.999-99'
-        //var cpf = document.querySelector('#cpf');    
-        //VMasker(cpf).maskPattern(cpfMask);    
+        let cpfMask = '999.999.999-99'
+        var cpf = document.querySelector('#cpf');    
+        VMasker(cpf).maskPattern(cpfMask);    
     }
 
     inputHandler(masks, max, event) {

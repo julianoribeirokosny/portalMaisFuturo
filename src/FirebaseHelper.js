@@ -938,7 +938,7 @@ export default class FirebaseHelper {
     })
   }
 
-  async enviarEmailLinkValidacao(tipoEnvio, emailDestino) {
+  async enviarEmailLinkValidacao(tipoEnvio, emailDestino, nome) {
     let usr = firebase.auth().currentUser
     let ref
     if (tipoEnvio==='firebase') {
@@ -993,6 +993,7 @@ export default class FirebaseHelper {
         assunto: 'Verifique seu e-mail para acessar o app do Portal Mais Futuro',
         corpo: '',
         linkWeb: linkWeb,
+        nome: nome,
         corpoHtml: 'validaEmailLink.html'
       }
       ref.update(jsonEmail)
@@ -1139,7 +1140,7 @@ export default class FirebaseHelper {
         let nome = ''
         snapshot.forEach((snap) => {
           if (emailCadastro === '') { //pega somente o primeiro
-            nome = snap.child('nomeParticipanteCadastro').val()
+            nome = snap.child('nomeParticipantePrincipal').val()
             emailCadastro = snap.child('emailCadastro').val()
           }
           listaChaves[snap.child('chave').val()] = {
