@@ -57,7 +57,10 @@ export default class Router {
       }).catch((e) => {
         console.log('Erro!', e)
       })
-    });    
+    });
+    page('/instalacao-ios', () => {
+      this.displayPage('instalacao-ios');
+    });
     page('/signout', () => {
       this.displayPage('splash-login');
     });

@@ -7,6 +7,7 @@ import Auth from './Auth';
 import Router from './Router';
 import 'material-design-lite';
 import {Utils} from './Utils';
+import page from 'page';
 
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
@@ -22,7 +23,8 @@ console.log('INICIANDO APP.JS 14')
 const checkIfIsIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   console.log('userAgent: ', userAgent)
-  return /iphone|ipad|ipod|macintosh/.test( userAgent );
+  //return /iphone|ipad|ipod|macintosh/.test( userAgent );
+  return true
 }
 
 const checkIfIsSamsungBrowser = () => {
@@ -128,7 +130,9 @@ $(document).ready(() => {
       install_button.style.display = 'block'
       divPrevdigi.style.display = 'block'
     }  else {
-      install_button.style.display = 'none'
+      $('#page-instalacao-ios').show()
+      $('#page-instalacao').hide()
+      //install_button.style.display = 'none'
     }  
     div_install.style.display = 'block'  
   }

@@ -938,7 +938,7 @@ export default class FirebaseHelper {
     })
   }
 
-  async enviarEmailLinkValidacao(tipoEnvio, emailDestino) {
+  async enviarEmailLinkValidacao(tipoEnvio, emailDestino, nome) {
     let usr = firebase.auth().currentUser
     let ref
     if (tipoEnvio==='firebase') {
@@ -1270,11 +1270,9 @@ export default class FirebaseHelper {
 
   async getDadosSimuladorSeguro(chave, uid) {
       let usuario = await this.getParticipante(chave)  
-      console.log('getDadosSimuladorSeguro',usuario)  
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)    
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)  
-      //console.log('simuladorSeguroSettings',simuladorSeguroSettings)
       let minimoMorte = this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, usuario.data.valores.coberturaMorte)
       let maximoSemSDPSMorte = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.maximo_morte, usuario.data.valores.coberturaMorte, simuladorSeguroSettings.regra_dps)     
       let stepMorte = simuladorSeguroSettings.step_morte
