@@ -44,6 +44,7 @@
     letter-spacing: -0.21px;
     font-weight: 100 !important;
     color: rgb(80, 81, 83);    
+    z-index: 1 !important;
 }
 .canvas_grafico_benchmark {
     width: 580px;
@@ -144,6 +145,7 @@
     .canvas_grafico_benchmark {
         width: 400px;
         height: 270px;
+        z-index: 0px;
     }
 }
 

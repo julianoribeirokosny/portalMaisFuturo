@@ -196,9 +196,11 @@ export default {
             //console.log('this.maximoSemDpsInvalidezTela',this.maximoSemDpsInvalidezTela)
             this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
             this.calculaPremioInvalidez()
+            console.log('==> this.coberturaInvalidez', this.coberturaInvalidez)
             this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
             this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
             this.calculaPremioMorte()
+            console.log('==> this.premioMorte', this.premioMorte)
             this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
             this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
             this.calculaTotal()
@@ -210,6 +212,7 @@ export default {
         coberturaInvalidez(newVal, oldVal) {
             if(newVal !== oldVal) {
                 this.calculaPremioInvalidez()
+                console.log('==> this.premioInvalidez', this.premioInvalidez)
                 this.coberturaTelaInvalidez = this.valor_to_string_formatado(newVal)
                 this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
                 this.calculaTotal()
@@ -218,6 +221,7 @@ export default {
         coberturaMorte(newVal, oldVal) {
             if(newVal !== oldVal) {
                 this.calculaPremioMorte()
+                console.log('==> this.premioMorte', this.premioMorte)
                 this.coberturaTelaMorte = this.valor_to_string_formatado(newVal)
                 this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
@@ -286,17 +290,17 @@ export default {
             this.simulador = value
         },
         calculaTotal(){
-            let premio = parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)
+            let premio = (parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)).toFixed(2)
             this.premioTelaTotal = this.valor_to_string_formatado(premio)
             let cobertura = parseFloat(this.coberturaInvalidez) + parseFloat(this.coberturaMorte)
             this.coberturaTelaTotal = this.valor_to_string_formatado(cobertura)
         },
         calculaPremioInvalidez(){
-            this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(0)
+            this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(2)
             //console.log('this.premioInvalidez',this.premioInvalidez)
         },
         calculaPremioMorte(){
-            this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(0)
+            this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(2)
             //console.log('this.premioMorte',this.premioMorte)
         },
         valor_to_string_formatado(num) {
