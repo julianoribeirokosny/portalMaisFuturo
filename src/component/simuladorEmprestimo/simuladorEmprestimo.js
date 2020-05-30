@@ -165,8 +165,10 @@ export default {
         selectAll() {
             this.$refs.inputprincipal.select();
         },
-        solicitarEmprestimo(){            
-            let principal = parseFloat(this.principal.split('.').join('')).toFixed(2)            
+        solicitarEmprestimo(){  
+            //console.log('this.principal',this.principal.replace('R$',''))
+            let principal = parseFloat(this.principal.replace('R$','').split('.').join('')).toFixed(2)
+            //console.log('principal',principal)
             if(this.valido_maximo && this.valido_minimo) {
                 this.contratacao.resumo = []
                 this.contratacao.titulo = 'Solicite o</br> empréstimo simulado'
