@@ -33,7 +33,7 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/#:standalone:",
+  "start_url": "/#:standalone:/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0288d1",
@@ -44,3 +44,4 @@
     "https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/"
   ]
 }
+

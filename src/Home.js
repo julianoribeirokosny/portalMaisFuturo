@@ -59,7 +59,7 @@ export default class Home {
     this.auth = firebase.auth();
     
     if (!this.auth.currentUser) {
-      Erros.registraErro('sem_uid', 'auth', 'showHome')
+      Erros.registraErro('sem_uid', 'auth', 'showHome', 'currentUser === undefined')
       base_spinner.style.display = 'none'
       return page('/erro')
     }
@@ -83,7 +83,7 @@ export default class Home {
     //console.log('=====> CHAVE: ', sessionStorage.chave)
     if (this.chave===null || this.chave ==='') {
       base_spinner.style.display = 'none'
-      Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
+      Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome', 'chave nula ou em branco')
       return page('/erro')
     }
 
@@ -95,7 +95,7 @@ export default class Home {
       //zera a session para tentar carregar em próximas vezes
       base_spinner.style.display = 'none'
       sessionStorage.chave = ''
-      Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome')
+      Erros.registraErro(this.auth.currentUser.uid, 'data_home', 'showHome', 'data_Home nulo')
       return page('/erro')
     }
     data_Home.educacao_financeira.url_video = ''
@@ -103,7 +103,7 @@ export default class Home {
     //participante com inabilitado para acessar o portal
     if (!data_Home.vigente) {
       base_spinner.style.display = 'none'
-      Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome')
+      Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome', 'data_Home.vigente === false' )
       return page('/erro')
     }
     
@@ -222,7 +222,7 @@ export default class Home {
     })
     Vue.config.errorHandler = function(err, vm, info) {
         console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-        Erros.registraErro(auth, 'Vuejs Error', 'showHome')
+        Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
         page('/erro')
     }
 
@@ -328,7 +328,7 @@ export default class Home {
           },
           errorCaptured(err, component, details) {
             base_spinner.style.display = 'none'
-              Erros.registraErro(err, 'vuejs', '')
+              Erros.registraErro(err, 'vuejs', 'showHome', JSON.stringify(err))
               return page('/erro')
           }
         })

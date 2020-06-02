@@ -107,7 +107,7 @@ export default class PrimeiroLogin {
             if (!listaChaves) {
                 page('/confirmacao-dados')      // pede confirmação de mais dados!
             } else { //achou ou email ou celular na lista
-                let nome = participacoes.nome
+                sessionStorage.nome = participacoes.nome
                 let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave            
                 let primeiroLogin = {
                     chave_principal: chavePrincipal, 
@@ -117,7 +117,7 @@ export default class PrimeiroLogin {
                     tipo_login: sessionStorage.tipoLogin,
                     celular_alternativo: this.validaSeLoginCelular(usr) ? celular : '', // só grava email alternativo se houver o emailPrincipal. Caso contrário o email alternativo será o principal...
                     email_alternativo: usr.email && usr.email !== '' ? email : '',  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
-                    full_name: nome
+                    full_name: sessionStorage.nome
                 }
                 this.firebaseHelper.gravaDadosPrimeiroLogin(primeiroLogin, usr.uid)            
                 let loginGoogle = usr.providerData[0].providerId === "google.com"
@@ -125,7 +125,8 @@ export default class PrimeiroLogin {
                     this.firebaseHelper.gravaLoginSucesso(usr.uid) //loga data-hora do login
                     page('/home')
                 } else {
-                    let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('firebase')
+                    //let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('firebase')
+                    let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', (usr.email && usr.email !== '' ? usr.email : email), sessionStorage.nome)
                     if (enviouEmail) {
                         page('/aviso-validacao')
                     } else {
@@ -143,7 +144,7 @@ export default class PrimeiroLogin {
             let usr = firebase.auth().currentUser
             let retListaParticipacoesDados = await this.firebaseHelper.getUsuarioListaParticipacoesDados(cpf)
             let listaChaves = retListaParticipacoesDados.listaChaves
-            let nome = retListaParticipacoesDados.nome
+            sessionStorage.nome = retListaParticipacoesDados.nome
             sessionStorage.emailCadastro = retListaParticipacoesDados.emailCadastro
             if (!listaChaves) {
                 page('/erro-confirmacao-dados')
@@ -158,11 +159,11 @@ export default class PrimeiroLogin {
                     tipo_login: sessionStorage.tipoLogin,
                     celular_alternativo: '',
                     email_alternativo: usr.email && usr.email !== '' ? sessionStorage.emailCadastro : '',  // só grava celular alternativo se houver o celularPrincipal. Caso contrário o celular alternativo será o principal...
-                    full_name: nome
+                    full_name: sessionStorage.nome
                 }
                 this.firebaseHelper.gravaDadosPrimeiroLogin(primeiroLogin, usr.uid) 
                 //this.firebaseHelper.gravaListaChaves(usr.uid, listaChaves)        
-                let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro, nome)
+                let enviouEmail = await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro, sessionStorage.nome)
                 if (enviouEmail) { //envia email
                     this.firebaseHelper.resetEmailVerified(usr.uid) //força reset do email pq pode ocorrer de já ter o usuário criado na estrutura de login do Firebase
                     page('/confirmacao-dados-final')      
@@ -195,7 +196,6 @@ export default class PrimeiroLogin {
             let emailCadastro = sessionStorage.emailCadastro
             let emailAlternativo = sessionStorage.emailAlternativo
             let btnReenviaVerificacao = $('#btn-reenvia-verificacao')
-            let btnNaoReconhece = $('#btn-nao-reconhece-email')
             //let divNaoReconhece = $('#div-nao-reconhece-email')
             let msgPart1 = $('#msg-participante1')
             let msgPart2 = $('#msg-participante2')
@@ -204,13 +204,10 @@ export default class PrimeiroLogin {
                 msgPart1.text(`Identificamos que o e-mail ${emailAlternativo} informado já consta em nossa base da dados.`)
                 msgPart2.texto(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para este e-mail.`)
                 msgPart3.text(`_`)            
-                //divNaoReconhece.hide()            
             } else {
-                //divNaoReconhece.show()
                 btnReenviaVerificacao.click(() => {
                     this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro, "")
                 })    
-                //msgPart3.text(`Não reconhece ou não usa mais o e-mail ${emailCadastro}?`)
                 msgPart2.text(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para seu e-mail cadastrado: ${emailCadastro}`)                
                 if (emailAlternativo !== '') {
                     msgPart1.text(`Nenhum dos e-mails informados (${this.auth.currentUser.email} e ${emailAlternativo}) foram identificados em nossa base de dados.`)
@@ -329,21 +326,6 @@ export default class PrimeiroLogin {
             this.displayEmail.style.display = 'none' 
             this.inputEmail.style.borderBottom  = '#03a9f4 solid 1px' 
             this.inputEmail.style.background = 'linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #03a9f4 4%)'
-            return true
-        }
-    }
-    validaNomeObrigatorio(nome) {
-        this.displayNome.style.display = 'none'
-        if(nome.length < 5) {
-            this.displayNome.innerHTML = 'Favor incluir o nome completo'
-            this.displayNome.style.display = 'inline' 
-            this.inputNome.style.borderBottom  = '#e91e63 solid 1px' 
-            this.inputNome.style.background = 'linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #e91e63 4%)' 
-            return false
-        } else {
-            this.displayNome.style.display = 'none' 
-            this.inputNome.style.borderBottom  = '#03a9f4 solid 1px' 
-            this.inputNome.style.background = 'linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #03a9f4 4%)'
             return true
         }
     }

@@ -15,7 +15,8 @@
       "source": "**",
       "destination": "/index.html"
     }],
-    "headers": [{
+    "headers": [
+      {
       "source" : "**/*.@(png|js|css|woff2)",
       "headers" : [{
         "key" : "Cache-Control",

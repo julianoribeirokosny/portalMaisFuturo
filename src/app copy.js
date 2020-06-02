@@ -17,6 +17,8 @@ import 'mdl-ext/lib/mdl-ext.min.css';
 import 'firebaseui/dist/firebaseui.css';
 import './app.css';
 
+console.log('INICIANDO APP.JS 14')
+
 const checkIfIsIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   console.log('userAgent: ', userAgent)
@@ -51,9 +53,13 @@ const div_install = document.querySelector('#div-install');
 const bt_install_text = document.querySelector('#bt-install-text');
 const msgInstalacao = document.querySelector('#msg-instalacao');
 const msgInicial = document.querySelector('#msg-inicial');
-const reset = window.location.href.indexOf('reset') > 0
-const pageInstall = window.location.href.indexOf('instalar') > 0
 
+var cacheReset = window.location.href.indexOf('cachereset') > 0
+const pageReset = window.location.href.indexOf('reset') > 0
+if (pageReset) {
+  cacheReset = true //força quando reinstall
+}
+const pageInstall = pageReset ? false : window.location.href.indexOf('instalar') > 0
 localStorage.isIos = checkIfIsIos()
 localStorage.isMac = checkIfIsMac()
 localStorage.isSamsungBrowser = checkIfIsSamsungBrowser()
@@ -68,12 +74,11 @@ console.log('MAC?', localStorage.isMac)
 console.log('Samsung Browser?', localStorage.isSamsungBrowser)
 console.log('PWA instalado?', localStorage.isPwaInstalled)
 console.log('pageInstall?', pageInstall)
-console.log('reset?', reset)
+console.log('pageReset?', pageReset)
 console.log('standaloneDetected?', localStorage.standaloneDetected)
+console.log('cacheReset?', cacheReset)
 
-if (reset) { //força limpar o cache para atualizar app
-  localStorage.isPwaInstalled = ""
-  localStorage.standaloneDetected = ""
+if (cacheReset) { //força limpar o cache para atualizar app
   let limpouCache = false
   let excluiuSw = false
   //limpa o cache
@@ -108,7 +113,7 @@ if (reset) { //força limpar o cache para atualizar app
 localStorage.beforeInstallPromptOK = ""
 if (pageInstall && localStorage.isIos === "false") {
 
-  if (localStorage.standaloneDetected === "false" && localStorage.isPwaInstalled === "true") {
+  if (localStorage.standaloneDetected === "false" && localStorage.isPwaInstalled === "true" && pageReset) {
     localStorage.isPwaInstalled === "false"    
   }
   //seta evento before install prompt - somente para Android
@@ -154,7 +159,7 @@ if (pageInstall && localStorage.isIos === "false") {
 }
 
 //seta evento para verificar se App instalado
-if (pageInstall) {
+if (pageInstall || pageReset) {
   window.addEventListener('appinstalled', e => {
     msgInicial.innerHTML = "Legal!"
     msgInstalacao.innerHTML = "Instalação concluída.<br> A partir de agora acesse nosso portal através do aplicativo instalado em seu dispositivo. "
@@ -181,10 +186,27 @@ if ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected =
   // Make firebase reachable through the console.
   window.firebase = firebase;
   
+  if ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall && !pageReset)  {
+    navigator.serviceWorker.addEventListener('message', async (event) => {
+      console.log("***************** MESSAGE")
+      // Optional: ensure the message came from workbox-broadcast-update
+      if (event.data.meta === 'workbox-broadcast-update') {
+        const {cacheName, updatedUrl} = event.data.payload;
+    
+        // Do something with cacheName and updatedUrl.
+        // For example, get the cached content and update
+        // the content on the page.
+        const cache = await caches.open(cacheName);
+        const updatedResponse = await cache.match(updatedUrl);
+        const updatedText = await updatedResponse.text();
+      }
+    });  
+  }
+
   // Load the app.
   $(document).ready(() => {
-    console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall, reset)
-    if (localStorage.isMac ==="true" || ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall && !reset)) {
+    console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall, pageReset)
+    if ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall && !pageReset) {
       const auth = new Auth();
       // Starts the router.
       window.fpRouter = new Router(auth);  
@@ -223,12 +245,25 @@ function detectStandalone() {
   let standalone = false;
 
   if (hash.indexOf('#:standalone:') >= 0 ) {
+    // first run (open app) in standalone mode
+    // cache state in sessionStorage
+
     standalone = true;
     sessionStorage.setItem(':standalone:', '1');
+    // remove hash part from the url before actual app start,
+    // in case if your app uses hash (#) routing
     history.replaceState(history.state, '', '/');
   } else if (sessionStorage.getItem(':standalone:')) {
+    // second and subsequent runs (reloads)
+    // sessionStorage is unique per tab and Home Screen app is just a
+    // chrome-less tab. So it's safe to assume
+    // that user is still in standalone mode
+
     standalone = true;
-  } 
+  } else {
+    // neither first, nor subsequent standalone runs, normal mode
+    // do nothing
+  }
   return standalone;
 }
 
