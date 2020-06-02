@@ -31,20 +31,14 @@ export default {
             finalizado: false,
             error_banco: false
         }
-    },
-    created(){  
-
-    },
-    mounted(){
-        //console.log('DADOS ===>', this.dados)
-    },
+    },    
     methods: {
         cancelar(){
             this.$emit('cancelar', true)
         },
         confirmar(){
             let objeto_contratacao = new Object()     
-            let dateFormat = Utils.dateFormat(new Date(), true, true)            
+            let dateFormat = Utils.dateFormat(new Date(), true, true)
             objeto_contratacao[dateFormat] = {
                                                 uid: this.dados.uid,
                                                 tipo: this.dados.tipo,
@@ -61,7 +55,8 @@ export default {
             }            
         },
         retornar(){
-            page(`/${sessionStorage.ultimaPagina}`)
+            //page(`/${sessionStorage.ultimaPagina}`)
+            page(`/home`)
         }
     }
 }

@@ -300,12 +300,7 @@
           </div>  
         </div>
       </div>
-    </section>
-
-
-
-
-    
+    </section>    
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="fp-header mdl-layout__header mdl-color--white">
@@ -530,21 +525,7 @@
                           <template v-if="home.projeto_vida.acao.vigente">
                               <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                                                
                                   <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background"
-                                       style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
-                                      <!-- <div class="mdl-card__supporting-text margin_auto">
-                                          <div class="mdl-card-campanha-button-left">
-                                              <dl>
-                                                  <dt class="dt-card-projeto-vida">Potencial de reserva</dt>
-                                                  <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.reserva_potencial }}</dd>
-                                              </dl>
-                                          </div>
-                                          <div class="mdl-card-campanha-button-right">                             
-                                            <dl>
-                                                <dt class="dt-card-projeto-vida">Potencial de renda</dt>
-                                                <dd class="dd-card-projeto-vida">{{ home.projeto_vida.acao.renda_potencial }}</dd>
-                                            </dl>
-                                          </div>
-                                      </div>-->
+                                       style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                                      
                                       <div class="mdl-card__supporting-text margin_auto div-card-botton-projeto-vida">
                                           <span class="span-card-botton-projeto-vida">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
                                           <i class="material-icons icon-button">arrow_forward</i>
@@ -814,12 +795,6 @@
                   <simulador-emprestimo v-bind:dados="emprestimoSimulador" :key="componentKey"></simulador-emprestimo>
               </section> 
 
-              <!--Rentabilidade-->
-              <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
-                  <a></a>
-                  <rentabilidade :key="componentKey"></rentabilidade>
-              </section>
-
               <!--Simulador Seguro -->
               <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
                   <a></a>
@@ -829,7 +804,13 @@
               <!--Simulador Renda-->
               <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
                   <a></a>
-                  <simulador-renda v-bind:dados="rendaSimulador" :key="componentKey"></simulador-renda>
+                  <simulador-renda v-bind:dados="rendaSimulador" :key="componentKey"/>
+              </section>
+
+              <!--Rentabilidade-->
+              <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
+                  <a></a>
+                  <rentabilidade :key="componentKey"></rentabilidade>
               </section>
               
               <!--Consulta Contratação em Aberto-->

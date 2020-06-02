@@ -77,20 +77,20 @@ module.exports =  {
 
     valor_to_string_formatado(num, casasDecimais, incluiCifrao, fromWeb) {
         let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
-        console.log('numFormatado ===> ',numFormatado)
+        //console.log('numFormatado ===> ',numFormatado)
         if (incluiCifrao) {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
         } else {
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
         }
-        console.log('numFormatado2 ===> ',numFormatado)
+        //console.log('numFormatado2 ===> ',numFormatado)
         if (!fromWeb) {
             numFormatado = numFormatado.replace(/,/g,'#')
-            console.log('numFormatado3 ===> ',numFormatado)
+            //console.log('numFormatado3 ===> ',numFormatado)
             numFormatado = numFormatado.replace('.',',')
-            console.log('numFormatado4 ===> ',numFormatado)
+            //console.log('numFormatado4 ===> ',numFormatado)
             numFormatado = numFormatado.replace(/#/g,'.')
-            console.log('numFormatado5 ===> ',numFormatado)
+            //console.log('numFormatado5 ===> ',numFormatado)
         }
         return numFormatado
     },

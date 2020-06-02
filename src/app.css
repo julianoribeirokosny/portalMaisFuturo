@@ -2472,3 +2472,9 @@ font-style: normal;
 font-weight: normal;
 border: 0px;
 }
+.vue-slider-rail {
+  background-color: #969797 !important;
+}
+.vue-slider-rail:hover {
+  background-color: #adafaf !important;
+}

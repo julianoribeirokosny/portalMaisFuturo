@@ -2,22 +2,21 @@
 
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/antd.css';
-
 import vSelect from 'vue-select'; 
 import 'vue-select/dist/vue-select.css';
-
 import simuladorRenda from './simuladorRenda.html';
 import './simuladorRenda.css';
-
 import page from 'page';
 import Contratacao from '../contratacao/contratacao';
+import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
+import FirebaseHelper from '../../FirebaseHelper'
 
 const financeiro = require('../../../functions/Financeiro')
 
 export default {    
     template: simuladorRenda,
     components: { 
-        VueSlider, vSelect, Contratacao
+        VueSlider, vSelect, Contratacao, ContratacaoAberta
     },
     props: { 
         dados: {
@@ -40,6 +39,8 @@ export default {
     },    
     data: function() {
         return {
+            firebaseHelper: new FirebaseHelper(),
+            rendaSolicitada: false,
             contratacao: {
                 titulo:'',
                 msg_inicial:'',
@@ -54,7 +55,7 @@ export default {
                 chave:'',
                 uid:'',
                 label_button:'',
-                tipo: ''
+                tipo: 'Contribuição mensal'
             },
             lidades: [{ label: '45 anos', value: 45 },{ label: '46 anos', value: 46 },{ label: '47 anos', value: 47 },
                       { label: '48 anos', value: 48 },{ label: '49 anos', value: 49 },{ label: '50 anos', value: 50 },
@@ -155,19 +156,19 @@ export default {
             }
         }
     },
-    created(){    
+    created(){          
         console.log('this.dados - CONTRIBUICAO',this.dados)
-        
-        this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
-        this.contribuicaoTela = financeiro.valor_to_string_formatado(this.contribuicao.toFixed(2), 2, false, true)
-        this.reservaTotalTela = financeiro.valor_to_string_formatado(this.dados.reservaTotalFutura, 2, false, true)
-        this.rendaMensalTela = financeiro.valor_to_string_formatado(this.dados.rendaMensalFutura, 2, false, true)
-        this.contribuicaoFixaTela = financeiro.valor_to_string_formatado(this.dados.contribuicaoFixa.toFixed(2), 2, false, true)
-        this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2), 2, false, true)
-        
-    }, 
-    mounted(){
-    },
+        if (this.dados.rendaSolicitada.dados != null) {
+            this.rendaSolicitada = true
+        } else {
+            this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
+            this.contribuicaoTela = financeiro.valor_to_string_formatado(this.contribuicao.toFixed(2), 2, false, true)
+            this.reservaTotalTela = financeiro.valor_to_string_formatado(this.dados.reservaTotalFutura, 2, false, true)
+            this.rendaMensalTela = financeiro.valor_to_string_formatado(this.dados.rendaMensalFutura, 2, false, true)
+            this.contribuicaoFixaTela = financeiro.valor_to_string_formatado(this.dados.contribuicaoFixa.toFixed(2), 2, false, true)
+            this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((this.dados.minimoContribuicao + this.dados.contribuicaoFixa).toFixed(2), 2, false, true)
+        }
+    },    
     watch: {
         contribuicao(newVal, oldVal) {
             if(newVal !== oldVal) {
@@ -230,8 +231,6 @@ export default {
             this.contratacao.chave = this.dados.chave
             this.contratacao.uid =  this.dados.uid
             this.contratacao.label_button = 'Confirma novo valor'
-            this.contratacao.tipo = 'Contribuição mensal'
-            //console.log('Contratacao',this.contratacao)
             this.simulador = false
         },
         calculaReservaFutura() {

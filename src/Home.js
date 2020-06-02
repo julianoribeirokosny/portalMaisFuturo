@@ -74,13 +74,13 @@ export default class Home {
       sessionStorage.dataUltimoLogin = new Date()
     }
 
-    console.log('=====> currentUser: ', this.auth.currentUser)
+    //console.log('=====> currentUser: ', this.auth.currentUser)
     if (!sessionStorage.chave || sessionStorage.chave==="undefined" || sessionStorage.chave === '') {
       sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
     }
     this.chave = sessionStorage.chave
 
-    console.log('=====> CHAVE: ', sessionStorage.chave)
+    //console.log('=====> CHAVE: ', sessionStorage.chave)
     if (this.chave===null || this.chave ==='') {
       base_spinner.style.display = 'none'
       Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome')
@@ -129,21 +129,20 @@ export default class Home {
     this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
     this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
     this.consulta_seguro.chave = this.chave
-    ////console.log('Consulta Seguro ====> ', this.consulta_seguro)
+    //console.log('Consulta Seguro ====> ', this.consulta_seguro)
 
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorSeguro =  await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
     
-    console.log('dadosSimuladorRenda',dadosSimuladorRenda)
-
+    dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao    
     dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
+    //console.log('dadosSimuladorRenda',dadosSimuladorRenda)
 
     let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
-
     let infoNomePlano = document.querySelector('#displayInfoNomePlano')
-    infoNomePlano.innerHTML = this.data_Home.plano    
+    infoNomePlano.innerHTML = this.data_Home.plano
     let infoCompetencia = document.querySelector('#displayInfoCompetencia')
     infoCompetencia.innerHTML = this.data_Home.competencia
     let infoPerfilInvestimento = document.querySelector('#displayInfoPerfilInvestimento')
@@ -228,7 +227,7 @@ export default class Home {
     }
 
     if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {      
-      console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
+      //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
       this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
     }
 
@@ -386,7 +385,7 @@ export default class Home {
             return false
           } else {
             this.participante = part
-            console.log('PARTICIPANTE:',this.participante)
+            //console.log('PARTICIPANTE:',this.participante)
             return true
           }
         }))  
