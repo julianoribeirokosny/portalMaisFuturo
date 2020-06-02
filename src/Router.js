@@ -37,7 +37,7 @@ export default class Router {
 
     // Configuring routes.
     page('/', () => {
-      if (localStorage.isPwaInstalled==="true") {
+      if (localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") {
         this.displayPage('splash-login');
         this.redirectHomeIfSignedIn();  
       }
@@ -45,7 +45,7 @@ export default class Router {
     page('/home', async () => {
       verificaPrimeiroLogin().then((primeiroLogin) => {
         if (primeiroLogin===null) {
-          Erros.registraErro('sem_uid', 'auth', 'showHome')
+          Erros.registraErro('sem_uid', 'auth', 'showHome', 'primeiroLogin === null')
           return page('/erro')  
         } else if (primeiroLogin) {
           telaPrimeiroLoginConfig()

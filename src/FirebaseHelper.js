@@ -955,7 +955,7 @@ export default class FirebaseHelper {
         console.log('=> Email Enviado')
         return true
       }).catch((e) => {
-        Erros.registraErro(usr.uid, 'emailVer', 'enviarEmailLinkValidacao')
+        Erros.registraErro(usr.uid, 'emailVer', 'enviarEmailLinkValidacao', JSON.stringify(e))
         return false
       })
       return ret
@@ -965,7 +965,7 @@ export default class FirebaseHelper {
         console.log('=> Token OK')
         return idToken
       }).catch((e) => {
-        Erros.registraErro(usr.uid, 'tkn', 'enviarEmailLinkValidacao')
+        Erros.registraErro(usr.uid, 'tkn', 'enviarEmailLinkValidacao', JSON.stringify(e))
         return false
       });      
 
@@ -1354,7 +1354,7 @@ export default class FirebaseHelper {
         return null
       }
     }).catch((e) => {
-      Erros.registraErro(this.auth.currentUser.uid, 'erroPerm', 'getParticipante')
+      Erros.registraErro(this.auth.currentUser.uid, 'erroPerm', 'getParticipante', JSON.stringify(e))
       return null
     })
   }
@@ -1452,9 +1452,9 @@ export default class FirebaseHelper {
     let ref = this.database.ref(`usuarios/${chave}/home`)
   }
 
-  logErros(uid, data, codErro, origem) {
+  logErros(uid, data, codErro, origem, erroDesc) {
     let ref = this.database.ref(`logErros/${uid}/${data}`)
-    ref.update({erro: codErro, origem: origem})
+    ref.update({erro: codErro, origem: origem, erroDesc: erroDesc})
   }
 
   async getFatorSimuladorSeguro(idade) {

@@ -25,8 +25,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlCriticalPlugin = require('html-critical-webpack-plugin');
 const {InjectManifest} = require('workbox-webpack-plugin');
 
+
 module.exports = (env, argv) => {
-  mode: argv.mode //"development"  
+  mode:  "development"  //argv.mode
 
   console.log('========================> argv.mode', argv.mode, '<====================')
   const devMode = argv.mode !== 'production'  //  true
@@ -56,6 +57,9 @@ module.exports = (env, argv) => {
       filename: /js\/bundle\..*\.js$/,
       compress: true, // enable gzip compression
       historyApiFallback: true, // true for index.html upon 404, object for multiple paths
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },      
       inline: true,
       port: 5000,
       hot: false, // hot module replacement. Depends on HotModuleReplacementPlugin

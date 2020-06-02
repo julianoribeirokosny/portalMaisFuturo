@@ -74,26 +74,26 @@
   <!--body class="fp-auth-state-unknown"-->
   <body>
 
-      <!--Modal dialog-->
-      <dialog id="termo-servico-dialog" class="mdl-dialog">
-          <div class="mdl-card__supporting-text mdl-card-container">
-              <h4 class="mdl-dialog__title" style="margin-left: 5px;font-size: 31px;">Nós protegemos sua privacidade!</h4>
-              <div class="mdl-dialog__content">
-                  <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
-                  <form class="col s12">
-                    <p style="display: flex;">
-                      <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico" style="width:120px;"/>
-                      <label for="allow-data-termo-servico">
-                        Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
-                      </label>
-                    </p>
-                  </form>
-                  <div style="width: 95%; text-align: center;">
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 80%;">Continuar</button>
-                  </div>
-              </div>
-          </div>
-      </dialog>
+    <!--Modal dialog-->
+    <dialog id="termo-servico-dialog" class="mdl-dialog">
+        <div class="mdl-card__supporting-text mdl-card-container">
+            <h4 class="mdl-dialog__title" style="margin-left: 5px;font-size: 31px;">Nós protegemos sua privacidade!</h4>
+            <div class="mdl-dialog__content">
+                <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
+                <form class="col s12">
+                  <p style="display: flex;">
+                    <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico" style="width:120px;"/>
+                    <label for="allow-data-termo-servico">
+                      Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
+                    </label>
+                  </p>
+                </form>
+                <div style="width: 95%; text-align: center;">
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-color--amber-400 termo-servico-save" disabled style="max-width: 80%;">Continuar</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
 
     <!-- Theatre mode viewer -->
     <!--div class="fp-theatre"><img class="fp-fullpic" alt="Full sized image"></div-->
@@ -244,8 +244,24 @@
       <div id="firebaseui-auth-container"></div>
     </section>
 
+    <!-- Acesso via Browser-->
+    <section id="page-acesso-browser" class="page-splash" style="display: none;">
+      <div style="margin: 5px 0 50px 0;">
+        <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
+      </div>
+      <div style="max-width: 500px; text-align: center;">    
+        <div style="display: block; text-align: center;">
+          <div class="fp-caption" style="display: block">Olá!</div> 
+          <div class="fp-caption2" style="display: block;">Você está tentando acessar o Portal Mais Futuro através do Browser.</div> 
+          <div class="fp-caption2" style="display: block;">Por favor efetue o acesso através do aplicativo instalado em seu dispositivo.</div> 
+          <div style="padding-top: 20px; text-align: center; display: block">
+            <a class="fp-skip" href="/instalar" style="padding-top: 30px;">Ainda não fez a instalação? Clique aqui.</a>        
+          </div>  
+        </div>
+      </div>
+    </section>    
     <!-- Splash screen da Instalação - ANDROID -->
-    <section id="page-instalacao" class="page-splash">
+    <section id="page-instalacao" class="page-splash" style="display: none;">
       <div style="margin: 5px 0 50px 0;">
         <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       </div>
@@ -436,7 +452,7 @@
                       <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                         <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
                             <div class="mdl-card__supporting-text div_titulo_card">
-                              Olá {{ home.apelido }}!                          
+                            Olá {{ home.apelido }}!                          
                             </div>                                                
                             <div class="mdl-card__supporting-text div_mensagem">
                               {{ home.mensagem }}

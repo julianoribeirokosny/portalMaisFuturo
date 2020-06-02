@@ -86,7 +86,9 @@ export default class Auth {
     this.updateAll.click(() => this.updateAllAccounts());
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
     this.avisoValidacaoButton.click(async () => {
-      if (! await this.firebaseHelper.enviarEmailLinkValidacao('firebase')) {
+      //if (! await this.firebaseHelper.enviarEmailLinkValidacao('firebase')) {
+      let nome = sessionStorage.nome && sessionStorage.nome !== '' ? sessionStorage.nome : ''
+      if (! await this.firebaseHelper.enviarEmailLinkValidacao('proprio', sessionStorage.emailCadastro, nome)) {
         page('/erro')  
       } else {
         page('/aviso-validacao')  
@@ -116,6 +118,7 @@ export default class Auth {
     // Confgiure and add the FirebaseUI Widget
     let signInFlow = 'popup';
     // For iOS full screen apps we use the redirect auth mode.
+    console.log(`'standalone' in window.navigator `, 'standalone' in window.navigator)
     if (('standalone' in window.navigator)
         && window.navigator.standalone) {
       signInFlow = 'redirect';
@@ -175,7 +178,7 @@ export default class Auth {
     }
 
     const div_install = document.querySelector('#div-install');
-    if (localStorage.isPwaInstalled==="true") {
+    if (localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") {
       div_install.style.display = 'none';   
     }
 
