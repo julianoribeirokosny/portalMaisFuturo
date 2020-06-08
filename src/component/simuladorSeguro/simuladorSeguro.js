@@ -186,26 +186,21 @@ export default {
         }
     },
     created(){        
-        //console.log('this.dados_Seguro',this.dados)        
+        console.log('THIS.DADOS.SEGUROS',this.dados)
         if(this.dados.seguroSolicitado.dados != null) {
             this.seguroSolicitado = true
         } else {
             this.getProfissaoParticipante(this.dados.chave)
-
-            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)
-            //console.log('this.maximoSemDpsInvalidezTela',this.maximoSemDpsInvalidezTela)
+            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)            
             this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
-            this.calculaPremioInvalidez()
-            console.log('==> this.coberturaInvalidez', this.coberturaInvalidez)
+            this.calculaPremioInvalidez()            
             this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
             this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
-            this.calculaPremioMorte()
-            console.log('==> this.premioMorte', this.premioMorte)
+            this.calculaPremioMorte()            
             this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
             this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
             this.calculaTotal()
-            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
-            //console.log('this.premioInicio',this.premioInicio)
+            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)            
         }
     },
     watch: {

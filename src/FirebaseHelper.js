@@ -1207,12 +1207,12 @@ export default class FirebaseHelper {
   async getDadosSimuladorRenda(chave, uid) {
     let usuario = await this.getParticipante(chave)
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
-    let minimoContribuicao = 0
-    if (usuario.home.usr_tipo_plano === 'instituido') {
-      minimoContribuicao = usuario.data.valores.contribParticipante
-    } else {
-      minimoContribuicao = usuario.data.valores.contribParticipantePlanoPatrocinado
-    }
+    let minimoContribuicao = usuario.data.valores.contribParticipante
+    // if (usuario.home.usr_tipo_plano === 'instituido') {
+    //   minimoContribuicao = usuario.data.valores.contribParticipante
+    // } else {
+    //   minimoContribuicao = usuario.data.valores.contribParticipantePlanoPatrocinado
+    // }
     // let maximoContribuicao = (usuario.data.valores.contribParticipante === 0 ? usuario.data.valores.contribParticipantePlanoPatrocinado : usuario.data.valores.contribParticipante) * 3
     // let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
     // if (qtdStep % 1 !== 0) {
@@ -1225,8 +1225,8 @@ export default class FirebaseHelper {
     //   qtdStep = Math.round(qtdStep)
     //   maximoContribuicao = simuladorRç endaSettings.step_contribuicao * qtdStep
     // }
-    console.log('maximoContribuicao',maximoContribuicao)
-    console.log('minimoContribuicao',minimoContribuicao)
+    //console.log('maximoContribuicao',maximoContribuicao)
+    //console.log('minimoContribuicao',minimoContribuicao)
 
     let dadosSimuladorRenda = {
       usr_tipo_plano: usuario.home.usr_tipo_plano,
@@ -1287,6 +1287,9 @@ export default class FirebaseHelper {
         maximoMorte = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
         maximoInval = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
       }      
+
+      let coberturaInvalidez = (usuario.data.valores.coberturaInvalidez === undefined || usuario.data.valores.coberturaInvalidez === 0) ? 0 : usuario.data.valores.coberturaInvalidez
+      let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
       let dadosSimuladorSeguro = {
           titulo: 'Simulador </br>de Seguro',
           tipo: 'Seguro',
@@ -1300,8 +1303,8 @@ export default class FirebaseHelper {
           stepInvalidez: stepInvalidez,
           fatorMorte: fator_idade_seguro.fator_morte,
           fatorInvalidez: fator_idade_seguro.fator_invalidez,
-          coberturaInvalidez: usuario.data.valores.coberturaInvalidez === undefined ? minimoInvalidez : usuario.data.valores.coberturaInvalidez,
-          coberturaMorte: usuario.data.valores.coberturaMorte === undefined ? minimoMorte : usuario.data.valores.coberturaMorte,
+          coberturaInvalidez: coberturaInvalidez === 0 ? minimoInvalidez : coberturaInvalidez,
+          coberturaMorte: coberturaMorte === 0 ? minimoMorte : coberturaMorte,
           chave: chave,
           uid: uid
       }
@@ -1489,5 +1492,46 @@ export default class FirebaseHelper {
         return null
       }
     })
+  }
+
+  getPerfilInvetimento(plano, perfilInvestimento) {
+    let ref = this.database.ref(`settings/rentabilidade/${plano}/${perfilInvestimento}`)
+    return ref.once('value').then((data) => {
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
+  getBenchmark() {
+    let ref = this.database.ref(`settings/rentabilidade/benchmark`)
+    return ref.once('value').then((data) => {
+      if (data.val()) {
+        console.log('data.val()',data.val())
+        let ret = data.val()
+        ret[0].valores = ret[0].valores.reverse() //Ibovespa
+        ret[1].valores = ret[1].valores.reverse() //CDI
+        ret[2].valores = ret[2].valores.reverse() //Meta Atuarial  
+        return ret
+      } else {
+        return  null
+      }
+    })
+  }
+
+  async getRentabilidade(plano, perfilInvestimento) {    
+      let perfil = await this.getPerfilInvetimento(plano, perfilInvestimento)
+      let obj = { 
+                    cor: '#1E77C6',
+                    nome: perfilInvestimento,
+                    valores: perfil.valores.reverse(),
+                    composicao: perfil.Composicao
+                }
+      let retorno = new Array(obj)    
+      let benchmark = await this.getBenchmark()    
+      Array.prototype.push.apply(retorno, benchmark)
+      return retorno
   }
 };

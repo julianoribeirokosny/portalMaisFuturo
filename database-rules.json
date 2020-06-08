@@ -39,7 +39,12 @@
       "simulador_renda": {
         ".read": "auth.uid !== null || auth.token.admin === true",
         ".write": "false"
-      },        
+      },       
+      // settings rentabilidade
+      "rentabilidade": {
+        ".read": "auth.uid !== null || auth.token.admin === true",
+        ".write": "false"
+      },   
       // settings do simulador de empréstimo
       "simulador_seguro": {
         ".read": "auth.uid !== null || auth.token.admin === true",
