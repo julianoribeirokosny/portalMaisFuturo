@@ -826,7 +826,7 @@
               <!--Rentabilidade-->
               <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
                   <a></a>
-                  <rentabilidade :key="componentKey"></rentabilidade>
+                  <rentabilidade v-bind:lista="historicoRentabilidade" :key="componentKey"/>
               </section>
               
               <!--Consulta Contratação em Aberto-->

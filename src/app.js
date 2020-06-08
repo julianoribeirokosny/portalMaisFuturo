@@ -251,3 +251,9 @@ function mostraTelaInstalacaoIOS() {
   $('#page-instalacao').hide()
   $('#page-acesso-browser').hide()
 }
+
+
+
+
+
+

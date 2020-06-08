@@ -1492,4 +1492,45 @@ export default class FirebaseHelper {
       }
     })
   }
+
+  getPerfilInvetimento(plano, perfilInvestimento) {
+    let ref = this.database.ref(`settings/rentabilidade/${plano}/${perfilInvestimento}`)
+    return ref.once('value').then((data) => {
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
+  getBenchmark() {
+    let ref = this.database.ref(`settings/rentabilidade/benchmark`)
+    return ref.once('value').then((data) => {
+      if (data.val()) {
+        console.log('data.val()',data.val())
+        let ret = data.val()
+        ret[0].valores = ret[0].valores.reverse() //Ibovespa
+        ret[1].valores = ret[1].valores.reverse() //CDI
+        ret[2].valores = ret[2].valores.reverse() //Meta Atuarial  
+        return ret
+      } else {
+        return  null
+      }
+    })
+  }
+
+  async getRentabilidade(plano, perfilInvestimento) {    
+      let perfil = await this.getPerfilInvetimento(plano, perfilInvestimento)
+      let obj = { 
+                    cor: '#1E77C6',
+                    nome: perfilInvestimento,
+                    valores: perfil.valores.reverse(),
+                    composicao: perfil.Composicao
+                }
+      let retorno = new Array(obj)    
+      let benchmark = await this.getBenchmark()    
+      Array.prototype.push.apply(retorno, benchmark)
+      return retorno
+  }
 };

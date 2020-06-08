@@ -24,6 +24,7 @@ import page from 'page';
 import {Utils} from './Utils';
 import FirebaseHelper from './FirebaseHelper';
 import PrimeiroLogin from './PrimeiroLogin';
+// import { debug } from 'webpack';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -206,18 +207,22 @@ export default class Auth {
   /**
    * Displays the Admin features if the user has the "admin=true" custom claim in its ID token. 
    */
-  async toggleAdminMode() {
-    try {
-      const idToken = await this.auth.currentUser.getIdToken();
-      const isAdmin = JSON.parse(window.atob(idToken.split('.')[1])).admin;
+  async toggleAdminMode() {    
+    try {    
+      //debugger
+      // Auth.disableAdminMode()
+      // const idToken = await this.auth.currentUser.getIdToken();
+      // let split = idToken.split('.')[1]
+      // let wind = window.atob(split)
+      const isAdmin = undefined// JSON.parse(wind).admin;
       if (isAdmin) {
-        Auth.enableAdminMode();
+        Auth.enableAdminMode()
       } else {
-        Auth.disableAdminMode();
+        Auth.disableAdminMode()
       }
     } catch (e) {
-      console.error('Error while checking for Admin priviledges', e);
-      Auth.disableAdminMode();
+      console.error('Error while checking for Admin priviledges', e)
+      Auth.disableAdminMode()
     }
   }
 

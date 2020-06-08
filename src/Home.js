@@ -129,7 +129,11 @@ export default class Home {
     this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
     this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
     this.consulta_seguro.chave = this.chave
-    //console.log('Consulta Seguro ====> ', this.consulta_seguro)
+    //console.log('Consulta Seguro ====> ', this.consulta_seguro)    
+    //console.log('this.data_Home',this.data_Home)
+    
+    let historicoRentabilidade = await firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento)
+    //console.log('TESTE-RENTABILIDADE',teste)
 
     let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
     let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
@@ -271,7 +275,8 @@ export default class Home {
               rendaSimulador: dadosSimuladorRenda,
               emprestimoSimulador: dadosSimuladorEmprestimo,
               seguroSimulador: dadosSimuladorSeguro,
-              historicoContribuicao: listaHistoricoContribuicao                
+              historicoContribuicao: listaHistoricoContribuicao,
+              historicoRentabilidade: historicoRentabilidade
           },  
           created() {
               sessionStorage.ultimaPagina = 'home'                              
