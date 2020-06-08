@@ -55,10 +55,19 @@ module.exports =  {
 
     diffDatasEmMeses : function (dataMenor, dataMaior) {
         if (!(dataMaior instanceof Date)) {
-            dataMaior = new Date(dataMaior)
+            console.log('!dataMaior instanceof Date')
+            let aData = dataMaior.split('/')
+            if (aData.length === 0) {
+                aData = dataMaior.split('-')
+            }
+            dataMaior = new Date(Number(aData[2]), Number(aData[1]) - 1, Number(aData[0]))
         }
         if (!(dataMenor instanceof Date)) {
-            dataMenor = new Date(dataMenor)
+            let aData = dataMenor.split('/')
+            if (aData.length === 0) {
+                aData = dataMenor.split('-')
+            }
+            dataMenor = new Date(Number(aData[2]), Number(aData[1]) - 1, Number(aData[0]))
         }
         let diminuiMes = dataMenor.getDate() > dataMaior.getDate() ? 1 : 0
         let months;

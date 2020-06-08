@@ -37,7 +37,7 @@ export default class Router {
 
     // Configuring routes.
     page('/', () => {
-      if (localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") {
+      if (localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true" || localStorage.isMac === "true") {
         this.displayPage('splash-login');
         this.redirectHomeIfSignedIn();  
       }
