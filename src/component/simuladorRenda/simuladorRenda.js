@@ -223,11 +223,13 @@ export default {
             this.contratacao.msg_vigencia = `A sua nova contribuição mensal estará vigente a partir do mês de ${n}/${d.getFullYear()}.`
             this.contratacao.msg_novo_valor = `O valor da sua nova contribuição mensal é de R$ ${this.contribuicaoTela}.`
             this.contratacao.valor_novo = this.contribuicao
-            this.contratacao.valor_novo_Tela = this.contribuicaoTela
+            this.contratacao.valor_novo_Tela = ''
             this.contratacao.valor_antigo = this.dados.minimoContribuicao
             this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Sua contribuição </br> foi alterada'
-            this.contratacao.finalizacao_msg = 'Contribuição mensal alterada com sucesso.'
-            this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$ '
+            this.contratacao.finalizacao_msg = `O novo valor da sua contribuição é R$ ${this.contribuicaoTela}`
+            if(this.dados.usr_tipo_plano === 'jmalucelli') {
+                this.contratacao.finalizacao_msg_novo_valor = `Sua nova contribuição total é R$ ${this.contribuicaoTotalTela}.`
+            }
             this.contratacao.chave = this.dados.chave
             this.contratacao.uid =  this.dados.uid
             this.contratacao.label_button = 'Confirma novo valor'

@@ -145,6 +145,8 @@ export default class Home {
     //console.log('dadosSimuladorRenda',dadosSimuladorRenda)
 
     let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
+    console.log('listaHistoricoContribuicao',listaHistoricoContribuicao)
+    
     let infoNomePlano = document.querySelector('#displayInfoNomePlano')
     infoNomePlano.innerHTML = this.data_Home.plano
     let infoCompetencia = document.querySelector('#displayInfoCompetencia')
@@ -218,6 +220,7 @@ export default class Home {
                     cutoutPercentage: 88,
                     responsive: true,
                     legend: false,
+                    tooltips: false,
                     rotation: 1 * Math.PI,
                     circumference: 1 * Math.PI
                 }

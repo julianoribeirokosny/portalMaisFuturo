@@ -4,7 +4,7 @@
     </div>
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
         <div class="div_dflex_center">
-            <span class="span_reserva_text_2 span_text_perfil">Perfil Agressivo</span>
+            <span class="span_reserva_text_2 span_text_perfil">Perfil {{ nome_perfil }}</span>
         </div>
     </div>
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_top_zero">
@@ -12,7 +12,7 @@
             <grafico-perfil class="canvas_grafico_doughnut" :chartdata="grafico_perfil"/>
             <div class="div_grafico_reserva_legenda">
                 <div class="div_titulo_legenda">
-                    Composição do perfil
+                    Composição do Perfil
                 </div>
                 <div>
                     <template v-for="legenda in legenda_perfil">
@@ -56,14 +56,14 @@
                 <div class="mdl-card-left div_tabela_item justify-content_left">
                     {{ indice.anomes }}
                 </div>
-                <div class="mdl-card-right div_tabela_item justify-content_center">
+                <div class="mdl-card-left div_tabela_item justify-content_center">
                     {{ indice.valor }}
                 </div>      
             </div>
         </div>        
         <div class="mdl-card-right div_titulo_acumulado">
             <span class="span_titulo_acumulado">Acumulado {{ quantidade_meses }}</span>
-            <p style="text-align: right;" v-for="acumulado in acumulados" v-if="acumulado">
+            <p style="margin-bottom: 5px;" v-for="acumulado in acumulados" v-if="acumulado">
                 <span class="span_label_acumulado"> {{ acumulado.nome }} </span>
                 <span class="span_indice_acumulado" v-bind:style="acumulado.cor">
                     {{ acumulado.indice }}%

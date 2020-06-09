@@ -476,7 +476,7 @@
                                       <div class="div_grafico_reserva_legenda">
                                         <template>
                                           <div class="div_reserva_text_1" v-for="conta in home.saldo_reserva.itens">
-                                              <template v-if="conta.nome === 'Total'">
+                                              <!-- <template v-if="conta.nome === 'Total'">
                                                 <dl class="dl_reserva_legenda">
                                                     <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
                                                     <dd class=" dd_reserva_text">
@@ -484,8 +484,9 @@
                                                         <span class="span_reserva_legenda_2_total" v-bind:style="conta.cor">{{ conta.valor }}</span>                                            
                                                     </dd>
                                                 </dl>
-                                              </template>
-                                              <template v-else>
+                                              </template> 
+                                              <template v-else> -->
+                                              <template v-if="conta.nome !== 'Total'">
                                                 <dl class="dl_reserva_legenda">
                                                     <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
                                                     <dd class="dd_reserva_text">
