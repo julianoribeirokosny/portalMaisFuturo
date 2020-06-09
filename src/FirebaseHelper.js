@@ -1345,7 +1345,7 @@ export default class FirebaseHelper {
   }
 
   getParticipante(chave, chaveInterna) {
-    let ref
+    let ref    
     if (chaveInterna) {
       ref = this.database.ref(`usuarios/${chave}/${chaveInterna}`)
     } else {
@@ -1411,6 +1411,17 @@ export default class FirebaseHelper {
       catch (e) {
           return false
       }
+  }
+
+  async getUsuario(uid) {
+    let ref = this.database.ref(`login/${uid}`)    
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
   }
 
   async getUsuarioChave(uid) {

@@ -23,7 +23,8 @@ export default {
     },
     props: {
         foto:'',
-        chave_usuario:''
+        chave_usuario:'',
+        uid: ''
     },
     data: function() {
         return {
@@ -31,6 +32,7 @@ export default {
             cadastro: null,
             cep: null,
             email: null,
+            emailPrincipal: '',
             finalizado: false,
             error_banco: false,
             img_editar: img_editar,
@@ -49,10 +51,9 @@ export default {
             profissao: ''
         }
     },
-    created(){
+    created(){        
         this.getParticipante()
-        this.getProfissoes()
-        //console.log('this.profissoes',this.profissoes)
+        this.getProfissoes()        
     },
     watch: {
         cep(val){
@@ -103,18 +104,24 @@ export default {
              }, 5000);
         },
         getParticipante() {
-            return this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
+            this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then( cad => {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
-                    this.email = this.cadastro.informacoes_pessoais.email
+                    this.email = this.cadastro.informacoes_pessoais.email          
                     this.profissao = ''
                     if (this.cadastro.informacoes_pessoais.profissao) {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
                     }
                 }
+            );
+
+            this.firebaseHelper.getUsuario(this.uid)
+                .then( response => {                    
+                    this.emailPrincipal = response.email_principal                            
+                }
             )
-        },
+        },                            
         voltar() {
             page('/home')
         },
@@ -136,8 +143,6 @@ export default {
                 this.finalizado = false
                 this.error_banco = true
             }
-        },selectAll(element) {
-            eval(`this.$refs.${element.toElement.id}.select()`)
         },
         getEndereco(val) {
             let cep_num = val.replace('.','').replace('-','')

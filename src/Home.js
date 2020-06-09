@@ -366,8 +366,7 @@ export default class Home {
       return n != "" && !isNaN(n) && Math.round(n) != n;
   }
 
-  async dadosHome(chave) {
-    //debugger;
+  async dadosHome(chave) {    
     let homeAux = {}
 
     let p1 = new Promise((resolve, reject) => {

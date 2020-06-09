@@ -1,140 +1,150 @@
-<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
-    <template v-if="cadastro">     
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing"
+    style="margin: auto;">
+    <template v-if="cadastro">
         <!-- Meu Perfil Page -->
         <!--div class="mdl-card__supporting-text mdl-card-container div-container Meu_Perfil_Class_v2">
             Meu Cadastro
-        </div-->  
+        </div-->
 
-        <!--Resumo do Perfil (Box)-->          
+        <!--Resumo do Perfil (Box)-->
         <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--8dp card_v2">
             <div class="card_left_v2">
-                <img class="img_card_v2" :src="foto"/>
+                <img class="img_card_v2" :src="foto" />
             </div>
             <div class="card_right_v2">
                 <span class="UserFullName_Class_v2">{{ cadastro.informacoes_pessoais.nome}}</span></br>
                 <span class="NomedoPlano_Class_v2">{{ cadastro.dados_plano.plano }}</span>
             </div>
-        </div>        
+        </div>
         
-        <!--Informações Pessoais-->        
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
-                Informações<br/>pessoais
-            </div>                           
+                Informações<br />pessoais
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+
+        <!-- CPF -->
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">CPF</span><br>
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.cpf}}</span>
-            </div>            
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+
+        <!-- Nome -->
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Nome</span><br>
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.nome}}</span>
-            </div>            
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+
+        <!-- E-mail Principal -->
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
+                <span class="Span_Label_v2">E-mail principal</span><br>
+                <span class="Span_Text_v2">{{ emailPrincipal }}</span>
+            </div>
+        </div>        
+
+        <!-- Data de Nascimento -->
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Data de Nascimento (dd/mm/aaaa)</span><br>
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.nascimento}}</span>
-            </div>            
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+
+        <!-- Sexo -->
+        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario" style="margin-bottom: 10px;">
+            <div>
                 <span class="Span_Label_v2">Sexo</span><br>
                 <span class="Span_Text_v2">{{cadastro.informacoes_pessoais.sexo}}</span>
-            </div>            
+            </div>
         </div>
+
+        <!-- Estado Civil -->
         <div class="mdl-card-container div_vSelect_cadastro div-container">
             <span class="Span_Label_vSelect_v2">Estado Civil</span><br>
-            <v-select v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis" :reduce="option => option.value" style="line-height: 18px !important;"></v-select>
-            <!-- <div class="div-img-vSelect">
-                <img class="img-editar" v-bind:src="img_editar" alt=""/>
-            </div>             -->
-        </div>        
+            <v-select :searchable="false" v-model="cadastro.informacoes_pessoais.estado_civil" :options="estados_civis"
+                :reduce="option => option.value"></v-select>
+        </div>
+
+        <!-- E-mail Alternativo -->
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2" :class="classValid">
                 <span class="Span_Label_v2">E-mail Alternativo</span><br>
-                <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email" v-on:click="selectAll($event)">
-                <div class="div-img-input">
-                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                </div>
-            </div>            
-        </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">            
-            <div class="Div_Campo_v2">
-                <span class="Span_Label_v2">Telefone Fixo</span><br>
-                <the-mask class="Input_Text_v2" autocomplete="off" :mask="['(##) ####-####', '(##) #####-####']" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" width="200px" v-on:click="selectAll($event)"/>
-                <!-- <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo" v-on:click="selectAll($event)"> -->
-                <div class="div-img-input">
-                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                </div>
+                <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email"
+                    >
             </div>
         </div>
+
+        <!-- Telefone Fixo -->
+        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div class="Div_Campo_v2">
+                <span class="Span_Label_v2">Telefone Fixo</span><br>
+                <the-mask class="Input_Text_v2" autocomplete="off" :mask="['(##) ####-####', '(##) #####-####']"
+                    id="fone_fixo" ref="fone_fixo" type="text" v-model="cadastro.informacoes_pessoais.fone_fixo"
+                    width="200px" />
+            </div>
+        </div>
+
+        <!-- Celular -->
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2">
                 <span class="Span_Label_v2">Celular</span><br>
-                <the-mask class="Input_Text_v2" autocomplete="off" width="200px" :mask="['(##) ####-####', '(##) #####-####']" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)"/>
-                <!-- <input class="Input_Text_v2" autocomplete="off" v-mask="'(##) ####-####'" id="celular" ref="celular" type="text" v-model="cadastro.informacoes_pessoais.celular" v-on:click="selectAll($event)"> -->
-                <div class="div-img-input">
-                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                </div>
-            </div>                               
+                <the-mask class="Input_Text_v2" autocomplete="off" width="200px"
+                    :mask="['(##) ####-####', '(##) #####-####']" id="celular" ref="celular" type="text"
+                    v-model="cadastro.informacoes_pessoais.celular" />
+            </div>
         </div>
-        <div class="mdl-card-container div_vSelect_cadastro div-container">
+
+        <!-- Profissão -->
+        <div class="mdl-card-container div_vSelect_cadastro div-container" style="margin-top: 5px;">
             <span class="Span_Label_vSelect_v2">Profissão</span><br>
-            <v-select v-if="profissoes" v-model="profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select>
-            <!-- <div class="div-img-vSelect">
-                <img class="img-editar" v-bind:src="img_editar" alt=""/>
-            </div>             -->
+            <v-select v-if="profissoes" v-model="profissao" :options="profissoes"></v-select>            
         </div>
+
         <!--Endereço-->
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
                 Endereço
-            </div>                           
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2">
                 <span class="Span_Label_v2">CEP</span><br>
-                <input class="Input_Text_v2" autocomplete="off" v-mask="'##.###-###'" id="cep" ref="cep" type="text" v-model="cep" v-on:click="selectAll($event)">
-                <div class="div-img-input">
-                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                </div>
-            </div>            
+                <input class="Input_Text_v2" autocomplete="off" v-mask="'##.###-###'" id="cep" ref="cep" type="text"
+                    v-model="cep">                
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2">
                 <span class="Span_Label_v2">Endereço</span><br>
                 <span class="Span_Text_v2">{{cadastro.endereco.logradouro}}</span>
-            </div>            
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div style="float:left; width: 47%;">
                 <div class="Div_Campo_v2">
                     <span class="Span_Label_v2">Número</span><br>
-                    <input class="Input_Text_v2" type="text" id="numero" ref="numero" v-model="cadastro.endereco.numero" v-on:click="selectAll($event)">
-                    <div class="div-img-input">
-                        <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                    </div>
+                    <input class="Input_Text_v2" type="text" id="numero" ref="numero" v-model="cadastro.endereco.numero"
+                        >                    
                 </div>
             </div>
             <div style="float: right;width: 47%;">
                 <div class="Div_Campo_v2">
                     <span class="Span_Label_v2">Complemento</span><br>
-                    <input class="Input_Text_v2" autocomplete="off" type="text" id="complemento" ref="complemento" v-model="cadastro.endereco.complemento" v-on:click="selectAll($event)">
-                    <div class="div-img-input">
-                        <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                    </div>
+                    <input class="Input_Text_v2" autocomplete="off" type="text" id="complemento" ref="complemento"
+                        v-model="cadastro.endereco.complemento" >                    
                 </div>
-            </div>                       
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2">
                 <span class="Span_Label_v2">Bairro</span><br>
                 <span class="Span_Text_v2">{{cadastro.endereco.bairro}}</span>
-            </div>            
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div style="float:left; width: 47%;">
@@ -148,66 +158,66 @@
                     <span class="Span_Label_v2">Estado</span><br>
                     <span class="Span_Text_v2">{{cadastro.endereco.estado}}</span>
                 </div>
-            </div>                       
+            </div>
         </div>
 
         <!--Dados do Plano-->
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
-                Dados do<br/> plano
-            </div>                           
+                Dados do<br /> plano
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Plano</span><br>
                 <span class="Span_Text_v2">{{cadastro.dados_plano.plano}}</span>
-            </div>            
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Matrícula</span><br>
                 <span class="Span_Text_v2">{{cadastro.dados_plano.matricula}}</span>
-            </div>            
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Data de Adesão (dd/mm/aaaa)</span><br>
                 <span class="Span_Text_v2">{{cadastro.dados_plano.data_adesao}}</span>
-            </div>            
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+            <div>
                 <span class="Span_Label_v2">Perfil de Investimento</span><br>
                 <span class="Span_Text_v2">{{cadastro.dados_plano.perfil_investimento}}</span>
-            </div>            
+            </div>
         </div>
 
         <!--Dados bancários-->
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
-                Dados<br/> bancários
-            </div>                           
+                Dados<br /> bancários
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Banco</span><br>
                 <span class="Span_Text_v2">{{cadastro.dados_bancarios.banco}}</span>
                 <!-- <input class="Input_Text_v2" type="text" v-model="cadastro.dados_bancarios.banco">-->
-            </div>            
+            </div>
         </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>
                 <span class="Span_Label_v2">Agência</span><br>
                 <span class="Span_Text_v2">{{cadastro.dados_bancarios.agencia}}</span>
                 <!-- <input class="Input_Text_v2" type="text" v-model="cadastro.dados_bancarios.agencia">-->
-            </div>            
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
-            <div class="Div_Campo_v2">
+            <div>
                 <span class="Span_Label_v2">Conta Corrente com DV</span><br>
                 <span class="Span_Text_v2">{{ cadastro.dados_bancarios.conta }}</span>
                 <!-- <input class="Input_Text_v2" type="text" v-model="cadastro.dados_bancarios.conta_corrente">-->
-            </div>            
+            </div>
         </div>
 
         <div class="mdl-card__supporting-text mdl-card-container div-container msg-sucesso" v-if="finalizado">
@@ -216,14 +226,14 @@
 
         <div class="mdl-card__supporting-text mdl-card-container div-container">
             <div class="mdl-shadow--2dp Div_Button_Salvar" ref="salvar" @click="salvar">
-                <span class="Span_Button_v2">Salvar</span>                
-            </div>            
+                <span class="Span_Button_v2">Salvar</span>
+            </div>
         </div>
         <div class="mdl-card__supporting-text mdl-card-container div-container">
             <div class="mdl-shadow--2dp Div_Button_Voltar" @click="voltar">
-                <span class="Span_Button_v2">Voltar</span>                
-            </div>            
-        </div>      
+                <span class="Span_Button_v2">Voltar</span>
+            </div>
+        </div>
 
     </template>
 </div>
