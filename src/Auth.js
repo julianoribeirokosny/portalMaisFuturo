@@ -167,6 +167,7 @@ export default class Auth {
    * "Sign-In" button if the user isn't signed-in.
    */
   onAuthStateChanged(user) {
+    console.log('onAuthStateChanged -> Auth')
     if (Utils.isSupportedNotification()) {
       console.log('Push suportado!');
     } else {

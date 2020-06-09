@@ -735,7 +735,6 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   let retListaMeses = {
     0: "Adesão"
   }
-
   
   //calculo de IdadeApos, datas e tempos
   let idadeNaAdesao = utils.diffDatasEmAnos(dataNasc, dataAdesao)
@@ -746,16 +745,14 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   if (idade > idadeApos) {
     idadeApos = idade
   }
+  console.log('==> dataAdesao', dataAdesao)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
   let dataAposentadoria = financeiro.calculaDataInicioRenda(dataNasc, idadeApos)
   let difMesesHojeAposentadoria = utils.diffDatasEmMeses(new Date(), dataAposentadoria)
   let difMesesDaAdesaoAposentadoria = utils.diffDatasEmMeses(dataAdesao, dataAposentadoria)
 
   let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
-  //console.log('***> valorReservaAposentadoria', valorReservaAposentadoria)
-  let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos            
-  //console.log('***> valorRendaAposentadoria', valorRendaAposentadoria)
-  
+  let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos             
   let valorContribProjetada = financeiro.calculaContribProjetada(taxa, difMesesHojeAposentadoria, valorHoje, valorReservaAposentadoria)
 
   //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e idadeAposentadoria
@@ -768,6 +765,13 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
       Math.trunc(1 + (crescPorFaixas * 4)), 
       difMesesDaAdesaoAposentadoria
   ]
+
+  console.log('==> Variáveis:')
+  console.log('==> difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
+  console.log('==> dataAposentadoria', dataAposentadoria)
+  console.log('==> difMesesHojeAposentadoria', difMesesHojeAposentadoria)
+  console.log('==> difMesesDaAdesaoAposentadoria', difMesesDaAdesaoAposentadoria)
+  console.log('==> aIdades', aIdades)
 
   let aDistribCurvaGrafico = [
     0, 0.40, 0.55, 0.70, 0.85, 1
@@ -784,13 +788,16 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
 
   //console.log('==> valorReservaAposentadoria', valorReservaAposentadoria, ' - aIdades', aIdades, ' - valorHoje', valorHoje, ' - difMesesHojeAposentadoria',difMesesHojeAposentadoria)
   for (let linha in aIdades) {
-    let dif = aIdades[linha] - difMesesDaAdesaoHoje    
+    let dif = aIdades[linha] - difMesesDaAdesaoHoje 
+    console.log('===> dif:', dif)   
+    console.log('===> crescPorFaixas', crescPorFaixas)
     if (linha > 0) {
       if (dif < 0) { 
         retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
+          console.log('===> Entrei dif <= crescPorFaixas')
           retListaMeses[linha] = 'Hoje'        
           retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
           if (amplitude==='até hoje') {

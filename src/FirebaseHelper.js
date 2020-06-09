@@ -410,6 +410,7 @@ export default class FirebaseHelper {
    * Saves or updates public user data in Firebase (such as image URL, display name...).
    */
   updatePublicProfile() {
+    console.log('updatePublicProfile')
     let user = firebase.auth().currentUser;
     let displayName = user.displayName;
     let imageUrl = user.photoURL;
@@ -436,19 +437,18 @@ export default class FirebaseHelper {
       console.error(e);
     }
 
-    this.getTermoServicoSettings(user.uid).then((snapshot) => {
-      const updateData = {
-        profile_picture: imageUrl || null,
-        full_name: displayName,
-      };
-      updateData._search_index = {
-        full_name: searchFullName,
-        reversed_full_name: searchReversedFullName,
-      };
-      return this.database.ref(`/login/${user.uid}`).update(updateData).then(() => {
-        console.log('Public profile updated.');
-      });
+    const updateData = {
+      profile_picture: imageUrl || null,
+      full_name: displayName,
+    };
+    updateData._search_index = {
+      full_name: searchFullName,
+      reversed_full_name: searchReversedFullName,
+    };
+    this.database.ref(`/login/${user.uid}`).update(updateData).then(() => {
+      console.log('Public profile updated.');
     });
+    return this.getTermoServicoSettings(user.uid)
   }
 
   /**
@@ -462,6 +462,7 @@ export default class FirebaseHelper {
    * Fetches the user's TermoServico settings.
    */
   getTermoServicoSettings(uid) {
+    console.log('getTermoServicoSettings')
     return this.database.ref(`/login/${uid}/termo_servico`).once('value');
   }
 
@@ -1352,7 +1353,7 @@ export default class FirebaseHelper {
   }
 
   getParticipante(chave, chaveInterna) {
-    let ref
+    let ref    
     if (chaveInterna) {
       ref = this.database.ref(`usuarios/${chave}/${chaveInterna}`)
     } else {
@@ -1418,6 +1419,17 @@ export default class FirebaseHelper {
       catch (e) {
           return false
       }
+  }
+
+  async getUsuario(uid) {
+    let ref = this.database.ref(`login/${uid}`)    
+    return ref.once('value').then((data) => {    
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
   }
 
   async getUsuarioChave(uid) {

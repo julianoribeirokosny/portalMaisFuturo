@@ -36,8 +36,8 @@ export default class AuthData {
     this.auth = firebase.auth();
 
     // Pointers to DOM Elements
-    this.uploadButton = $('button#add');
-    this.mobileUploadButton = $('button#add-floating');
+    //this.uploadButton = $('button#add');
+    //this.mobileUploadButton = $('button#add-floating');
 
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
   }
@@ -47,17 +47,15 @@ export default class AuthData {
    * "Sign-In" button if the user isn't signed-in.
    */
   async onAuthStateChanged(user) {
+    console.log('onAuthStateChanged -> AuthData')
     if (user) {
-      this.firebaseHelper.updatePublicProfile();
-      const snapshot = await this.firebaseHelper.getTermoServicoSettings(user.uid);
+      const snapshot = await this.firebaseHelper.updatePublicProfile();
+      console.log('snapshot.val()', snapshot.val())
+      //const snapshot = await this.firebaseHelper.getTermoServicoSettings(user.uid);
       const settings = snapshot.val();
       // display TermoServico modal if there are no TermoServico preferences
-      if (!settings) {
+      if (!settings || !settings.termo_servico) {
         this.termoServicoSettings.showTermoServicoDialog();
-      } else if (settings.content === true) {
-        // enable upload buttons
-        this.uploadButton.prop('disabled', false);
-        this.mobileUploadButton.prop('disabled', false);
       }
     }
   }

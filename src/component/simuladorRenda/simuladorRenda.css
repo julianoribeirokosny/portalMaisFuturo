@@ -48,32 +48,3 @@
     letter-spacing: -1px;
     margin-right: 5px;
 }
-.vs__selected {
-    font-size: 14px;
-    font-family: 'MaisFuturo-Bold';
-    color: #003366;
-    
-}
-.vs__selected-options, .vs__actions {
-    cursor: pointer;
-}
-.vs__dropdown-toggle {
-    border-radius: 0px !important;
-    border-top: none  !important;
-    border-left: none !important;
-    border-right: 1px solid rgba(60, 60, 60, 0.26) !important;
-    border-bottom: 1px solid rgba(60, 60, 60, 0.26) !important;
-    width: 140px;
-    height: 30px;
-    cursor: pointer;
-}
-
-.vs__dropdown-menu {
-    min-width: 140px;
-    max-height: 200px;
-    width: 140px;
-    border-radius: 0 0 0 0px;
-    font-size: 13px;
-    font-family: 'MaisFuturo-Bold';
-}
-

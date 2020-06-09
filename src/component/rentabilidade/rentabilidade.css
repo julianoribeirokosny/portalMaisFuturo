@@ -28,39 +28,9 @@
 .p_margin_30 {
     margin-top: 30px;
 }
-.vs__clear {
-    display: none !important;
-}
-.vs__dropdown-toggle {
-    border-radius: 20px;    
-    height: 40px;
-    width: 180px;
-}
-.vs__dropdown-menu {
-    width: 180px;
-    border-radius: 0 0 20px 20px;
-    font-size: 11px;
-    font-family: 'MaisFuturo-Medium';
-    letter-spacing: -0.21px;
-    font-weight: 100 !important;
-    color: rgb(80, 81, 83);    
-    z-index: 1 !important;
-}
 .canvas_grafico_benchmark {
     width: 580px;
     height: 340px;
-}
-.vs__actions {
-    display: flex !important;
-    padding-bottom: 14px !important;
-    padding-top: 0px !important;
-}
-.vs__selected {
-    font-size: 11px;
-    font-family: 'MaisFuturo-Medium';
-    letter-spacing: -0.21px;
-    font-weight: 100 !important;
-    color: rgb(80, 81, 83);    
 }
 .div_select_right {
     display:flex;

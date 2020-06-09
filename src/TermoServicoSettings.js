@@ -53,6 +53,7 @@ export default class TermoServicoSettings {
    * Sets initial state of termoServico Dialog.
    */
   showTermoServicoDialog() {
+    console.log('showTermoServicoDialog')
     this.initializeTermoServicoSettings();
     if (window.dialogPolyfill && !this.termoServicoDialog.get(0).showModal) {
       window.dialogPolyfill.registerDialog(this.termoServicoDialog.get(0));
@@ -77,6 +78,7 @@ export default class TermoServicoSettings {
    * enables the Submit button if user has consented to data processing.
    */
   async initializeTermoServicoSettings() {
+    console.log('initializeTermoServicoSettings')
     const uid = firebase.auth().currentUser.uid;
     if (this.savedTermoServicoSettings === undefined) {
       const snapshot = await this.firebaseHelper.getTermoServicoSettings(uid);
