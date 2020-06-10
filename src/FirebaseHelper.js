@@ -9,7 +9,9 @@ import {Utils} from './Utils';
 import $ from 'jquery';
 import {Erros} from './Erros';
 
+
 const utils = require('../functions/utilsFunctions')
+const financeiro = require('../functions/Financeiro')
 
 /**
  * Handles all Firebase interactions.
@@ -1197,7 +1199,13 @@ export default class FirebaseHelper {
       let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
       return ref.once('value').then((data) => {    
           if (data.val()) {
-              return data.val()
+              let historico = []              
+              data.val().forEach((item) => {
+                  let valor = financeiro.valor_to_string_formatado(item.valor, 2, false, true)
+                  item.valor = valor
+                  historico.push(item)
+              })              
+              return historico.reverse()
           } else {
               return null
           }
@@ -1291,7 +1299,7 @@ export default class FirebaseHelper {
       let coberturaInvalidez = (usuario.data.valores.coberturaInvalidez === undefined || usuario.data.valores.coberturaInvalidez === 0) ? 0 : usuario.data.valores.coberturaInvalidez
       let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
       let dadosSimuladorSeguro = {
-          titulo: 'Simulador </br>de Seguro',
+          titulo: 'Simulador de</br>Seguro de Renda',
           tipo: 'Seguro',
           minimoMorte: minimoMorte,
           maximoSemDpsMorte: maximoSemSDPSMorte === 0 ? minimoMorte : maximoSemSDPSMorte,
@@ -1520,7 +1528,7 @@ export default class FirebaseHelper {
     let ref = this.database.ref(`settings/rentabilidade/benchmark`)
     return ref.once('value').then((data) => {
       if (data.val()) {
-        console.log('data.val()',data.val())
+        //console.log('data.val()',data.val())
         let ret = data.val()
         ret[0].valores = ret[0].valores.reverse() //Ibovespa
         ret[1].valores = ret[1].valores.reverse() //CDI

@@ -107,6 +107,7 @@ export default {
             this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then( cad => {
                     this.cadastro = cad
+                    console.log('this.cadastro',this.cadastro)
                     this.cep = this.cadastro.endereco.cep
                     this.email = this.cadastro.informacoes_pessoais.email          
                     this.profissao = ''

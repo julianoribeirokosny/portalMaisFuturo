@@ -12,7 +12,7 @@ export default {
                     maintainAspectRatio: false,
                     legend:{
                         labels: {
-                            boxWidth: 15,
+                            boxWidth: 10,
                             boxHeight: 5,
                             fontSize: 9,
                             fontFamily:'MaisFuturo-regular',

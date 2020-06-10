@@ -20,6 +20,9 @@ export default {
             img_check: img_check
         }
     },        
+    created(){
+        console.log('historicoDeContribuição:', this.historico)
+    },
     methods: {
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)

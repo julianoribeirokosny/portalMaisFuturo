@@ -1535,7 +1535,7 @@ _dialog_overlay {
   .div-contribuicao-row {
     float:left;
     width: 75%; 
-    line-height: 30px;
+    line-height: 16px;
   }
 
   .div-contribuicao-nome {
@@ -1627,7 +1627,7 @@ _dialog_overlay {
       width: 280px;
       height: 60%;      
       background-color: transparent; 
-      margin: 60px 0px 0px 0px;
+      margin: 80px 0px 0px 0px;
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%);
@@ -1891,7 +1891,7 @@ _dialog_overlay {
       }
       .div_grafico_reserva_legenda {
           width: 220px; 
-          margin: 40px 0px 0px 0px;
+          margin: 60px 0px 0px 0px;
       }
       .span_reserva_text_2 {
           font-size: 39px; 
@@ -2008,7 +2008,7 @@ _dialog_overlay {
       }
       .div_grafico_reserva_legenda {
           width: 160px; 
-          margin: 20px 0px 0px 0px;
+          margin: 40px 0px 0px 0px;
       }
       .div_grafico_contribuicao_legenda {
           width: 150px; 
@@ -2155,7 +2155,7 @@ _dialog_overlay {
     color: #0C7BC6;
     /*padding-top: 3px;*/
     letter-spacing: -3px;
-    text-align: end;
+    text-align: start;
     border-bottom: none;
     text-decoration: underline #0C7BC6;
     max-width: 300px;
@@ -2180,7 +2180,7 @@ _dialog_overlay {
 p.p_valor_simulado__se {
     font-family: 'MaisFuturo-Bold' !important;
     line-height: 32px !important;
-    font-size: 30px !important;
+    font-size: 26px !important;
     color: #0C7BC6 !important;
     opacity: 1 !important;
     letter-spacing: -2px !important;
@@ -2265,7 +2265,7 @@ p.p_valor_simulado__se {
         font-size: 12px;        
     }
     .p_valor_simulado__se {     
-        font-size: 20px;
+        font-size: 16px;
     }
 }
 /* Info Top Home */

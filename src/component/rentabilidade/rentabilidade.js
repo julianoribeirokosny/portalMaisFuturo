@@ -28,25 +28,9 @@ export default {
             type: Object,
             default: () => { 
                 return {                    
-                    titulo:'Confira a rentabilidade <br>do seu plano',
-                    legenda_perfil: [
-                    //     {
-                    //         nome: 'Renda Fixa',
-                    //         valor:'59,3%',
-                    //         cor:'color: #8ACE7B'
-                    //     },{
-                    //         nome: 'Renda Variável',
-                    //         valor:'38,2%',
-                    //         cor:'color: #033166'
-                    //     },{
-                    //         nome: 'Empréstimo Pessoal',
-                    //         valor:'2,5%',
-                    //         cor:'color:#1779C6'
-                    //     }
-                    ],
-                    indices: [
-         
-                    ]
+                    titulo:'Confira a rentabilidade <br>do seu Plano',
+                    legenda_perfil: [],
+                    indices: []
                 }
             }
         }        
@@ -63,11 +47,13 @@ export default {
             acumulado:'',
             indicesPerfil:'',
             quantidade_meses: 'Últ. 12 meses',
-            lista_quantidade_meses: ['Últ. 12 meses','Últ. 24 meses','Últ. 36 meses','Últ. 48 meses','Últ. 60 meses']
+            lista_quantidade_meses: ['Últ. 12 meses','Últ. 24 meses','Últ. 36 meses','Últ. 48 meses','Últ. 60 meses'],
+            nome_perfil:''
         }
     },
     created() {    
-        this.legenda_perfil = this.lista[0].composicao
+        this.legenda_perfil = this.lista[0].composicao        
+        this.nome_perfil = this.lista[0].nome        
         this.carregaListaIndice()
     },
     mounted() {        

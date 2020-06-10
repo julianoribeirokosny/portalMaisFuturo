@@ -44,10 +44,10 @@
     <template v-if="finalizado">
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo_finalizacao" style="margin-top: 30px;"></div>
-            <div style="margin-top: 40px;">
+            <div style="margin-top: 40px;" v-if="dados.finalizacao_msg">
                 <p>{{ dados.finalizacao_msg}}</p>
             </div>    
-            <div style="margin-top: 40px;">
+            <div style="margin-top: 40px;" v-if="dados.finalizacao_msg_novo_valor">
                 <p>{{ dados.finalizacao_msg_novo_valor }} {{ dados.valor_novo_Tela }} </p>
             </div>         
             <div style="margin-top: 40px;">

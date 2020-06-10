@@ -9,9 +9,9 @@
       <div class="TableHeader" style="color:#033166;font-weight: 600;">Valor (R$)</div>
       <div class="TableHeader" style="color:#033166;font-weight: 600;">Status</div>
    </div>
-   <div class="mdl-card__supporting-text mdl-card-container div-container grid Div_Table-Desgin" v-for="item in historico.slice().reverse()">
-      <div class="TableText" style="color:#033166;font-weight: 600;">{{item.anoMes}}</div>
-      <div class="TableText" style="color:#033166;font-weight: 600;">{{(item.valor).toLocaleString('pt-BR')}}</div>
+   <div class="mdl-card__supporting-text mdl-card-container div-container grid Div_Table-Desgin" v-for="item in historico">
+      <div class="TableText" style="color:#033166;font-weight: 600;">{{ item.anoMes }}</div>
+      <div class="TableText" style="color:#033166;font-weight: 600;">{{ item.valor }}</div>
       <template v-if="item.pago">
          <div class="TableImg"><img v-bind:src="img_check" width="14" height="10" alt=""/></div>
       </template>

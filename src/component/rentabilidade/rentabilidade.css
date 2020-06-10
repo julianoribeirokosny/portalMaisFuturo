@@ -83,6 +83,7 @@
     display:flex;
     justify-content: left;
     padding-left: 30px;
+    line-height: 14px;
 }
 .span_indice_acumulado {
     font-size: 30px; 
