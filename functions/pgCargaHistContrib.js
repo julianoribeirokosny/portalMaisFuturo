@@ -82,11 +82,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     retDadosPG.forEach((rowDados) => {
       console.log('===> chave', rowDados.chave)
       if (usuarios[rowDados.chave] !== undefined && usuarios[rowDados.chave].data !== undefined) {
-        if (rowDados.cad_sitPart === "Ativo" || "Autopatrocinado") {
-          usuarios[rowDados.chave].data.valores.historicoContribuicao = rowDados.jsonhistcontrib
-        } else {
-          usuarios[rowDados.chave].data.valores.historicoContribuicao = 0
-        }
+        usuarios[rowDados.chave].data.valores.historicoContribuicao = rowDados.jsonhistcontrib
       }
     })
     

@@ -197,6 +197,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
           if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
             usuarioContrib.contribParticipante = usuarioContribCadastro.contribParticipante
+            listaItensContribuicaoChave.participante.valor = usuarioContribCadastro.contribParticipante
+            listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
+            listaItensContribuicaoChave.participante.eventos.push({
+              cor: `<<seg_contribuicao.itens.participante.0.cor>>`,
+              nome: 'Contribuição normal participante',
+              valor: financeiro.valor_to_string_formatado(usuarioContribCadastro.contribParticipante, 2, false)
+            })  
+    
             if (usuarioContrib.contribRisco === 0) {
               usuarioContrib.contribRisco = usuarioContribCadastro.contribRisco
             }
@@ -465,6 +473,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
         usuarioContrib.contribParticipante = usuarioContribCadastro.contribParticipante
         listaItensContribuicaoChave.participante.valor = usuarioContribCadastro.contribParticipante
+        listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
+        listaItensContribuicaoChave.participante.eventos.push({
+          cor: `<<seg_contribuicao.itens.participante.0.cor>>`,
+          nome: 'Contribuição normal participante',
+          valor: financeiro.valor_to_string_formatado(usuarioContribCadastro.contribParticipante, 2, false)
+        })  
+
         if (usuarioContrib.contribRisco === 0) {
           usuarioContrib.contribRisco = usuarioContribCadastro.contribRisco
           listaItensContribuicaoChave.seguro.valor = usuarioContribCadastro.contribRisco
