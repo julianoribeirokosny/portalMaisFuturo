@@ -1227,7 +1227,7 @@ export default class FirebaseHelper {
     //   qtdStep = Math.round(qtdStep)
     //   maximoContribuicao = simuladorRendaSettings.step_contribuicao * qtdStep
     // }
-    let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 20)
+    let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 40)
     // let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
     // if (qtdStep % 1 !== 0) {
     //   qtdStep = Math.round(qtdStep)

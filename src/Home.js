@@ -144,9 +144,7 @@ export default class Home {
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
     //console.log('dadosSimuladorRenda',dadosSimuladorRenda)
 
-    let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
-    console.log('listaHistoricoContribuicao',listaHistoricoContribuicao)
-    
+    let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)    
     let infoNomePlano = document.querySelector('#displayInfoNomePlano')
     infoNomePlano.innerHTML = this.data_Home.plano
     let infoCompetencia = document.querySelector('#displayInfoCompetencia')
@@ -154,10 +152,10 @@ export default class Home {
     let infoPerfilInvestimento = document.querySelector('#displayInfoPerfilInvestimento')
     infoPerfilInvestimento.innerHTML = this.data_Home.perfil_investimento
     
+    
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
         mounted () {
-
             //console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
             //console.log('Doughnut', data_Home.saldo_reserva.grafico);
 
@@ -245,9 +243,10 @@ export default class Home {
     if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
       this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
     }
-
-    console.log('this.data_Home',this.data_Home)
+    
     let auth = this.auth.currentUser.uid    
+    console.log('A U T H : ', auth)
+    console.log('D A T A   H O M E : ', this.data_Home)    
     
     if (!this.vueObj) {
         this.vueObj = new Vue({

@@ -3,19 +3,19 @@
         <template v-if="!emprestimoSolicitado">
             <template v-if="simulador">
                 <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
-                <div style="margin-top: 20px;">                    
+                <div style="margin-top: 30px;">                    
                     <div v-if="dados.pre_aprovado" class="div_msg_emprestimo__se margin-auto">
-                        Você tem um limite, pré-aprovado, de R$ {{ dados.pre_aprovado }}.
+                        Limite pré-aprovado: R$ {{ dados.pre_aprovado }}.
                     </div>
                     <div v-if="dados.saldo_devedor" class="div_msg_emprestimo__se margin-auto">
-                        Seu saldo devedor atual é R$ {{ dados.saldo_devedor }}.
+                        Saldo devedor: R$ {{ dados.saldo_devedor }}.
                     </div>
-                    <div v-if="dados.saldo_devedor" class="div_msg_emprestimo__se margin-auto">
-                        O valor mínimo para empréstimo é R$ {{ str_minimo }}.
+                    <!-- <div v-if="dados.saldo_devedor" class="div_msg_emprestimo__se margin-auto">
+                        Valor mínimo: R$ {{ str_minimo }}.
                     </div>
                     <div v-if="str_maximo" class="div_msg_emprestimo__se margin-auto">
-                        O valor máximo para empréstimo é R$ {{ str_maximo }}.
-                    </div>            
+                        Valor máximo: R$ {{ str_maximo }}.
+                    </div>             -->
                     <p class="p_espaco_50__se"></p>
                     <p class="p_label__se">Altere o valor do empréstimo</p>
                     <div style="margin-left: 20px;margin-right: 20px;display: flex;">

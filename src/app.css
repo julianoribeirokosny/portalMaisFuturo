@@ -1384,6 +1384,12 @@ _dialog_overlay {
       border-radius: 20px;
   } 
 
+  .icon-button-minicard {  
+      background-color: #FFFFFF; 
+      color: #003366; 
+      border-radius: 20px;
+  } 
+
   @media screen and (max-width: 375px) {
       .mdl-card-campanha-button-left {
           font-size: 12px;          
@@ -1547,10 +1553,11 @@ _dialog_overlay {
   }
 
   .div-contribiucao-dot {
-    width: 10px;
-    height: 27px;
-    display: inline-block;
-    margin-right: 2px;
+      width: 10px;
+      height: 27px;
+      display: inline-block;
+      margin-right: 2px;
+      margin-bottom: 2px;
   }
 
   .div-contribiucao-valor {
@@ -1627,7 +1634,7 @@ _dialog_overlay {
       width: 280px;
       height: 60%;      
       background-color: transparent; 
-      margin: 80px 0px 0px 0px;
+      margin: 50px 0px 0px 0px;
       top: 50%; 
       left: 50%; 
       transform: translate(-50%, -50%);
@@ -1700,17 +1707,7 @@ _dialog_overlay {
       color: #88CFFF 
   }
 
-  .mdl-card_projeto-vida {
-      border-radius: 25px; 
-      min-height: 70px;
-
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 15px;
-  }
-
-  .mdl-card_coberturas {
+  .mdl-card_acao {
       border-radius: 25px;
       min-height: 70px;
       display: flex;
@@ -1726,14 +1723,15 @@ _dialog_overlay {
       line-height: 15px;
       padding-bottom: 10px !important;
   }
-
-  .span-card-botton-projeto-vida {
+  
+  .span-minicard-text {
       margin-left: 8px;      
       margin-right: 5px;
-      font-size: 14px;
+      font-size: 18px;
       font-family: 'MaisFuturo-Medium';
       color: #FFFFFF;
       opacity: 1;
+      letter-spacing: -1px;
   }
 
   .div_coberturas_label {
@@ -1767,16 +1765,7 @@ _dialog_overlay {
       margin-bottom: 10px !important;
       margin-left: 25px;
       margin-right: 25px;
-  }
-
-  .mdl-card_contribuicao {
-      border-radius: 25px; 
-      min-height: 70px;
-      display: flex;
-      justify-content: space-between;       
-      align-items: center;
-      padding: 0px 15px;
-  }
+  }  
 
   .mdl-card_mais_amigos {      
       margin-top: 30px;
@@ -1891,7 +1880,7 @@ _dialog_overlay {
       }
       .div_grafico_reserva_legenda {
           width: 220px; 
-          margin: 60px 0px 0px 0px;
+          margin: 40px 0px 0px 0px;
       }
       .span_reserva_text_2 {
           font-size: 39px; 
@@ -1984,9 +1973,9 @@ _dialog_overlay {
       }    
       .img-redes-footer {
           height:30px;
-      }
-      .span-card-botton-projeto-vida {
-          font-size: 12px;
+      }      
+      .span-minicard-text {
+        font-size: 16px;
       }
   }
 
@@ -2008,7 +1997,7 @@ _dialog_overlay {
       }
       .div_grafico_reserva_legenda {
           width: 160px; 
-          margin: 40px 0px 0px 0px;
+          margin: 30px 0px 0px 0px;
       }
       .div_grafico_contribuicao_legenda {
           width: 150px; 
@@ -2106,23 +2095,23 @@ _dialog_overlay {
       }    
       .img-redes-footer {
           height:22px;
-      }
-      .span-card-botton-projeto-vida {
-          font-size: 10px;
-      }
+      }      
+      .span-minicard-text {
+          font-size: 14px;
+      }      
 }
 
 /* Simulador Emprestimo */
 .div_msg_emprestimo__se {
     font-family: 'MaisFuturo-Regular';
-    font-size: 16px;    
+    font-size: 14px;    
     font-weight: 100;
-    letter-spacing: -0.56px;
+    letter-spacing: -1x;
     color: #3B3C3E;
     opacity: 1;
     margin-left: 20px;
     margin-top: 8px;
-    display: list-item;
+    /*display: list-item;*/
 }
 .p_espaco_50__se {
     margin-top: 50px;
@@ -2153,7 +2142,7 @@ _dialog_overlay {
     font-family: 'MaisFuturo-Black';
     font-size: 36px;
     color: #0C7BC6;
-    /*padding-top: 3px;*/
+    padding-top: 3px !important;
     letter-spacing: -3px;
     text-align: start;
     border-bottom: none;
