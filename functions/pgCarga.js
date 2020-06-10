@@ -154,9 +154,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     }
     let chave = '', usr
     let listaItensContribuicaoChave = {
-      participante: { eventos: [], nome: '', valor: 0},
-      patronal: { eventos: [], nome: '', valor: 0}, 
-      seguro: { eventos: [], nome: '', valor: 0}
+      participante: { eventos: [], nome: 'Contribuição participante', valor: 0},
+      patronal: { eventos: [], nome: 'Contribuição empresa', valor: 0}, 
+      seguro: { eventos: [], nome: 'Contribuição de risco', valor: 0}
     }
     let listaValoresContribuicaoChave = [], listaItensReservaChave = {}, listaValoresReservaChave = {}, usrReservaTotal = {}, usuarioTotalContr ={}, listaItensCoberturas = {}, listaDatasetsProjetoDeVida = {}, listaItensProjetoDeVidaProjecao = {}, listaItensProjetoDeVidaCoberturas = {},listaMesesProjetoDeVida = {}
     let usuarioContrib = {
@@ -283,10 +283,10 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           
           //Bloco estrutura valores de contribuição
           listaItensContribuicaoChave = {
-            participante: { eventos: [], nome: '', valor: 0},
-            patronal: { eventos: [], nome: '', valor: 0}, 
-            seguro: { eventos: [], nome: '', valor: 0}
-          }
+            participante: { eventos: [], nome: 'Contribuição participante', valor: 0},
+            patronal: { eventos: [], nome: 'Contribuição empresa', valor: 0}, 
+            seguro: { eventos: [], nome: 'Contribuição de risco', valor: 0}
+          }      
           listaValoresContribuicaoChave = []
           usuarioTotalContr =  {
             color: "<<seg_contribuicao.total.color>>",
@@ -441,7 +441,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensContribuicaoChave.seguro.nome = 'Contribuição de risco'
             listaItensContribuicaoChave.seguro.valor += rowDados.contr_valor            
             listaItensContribuicaoChave.seguro.eventos.push({
-              cor: `<<seg_contribuicao.seguro.itens.${listaItensContribuicaoChave.seguro.eventos.length}.cor>>`,
+              cor: `<<seg_contribuicao.itens.seguro.${listaItensContribuicaoChave.seguro.eventos.length}.cor>>`,
               nome: rowDados.contr_eventonome,
               valor: financeiro.valor_to_string_formatado(rowDados.contr_valor, 2, false)
             })  
@@ -528,7 +528,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //ref = admin.database().ref('usuarios')
       //return ref.remove() 
     //}).then(() => {      
-      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios))
+      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios['4-1179']))
       ref = admin.database().ref(`usuarios`)
       //primeiro salva usuário bloqueados pelo processamento
       ref.update(usuariosBloquear)
@@ -560,6 +560,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 })
 
 function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribProjetada) {
+  let valorTotal = Number(usuarioTotalContr.valor.replace('.','').replace(',','.'))
   //carrega estrutura da Home
   usuarios[chave].home = {
     usr_vigente: true,
@@ -582,7 +583,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
         vigente: true
       },
       lista_itens_contribuicao: listaItensContribuicaoChave,
-      lista_valores_contribuicao: listaValoresContribuicaoChave,
+      lista_valores_contribuicao: listaValoresContribuicaoChave.length > 0 ? listaValoresContribuicaoChave : [valorTotal],
       total: usuarioTotalContr,
       vigente: true      
     },

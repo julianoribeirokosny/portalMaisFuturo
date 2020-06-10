@@ -36,9 +36,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let plano = context.params.plano
 
   let select = jsonDataSelects.historicoContrib
-  select = select.replace(/--nome_plano--/g, plano)  
-  console.log('===> select', select)
-
   dataProcessamento = utils.dateFormat(new Date(), true, false)
   logProcessamento[dataProcessamento] = {
     tipo: 'Histórico de Contribuições',
@@ -54,9 +51,23 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
   let usuarios = {} //lista de usuários que serão atualizados na base
   let usrAnterior
-  let ref = admin.database().ref('usuarios')
-  return ref.orderByChild('home/usr_plano').equalTo(plano).once('value')
-  .then((usuariosAnterior) => {
+  let ref = change.after.ref.parent;
+  return ref.once('value').then((snapshotParent)  => {
+    if (!snapshotParent.val()) {
+      console.error('#pgCarga - Processamento cancelado. Estrutura do settings do plano inconsistente.')
+      return false
+    }
+    console.log('===> verificando se há chaves específicas para a carga.')
+    if (snapshotParent.hasChild('lista_chaves_carga')) {
+      console.log('===> dadosPortalLista!')
+      select = select.replace(/--lista_dados_carga--/g, snapshotParent.child('lista_chaves_carga').val())
+    }
+    select = select.replace(/--nome_plano--/g, plano)
+    console.log('===> select', select)        
+
+    ref = admin.database().ref('usuarios')
+    return ref.orderByChild('home/usr_plano').equalTo(plano).once('value')
+  }).then((usuariosAnterior) => {
     //salva dados anteriores de usuários
     usrAnterior = usuariosAnterior.val()
     usuarios = usrAnterior ? usrAnterior : {}
@@ -66,12 +77,16 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       console.error('#pgCargaHistContrib - Processamento cancelado. Verifique mensagens anteriores.')
       return false
     }
-    console.log('===> usuarios', usuarios)
+    //console.log('===> usuarios', usuarios)
     console.log('#pgCargaHistContrib - iniciando forEach', retDadosPG)
     retDadosPG.forEach((rowDados) => {
       console.log('===> chave', rowDados.chave)
       if (usuarios[rowDados.chave] !== undefined && usuarios[rowDados.chave].data !== undefined) {
-        usuarios[rowDados.chave].data.valores.historicoContribuicao = rowDados.jsonhistcontrib
+        if (rowDados.cad_sitPart === "Ativo" || "Autopatrocinado") {
+          usuarios[rowDados.chave].data.valores.historicoContribuicao = rowDados.jsonhistcontrib
+        } else {
+          usuarios[rowDados.chave].data.valores.historicoContribuicao = 0
+        }
       }
     })
     
@@ -86,6 +101,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       console.log('#pgCargaHistContrib - dados atualizados dos usuários foram salvos com sucesso.')
+      return true
     }).catch((e) => {
       console.error('#pgCargaHistContrib - erro ao final do processo. Dados não foram salvos.', e)
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
@@ -94,7 +110,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].erro = e
       let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
-
+      return false
     })
 
   })
@@ -117,7 +133,7 @@ async function buscaDadosPG(select) {
   console.log('#buscaDadosPG - Iniciando - select:', select)
 
   return getConnection().then( async (pgConn) => {
-    console.log('#buscaDadosPG - Banco conectado.')
+    //console.log('#buscaDadosPG - Banco conectado.')
     let result = await pgConn.query(select)
     let ret
     if (!result) {

@@ -229,7 +229,7 @@ export default class Home {
     })
     Vue.config.errorHandler = function(err, vm, info) {
         console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-        Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
+        Erros.registraErro(this.auth.currentUser.uid, 'Vuejs Error', 'showHome', JSON.stringify(err))
         page('/erro')
     }
 
@@ -336,7 +336,7 @@ export default class Home {
           },
           errorCaptured(err, component, details) {
             base_spinner.style.display = 'none'
-              Erros.registraErro(err, 'vuejs', 'showHome', JSON.stringify(err))
+              Erros.registraErro(this.auth.currentUser.uid, 'vuejs', 'showHome', JSON.stringify(err))
               return page('/erro')
           }
         })
