@@ -205,9 +205,8 @@
     border-radius: 0 0 0 0px;
     font-size: 13px;
     font-family: 'MaisFuturo-Bold';
+    z-index: 1;
 }
-
-
 .vs__clear {
     display: none !important;
 }

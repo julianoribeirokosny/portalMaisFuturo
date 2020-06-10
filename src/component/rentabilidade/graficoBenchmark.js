@@ -10,6 +10,7 @@ export default {
                  return {
                     responsive: true, 
                     maintainAspectRatio: false,
+                    tooltips:false,
                     legend:{
                         labels: {
                             boxWidth: 10,

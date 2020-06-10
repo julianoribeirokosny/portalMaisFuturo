@@ -130,7 +130,7 @@
                   <button class="mdl-button mdl-js-button fp-cancelar-dados" style="z-index:10">
                       <span class="mdl-color-text--white">Cancelar</span>
                   </button>
-              </div>
+                </div>
             </div>      
         </div>
     </section>
@@ -140,20 +140,20 @@
       <br><br><br>
       <div class="mdl-card__supporting-text">
         <div style="max-width: 500px; text-align: center; margin: auto;">
-          <div class="fp-caption">Legal! Obrigado!</div> 
-          <div class="fp-caption2">Suas informações foram validadas e você receberá um e-mail de verificação com um link para confirmação do processo.</div>     
-          <div class="fp-caption2"><br>É só seguir com as orientações do e-mail e voltar aqui.</div>     
-          <div class="fp-caption2"><br>Caso não tenha recebido o e-mail de verificação, clique abaixo. Lembre-se de verificar também na caixa de Spam, ok?</div>           
-          <div style="padding-top: 45px;">
-            <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-aviso-validacao"  style="margin: 0 auto;">
-              <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
-            </button>
+          <div class="fp-caption">Legal! Obrigado!</div>
+          <div class="fp-caption2">Suas informações foram validadas e você receberá um e-mail de verificação com um link para confirmação do processo.</div>
+          <div class="fp-caption2"><br>É só seguir com as orientações do e-mail e voltar aqui.</div>
+          <div class="fp-caption2"><br>Caso não tenha recebido o e-mail de verificação, clique abaixo. Lembre-se de verificar também na caixa de Spam, ok?</div>                    
+          <div style="padding-top: 45px; display: flex; align-items: center; justify-content: center;">
+              <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-aviso-validacao"  style="margin: 0 auto;">
+                  <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
+              </button>
           </div>        
           <div style="display: flex; align-items: center; justify-content: center; padding-top: 20px;">
-            <button class="mdl-button mdl-js-button fp-cancelar-dados">
-                <span class="mdl-color-text--white">Cancelar</span>
-            </button>
-        </div>      
+              <button class="mdl-button mdl-js-button fp-cancelar-dados">
+                  <span class="mdl-color-text--white">Cancelar</span>
+              </button>
+          </div>      
       </div>
     </section>
 
@@ -188,7 +188,7 @@
           <div class="fp-caption2">Agora é só seguir com as orientações do e-mail e voltar aqui.</div>     
           <div class="fp-caption2">Caso não tenha recebido o e-mail de verificação, clique abaixo. Lembre-se de verificar também na caixa de Spam, ok?</div>           
           <div style="display: flex; align-items: center; justify-content: center; padding-top: 30px;">
-            <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="btn-reenvia-verificacao"  style="margin: 0 auto;">
+            <button class="mdl-button mdl-js-button mdl-color--light-blue-800" id="btn-reenvia-verificacao" style="margin: auto;">
               <span class="mdl-color-text--white">Reenviar e-mail de verificação</span>
             </button>
           </div>
@@ -263,6 +263,7 @@
         </div>
       </div>
     </section>    
+
     <!-- Splash screen da Instalação - ANDROID -->
     <section id="page-instalacao" class="page-splash" style="display: none;">
       <div style="margin: 5px 0 50px 0;">
@@ -285,27 +286,7 @@
     </section>
 
     <!-- Splash screen da Instalação - IOS -->
-    <section id="page-instalacao-ios" class="page-splash" style="display:none">
-      <!--div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
-        <div class="mdl-card__supporting-text mdl-card-container div-container Meu_Perfil_Class_v2 logoPosition">
-            <img src="../public/images/LogoiOSInstall.png" width="250" height="83" alt=""/>
-        </div>  
-        <div class="mdl-card__supporting-text mdl-card-container div-container">     
-            <div class="InstalliOSTitle">
-                <span>Bem-vindo<br/>
-                    ao portal<br/>
-                    maisfuturo</span>
-            </div>               
-        </div>
-        <div class="mdl-card__supporting-text mdl-card-container div-container gridInstalliOS">                         
-            <div><img src="../public/images/App-IconiOSInstall.png"></div>
-            <div class="iOSTextInstructions">Para ter fácil acesso a esse app,
-                adicione ele à sua tela inicial. <br/>
-                Toque no ícone <span class="iOSFontIcons">􀈂</span> e depois
-                “Adicionar à Tela de Início”.</div>
-            </div>
-        </div>
-      </div-->  
+    <section id="page-instalacao-ios" class="page-splash" style="display:none">      
       <div style="margin: 5px 0 50px 0;">
         <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
       </div>
@@ -540,24 +521,21 @@
                         </div>
                       </div>
 
-
+                      <!--mini card ação-->
                       <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
                           <template v-if="home.projeto_vida.acao.vigente">
-                              <div class="mdl-card__supporting-text  margin_auto mdl-card-container">                                                
-                                  <div class="mdl-shadow--1dp mdl-card_projeto-vida" v-bind:style="home.projeto_vida.acao.card_background"
-                                       style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                                      
-                                      <div class="mdl-card__supporting-text margin_auto div-card-botton-projeto-vida">
-                                          <span class="span-card-botton-projeto-vida">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
-                                          <i class="material-icons icon-button">arrow_forward</i>
-                                      </div>
-                                  </div>  
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.projeto_vida.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
+                                      <span class="span-minicard-text">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
+                                      <i class="material-icons icon-button-minicard">arrow_forward</i>                                      
+                                  </div>
                               </div>
                           </template>   
                           <template v-else>
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">
-                                  <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
-                                      <span class="span-card-botton-projeto-vida">Sua nova contribuição estará vigente a parir do proximo mês, veja aqui</span>&nbsp;
-                                      <i class="material-icons icon-button">arrow_forward</i>
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">                                  
+                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
+                                      <span class="span-minicard-text">Sua nova contribuição estará vigente a parir do proximo mês, veja aqui</span>&nbsp;
+                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
                                   </div>
                               </div>
                           </template>                      
@@ -584,11 +562,12 @@
                               </dl> 
                           </div>
                       </div>
+                      <!--mini card ação-->                      
                       <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                          <div class="mdl-card__supporting-text margin_auto mdl-card-container">
-                              <div class="mdl-shadow--1dp mdl-card_coberturas" v-bind:style="home.coberturas.acao.card_background" @click.prevent="simuladorSeguro('simulador-seguro')" style="cursor: pointer;">
-                                  <span class="span-card-botton-projeto-vida">{{ home.coberturas.acao.descricao }}</span>&nbsp;
-                                  <i class="material-icons icon-button">arrow_forward</i>
+                          <div class="mdl-card__supporting-text margin_auto mdl-card-container">                              
+                              <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.coberturas.acao.card_background" @click.prevent="simuladorSeguro('simulador-seguro')" style="cursor: pointer;">
+                                  <span class="span-minicard-text">{{ home.coberturas.acao.descricao }}</span>&nbsp;
+                                  <i class="material-icons icon-button-minicard">arrow_forward</i>
                               </div>
                           </div>
                       </div>
@@ -628,15 +607,24 @@
                                       <span class="span-contribuicao-titulo">Participante</span>
                                   </div>                             
                                   <div id="div-contribuicao-row-participante" class="div-contribuicao-row">
-                                    <template  v-for="participante in home.contribuicao.itens.participante.eventos">
+                                    <template v-if="home.contribuicao.itens.participante.eventos.length == 1"
+                                              v-for="participante in home.contribuicao.itens.participante.eventos" >
                                       <div class="div-contribuicao-nome">
-                                        <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>                                    
-                                        {{ participante.nome }}
+                                        <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                        {{participante.nome }}
                                       </div>
-                                      <div class="div-contribiucao-valor">
-                                        {{ participante.valor }}
-                                      </div>    
-                                    </template>                          
+                                      <div class="div-contribiucao-valor">                                        
+                                      </div>
+                                    </template>
+                                    <template v-if="home.contribuicao.itens.participante.eventos.length > 1"v-for="participante in home.contribuicao.itens.participante.eventos">
+                                        <div class="div-contribuicao-nome">
+                                          <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                          {{participante.nome }}
+                                        </div>
+                                        <div class="div-contribiucao-valor">
+                                          {{participante.valor }}
+                                        </div>
+                                    </template>
                                   </div>
                                   <div id="div-contribuicao-row-participante-total" class="div-contribuicao-total">
                                     <dl class="dl-contribuicao-total">                                  
@@ -656,14 +644,23 @@
                                   <span class="span-contribuicao-titulo">Empresa</span>
                                 </div>                             
                                 <div id="div-contribuicao-row-patronal" class="div-contribuicao-row">
-                                  <template v-for="patronal in home.contribuicao.itens.patronal.eventos">
-                                    <div class="div-contribuicao-nome">
-                                      <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
-                                      {{ patronal.nome }}
-                                    </div>
-                                    <div class="div-contribiucao-valor">
-                                      {{ patronal.valor }}
-                                    </div>    
+                                  <template v-if="home.contribuicao.itens.patronal.eventos.length == 1"
+                                            v-for="patronal in home.contribuicao.itens.patronal.eventos">
+                                      <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
+                                        {{ patronal.nome }}
+                                      </div>
+                                      <div class="div-contribiucao-valor">                                        
+                                      </div>    
+                                  </template>                          
+                                  <template v-if="home.contribuicao.itens.patronal.eventos.length > 1" v-for="patronal in home.contribuicao.itens.patronal.eventos">
+                                      <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
+                                        {{ patronal.nome }}
+                                      </div>
+                                      <div class="div-contribiucao-valor">
+                                        {{ patronal.valor }}                                        
+                                      </div>    
                                   </template>                          
                                 </div>
                                 <div id="div-contribuicao-row-patronal-total" class="div-contribuicao-total">
@@ -685,15 +682,23 @@
                                 <span class="span-contribuicao-titulo">Prêmios riscos</span>
                             </div>                             
                             <div id="div-contribuicao-row-seguro" class="div-contribuicao-row">
-                              <template  v-for="seguro in home.contribuicao.itens.seguro.eventos">
-                                <div class="div-contribuicao-nome">
-                                  <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>                                    
-                                  {{seguro.nome }}
-                                </div>
-                                <div class="div-contribiucao-valor">
-                                  {{seguro.valor }}
-                                </div>    
-                              </template>                          
+                              <template v-if="home.contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in home.contribuicao.itens.seguro.eventos">
+                                  <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                    {{seguro.nome }}
+                                  </div>
+                                  <div class="div-contribiucao-valor">                                    
+                                  </div>    
+                              </template>
+                              <template v-if="home.contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in home.contribuicao.itens.seguro.eventos">
+                                  <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                    {{seguro.nome }}
+                                  </div>
+                                  <div class="div-contribiucao-valor">
+                                    {{seguro.valor }}                                    
+                                  </div>    
+                              </template>
                             </div>
                             <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
                               <dl class="dl-contribuicao-total">                                  
@@ -704,22 +709,21 @@
                           </div>
                         </div>
                       </template>
-
+                      <!--mini card ação-->                      
                       <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                          <template v-if="home.contribuicao.acao.vigente">
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">
-                                  <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background"
-                                  style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
-                                      <span class="span-card-botton-projeto-vida">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
-                                      <i class="material-icons icon-button">arrow_forward</i>
+                          <template v-if="home.contribuicao.acao.vigente">                              
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
+                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
+                                      <span class="span-minicard-text">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
+                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
                                   </div>
                               </div>
                           </template>  
-                          <template v-else>
+                          <template v-else>                              
                               <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;margin-top: 20px;" @click.prevent="contratacaoAberta">
-                                  <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
-                                      <span class="span-card-botton-projeto-vida">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
-                                      <i class="material-icons icon-button">arrow_forward</i>
+                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
+                                      <span class="span-minicard-text">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
+                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
                                   </div>
                               </div>
                           </template>
@@ -847,37 +851,38 @@
 
               <!--Serviços-->
               <section id="page-servicos" class="mdl-grid fp-content" style="display: none;">
-                <a></a>            
-                <servicos :key="componentKey"></servicos>            
+                  <a></a>
+                  <servicos :key="componentKey"></servicos>            
               </section>
               <!--Histórico de Contribuição-->
               <section id="page-historico-contribuicao" class="mdl-grid fp-content" style="display: none;">
-                <a></a>  
-                <!--Minha Contribuição-->
-                <template v-if="home.contribuicao && home.contribuicao.vigente">
-                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-                          <div class="mdl-card__supporting-text div_titulo_card">
-                              Minha <br>Contribuição
+                  <a></a>  
+                  <!--Minha Contribuição-->
+                  <template v-if="home.contribuicao && home.contribuicao.vigente">
+                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                          <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                              <div class="mdl-card__supporting-text div_titulo_card">
+                                  Minha <br>Contribuição
+                              </div>
                           </div>
                       </div>
-                  </div>
-                  <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
-                      <contribuicao class="canvas_grafico_semi_circle"></contribuicao>
-                      <div class="div_grafico_contribuicao_legenda">                    
-                          <div class="div_contribuicao_text_1">
-                              <template>
-                                <dl class="dl_contribuicao_legenda">
-                                    <dt class="dt_contribuicao_legenda">{{ home.contribuicao.total.nome }}</dt>
-                                    <dd class="dd_contribuicao_text">
-                                        <span class="span_contribuicao_legenda_1_total" v-bind:style="home.contribuicao.total.color">R$</span>
-                                        <span class="span_contribuicao_legenda_2_total" v-bind:style="home.contribuicao.total.color">{{ home.contribuicao.total.valor }}</span> 
-                                    </dd>
-                                </dl>
-                              </template>
+                      <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+                          <contribuicao class="canvas_grafico_semi_circle"></contribuicao>
+                          <div class="div_grafico_contribuicao_legenda">                    
+                              <div class="div_contribuicao_text_1">
+                                  <template>
+                                    <dl class="dl_contribuicao_legenda">
+                                        <dt class="dt_contribuicao_legenda">{{ home.contribuicao.total.nome }}</dt>
+                                        <dd class="dd_contribuicao_text">
+                                            <span class="span_contribuicao_legenda_1_total" v-bind:style="home.contribuicao.total.color">R$</span>
+                                            <span class="span_contribuicao_legenda_2_total" v-bind:style="home.contribuicao.total.color">{{ home.contribuicao.total.valor }}</span> 
+                                        </dd>
+                                    </dl>
+                                  </template>
+                              </div>
                           </div>
                       </div>
-                  </div>
+
                       <!--Participante--> 
                       <template v-if="home.contribuicao.itens.participante.valor !== 0">
                         <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto"
@@ -887,15 +892,23 @@
                                       <span class="span-contribuicao-titulo">Participante</span>
                                   </div>                             
                                   <div id="div-contribuicao-row-participanteh" class="div-contribuicao-row">
-                                    <template  v-for="participante in home.contribuicao.itens.participante.eventos">
-                                      <div class="div-contribuicao-nome">
-                                        <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>                                    
-                                        {{participante.nome }}
-                                      </div>
-                                      <div class="div-contribiucao-valor">
-                                        {{participante.valor }}
-                                      </div>    
-                                    </template>                          
+                                    <template v-if="home.contribuicao.itens.participante.eventos.length == 1" v-for="participante in home.contribuicao.itens.participante.eventos" >
+                                        <div class="div-contribuicao-nome">
+                                          <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                          {{participante.nome }}
+                                        </div>
+                                        <div class="div-contribiucao-valor">                                          
+                                        </div>
+                                    </template>
+                                    <template v-if="home.contribuicao.itens.participante.eventos.length > 1" v-for="participante in home.contribuicao.itens.participante.eventos" >
+                                        <div class="div-contribuicao-nome">
+                                          <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                          {{participante.nome }}
+                                        </div>
+                                        <div class="div-contribiucao-valor">
+                                          {{participante.valor }}                                          
+                                        </div>
+                                    </template>
                                   </div>
                                   <div id="div-contribuicao-row-participante-totalh" class="div-contribuicao-total">
                                     <dl class="dl-contribuicao-total">                                  
@@ -915,15 +928,23 @@
                                   <span class="span-contribuicao-titulo">Empresa</span>
                                 </div>                             
                                 <div id="div-contribuicao-row-patronalh" class="div-contribuicao-row">
-                                  <template v-for="patronal in home.contribuicao.itens.patronal.eventos">
-                                    <div class="div-contribuicao-nome">
-                                      <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
-                                      {{patronal.nome }}
-                                    </div>
-                                    <div class="div-contribiucao-valor">
-                                      {{patronal.valor }}
-                                    </div>    
-                                  </template>                          
+                                  <template v-if="home.contribuicao.itens.patronal.eventos.length == 1" v-for="patronal in home.contribuicao.itens.patronal.eventos">
+                                      <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>
+                                        {{patronal.nome }}
+                                      </div>
+                                      <div class="div-contribiucao-valor">                                        
+                                      </div>    
+                                  </template>
+                                  <template v-if="home.contribuicao.itens.patronal.eventos.length > 1" v-for="patronal in home.contribuicao.itens.patronal.eventos">
+                                      <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>
+                                        {{patronal.nome }}
+                                      </div>
+                                      <div class="div-contribiucao-valor">     
+                                        {{patronal.valor }}                                   
+                                      </div>    
+                                  </template>
                                 </div>
                                 <div id="div-contribuicao-row-patronal-totalh" class="div-contribuicao-total">
                                   <dl class="dl-contribuicao-total">                                  
@@ -944,15 +965,23 @@
                                 <span class="span-contribuicao-titulo">Prêmios riscos</span>
                             </div>                             
                             <div id="div-contribuicao-row-seguroh" class="div-contribuicao-row">
-                              <template  v-for="seguro in home.contribuicao.itens.seguro.eventos">
-                                <div class="div-contribuicao-nome">
-                                  <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>                                    
-                                  {{seguro.nome }}
-                                </div>
-                                <div class="div-contribiucao-valor">
-                                  {{seguro.valor }}
-                                </div>    
-                              </template>                          
+                              <template v-if="home.contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in home.contribuicao.itens.seguro.eventos">
+                                  <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                    {{ seguro.nome }}
+                                  </div>
+                                  <div class="div-contribiucao-valor">                                    
+                                  </div>
+                              </template>
+                              <template v-if="home.contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in home.contribuicao.itens.seguro.eventos">
+                                  <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                    {{ seguro.nome }}
+                                  </div>
+                                  <div class="div-contribiucao-valor">                                    
+                                    {{ seguro.valor }}
+                                  </div>
+                              </template>
                             </div>
                             <div id="div-contribuicao-row-seguro-totalh" class="div-contribuicao-total">
                               <dl class="dl-contribuicao-total">                                  
@@ -964,27 +993,27 @@
                         </div>
                       </template>
 
-                  <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                      <template v-if="home.contribuicao.acao.vigente">
-                          <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">
-                              <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background"
-                              style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','servicos')">
-                                  <span class="span-card-botton-projeto-vida">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
-                                  <i class="material-icons icon-button">arrow_forward</i>
+                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                          <template v-if="home.contribuicao.acao.vigente">
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">
+                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background"
+                                  style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','servicos')">
+                                      <span class="span-minicard-text">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
+                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
+                                  </div>
                               </div>
-                          </div>
-                      </template>  
-                      <template v-else>
-                          <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer; margin-top: 20px;" @click.prevent="contratacaoAberta">
-                              <div class="mdl-shadow--1dp mdl-card_contribuicao" v-bind:style="home.contribuicao.acao.card_background">
-                                  <span class="span-card-botton-projeto-vida">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
-                                  <i class="material-icons icon-button">arrow_forward</i>
+                          </template>  
+                          <template v-else>
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer; margin-top: 20px;" @click.prevent="contratacaoAberta">
+                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
+                                      <span class="span-minicard-text">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
+                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
+                                  </div>
                               </div>
-                          </div>
-                      </template>
-                  </div>
-                </template>
-                <historico-contribuicao v-bind:historico="historicoContribuicao" :key="componentKey"></historico-contribuicao>            
+                          </template>
+                      </div>
+                  </template>
+                  <historico-contribuicao v-bind:historico="historicoContribuicao" :key="componentKey"></historico-contribuicao>            
               </section>
 
               <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
@@ -1026,7 +1055,7 @@
               <section id="page-post" class="mdl-grid fp-content" style="display: none;">
                 <div class="fp-image-container mdl-cell mdl-cell--12-col mdl-grid">Post</div>
               </section>
-
+                
               <!-- About & Contact page -->
               <section id="page-about" class="mdl-grid fp-content" style="display: none;">
                 <div class="fp-help mdl-card mdl-shadow--2dp mdl-cell
