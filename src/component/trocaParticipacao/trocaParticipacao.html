@@ -1,37 +1,51 @@
-<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
-    <template>     
-        <!-- Meu Perfil Page -->
-        <!--div class="mdl-card__supporting-text mdl-card-container div-container Meu_Perfil">
-            Meu Perfil
-        </div-->  
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto; padding-top: 20px;">
 
-        <!--Cards Participações-->
-        <template v-if="listaChaves" v-for="chave in listaChaves">          
-            <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--2dp card_tp" @click="showModal(chave)">
-                <div class="card_left_tp">
-                    <img class="img_card_tp" :src="foto"/>
-                </div>   
-                <div class="card_right_tp">
-                    <p class="name_tp">{{chave.nome}}</p>
-                    <p class="plano_tp">{{chave.plano}}</p>
-                </div>                     
+    <!--Cards Participações-->
+    <template v-if="listaChaves" v-for="chave in listaChaves">          
+
+        <div style="width: 100%; display: flex; justify-content: center;">
+          <div class="card-tipo-plano" @click="showModal(chave)">
+              <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + foto + ')' }"></div>
+              <div class="body">
+                  <div class="content">                              
+                    <div class="nome">{{ chave.nome }}</div>                        
+                    <div class="info">
+                        <table width="100%">
+                          <tr>
+                            <td>Plano:</td>
+                            <td>{{ chave.plano }}</td>
+                          </tr>
+                          <tr>
+                            <td>Competência:</td>
+                            <td>{{ competencia }}</td>
+                          </tr>
+                          <tr>
+                            <td>Perfil:</td>
+                            <td>{{ perfil }}</td>
+                          </tr>
+                        </table>
+                    </div>
+                  </div>
+              </div>
             </div>
+        </div>
+
         </template>
     </template>
     <!-- The Modal -->
-   <div id="Modal_tp" ref="Modal_tp" class="modal" @click="closeModal">
-    <!-- Modal content -->
-    <div class="modal-content" v-if="novaChave">
-        <span class="close" @click="closeModal">&times;</span>
-        <p class="name_tp" style="margin:10px">Alterar visualização para:</p>
-        <div class="mdl-card__supporting-text" style="margin:20px">
-            <p class="name_tp">{{novaChave.nome}}</p>
-            <p class="plano_tp">{{novaChave.plano}}</p>
+    <div id="Modal_tp" ref="Modal_tp" class="modal" @click="closeModal">
+        <!-- Modal content -->
+        <div class="modal-content" v-if="novaChave">
+            <span class="close" @click="closeModal">&times;</span>
+            <p class="name_tp" style="margin:10px">Alterar visualização para:</p>
+            <div class="mdl-card__supporting-text" style="margin:20px">
+                <p class="name_tp">{{novaChave.nome}}</p>
+                <p class="plano_tp">{{novaChave.plano}}</p>
+            </div>
+            <div class="mdl-card__supporting-text" style="margin:20px">
+                <div class="div_button_confirmar" style="float: left; width: 48%;" @click="selecionarNovaChave(novaChave.chave)">confirmar</div>
+                <div class="div_button_cancelar" style="float: right; width: 48%;">cancelar</div>
+            </div>
         </div>
-        <div class="mdl-card__supporting-text" style="margin:20px">
-            <div class="div_button_confirmar" style="float: left; width: 48%;" @click="selecionarNovaChave(novaChave.chave)">confirmar</div>
-            <div class="div_button_cancelar" style="float: right; width: 48%;">cancelar</div>
-        </div>        
-    </div>   
- </div>   
+    </div>
 </div>
