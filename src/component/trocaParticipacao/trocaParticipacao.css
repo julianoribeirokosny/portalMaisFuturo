@@ -1,45 +1,72 @@
-.Meu_Perfil {    
-    overflow: visible;   
-    white-space: nowrap;
-    line-height: 29px;
-    margin-top: 15px;
-    margin-bottom: 30px;
-    text-align: center;
-    font-family: Objectivity;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 25px;
-    color: rgba(59,60,62,1);
-}
-.card_tp {
-    box-shadow: 1px 2px 4px 2px rgba(105, 160, 202, 0.14), 1px 2px 4px 2px rgba(93, 147, 189, 0.14), 1px 2px 4px 2px rgba(95, 154, 199, 0.14) !important;
-    border-radius: 25px; 
-    height: 100px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0px !important;
+.card-tipo-plano {
+    position: relative;
+    width: 400px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'MaisFuturo-regular';
     cursor: pointer;
 }
-.card_tp:hover {
-    box-shadow: 1px 4px 8px 4px rgba(105, 160, 202, 0.14), 1px 4px 8px 4px rgba(93, 147, 189, 0.14), 1px 4px 8px 4px rgba(95, 154, 199, 0.14) !important;
+
+.card-tipo-plano .avatar {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-position: center;
+    background-size: cover;
+    top: 50%;
+    margin-top: -44px;
+    border-width: 4px;
+    border-style: solid;
+    border-color: #fff;
 }
-.card_left_tp {    
-    float: left; 
-    width: 100px;
-    height: 100px;    
+
+.card-tipo-plano .body {
+    max-width: 400px;
+    padding-left: 44px;
 }
-.card_right_tp {
-    float: right;   
-    padding-left: 5px; 
+
+.card-tipo-plano .body .content {
+    background: #1e70dc;
+    background: -moz-linear-gradient(45deg, #1e70dc 0%, #0c2648 100%);
+    background: -webkit-linear-gradient(45deg, #1e70dc 0%, #0c2648 100%);
+    background: linear-gradient(45deg, #1e70dc 0%, #0c2648 100%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 15px 5px 15px 50px;
 }
-.img_card_tp {
-    width: 70px;
-    height: 70px;
-    border-radius: 35px;
-    margin: 15px;
+
+.card-tipo-plano .body .content .nome {
+    font-size: 14px;
 }
+
+.card-tipo-plano .body .content .info>table {
+    border-spacing: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.card-tipo-plano .body .content .info>table tr td:nth-of-type(1) {
+    text-align: right;
+    font-size: 14px;
+    border-bottom: 1px solid #1e70dc;
+    padding: 5px;
+}
+
+.card-tipo-plano .body .content .info>table tr td:nth-of-type(2) {
+    font-size: 14px;
+    border-bottom: 1px solid #1e70dc;
+}
+
+.card-tipo-plano .body .content .info>table tr:nth-last-of-type(1) td:nth-of-type(1) {
+    border-bottom: none;
+}
+
+.card-tipo-plano .body .content .info>table tr:nth-last-of-type(1) td:nth-of-type(2) {
+    border-bottom: none;
+}
+
 p.name_tp {
     line-height: 18px;
     text-align: left;
@@ -50,17 +77,19 @@ p.name_tp {
     opacity: 1;
     margin-bottom: 2px !important;
 }
+
 p.plano_tp {
     line-height: 14px;
     text-align: left;
-    letter-spacing: 0px;    
+    letter-spacing: 0px;
     font-size: 12px;
-    font-family: 'MaisFuturo-Regular';    
+    font-family: 'MaisFuturo-Regular';
     color: #131721;
     opacity: 1;
     margin-bottom: 0px !important;
 }
-.div_button_confirmar {    
+
+.div_button_confirmar {
     background-color: #1a6bb6;
     height: 40px;
     border-radius: 20px;
@@ -69,13 +98,15 @@ p.plano_tp {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color:white;
+    color: white;
 }
-.div_button_confirmar:hover {    
+
+.div_button_confirmar:hover {
     background-color: #165fa3;
 }
+
 .div_button_cancelar {
-    background-color: rgb(170, 169, 169);    
+    background-color: rgb(170, 169, 169);
     height: 40px;
     border-radius: 20px;
     margin-top: 5px;
@@ -83,8 +114,9 @@ p.plano_tp {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color:white;
+    color: white;
 }
-.div_button_cancelar:hover {   
-    background-color: rgb(161, 160, 160);     
+
+.div_button_cancelar:hover {
+    background-color: rgb(161, 160, 160);
 }

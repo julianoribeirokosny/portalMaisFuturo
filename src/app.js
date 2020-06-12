@@ -6,7 +6,7 @@ import firebaseConfig from './firebase-config.json';
 import Auth from './Auth';
 import Router from './Router';
 import 'material-design-lite';
-import {Utils} from './Utils';
+import { Utils } from './Utils';
 
 // Styling
 import 'material-design-icons/iconfont/material-icons.css';
@@ -19,8 +19,7 @@ import './app.css';
 
 //Primeiro valida a versão! Se diferente, limpa o cache para atualizar o App
 if (!localStorage.versao || localStorage.versao !== '') {
-
-  if (window.location.href.indexOf('localhost') === 0) {
+  if (window.location.href.indexOf('localhost') < 0) {
     let request = require('request')
     let options = {
       method: 'get',
@@ -31,44 +30,20 @@ if (!localStorage.versao || localStorage.versao !== '') {
         console.log('==> Erro na busca da ultima versão. App não foi atualizado')
       } else {
         localStorage.versao = body
-        limpaCache()
+        limpaCache().then((ret) => {
+          montaApp()
+        })
       }
-      montaApp()
     });  
   } else {
-    limpaCache()
-  }
+    console.log('==> localhost!')
+    limpaCache().then((ret) => {
+      montaApp()
+    })
+}
 
 } else {
   montaApp()
-}
-
-const checkIfIsIos = () => {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  console.log('userAgent: ', userAgent)
-  return /iphone|ipad|ipod/.test( userAgent );
-  //return true
-}
-
-const checkIfIsMac = () => {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  console.log('userAgent: ', userAgent)
-  return /macintosh/.test( userAgent );
-  //return true
-}
-
-const checkIfIsSamsungBrowser = () => {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  return /samsungbrowser/.test( userAgent );  
-}
-
-const checkIfIsPwaInstalled = (isIos) => { 
-  if (isIos==="false") {
-    var displayModes = ["fullscreen", "standalone", "minimal-ui"]; 
-    return displayModes.some((displayMode) => window.matchMedia('(display-mode: ' + displayMode + ')').matches) || window.navigator.standalone === true;   
-  } else {
-    return ('standalone' in window.navigator) && (window.navigator.standalone);
-  }
 }
 
 function detectStandalone() {
@@ -106,33 +81,31 @@ function mostraTelaInstalacaoIOS() {
 }
 
 function limpaCache() {
+  console.log('==> Limpando cache.')
   localStorage.isPwaInstalled = ""
   localStorage.standaloneDetected = ""
-  let limpouCache = false
-  let excluiuSw = false
-  //limpa o cache
-  self.caches.keys().then(keys => { 
-    keys.forEach(key => {
-      self.caches.delete(key)  
-      limpouCache = true
-      console.log(key)
-    }) 
-    if (limpouCache) {
-      window.location.reload();
-    }
+  let p1 = new Promise((resolve) => {
+    //limpa o cache
+    self.caches.keys().then(keys => { 
+      keys.forEach(key => {
+        self.caches.delete(key)  
+        console.log(key)
+      }) 
+      resolve(true)
+    })
   })
 
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for(let registration of registrations) {  
-      console.log(registration)
-      excluiuSw = true
-      registration.unregister();
-    }
-    if (excluiuSw) {
-      window.location.reload(); //sim... 2 windows.reload na mesma lógica... 
-    }
-  });  
+  let p2 = new Promise((resolve) => {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for(let registration of registrations) {  
+        console.log(registration)
+        registration.unregister();
+      }
+      resolve(true)
+    });  
+  })
  
+  return Promise.all([p1, p2])
   //self.caches.delete('html-cache')
 }
 
@@ -143,9 +116,32 @@ function montaApp() {
   const bt_install_text = document.querySelector('#bt-install-text');
   const msgInstalacao = document.querySelector('#msg-instalacao');
   const msgInicial = document.querySelector('#msg-inicial');
-  const reset = window.location.href.indexOf('reset') > 0
   const pageInstall = window.location.href.indexOf('instalar') > 0
-  
+  const checkIfIsIos = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    console.log('userAgent: ', userAgent)
+    return /iphone|ipad|ipod/.test(userAgent);
+    //return true
+  }
+  const checkIfIsMac = () => {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      console.log('userAgent: ', userAgent)
+      return /macintosh/.test(userAgent);
+      //return true
+  }
+  const checkIfIsSamsungBrowser = () => {
+      const userAgent = window.navigator.userAgent.toLowerCase();
+      return /samsungbrowser/.test(userAgent);
+  }
+  const checkIfIsPwaInstalled = (isIos) => {
+      if (isIos === "false") {
+          var displayModes = ["fullscreen", "standalone", "minimal-ui"];
+          return displayModes.some((displayMode) => window.matchMedia('(display-mode: ' + displayMode + ')').matches) || window.navigator.standalone === true;
+      } else {
+          return ('standalone' in window.navigator) && (window.navigator.standalone);
+      }
+  }
+ 
   localStorage.isIos = checkIfIsIos()
   localStorage.isMac = checkIfIsMac()
   localStorage.isSamsungBrowser = checkIfIsSamsungBrowser()
@@ -160,13 +156,8 @@ function montaApp() {
   console.log('Samsung Browser?', localStorage.isSamsungBrowser)
   console.log('PWA instalado?', localStorage.isPwaInstalled)
   console.log('pageInstall?', pageInstall)
-  console.log('reset?', reset)
   console.log('standaloneDetected?', localStorage.standaloneDetected)
-  
-  if (reset) { //força limpar o cache para atualizar app (quando a chamada via Browser tiver "/reset")
-    limpaCache()
-  }
-  
+
   //------------------------------------------------------------------------------------------------------
   // BLOCO: Instalação do APP - Android
   localStorage.beforeInstallPromptOK = ""
@@ -247,8 +238,8 @@ function montaApp() {
     
     // Load the app.
     $(document).ready(() => {
-      console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall, reset)
-      if (localStorage.isMac ==="true" || ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall && !reset)) {
+      console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall)
+      if (localStorage.isMac ==="true" || ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall)) {
         const auth = new Auth();
         // Starts the router.
         window.fpRouter = new Router(auth);  

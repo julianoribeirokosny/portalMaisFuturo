@@ -1,21 +1,32 @@
-<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing"
-    style="margin: auto;">
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
     <template v-if="cadastro">
         <!-- Meu Perfil Page -->
         <!--div class="mdl-card__supporting-text mdl-card-container div-container Meu_Perfil_Class_v2">
             Meu Cadastro
         </div-->
 
-        <!--Resumo do Perfil (Box)-->
-        <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--8dp card_v2">
-            <div class="card_left_v2">
-                <img class="img_card_v2" :src="foto" />
-            </div>
-            <div class="card_right_v2">
-                <span class="UserFullName_Class_v2">{{ cadastro.informacoes_pessoais.nome}}</span></br>
-                <span class="NomedoPlano_Class_v2">Plano: {{ cadastro.dados_plano.plano }}</span>
-            </div>
-        </div>
+        <!--Resumo do Perfil (Box)-->        
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <div class="card-tipo-plano" @click="showModal(chave)">
+                <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + foto + ')' }"></div>
+                <div class="body">
+                    <div class="content">                              
+                      <div class="nome">{{ cadastro.informacoes_pessoais.nome }}</div>                        
+                      <div class="info">
+                          <table width="100%">
+                            <tr>
+                              <td>Plano:</td>
+                              <td>{{ cadastro.dados_plano.plano }}</td>
+                            </tr>                            
+                          </table>
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+
+
+
         
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
@@ -74,8 +85,7 @@
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2" :class="classValid">
                 <span class="Span_Label_v2">E-mail Alternativo</span><br>
-                <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email"
-                    >
+                <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email">
             </div>
         </div>
 
@@ -102,7 +112,10 @@
         <!-- Profissão -->
         <div class="mdl-card-container div_vSelect_cadastro div-container" style="margin-top: 5px;">
             <span class="Span_Label_vSelect_v2">Profissão</span><br>
-            <v-select v-if="profissoes" v-model="profissao" :options="profissoes"></v-select>            
+            <v-select ref="profissao" v-if="profissoes" v-model="profissao" :options="profissoes"></v-select>
+            <!-- <div id="divErrorProfissao" style="display: none;">
+                <span>Necessário selecionar uma profissão!</span>
+            </div> -->
         </div>
 
         <!--Endereço-->
