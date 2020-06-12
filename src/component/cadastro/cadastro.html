@@ -1,21 +1,32 @@
-<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing"
-    style="margin: auto;">
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
     <template v-if="cadastro">
         <!-- Meu Perfil Page -->
         <!--div class="mdl-card__supporting-text mdl-card-container div-container Meu_Perfil_Class_v2">
             Meu Cadastro
         </div-->
 
-        <!--Resumo do Perfil (Box)-->
-        <div class="mdl-card__supporting-text mdl-card-container div-container mdl-shadow--8dp card_v2">
-            <div class="card_left_v2">
-                <img class="img_card_v2" :src="foto" />
-            </div>
-            <div class="card_right_v2">
-                <span class="UserFullName_Class_v2">{{ cadastro.informacoes_pessoais.nome}}</span></br>
-                <span class="NomedoPlano_Class_v2">Plano: {{ cadastro.dados_plano.plano }}</span>
-            </div>
-        </div>
+        <!--Resumo do Perfil (Box)-->        
+        <div style="width: 100%; display: flex; justify-content: center;">
+            <div class="card-tipo-plano" @click="showModal(chave)">
+                <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + foto + ')' }"></div>
+                <div class="body">
+                    <div class="content">                              
+                      <div class="nome">{{ cadastro.informacoes_pessoais.nome }}</div>                        
+                      <div class="info">
+                          <table width="100%">
+                            <tr>
+                              <td>Plano:</td>
+                              <td>{{ cadastro.dados_plano.plano }}</td>
+                            </tr>                            
+                          </table>
+                      </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+
+
+
         
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
