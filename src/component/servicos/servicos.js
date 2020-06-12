@@ -30,7 +30,12 @@ export default {
             icon_simulador_riscos: icon_simulador_riscos,
             icon_historico_servicos: icon_historico_servicos,
         }        
-    },    
+    },   
+    mounted() {
+        window.addEventListener('orientationchange', function(){ 
+            alert('orientação')
+        });
+    }, 
     methods: { 
         toggledisplayList() {
             this.displayIcon = false

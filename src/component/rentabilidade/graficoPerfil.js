@@ -18,7 +18,8 @@ export default {
                 }]
             }, {
                 cutoutPercentage: 88,
-                legend: false
+                legend: false,
+                tooltips:false,
             })
         }
     }

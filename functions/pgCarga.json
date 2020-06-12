@@ -1,7 +1,7 @@
 {
     "dadosPortal": "select * from dados_portal where cad_plano = '--nome_plano--' AND datacomp = '--data_base_carga--' order by chave, contr_eventocod" ,
     "dadosPortalLista": "select * from dados_portal where chave IN (--lista_dados_carga--) AND cad_plano = '--nome_plano--' AND datacomp = '--data_base_carga--' order by chave, contr_eventocod" ,
-    "historicoContrib": "WITH hc AS (SELECT chave, anomes AS \"anoMes\", pago, valorbase as valor FROM dados_portal_hist_contrib WHERE valorbase > 0 order by chave, datacomp) SELECT chave, json_agg(row_to_json(hc)) as jsonhistcontrib FROM hc group by chave order by chave"
+    "historicoContrib": "WITH hc AS (SELECT chave, anomes AS \"anoMes\", pago, valorbase as valor  FROM dados_portal_hist_contrib WHERE chave IN (--lista_dados_carga--) AND cad_plano = '--nome_plano--' AND valorbase > 0 order by chave, datacomp) SELECT chave, json_agg(row_to_json(hc)) as jsonhistcontrib FROM hc group by chave order by chave"
 
 }
 
