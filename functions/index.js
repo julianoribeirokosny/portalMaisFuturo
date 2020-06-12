@@ -1,5 +1,10 @@
 'use strict';
 
+//Api de controle de versionamento do APP (para atualiza do cache)
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'versao') {
+  exports.versao = require('./versao').default;
+}
+
 /**
  * Carga de dados oriundos do Postgree
  */
