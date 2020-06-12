@@ -33,7 +33,7 @@ export default {
     },   
     mounted() {
         window.addEventListener('orientationchange', function(){ 
-            alert('orientação')
+            alert('orientação' + screen.orientation.angle)
         });
     }, 
     methods: { 
