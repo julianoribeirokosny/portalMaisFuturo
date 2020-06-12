@@ -5,6 +5,7 @@
     margin-left: auto;
     margin-right: auto;
     font-family: 'MaisFuturo-regular';
+    cursor: pointer;
 }
 
 .card-tipo-plano .avatar {
