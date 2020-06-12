@@ -144,7 +144,7 @@ export default class Router {
     this.pagesElements.each((index, element) => {
       //console.log('ELEMENT.ID =====> ',element.id)
       if (element.id === 'page-' + pageId) {  
-        $('#'+element.id).show()
+        $('#'+element.id).show()        
       } else if (element.id === 'page-splash-login') {
         $(element).fadeOut(1000);
         $('#'+element.id).fadeOut(1000);
@@ -152,10 +152,12 @@ export default class Router {
         $('#'+element.id).hide()
       }
     });
-
+    
     MaterialUtils.closeDrawer();
     // Scroll to top.
-    Router.scrollToTop();
+    let pagina = document.querySelector(`#divFixedHeader`)
+    pagina.scrollTop = 0
+    //Router.scrollToTop();
   }
 
   /**

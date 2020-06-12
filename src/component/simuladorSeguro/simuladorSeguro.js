@@ -14,7 +14,7 @@ import FirebaseHelper from '../../FirebaseHelper'
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
 
-export default {
+export default {    
     template: simuladorSeguro,
     components: { 
         VueSlider, Contratacao, ContratacaoAberta, vSelect
