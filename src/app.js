@@ -26,10 +26,11 @@ if (!localStorage.versao || localStorage.versao !== '') {
       url: 'https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/versao'
     }
     request(options, (err, response, body) => {
-      if (err || response.statusCode != 200 || body) {
+      if (err || response.statusCode != 200 || !body) {
         console.log('==> Erro na busca da ultima versão. App não foi atualizado')
       } else {
-        localStorage.versao = body
+        console.log('===> JSON.parse(body)', JSON.parse(body))
+        localStorage.versao = JSON.parse(body)
         limpaCache().then((ret) => {
           montaApp()
         })
