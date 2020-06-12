@@ -532,7 +532,7 @@
                               </div>
                           </template>   
                           <template v-else>
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">                                  
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                              
                                   <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
                                       <span class="span-minicard-text">Sua nova contribuição estará vigente a parir do proximo mês, veja aqui</span>&nbsp;
                                       <i class="material-icons icon-button-minicard">arrow_forward</i>
@@ -823,7 +823,13 @@
               <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
                   <a></a>
                   <simulador-seguro v-bind:dados="seguroSimulador" :key="componentKey"></simulador-seguro>
-              </section>     
+              </section>
+              
+              <!--Cadastro-->
+              <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
+                  <a></a>
+                  <cadastro ref="cadastro" v-bind:chave_usuario="chave" v-bind:foto="url_foto" :uid="uid" :key="componentKey" :testeProf="testeProf"></cadastro>              
+              </section>
 
               <!--Simulador Renda-->
               <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
@@ -841,12 +847,6 @@
               <section id="page-contratacao-aberta" class="mdl-grid fp-content" style="display: none;">
                   <a></a>
                   <contratacao-aberta v-bind:dados="contribuicaoSimulador" :key="componentKey"></contratacao-aberta>
-              </section>
-
-              <!--Cadastro-->
-              <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
-                  <a></a>
-                  <cadastro v-bind:chave_usuario="chave" v-bind:foto="url_foto" :uid="uid" :key="componentKey"></cadastro>              
               </section>
 
               <!--Serviços-->

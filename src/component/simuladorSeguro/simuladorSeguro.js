@@ -186,7 +186,7 @@ export default {
         }
     },
     created(){        
-        console.log('THIS.DADOS.SEGUROS',this.dados)
+        //console.log('THIS.DADOS.SEGUROS',this.dados)        
         if(this.dados.seguroSolicitado.dados != null) {
             this.seguroSolicitado = true
         } else {
@@ -202,6 +202,16 @@ export default {
             this.calculaTotal()
             this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)            
         }
+        this.$root.$on('novaProfissao', (profissao) => { 
+            //console.log('N O V A  P R O F I S S Ã O:',profissao)
+            //this.getProfissaoParticipante(this.dados.chave)
+            this.profissao = profissao.nome
+            this.sliderMorte.max = profissao.seguro
+            this.sliderInvalidez.max = profissao.seguro
+            this.closeModal()
+            //this.profissao = valor
+        })
+
     },
     watch: {
         coberturaInvalidez(newVal, oldVal) {
@@ -234,37 +244,33 @@ export default {
     },
     methods: {
         salvarProfissao() {
-            let profissao = this.listaProfissoes.filter(p => { 
+            let profissao = this.listaProfissoes.filter(p => {
                 if (p[0] === this.profissao)
-                    return Object.entries(p)                                             
+                    return Object.entries(p)
                 }
-            )          
+            )
             this.cadastro.profissao =  {
                 nome: profissao[0][0],
                 seguro: profissao[0][1]
             }
-
-            //console.log('Cadastro Profissao',this.cadastro.profissao)
             var cadastro = this.firebaseHelper.salvarCadastro(this.dados.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
             if(cadastro) {
-                this.sliderInvalidez.max = profissao[0][1].Invalidez
-                this.sliderMorte.max = profissao[0][1].Morte
+                this.$root.$emit('atualizaProfissao',this.cadastro.profissao.nome)
+                this.sliderInvalidez.max = profissao[0][1]
+                this.sliderMorte.max = profissao[0][1]
                 this.closeModal()
-                page(`/home`)
-            } else {
-                alert('error')
             }
         },
         showModal() {
-            this.$refs.ModalProfissao.style.display = "block";
+            this.$refs.ModalProfissao.style.display = "block"
         },
         closeModal() {
-            this.$refs.ModalProfissao.style.display = "none";
+            this.$refs.ModalProfissao.style.display = "none"
         },
         getProfissaoParticipante(chave){
             return this.firebaseHelper.getProfissaoParticipante(chave)
                 .then(profissao => {
-                    if (!profissao) {          
+                    if (!profissao) {
                         this.profissao = profissao
                         this.$refs.salvar.style.pointerEvents = 'none'
                         this.$refs.salvar.style.opacity = 0.6
@@ -274,9 +280,11 @@ export default {
                                 this.listaProfissoes = Object.entries(ret) 
                                 this.listaProfissoes.forEach(prof => {
                                     this.profissoes.push(prof[0])
-                                })                        
+                                })
                             }
-                        )                        
+                        )
+                    } else {
+                        this.closeModal()
                     }
                 }
             )
@@ -291,18 +299,13 @@ export default {
             this.coberturaTelaTotal = this.valor_to_string_formatado(cobertura)
         },
         calculaPremioInvalidez(){
-            this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(2)
-            //console.log('this.premioInvalidez',this.premioInvalidez)
+            this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(2)            
         },
         calculaPremioMorte(){
-            this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(2)
-            //console.log('this.premioMorte',this.premioMorte)
+            this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(2)            
         },
         valor_to_string_formatado(num) {
-            return financeiro.valor_to_string_formatado(num, 2, false, true)
-            //let numero = String(num).replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-            //return numero
-            //return num
+            return financeiro.valor_to_string_formatado(num, 2, false, true)            
         },
         toggleCategory(){
             this.toggle = !this.toggle;

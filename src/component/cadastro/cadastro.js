@@ -24,7 +24,8 @@ export default {
     props: {
         foto:'',
         chave_usuario:'',
-        uid: ''
+        uid: '',
+        testeProf:''
     },
     data: function() {
         return {
@@ -54,8 +55,11 @@ export default {
     created(){        
         this.getParticipante()
         this.getProfissoes()        
+        this.$root.$on('atualizaProfissao', (valor) => { 
+            this.profissao = valor
+        })
     },
-    watch: {
+    watch: {        
         cep(val){
             if(val.length === 10) {
                 this.getEndereco(val)
@@ -82,9 +86,9 @@ export default {
             if(val) {
                 this.intervaloMSG()
             }
-        }
+        }        
     },
-    methods: {
+    methods: {        
         getProfissoes() {            
             return this.firebaseHelper.getProfissoes()
                 .then(ret => {                                    
@@ -107,42 +111,45 @@ export default {
             this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then( cad => {
                     this.cadastro = cad
-                    console.log('this.cadastro',this.cadastro)
                     this.cep = this.cadastro.endereco.cep
-                    this.email = this.cadastro.informacoes_pessoais.email          
+                    this.email = this.cadastro.informacoes_pessoais.email
                     this.profissao = ''
                     if (this.cadastro.informacoes_pessoais.profissao) {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
                     }
                 }
-            );
-
+            )
             this.firebaseHelper.getUsuario(this.uid)
                 .then( response => {                    
-                    this.emailPrincipal = response.email_principal                            
+                    this.emailPrincipal = response.email_principal
                 }
             )
-        },                            
+        },
         voltar() {
             page('/home')
         },
-        salvar() {
+        salvar() {            
             let profissao = this.listaProfissoes.filter(p => { 
-                                                                if (p[0] === this.profissao)
-                                                                    return Object.entries(p)                                             
-                                                            }
-                                                        )          
-            this.cadastro.informacoes_pessoais.profissao =  {
-                                                                nome: profissao[0][0],
-                                                                seguro: profissao[0][1]
-                                                            }            
-            this.cadastro.informacoes_pessoais.email = this.email
-            var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
-            if(cadastro) {
-                this.finalizado = true
+                                                                if (p[0] === this.profissao) {
+                                                                    return Object.entries(p)  
+                                                                }
+                                                            })
+            if(profissao.length > 0) {
+                this.cadastro.informacoes_pessoais.profissao =  {
+                                                                    nome: profissao[0][0],
+                                                                    seguro: profissao[0][1]
+                                                                }            
+                this.cadastro.informacoes_pessoais.email = this.email
+                var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
+                if(cadastro) {
+                    this.$root.$emit('novaProfissao',this.cadastro.informacoes_pessoais.profissao)
+                    this.finalizado = true
+                } else {
+                    this.finalizado = false
+                    this.error_banco = true
+                }
             } else {
-                this.finalizado = false
-                this.error_banco = true
+                return
             }
         },
         getEndereco(val) {

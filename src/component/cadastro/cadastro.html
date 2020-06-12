@@ -74,8 +74,7 @@
         <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
             <div class="Div_Campo_v2" :class="classValid">
                 <span class="Span_Label_v2">E-mail Alternativo</span><br>
-                <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email"
-                    >
+                <input class="Input_Text_v2" autocomplete="off" id="email" ref="email" type="email" v-model="email">
             </div>
         </div>
 
@@ -102,7 +101,10 @@
         <!-- Profissão -->
         <div class="mdl-card-container div_vSelect_cadastro div-container" style="margin-top: 5px;">
             <span class="Span_Label_vSelect_v2">Profissão</span><br>
-            <v-select v-if="profissoes" v-model="profissao" :options="profissoes"></v-select>            
+            <v-select ref="profissao" v-if="profissoes" v-model="profissao" :options="profissoes"></v-select>
+            <!-- <div id="divErrorProfissao" style="display: none;">
+                <span>Necessário selecionar uma profissão!</span>
+            </div> -->
         </div>
 
         <!--Endereço-->

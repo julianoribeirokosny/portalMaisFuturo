@@ -142,7 +142,7 @@ export default class Home {
     dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao    
     dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
     dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
-    //console.log('dadosSimuladorRenda',dadosSimuladorRenda)
+    console.log('D A D O S  S I M U L A D O R  S E G U R O',dadosSimuladorSeguro)
 
     let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)    
     let infoNomePlano = document.querySelector('#displayInfoNomePlano')
@@ -150,8 +150,7 @@ export default class Home {
     let infoCompetencia = document.querySelector('#displayInfoCompetencia')
     infoCompetencia.innerHTML = this.data_Home.competencia
     let infoPerfilInvestimento = document.querySelector('#displayInfoPerfilInvestimento')
-    infoPerfilInvestimento.innerHTML = this.data_Home.perfil_investimento
-    
+    infoPerfilInvestimento.innerHTML = this.data_Home.perfil_investimento    
     
     Vue.component('grafico-reserva', {
         extends: VueCharts.Doughnut,
@@ -278,7 +277,8 @@ export default class Home {
               emprestimoSimulador: dadosSimuladorEmprestimo,
               seguroSimulador: dadosSimuladorSeguro,
               historicoContribuicao: listaHistoricoContribuicao,
-              historicoRentabilidade: historicoRentabilidade
+              historicoRentabilidade: historicoRentabilidade,
+              testeProf:''
           },  
           created() {
               sessionStorage.ultimaPagina = 'home'                              
