@@ -1287,7 +1287,7 @@ export default class FirebaseHelper {
       let maximoSemSDPSMorte = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.maximo_morte, usuario.data.valores.coberturaMorte, simuladorSeguroSettings.regra_dps)     
       let stepMorte = simuladorSeguroSettings.step_morte
       let minimoInvalidez = this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez)
-      let maximoSemDPSInvalidez = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez)      
+      let maximoSemDPSInvalidez = this.calculaMaximoSemDPSSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez, simuladorSeguroSettings.regra_dps)      
       let stepInvalidez = simuladorSeguroSettings.step_invalidez
       let maximoMorte = 0      
       let maximoInval = 0
