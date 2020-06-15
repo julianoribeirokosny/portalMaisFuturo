@@ -234,14 +234,18 @@ export default class Auth {
       if (error.code === 'auth/requires-recent-login') {
         window.alert('You need to have recently signed-in to delete your account.\n' +
             'Please sign-in and try again.');
-        this.auth.signOut();
+        if (this.auth) {
+          this.auth.signOut();
+        }
         page('/');
       }
     }
   }
 
   signOut() {
-    this.auth.signOut(); 
+    if(this.auth) {
+      this.auth.signOut(); 
+    }
     page('/signout');
   } 
 

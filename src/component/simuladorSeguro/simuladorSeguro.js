@@ -186,7 +186,8 @@ export default {
         }
     },
     created(){        
-        //console.log('THIS.DADOS.SEGUROS',this.dados)        
+        console.log('THIS.DADOS.SEGUROS',this.dados)  
+        
         if(this.dados.seguroSolicitado.dados != null) {
             this.seguroSolicitado = true
         } else {
@@ -210,8 +211,14 @@ export default {
             this.sliderInvalidez.max = profissao.seguro
             this.closeModal()
             //this.profissao = valor
-        })
-
+        })        
+    },
+    mounted(){
+        if (this.dados.bloqueio) {
+            this.$refs.ModalBloqueioIdade.style.display = "block"
+            // let modal = document.getElementById('ModalBloqueioIdade')
+            // modal.style.display = "block"
+        }
     },
     watch: {
         coberturaInvalidez(newVal, oldVal) {
