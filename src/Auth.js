@@ -162,6 +162,7 @@ export default class Auth {
     // Reload the page unless this is the first time being loaded and no signed-in user.
     if (this._waitForAuthPromiseResolver.state() !== 'pending' || user) {
       Router.reloadPage();
+      return
     }
 
     const div_install = document.querySelector('#div-install');
