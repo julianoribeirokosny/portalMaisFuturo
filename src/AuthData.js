@@ -50,7 +50,6 @@ export default class AuthData {
     console.log('onAuthStateChanged -> AuthData')
     if (user) {
       const snapshot = await this.firebaseHelper.updatePublicProfile();
-      console.log('snapshot.val()', snapshot.val())
       //const snapshot = await this.firebaseHelper.getTermoServicoSettings(user.uid);
       const settings = snapshot.val();
       // display TermoServico modal if there are no TermoServico preferences

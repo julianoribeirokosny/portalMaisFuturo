@@ -127,12 +127,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       // Monta comando select com os parametros
       console.log('===> verificando se há chaves específicas para a carga.')
       if (snapshotParent.hasChild('lista_chaves_carga')) {
-        console.log('===> dadosPortalLista!')
+        //console.log('===> dadosPortalLista!')
         select = jsonDataSelects.dadosPortalLista
         select = select.replace(/--lista_dados_carga--/g, snapshotParent.child('lista_chaves_carga').val())
-        console.log('===> select', select)        
+        //console.log('===> select', select)        
       } else {
-        console.log('===> dadosPortal Geral!')
+        //console.log('===> dadosPortal Geral!')
         select = jsonDataSelects.dadosPortal
       }
       select = select.replace(/--data_base_carga--/g, dataBase)
@@ -761,7 +761,7 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   if (idade > idadeApos) {
     idadeApos = idade
   }
-  console.log('==> dataAdesao', dataAdesao)
+  //console.log('==> dataAdesao', dataAdesao)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
   let dataAposentadoria = financeiro.calculaDataInicioRenda(dataNasc, idadeApos)
   let difMesesHojeAposentadoria = utils.diffDatasEmMeses(new Date(), dataAposentadoria)
@@ -782,12 +782,12 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
       difMesesDaAdesaoAposentadoria
   ]
 
-  console.log('==> Variáveis:')
-  console.log('==> difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
-  console.log('==> dataAposentadoria', dataAposentadoria)
-  console.log('==> difMesesHojeAposentadoria', difMesesHojeAposentadoria)
-  console.log('==> difMesesDaAdesaoAposentadoria', difMesesDaAdesaoAposentadoria)
-  console.log('==> aIdades', aIdades)
+  //console.log('==> Variáveis:')
+  //console.log('==> difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
+  //console.log('==> dataAposentadoria', dataAposentadoria)
+  //console.log('==> difMesesHojeAposentadoria', difMesesHojeAposentadoria)
+  //console.log('==> difMesesDaAdesaoAposentadoria', difMesesDaAdesaoAposentadoria)
+  //console.log('==> aIdades', aIdades)
 
   let aDistribCurvaGrafico = [
     0, 0.40, 0.55, 0.70, 0.85, 1
@@ -805,15 +805,15 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   //console.log('==> valorReservaAposentadoria', valorReservaAposentadoria, ' - aIdades', aIdades, ' - valorHoje', valorHoje, ' - difMesesHojeAposentadoria',difMesesHojeAposentadoria)
   for (let linha in aIdades) {
     let dif = aIdades[linha] - difMesesDaAdesaoHoje 
-    console.log('===> dif:', dif)   
-    console.log('===> crescPorFaixas', crescPorFaixas)
+    //console.log('===> dif:', dif)   
+    //console.log('===> crescPorFaixas', crescPorFaixas)
     if (linha > 0) {
       if (dif < 0) { 
         retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
-          console.log('===> Entrei dif <= crescPorFaixas')
+          //console.log('===> Entrei dif <= crescPorFaixas')
           retListaMeses[linha] = 'Hoje'        
           retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
           if (amplitude==='até hoje') {

@@ -1524,6 +1524,17 @@ export default class FirebaseHelper {
     })
   }
 
+  getVersao() {
+    let ref = this.database.ref(`settings/versao`)
+    return ref.once('value').then((data) => {
+      if (data.val()) {
+        return data.val()
+      } else {
+        return null
+      }
+    })
+  }
+
   getBenchmark() {
     let ref = this.database.ref(`settings/rentabilidade/benchmark`)
     return ref.once('value').then((data) => {

@@ -6,6 +6,7 @@ import 'firebase/auth';
 import {MaterialUtils} from './Utils';
 import {Erros} from './Erros';
 import page from 'page';
+import FirebaseHelper from './FirebaseHelper';
 
 /**
  * Handles the pages/routing.
@@ -18,6 +19,7 @@ export default class Router {
   constructor(auth) {
     this.authCl = auth
     this.auth = firebase.auth()
+    this.firebaseHelper = new FirebaseHelper();
 
     // Dom elements.
     this.pagesElements = $('[id^=page-]');
@@ -45,7 +47,7 @@ export default class Router {
     page('/home', async () => {
       verificaPrimeiroLogin().then((primeiroLogin) => {
         if (primeiroLogin===null) {
-          Erros.registraErro('sem_uid', 'auth', 'showHome', 'primeiroLogin === null')
+          Erros.registraErro(this.auth.currentUser.uid, 'auth', 'showHome', 'primeiroLogin === null')
           return page('/erro')  
         } else if (primeiroLogin) {
           telaPrimeiroLoginConfig()
@@ -163,10 +165,19 @@ export default class Router {
   /**
    * Redireciona para o home caso o usuário esteja logado.
    */
-  redirectHomeIfSignedIn() {
+  async redirectHomeIfSignedIn() {
     if (firebase.auth().currentUser) {
-      page('/home');
-    }
+      this.validaVersaoApp().then((ok) => {
+        if (ok) {
+          if (firebase.auth().currentUser) {
+            page('/home');
+          }  
+        } else {
+          Erros.registraErro(this.auth.currentUser.uid, 'appUpdate', 'redirectHomeIfSignedIn', 'Não foi possível verificar versão do App')
+          return page('/erro')  
+        }
+      })
+    }  
   }
 
   /**
@@ -198,6 +209,43 @@ export default class Router {
     $('.is-active').removeClass('is-active');
     $(`[href="${canonicalPath}"]`).addClass('is-active');
     next();
+  }
+
+  async validaVersaoApp() {
+    //valida se há nova versão do App e limpa o cache  
+    console.log('==> localStorage.versao', localStorage.versao)
+    let versao = await this.firebaseHelper.getVersao()
+    console.log('==> versao', versao)
+    if (localStorage.versao !== versao) {
+      localStorage.versao = versao
+      console.log('==> Limpando cache para atualização do App.')
+      let p1 = new Promise((resolve) => {
+        //limpa o cache
+        self.caches.keys().then(keys => { 
+          keys.forEach(key => {
+            self.caches.delete(key)  
+            console.log(key)
+          }) 
+          resolve(true)
+        })
+      })
+      let p2 = new Promise((resolve) => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for(let registration of registrations) {  
+            console.log(registration)
+            registration.unregister();
+          }
+          resolve(true)
+        });  
+      })
+      await Promise.all([p1, p2])
+      return true
+    } else {
+      return true
+    }
+  }
+
+  static limpaCache() {
   }
 
 };

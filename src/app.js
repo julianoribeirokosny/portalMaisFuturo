@@ -17,34 +17,36 @@ import 'mdl-ext/lib/mdl-ext.min.css';
 import 'firebaseui/dist/firebaseui.css';
 import './app.css';
 
-//Primeiro valida a versão! Se diferente, limpa o cache para atualizar o App
-if (!localStorage.versao || localStorage.versao !== '') {
-  if (window.location.href.indexOf('localhost') < 0) {
-    let request = require('request')
-    let options = {
-      method: 'get',
-      url: 'https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/versao'
-    }
-    request(options, (err, response, body) => {
-      if (err || response.statusCode != 200 || !body) {
-        console.log('==> Erro na busca da ultima versão. App não foi atualizado')
-      } else {
-        console.log('===> JSON.parse(body)', JSON.parse(body))
-        localStorage.versao = JSON.parse(body)
-        limpaCache().then((ret) => {
-          montaApp()
-        })
-      }
-    });  
-  } else {
-    console.log('==> localhost!')
-    limpaCache().then((ret) => {
-      montaApp()
-    })
+const install_button = document.querySelector('#bt-install');
+const divPrevdigi = document.querySelector('#div-prevdigi');
+const div_install = document.querySelector('#div-install');
+const bt_install_text = document.querySelector('#bt-install-text');
+const msgInstalacao = document.querySelector('#msg-instalacao');
+const msgInicial = document.querySelector('#msg-inicial');
+const pageInstall = window.location.href.indexOf('instalar') > 0
+const checkIfIsIos = () => {
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  console.log('userAgent: ', userAgent)
+  return /iphone|ipad|ipod/.test(userAgent);
+  //return true
 }
-
-} else {
-  montaApp()
+const checkIfIsMac = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    console.log('userAgent: ', userAgent)
+    return /macintosh/.test(userAgent);
+    //return true
+}
+const checkIfIsSamsungBrowser = () => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /samsungbrowser/.test(userAgent);
+}
+const checkIfIsPwaInstalled = (isIos) => {
+    if (isIos === "false") {
+        var displayModes = ["fullscreen", "standalone", "minimal-ui"];
+        return displayModes.some((displayMode) => window.matchMedia('(display-mode: ' + displayMode + ')').matches) || window.navigator.standalone === true;
+    } else {
+        return ('standalone' in window.navigator) && (window.navigator.standalone);
+    }
 }
 
 function detectStandalone() {
@@ -81,67 +83,9 @@ function mostraTelaInstalacaoIOS() {
   $('#page-acesso-browser').hide()
 }
 
-function limpaCache() {
-  console.log('==> Limpando cache.')
-  localStorage.isPwaInstalled = ""
-  localStorage.standaloneDetected = ""
-  let p1 = new Promise((resolve) => {
-    //limpa o cache
-    self.caches.keys().then(keys => { 
-      keys.forEach(key => {
-        self.caches.delete(key)  
-        console.log(key)
-      }) 
-      resolve(true)
-    })
-  })
-
-  let p2 = new Promise((resolve) => {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for(let registration of registrations) {  
-        console.log(registration)
-        registration.unregister();
-      }
-      resolve(true)
-    });  
-  })
- 
-  return Promise.all([p1, p2])
-  //self.caches.delete('html-cache')
-}
+montaApp()
 
 function montaApp() {
-  const install_button = document.querySelector('#bt-install');
-  const divPrevdigi = document.querySelector('#div-prevdigi');
-  const div_install = document.querySelector('#div-install');
-  const bt_install_text = document.querySelector('#bt-install-text');
-  const msgInstalacao = document.querySelector('#msg-instalacao');
-  const msgInicial = document.querySelector('#msg-inicial');
-  const pageInstall = window.location.href.indexOf('instalar') > 0
-  const checkIfIsIos = () => {
-    const userAgent = window.navigator.userAgent.toLowerCase();
-    console.log('userAgent: ', userAgent)
-    return /iphone|ipad|ipod/.test(userAgent);
-    //return true
-  }
-  const checkIfIsMac = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      console.log('userAgent: ', userAgent)
-      return /macintosh/.test(userAgent);
-      //return true
-  }
-  const checkIfIsSamsungBrowser = () => {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      return /samsungbrowser/.test(userAgent);
-  }
-  const checkIfIsPwaInstalled = (isIos) => {
-      if (isIos === "false") {
-          var displayModes = ["fullscreen", "standalone", "minimal-ui"];
-          return displayModes.some((displayMode) => window.matchMedia('(display-mode: ' + displayMode + ')').matches) || window.navigator.standalone === true;
-      } else {
-          return ('standalone' in window.navigator) && (window.navigator.standalone);
-      }
-  }
  
   localStorage.isIos = checkIfIsIos()
   localStorage.isMac = checkIfIsMac()
