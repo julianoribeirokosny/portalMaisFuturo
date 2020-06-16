@@ -245,7 +245,4 @@ export default class Router {
     }
   }
 
-  static limpaCache() {
-  }
-
 };

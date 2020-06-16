@@ -24,6 +24,7 @@ const bt_install_text = document.querySelector('#bt-install-text');
 const msgInstalacao = document.querySelector('#msg-instalacao');
 const msgInicial = document.querySelector('#msg-inicial');
 const pageInstall = window.location.href.indexOf('instalar') > 0
+const pageReset = window.location.href.indexOf('reset') > 0
 const checkIfIsIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   console.log('userAgent: ', userAgent)
@@ -83,7 +84,33 @@ function mostraTelaInstalacaoIOS() {
   $('#page-acesso-browser').hide()
 }
 
-montaApp()
+if (pageReset) { //limpa o cache antes de continuar
+  let p1 = new Promise((resolve) => {
+    //limpa o cache
+    self.caches.keys().then(keys => { 
+      keys.forEach(key => {
+        self.caches.delete(key)  
+        console.log(key)
+      }) 
+      resolve(true)
+    })
+  })
+  let p2 = new Promise((resolve) => {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for(let registration of registrations) {  
+        console.log(registration)
+        registration.unregister();
+      }
+      resolve(true)
+    });  
+  })
+  Promise.all([p1, p2]).then(() => {
+    montaApp()
+  })
+} else {
+  montaApp()
+}
+
 
 function montaApp() {
  

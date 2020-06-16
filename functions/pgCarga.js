@@ -24,18 +24,6 @@ var dataBase, anoMes
 var taxaAumentoSugestao = 1.20
 var select
 
-/*************************************************
-***********
-*********
-******
-CARGA!!!!!!!!!
-
-CRIAR DADOS CADASTRO DENTRO DE USUARIOS
-CRIAR DEMAIS DADOS (CAMPOS DO POSTGRE!!!! MESMO QUE NÃO USE AGORA - EX: vlrCota)
-
-
-*/
-
 exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{plano}/data_base_carga').onWrite(
   async (change, context) => {
 
@@ -125,7 +113,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       taxaAumentoSugestao = snapshotParent.child('taxa_aumento_sugestao')
       
       // Monta comando select com os parametros
-      console.log('===> verificando se há chaves específicas para a carga.')
       if (snapshotParent.hasChild('lista_chaves_carga')) {
         //console.log('===> dadosPortalLista!')
         select = jsonDataSelects.dadosPortalLista
@@ -220,14 +207,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
               borderWidth: "<<seg_projeto_vida.grafico.datasets.2.borderWidth>>",
-              label: 'Reserva Total',
+              label: 'Saldo Total',
               data: retGraficoReservaCompleto[0]
             }
             listaDatasetsProjetoDeVida[3] = {
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.3.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.3.borderColor>>",
               borderWidth: "<<seg_projeto_vida.grafico.datasets.3.borderWidth>>",
-              label: 'Reserva Total',
+              label: 'Saldo Total',
               data: retGraficoReservaAteHoje[0]
             }          
   
@@ -238,7 +225,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             }            
             listaItensProjetoDeVidaProjecao[1] = {
               cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-              nome: 'Reserva projetada',
+              nome: 'Saldo projetado',
               valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, true)
             }     
             
@@ -342,7 +329,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaValoresReservaChave[1] = rowDados.res_saldopj
           usrReservaTotal = {
             color: '<<seg_saldo_reserva.total.color>>',
-            nome: 'Reserva Total',
+            nome: 'Saldo Total',
             valor: rowDados.res_saldototal
           }
   
@@ -495,14 +482,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
         borderWidth: "<<seg_projeto_vida.grafico.datasets.2.borderWidth>>",
-        label: 'Reserva Total',
+        label: 'Saldo Total',
         data: retGraficoReservaCompleto[0]
       }
       listaDatasetsProjetoDeVida[3] = {
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.3.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.3.borderColor>>",
         borderWidth: "<<seg_projeto_vida.grafico.datasets.3.borderWidth>>",
-        label: 'Reserva Total',
+        label: 'Saldo Total',
         data: retGraficoReservaAteHoje[0]
       }          
       listaItensProjetoDeVidaProjecao[0] = {
@@ -512,7 +499,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       }            
       listaItensProjetoDeVidaProjecao[1] = {
         cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-        nome: 'Reserva projetada',
+        nome: 'Saldo projetado',
         valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, true)
       }     
 
@@ -543,7 +530,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //ref = admin.database().ref('usuarios')
       //return ref.remove() 
     //}).then(() => {      
-      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios['4-1179']))
+      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios))
       ref = admin.database().ref(`usuarios`)
       //primeiro salva usuário bloqueados pelo processamento
       ref.update(usuariosBloquear)

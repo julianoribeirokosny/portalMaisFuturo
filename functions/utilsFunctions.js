@@ -95,9 +95,6 @@ module.exports =  {
     valorFormatoDesc : function (num) {
         let ret = ''
         if (Math.abs(num) > 999) {
-            console.log('===> num', num)
-            console.log('===> Math.sign(num)', Math.sign(num))
-            console.log('===> (Math.abs(num)/1000)', (Math.abs(num)/1000))
             ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + ' mil' 
         } else if (Math.abs(num) > 999999) {
             ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + ' Mi' 
