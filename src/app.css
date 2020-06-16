@@ -2147,6 +2147,7 @@ _dialog_overlay {
     text-align: start;
     border-bottom: none;
     text-decoration: underline #0C7BC6;
+    -webkit-text-decoration: underline #0C7BC6;
     max-width: 300px;
     background-position: none !important;
 }
