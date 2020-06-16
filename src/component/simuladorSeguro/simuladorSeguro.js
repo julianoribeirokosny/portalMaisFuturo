@@ -91,8 +91,11 @@ export default {
                 order: true,
                 marks: false,
                 dotOptions: void 0,
-                process: true,                
-                railStyle: void 0,                                
+                process: true,
+                railStyle: {
+                    "backgroundColor": "#d3cbcb",
+                    "width": "8px"
+                },
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
                 labelStyle: void 0,
@@ -141,8 +144,11 @@ export default {
                 order: true,
                 marks: false,
                 dotOptions: void 0,
-                process: true,                
-                railStyle: void 0,                                
+                process: true,
+                railStyle: {
+                    "backgroundColor": "#d3cbcb",
+                    "width": "8px"
+                },          
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
                 labelStyle: void 0,

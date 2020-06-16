@@ -108,7 +108,7 @@ export default {
                 dotSize: 14,
                 height: 360,
                 with: 15,
-                direction: 'btt',
+                direction: 'btt',                
                 contained: false,
                 data: null,
                 min: this.dados.minimoContribuicao,
@@ -133,7 +133,10 @@ export default {
                 marks: false,
                 dotOptions: void 0,
                 process: true,                
-                railStyle: void 0,                                
+                railStyle: {
+                    "backgroundColor": "#d3cbcb",
+                    "width": "8px"
+                },                           
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
                 labelStyle: void 0,

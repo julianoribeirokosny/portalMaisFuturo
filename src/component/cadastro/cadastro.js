@@ -128,7 +128,8 @@ export default {
         voltar() {
             page('/home')
         },
-        salvar() {            
+        salvar() { 
+                       
             let profissao = this.listaProfissoes.filter(p => { 
                                                                 if (p[0] === this.profissao) {
                                                                     return Object.entries(p)  
@@ -144,9 +145,11 @@ export default {
                 if(cadastro) {
                     this.$root.$emit('novaProfissao',this.cadastro.informacoes_pessoais.profissao)
                     this.finalizado = true
+                    return 
                 } else {
                     this.finalizado = false
                     this.error_banco = true
+                    return
                 }
             } else {
                 return

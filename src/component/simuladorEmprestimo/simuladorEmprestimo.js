@@ -82,8 +82,7 @@ export default {
                 order: true,
                 marks: false,
                 dotOptions: void 0,
-                process: true,                
-                railStyle: void 0,                                
+                process: true, 
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
                 labelStyle: void 0,
@@ -101,6 +100,10 @@ export default {
                     "backgroundColor": "#0C7BC6",
                     "border-color": "#0C7BC6"
                 },
+                railStyle: {
+                    "backgroundColor": "#d3cbcb",
+                    "width": "8px"
+                }
             },
             contratacao: {
                 titulo:'',
