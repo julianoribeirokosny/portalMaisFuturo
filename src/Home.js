@@ -142,10 +142,10 @@ export default class Home {
         dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
         dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
         dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
-            //console.log('dadosSimuladorRenda',dadosSimuladorRenda)
+        //console.log('dadosSimuladorSeguro',dadosSimuladorSeguro)
 
         let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
-        console.log('listaHistoricoContribuicao', listaHistoricoContribuicao)
+        //console.log('listaHistoricoContribuicao', listaHistoricoContribuicao)
 
 
         Vue.component('grafico-reserva', {
@@ -240,7 +240,7 @@ export default class Home {
             this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
         }
 
-        console.log('this.data_Home', this.data_Home)
+        //console.log('this.data_Home', this.data_Home)
         let auth = this.auth.currentUser.uid
 
         if (!this.vueObj) {

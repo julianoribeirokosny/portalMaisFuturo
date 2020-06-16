@@ -1,103 +1,105 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-    <template v-if="!seguroSolicitado">
-        <template v-if="simulador">
-            <div class="mdl-card__supporting-text mdl-card-container div_margem_card" style="width: 95%;">
-                <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
-                <div style="margin-top: 20px;">                    
-                    <div class="div_descricao margin-auto" v-html="dados.descricao"></div>            
-                    <div style="float: left; width: 75% !important; height: 400px;">                        
-                        <p class="p_label_seguro">Cobertura | Invalidez</p>
-                        <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
-                            <p style="margin-bottom: 1px;">
-                                <span class='line span_cobertura_valor2' style="color:#8BCF7B">
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}</span>
-                            </p>
-                        </div>            
-                        <p class="p_label_seguro_dps" v-if="coberturaInvalidez >= dados.maximoSemDpsInvalidez">Preencher nova DPS a partir de R$ {{ maximoSemDpsInvalidezTela }}</p>
-                        <p class="p_label_seguro">Cobertura | Morte</p>
-                        <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaMorte > 0">
-                            <p style="margin-bottom: 1px;">
-                                <span class='line span_cobertura_valor2' style="color:#003366">
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaMorte }}</span>
-                            </p>
-                        </div>
-                        <p class="p_label_seguro_dps" v-if="coberturaMorte >= dados.maximoSemDpsMorte">Preencher nova DPS a partir de R$ {{ maximoSemDpsMorteTela }}</p>
-
-                        <div style="margin-top: 50px; margin-left: 20px;">
-                            <p class="p_label_seguro">Contribuição | Invalidez</p>
-                            <div style="margin-left: 2px;margin-right: 20px;">
-                                <p style="margin-bottom: 1px; padding-left: 0px;">
-                                    <span class='span_premio_valor2' style="color:#8BCF7B !important;">
-                                        R$ {{ premioTelaInvalidez }}
-                                    </span>
-                                </p>
-                            </div>                
-                            <p class="p_label_seguro">Contribuição | Morte</p>
-                            <div style="margin-left: 2px;margin-right: 20px;">
-                                <p style="padding-left: 0px;">
-                                    <span class='span_premio_valor2' style="color:#003366 !important;">
-                                        R$ {{ premioTelaMorte }}
-                                    </span>
-                                </p>
-                            </div>
-                            <p class="p_label_seguro" style="padding-left: 0px;">Contribuição | Total</p>
-                            <div style="margin-left: 2px;margin-right: 20px;">
+    <template v-if="!dados.bloqueio">
+        <template v-if="!seguroSolicitado">
+            <template v-if="simulador">
+                <div class="mdl-card__supporting-text mdl-card-container div_margem_card" style="width: 95%;">
+                    <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
+                    <div style="margin-top: 20px;">                    
+                        <div class="div_descricao margin-auto" v-html="dados.descricao"></div>            
+                        <div style="float: left; width: 75% !important; height: 400px;">                        
+                            <p class="p_label_seguro">Cobertura | Invalidez</p>
+                            <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
                                 <p style="margin-bottom: 1px;">
-                                    <span class='line span_premio_valor'>
-                                    <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ premioTelaTotal }}</span>
+                                    <span class='line span_cobertura_valor2' style="color:#8BCF7B">
+                                        <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaInvalidez }}</span>
+                                </p>
+                            </div>            
+                            <p class="p_label_seguro_dps" v-if="coberturaInvalidez >= dados.maximoSemDpsInvalidez">Preencher nova DPS a partir de R$ {{ maximoSemDpsInvalidezTela }}</p>
+                            <p class="p_label_seguro">Cobertura | Morte</p>
+                            <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaMorte > 0">
+                                <p style="margin-bottom: 1px;">
+                                    <span class='line span_cobertura_valor2' style="color:#003366">
+                                        <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ coberturaTelaMorte }}</span>
                                 </p>
                             </div>
+                            <p class="p_label_seguro_dps" v-if="coberturaMorte >= dados.maximoSemDpsMorte">Preencher nova DPS a partir de R$ {{ maximoSemDpsMorteTela }}</p>
+
+                            <div style="margin-top: 50px; margin-left: 20px;">
+                                <p class="p_label_seguro">Contribuição | Invalidez</p>
+                                <div style="margin-left: 2px;margin-right: 20px;">
+                                    <p style="margin-bottom: 1px; padding-left: 0px;">
+                                        <span class='span_premio_valor2' style="color:#8BCF7B !important;">
+                                            R$ {{ premioTelaInvalidez }}
+                                        </span>
+                                    </p>
+                                </div>                
+                                <p class="p_label_seguro">Contribuição | Morte</p>
+                                <div style="margin-left: 2px;margin-right: 20px;">
+                                    <p style="padding-left: 0px;">
+                                        <span class='span_premio_valor2' style="color:#003366 !important;">
+                                            R$ {{ premioTelaMorte }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <p class="p_label_seguro" style="padding-left: 0px;">Contribuição | Total</p>
+                                <div style="margin-left: 2px;margin-right: 20px;">
+                                    <p style="margin-bottom: 1px;">
+                                        <span class='line span_premio_valor'>
+                                        <span id='text-top' class="span_cobertura_prefixo">R$</span>{{ premioTelaTotal }}</span>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
+                        <div style="float: right;width: 25% !important;height: 400px;display: flex;justify-content: flex-end;">                
+                            <div style="float: left; width: 50% !important;">
+                                <p class="p_slider_vertical">
+                                    <vue-slider v-model="coberturaInvalidez" ref="slider" v-bind="sliderInvalidez" :tooltip-formatter="formatter1"></vue-slider>
+                                </p>
+                            </div>
+                            <div style="float: right; width: 50% !important;">
+                                <p class="p_slider_vertical">
+                                    <vue-slider v-model="coberturaMorte" ref="slider" v-bind="sliderMorte" :tooltip-formatter="formatter1"></vue-slider>
+                                </p>                
+                            </div>
+                        </div>            
+                    </div>        
+                </div>
+                <div class="mdl-card__supporting-text mdl-card-container">
+                    <div class="mdl-shadow--2dp div_btn_contratar" @click="contratar">
+                        Contratar
                     </div>
-                    <div style="float: right;width: 25% !important;height: 400px;display: flex;justify-content: flex-end;">                
-                        <div style="float: left; width: 50% !important;">
-                            <p class="p_slider_vertical">
-                                <vue-slider v-model="coberturaInvalidez" ref="slider" v-bind="sliderInvalidez" :tooltip-formatter="formatter1"></vue-slider>
-                            </p>
-                        </div>
-                        <div style="float: right; width: 50% !important;">
-                            <p class="p_slider_vertical">
-                                <vue-slider v-model="coberturaMorte" ref="slider" v-bind="sliderMorte" :tooltip-formatter="formatter1"></vue-slider>
-                            </p>                
-                        </div>
-                    </div>            
-                </div>        
-            </div>
-            <div class="mdl-card__supporting-text mdl-card-container">
-                <div class="mdl-shadow--2dp div_btn_contratar" @click="contratar">
-                    Contratar
+                    <div class="mdl-shadow--2dp div_btn_voltar" @click="voltar">
+                        Voltar
+                    </div>
                 </div>
-                <div class="mdl-shadow--2dp div_btn_voltar" @click="voltar">
-                    Voltar
-                </div>
-            </div>
-            <!-- <div class="mdl-card__supporting-text mdl-card-container">
-                <div style="display: flex; font-family: MaisFuturo-Regular; font-size: 18px; cursor: pointer;
-                            justify-content: center; align-items: center;" @click.prevent="toggleCategory">
-                    Seu projeto de vida atualizado
-                    <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>
-                </div>        
-            </div> -->
-            <!-- <template v-if="toggle">                    
-            <div class="mdl-card__supporting-text mdl-card-container div_grafico">
-                <projeto-vida class="canvas_grafico_line"></projeto-vida>            
-            </div>    
-            <div class="mdl-card__supporting-text mdl-card-container" style="padding-top:20px !important;">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar, 
-                justo non dictum hendrerit, tortor erat iaculis turpis, ac varius leo augue at felis. 
-                Mauris rutrum purus suscipit nunc condimentum elementum. Fusce eget mi augue. Fusce 
-                vestibulum sapien sit amet orci dignissim euismod. Mauris finibus lectus ac Leo fringilla
-                bibendum. Praesent quis aliquam dui. Aliquam eu condimentum enim.
-            </div>         -->
+                <!-- <div class="mdl-card__supporting-text mdl-card-container">
+                    <div style="display: flex; font-family: MaisFuturo-Regular; font-size: 18px; cursor: pointer;
+                                justify-content: center; align-items: center;" @click.prevent="toggleCategory">
+                        Seu projeto de vida atualizado
+                        <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>
+                    </div>        
+                </div> -->
+                <!-- <template v-if="toggle">                    
+                <div class="mdl-card__supporting-text mdl-card-container div_grafico">
+                    <projeto-vida class="canvas_grafico_line"></projeto-vida>            
+                </div>    
+                <div class="mdl-card__supporting-text mdl-card-container" style="padding-top:20px !important;">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar, 
+                    justo non dictum hendrerit, tortor erat iaculis turpis, ac varius leo augue at felis. 
+                    Mauris rutrum purus suscipit nunc condimentum elementum. Fusce eget mi augue. Fusce 
+                    vestibulum sapien sit amet orci dignissim euismod. Mauris finibus lectus ac Leo fringilla
+                    bibendum. Praesent quis aliquam dui. Aliquam eu condimentum enim.
+                </div>         -->
+            </template>
+            <template v-else>
+                <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
+            </template>
         </template>
         <template v-else>
-            <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
+            <contratacao-aberta v-bind:dados="dados.seguroSolicitado"></contratacao-aberta>
         </template>
     </template>
-    <template v-else>
-        <contratacao-aberta v-bind:dados="dados.seguroSolicitado"></contratacao-aberta>
-    </template>
-    <!-- The Modal -->
+    <!-- The Modals -->
     <div id="ModalProfissao" ref="ModalProfissao" class="modal">
         <!-- Modal content -->
         <div class="modal-content" style="height: auto">
@@ -116,5 +118,20 @@
                 <div class="div_button_confirmar" style="float: right; width: 48%;" @click="salvarProfissao()" ref="salvar">salvar</div>
             </div>          
         </div>
-    </div>    
+    </div>
+
+    <div id="ModalBloqueioIdade" ref="ModalBloqueioIdade" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" style="height: auto">
+            <div class="mdl-card-container div-container" style="width: 90%; margin-top: 30px;">
+                <p>Opa!</p>
+                <p>
+                    Infelizmente não é possível a contratação de seguros para participantes com idade inferior a 15 anos.</p>
+                </p>
+            </div>                
+            <div class="mdl-card__supporting-text" style="margin:20px">                
+                <div class="div_button_cancelar" @click="modalvoltar()">voltar</div>                    
+            </div>          
+        </div>
+    </div>
 </div>
