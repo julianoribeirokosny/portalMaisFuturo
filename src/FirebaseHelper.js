@@ -993,7 +993,7 @@ export default class FirebaseHelper {
       let jsonEmail = {}
       jsonEmail[dataEnvio] = {
         emailDestinatario: emailDestino,
-        assunto: 'Verifique seu e-mail para acessar o app do Portal Mais Futuro',
+        assunto: 'Verifique seu e-mail para acessar o app Previdência Digital | Mais Futuro',
         corpo: '',
         linkWeb: linkWeb,
         nome: nome,
