@@ -103,7 +103,7 @@ export default {
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
                     "height": "8px",
-                    "border-radius": "50%"
+                    "border-radius": "4px"
                 }
             },
             contratacao: {

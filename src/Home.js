@@ -240,7 +240,7 @@ export default class Home {
             this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
         }
 
-        //console.log('this.data_Home', this.data_Home)
+        console.log('this.data_Home', this.data_Home)
         let auth = this.auth.currentUser.uid
 
         if (!this.vueObj) {

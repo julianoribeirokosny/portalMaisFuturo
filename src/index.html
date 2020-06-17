@@ -455,7 +455,7 @@
                                                 </dl>
                                               </template>
                     <template v-else> -->
-                                              <template v-if="conta.nome !== 'Total'">
+                                              <template v-if="conta.nome !== 'Total' && conta.valor !== '0,00'">
                                                 <dl class="dl_reserva_legenda">
                                                     <dt class="dt_reserva_legenda">{{ conta.nome }}</dt>
                                                     <dd class="dd_reserva_text">

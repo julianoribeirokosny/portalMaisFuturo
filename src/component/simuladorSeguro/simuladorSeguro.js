@@ -95,7 +95,7 @@ export default {
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
                     "width": "8px",
-                    "border-radius": "50%"
+                    "border-radius": "4px"
                 },
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
@@ -149,7 +149,7 @@ export default {
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
                     "width": "8px",
-                    "border-radius": "50%"
+                    "border-radius": "4px"
                 },          
                 stepStyle: void 0,
                 stepActiveStyle: void 0,

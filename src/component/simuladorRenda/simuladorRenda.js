@@ -136,7 +136,7 @@ export default {
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
                     "width": "8px",
-                    "border-radius": "50%"                    
+                    "border-radius": "4px"
                 },                           
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
@@ -162,7 +162,7 @@ export default {
         }
     },
     created(){          
-        console.log('this.dados - CONTRIBUICAO',this.dados)
+        //console.log('this.dados - CONTRIBUICAO',this.dados)
         if (this.dados.rendaSolicitada.dados != null) {
             this.rendaSolicitada = true
         } else {
@@ -184,8 +184,7 @@ export default {
             }
         },
         idade(newVal, oldVal) {
-            if(newVal !== oldVal) {
-                //this.date_inicio_renda = new Date(Number(this.date_parts[2]) + Number(newVal), this.date_parts[1] - 1, this.date_parts[0])
+            if(newVal !== oldVal) {                
                 this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
                 this.calculaReservaFutura()
                 this.calculaRendaFutura()
@@ -241,6 +240,12 @@ export default {
             this.simulador = false
         },
         calculaReservaFutura() {
+            
+
+
+
+
+
             this.reservaTotal = financeiro.calculaReservaFutura(
                 this.dados.reservaTotalAtual, 
                 this.dados.taxa_anual_simulacao, 
@@ -259,10 +264,7 @@ export default {
                     this.reservaTotal,
                     this.dados.taxa_anual_simulacao,
                     this.tempo,
-                    this.dados.usr_tipo_plano
-                ), 
-                2, false, true
-            )
+                    this.dados.usr_tipo_plano), 2, false, true)
         },
     },
 }
