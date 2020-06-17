@@ -176,6 +176,20 @@ export default class PrimeiroLogin {
     }
     //configura tela de primeiro login de acordo com o tipo do primeiro login feito
     telaPrimeiroLoginConfig() {
+        let celular = document.querySelector('#celular')
+        let email = document.querySelector('#email')
+        celular.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault()
+                email.focus()
+            }
+        })
+        email.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault()
+                celular.focus()
+            }
+        })
         let labelCelular = document.querySelector('#label-primeiro-login-celular')
         let labelEmail = document.querySelector('#label-primeiro-login-email')
         if (this.validaSeLoginCelular(this.auth.currentUser)) {            
