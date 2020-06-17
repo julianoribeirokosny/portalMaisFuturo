@@ -77,7 +77,7 @@ export default {
             contribuicaoTotalTela: '',
             qtd_meses: 0,
             idade: this.dados.idadeBeneficio,            
-            tempo: 15,
+            tempo: 20,
             ltempo: [
                 { label: '10 anos', value: 10 },                
                 { label: '11 anos', value: 11 },
@@ -240,7 +240,7 @@ export default {
             this.simulador = false
         },
         calculaReservaFutura() {
-            
+
 
 
 
