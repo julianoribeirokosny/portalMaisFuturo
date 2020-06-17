@@ -993,7 +993,7 @@ export default class FirebaseHelper {
       let jsonEmail = {}
       jsonEmail[dataEnvio] = {
         emailDestinatario: emailDestino,
-        assunto: 'Verifique seu e-mail para acessar o app do Portal Mais Futuro',
+        assunto: 'Verifique seu e-mail para acessar o app Previdência Digital | Mais Futuro',
         corpo: '',
         linkWeb: linkWeb,
         nome: nome,
@@ -1281,9 +1281,10 @@ export default class FirebaseHelper {
   async getDadosSimuladorSeguro(chave, uid) {
 
       let usuario = await this.getParticipante(chave)
-      
+
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)
+      
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)
       
       let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
@@ -1496,8 +1497,8 @@ export default class FirebaseHelper {
       return ref.once('value').then((data) => {    
           if (data.val()) {
               return data.val()
-          } else {
-              return null
+          } else {              
+              return { "fator_invalidez": 0.1, "fator_morte": 0.1 }
           }
       })
   }

@@ -106,7 +106,16 @@
                     </template>        
                     <div class="mdl-shadow--2dp div_btn_voltar"  @click="voltar">
                         Voltar
-                    </div>        
+                    </div>   
+                    
+                <p> {{ dados.reservaTotalAtual }} </p>
+                <p> {{ dados.taxa_anual_simulacao }} </p>
+                <p> {{ contribuicao }} </p>
+                <p> {{ dados.contribuicaoFixa }} </p>
+                <p> {{ dados.contribuicaoPatronal }} </p>
+                <p> {{ date_inicio_renda }} </p>
+                <p> {{ dados.usr_tipo_plano }} </p>
+                <p> {{ reservaTotal }}</p>
                 </div>
             </template>
             <template v-if="!simulador">            

@@ -129,6 +129,7 @@ export default {
             page('/home')
         },
         salvar() { 
+            
                        
             let profissao = this.listaProfissoes.filter(p => { 
                                                                 if (p[0] === this.profissao) {
@@ -145,14 +146,15 @@ export default {
                 if(cadastro) {
                     this.$root.$emit('novaProfissao',this.cadastro.informacoes_pessoais.profissao)
                     this.finalizado = true
-                    return 
+                     
                 } else {
                     this.finalizado = false
-                    this.error_banco = true
-                    return
+                    this.error_banco = true                    
+                    
                 }
             } else {
-                return
+                this.finalizado = false
+                this.error_banco = true  
             }
         },
         getEndereco(val) {
