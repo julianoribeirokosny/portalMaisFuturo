@@ -94,7 +94,8 @@ export default {
                 process: true,
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
-                    "width": "8px"
+                    "width": "8px",
+                    "border-radius": "50%"
                 },
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
@@ -147,7 +148,8 @@ export default {
                 process: true,
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
-                    "width": "8px"
+                    "width": "8px",
+                    "border-radius": "50%"
                 },          
                 stepStyle: void 0,
                 stepActiveStyle: void 0,

@@ -135,7 +135,8 @@ export default {
                 process: true,                
                 railStyle: {
                     "backgroundColor": "#d3cbcb",
-                    "width": "8px"
+                    "width": "8px",
+                    "border-radius": "50%"                    
                 },                           
                 stepStyle: void 0,
                 stepActiveStyle: void 0,
@@ -154,7 +155,8 @@ export default {
                 },
                 dotStyle: {
                     "backgroundColor": "#0C7BC6",
-                    "border-color": "#0C7BC6"
+                    "border-color": "#0C7BC6",
+                    "border-radius": "50%"
                 },
             }
         }
