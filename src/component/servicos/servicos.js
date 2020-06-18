@@ -33,7 +33,9 @@ export default {
     },   
     mounted() {
         window.addEventListener('orientationchange', function(){ 
-            alert('orientação' + screen.orientation.angle)
+            alert('orientação')
+            console.log("the orientation of the device is now " + screen.orientation.angle);
+            //alert('orientação' + screen.orientation.angle)
         });
     }, 
     methods: { 
