@@ -27,7 +27,7 @@
     "settings" : {
       // versao do app
       "versao": {
-        ".read": "auth.uid !== null || auth.token.admin === true",
+        ".read": "true",
         ".write": "auth.token.admin === true"
       },
       // estrutura básica da home

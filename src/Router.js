@@ -41,7 +41,14 @@ export default class Router {
     page('/', () => {
       if (localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true" || localStorage.isMac === "true") {
         this.displayPage('splash-login');
-        this.redirectHomeIfSignedIn();  
+        this.validaVersaoApp().then((ok) => {
+          if (ok) {
+            this.redirectHomeIfSignedIn()  
+          } else {
+            Erros.registraErro(this.auth.currentUser.uid, 'appUpdate', 'redirectHomeIfSignedIn', 'Não foi possível verificar versão do App')
+            return page('/erro')  
+          }
+        })
       }
     });
     page('/home', async () => {
@@ -167,16 +174,7 @@ export default class Router {
    */
   async redirectHomeIfSignedIn() {
     if (firebase.auth().currentUser) {
-      this.validaVersaoApp().then((ok) => {
-        if (ok) {
-          if (firebase.auth().currentUser) {
-            page('/home');
-          }  
-        } else {
-          Erros.registraErro(this.auth.currentUser.uid, 'appUpdate', 'redirectHomeIfSignedIn', 'Não foi possível verificar versão do App')
-          return page('/erro')  
-        }
-      })
+        page('/home');
     }  
   }
 
