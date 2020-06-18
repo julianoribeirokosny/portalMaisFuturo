@@ -1,0 +1,35 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
+    <div class="mdl-card__supporting-text mdl-card-container div-container" style="margin-top: 20px;">
+        <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo">            
+        </div>
+    </div>
+    <div class="mdl-card__supporting-text mdl-card-container div-container">
+        <div class="mdl-shadow--1dp mdl-card_mais_amigos" v-bind:style="background">
+            <div style="display: contents;">
+                <div class="mdl-card__supporting-text margin_auto div-mais_amigos-top">
+                    <div class="mdl-card-campanha-button-left">                                        
+                        <img class="img-mais-amigos-1" src="../../../public/images/Component 37 ÔÇô 2@2x.png" alt="maisAmigosLogo">
+                    </div>
+                    <div class="mdl-card-campanha-button-right" style="display: flex; justify-content: flex-end;">
+                        <img class="img-mais-amigos-2" src="../../../public/images/Component 38 ÔÇô 2@2x.png" alt="maisAmigosRedes">
+                    </div>                                
+                </div>
+                <div class="mdl-card__supporting-text margin_auto">
+                    <div class="mdl-card__supporting-text card-campanha-titulo margin_auto" style="margin-bottom: 15px;">
+                        <span class="span-mais_amigos-mensagem">Aguarde! Em breve o maior programa de indicações do mercado de previdência complementar.</span>
+                        
+                    </div>
+                </div>                
+            </div>
+        </div>
+        <div class="mdl-shadow--1dp mdl-card_mais_amigos" v-bind:style="background" style="cursor: pointer;" @click="voltar()">
+            <div style="display: contents;">                
+                <div class="mdl-card__supporting-text margin_auto">
+                    <div class="mdl-card__supporting-text card-campanha-titulo margin_auto" style="text-align: center; margin-top: 5px;">
+                        <span class="span-mais_amigos-voltar">Voltar</span>                        
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
