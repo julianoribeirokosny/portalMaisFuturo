@@ -111,6 +111,9 @@ export default class Router {
     page('/historico-contribuicao', () => {
       this.displayPage('historico-contribuicao')
     });    
+    page('/mais-amigos', () => {
+      this.displayPage('mais-amigos')
+    });    
     page('/erro', () => {
       Erros.displayMensagemErro()
       this.displayPage('erro')

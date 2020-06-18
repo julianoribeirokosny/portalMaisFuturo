@@ -717,7 +717,7 @@
 
     <!--Mais Amigos-->
     <template v-if="home.mais_amigos.vigente">
-                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto" @click="maisamigos()">
                           <div class="mdl-card__supporting-text margin_auto mdl-card-container">
                               <div class="mdl-shadow--1dp mdl-card_mais_amigos" v-bind:style="home.mais_amigos.background">
                                   <div style="display: contents;">
@@ -829,6 +829,7 @@
         <a></a>
         <servicos :key="componentKey"></servicos>
     </section>
+
     <!--Histórico de Contribuição-->
     <section id="page-historico-contribuicao" class="mdl-grid fp-content" style="display: none;">
         <a></a>
@@ -991,10 +992,17 @@
         <historico-contribuicao v-bind:historico="historicoContribuicao" :key="componentKey"></historico-contribuicao>
     </section>
 
+    <!--Troca Participação-->
     <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
         <a></a>
         <!-- <troca-participacao v-bind:uid="uid"></troca-participacao> -->
         <troca-participacao v-bind:uid="uid" v-bind:competencia="home.competencia" v-bind:perfil="home.perfil_investimento"></troca-participacao>
+    </section>
+
+    <!--Mais Amigos-->
+    <section id="page-mais-amigos" class="mdl-grid fp-content" style="display: none;">
+        <a></a>
+        <mais-amigos :background="background"></mais-amigos>
     </section>
 
     <!--Página em Construção-->
