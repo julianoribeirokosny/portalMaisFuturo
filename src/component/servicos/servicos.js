@@ -4,7 +4,6 @@ import Vue from 'vue/dist/vue.esm.js'
 import servicos from './servicos.html'
 import './servicos.css'
 import page from 'page'
-import { FALSE } from 'node-sass';
 
 const icon_view = require('../../../public/images/View-Icons.png')
 const icon_list = require('../../../public/images/ViewList.png')
@@ -16,10 +15,10 @@ const icon_simulador_emprestimos = require('../../../public/images/SimuladorEmpr
 const icon_simulador_riscos = require('../../../public/images/SimuladorRiscos-IconS.png')
 const icon_historico_servicos = require('../../../public/images/HistoricoServicos-IconS.png')
 
-export default {  
+export default {
     template: servicos,
     data: function() {
-        return {           
+        return {
             displayIcon: false,
             icon_list: icon_list,
             icon_view: icon_view,
@@ -31,32 +30,32 @@ export default {
             icon_simulador_riscos: icon_simulador_riscos,
             icon_historico_servicos: icon_historico_servicos,
             orientacao: 0
-        }        
-    },   
+        }
+    },
     mounted() {
-        window.addEventListener('orientationchange', function(){ 
-            this.orientacao = screen.orientation.angle            
+        window.addEventListener('orientationchange', function() {
+            this.orientacao = screen.orientation.angle
         });
-    }, 
+    },
     watch: {
         orientacao(newVal, oldVal) {
-            if (newVal === 0 ) {
+            if (newVal === 0) {
                 this.displayIcon = false
             } else {
                 this.displayIcon = true
             }
         }
     },
-    methods: { 
+    methods: {
         toggledisplayList() {
             this.displayIcon = false
         },
         toggledisplayIcon() {
             this.displayIcon = true
         },
-        clickPage(link) {  
+        clickPage(link) {
             sessionStorage.ultimaPagina = 'servicos'
             page(`/${link}`)
         }
-    }, 
+    },
 }
