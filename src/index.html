@@ -517,7 +517,7 @@
                               </div>
                           </template>
         <template v-else>
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="contratacaoAberta">                                  
+                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                                  
                                   <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
                                       <span class="span-minicard-text">Sua nova contribuição estará vigente a parir do proximo mês, veja aqui</span>&nbsp;
                                       <i class="material-icons icon-button-minicard">arrow_forward</i>
@@ -1187,8 +1187,11 @@
                     <a href="#"><img class="img-redes-footer" src="../public/images/Component 42 ÔÇô 2@2x.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#"><img class="img-redes-footer" src="../public/images/WA Logo@2x.png" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#"><img class="img-redes-footer" src="../public/images/Component 43 ÔÇô 2@2x.png" /></a>
-                </div>
+                </div>                
             </div>
+            <div class="mdl-card__supporting-text mdl-card-container" style="background-color: #424242;">
+                <div id="div-footer-versao" class="mdl-logo div-footer-text" style="margin-bottom: 3px !important; background-color: #424242; font-size: 14px !important; text-align: end;"></div>                
+            </div>            
         </div>
     </footer>
     <!-- <div class="mdl-layout__obfuscator"></div> -->

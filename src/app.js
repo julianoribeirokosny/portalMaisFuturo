@@ -50,6 +50,8 @@ const checkIfIsPwaInstalled = (isIos) => {
     }
 }
 
+document.querySelector('#div-footer-versao').innerHTML = `Versão: ${localStorage.versao}`
+
 function detectStandalone() {
   const hash = window.location.hash;
   let standalone = false;

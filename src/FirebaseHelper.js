@@ -1213,29 +1213,10 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorRenda(chave, uid) {
-    let usuario = await this.getParticipante(chave)
+    let usuario = await this.getParticipante(chave)    
     let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
-    let minimoContribuicao = usuario.data.valores.contribParticipante
-    // if (usuario.home.usr_tipo_plano === 'instituido') {
-    //   minimoContribuicao = usuario.data.valores.contribParticipante
-    // } else {
-    //   minimoContribuicao = usuario.data.valores.contribParticipantePlanoPatrocinado
-    // }
-    // let maximoContribuicao = (usuario.data.valores.contribParticipante === 0 ? usuario.data.valores.contribParticipantePlanoPatrocinado : usuario.data.valores.contribParticipante) * 3
-    // let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
-    // if (qtdStep % 1 !== 0) {
-    //   qtdStep = Math.round(qtdStep)
-    //   maximoContribuicao = simuladorRendaSettings.step_contribuicao * qtdStep
-    // }
-    let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 40)
-    // let qtdStep = maximoContribuicao / simuladorRendaSettings.step_contribuicao
-    // if (qtdStep % 1 !== 0) {
-    //   qtdStep = Math.round(qtdStep)
-    //   maximoContribuicao = simuladorRç endaSettings.step_contribuicao * qtdStep
-    // }
-    //console.log('maximoContribuicao',maximoContribuicao)
-    //console.log('minimoContribuicao',minimoContribuicao)
-
+    let minimoContribuicao = usuario.data.valores.contribParticipante    
+    let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 40)    
     let dadosSimuladorRenda = {
       usr_tipo_plano: usuario.home.usr_tipo_plano,
       taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
@@ -1252,10 +1233,7 @@ export default class FirebaseHelper {
       idadeBeneficio: simuladorRendaSettings.idade_beneficio,        
       chave: chave,
       uid: uid
-    }
-
-    dadosSimuladorRenda.maximoContribuicao = Math.round(dadosSimuladorRenda.maximoContribuicao)
-    dadosSimuladorRenda.minimoContribuicao = Math.round(dadosSimuladorRenda.minimoContribuicao)
+    }    
     return dadosSimuladorRenda
   }
 

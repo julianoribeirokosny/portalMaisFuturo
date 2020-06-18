@@ -14,10 +14,9 @@
                             </span>
                         </p>
                         <p class="p_label_renda" style="margin-top: 30px;" >Idade Aposentadoria</p>      
-                        <v-select v-model="idade" :options="lidades" :reduce="option => option.value">
-                        </v-select>
+                        <v-select v-model="idade" :options="lidades" :reduce="option => option.value" style="max-width: 150px;"></v-select>
                         <p class="p_label_renda">Tempo Recebimento Renda</p>
-                        <v-select v-model="tempo" :options="ltempo" :reduce="option => option.value"></v-select>                         
+                        <v-select v-model="tempo" :options="ltempo" :reduce="option => option.value" style="max-width: 150px;"></v-select>         
                         <div style="margin-top: 30px;">
                             <p class="p_label_renda_2">Nova Projeção</p>
                             <p class="p_label_renda">Saldo Total</p>
@@ -65,10 +64,9 @@
                             </span>
                         </p>
                         <p class="p_label_renda">Idade Aposentadoria</p>      
-                        <v-select v-model="idade" :options="lidades" :reduce="option => option.value">
-                        </v-select>
+                        <v-select v-model="idade" :options="lidades" :reduce="option => option.value" style="max-width: 150px;"></v-select>
                         <p class="p_label_renda">Tempo Recebimento Renda</p>
-                        <v-select v-model="tempo" :options="ltempo" :reduce="option => option.value"></v-select>
+                        <v-select v-model="tempo" :options="ltempo" :reduce="option => option.value" style="max-width: 150px;"></v-select>
                         <div style="margin-top: 16px;">
                             <p class="p_label_renda_2">Nova Projeção</p>
                             <p class="p_label_renda" >Saldo Total</p>
@@ -106,16 +104,7 @@
                     </template>        
                     <div class="mdl-shadow--2dp div_btn_voltar"  @click="voltar">
                         Voltar
-                    </div>   
-                    
-                <p> {{ dados.reservaTotalAtual }} </p>
-                <p> {{ dados.taxa_anual_simulacao }} </p>
-                <p> {{ contribuicao }} </p>
-                <p> {{ dados.contribuicaoFixa }} </p>
-                <p> {{ dados.contribuicaoPatronal }} </p>
-                <p> {{ date_inicio_renda }} </p>
-                <p> {{ dados.usr_tipo_plano }} </p>
-                <p> {{ reservaTotal }}</p>
+                    </div>
                 </div>
             </template>
             <template v-if="!simulador">            
