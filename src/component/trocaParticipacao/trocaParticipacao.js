@@ -26,6 +26,7 @@ export default {
     },
     methods: {
         getParticipacoes() {
+            //console.log('U I D: ',this.uid)
             return this.firebaseHelper.getUsuarioChave(this.uid)
                 .then(chaves => {
                     if (chaves) {

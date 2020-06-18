@@ -101,7 +101,8 @@ export default {
                 { label: '29 anos', value: 29 },
                 { label: '30 anos', value: 30 }],
             simulador: true,
-            taxa_mensal: 0,     
+            taxa_mensal: 0,
+            taxa_mensal_assistido: 4.5,  
             date_now: '',
             date_inicio_renda: '',
             sliderContribuicao: {
@@ -240,14 +241,8 @@ export default {
             this.simulador = false
         },
         calculaReservaFutura() {
-
-
-
-
-
-
             this.reservaTotal = financeiro.calculaReservaFutura(
-                this.dados.reservaTotalAtual, 
+                this.dados.reservaTotalAtual,
                 this.dados.taxa_anual_simulacao, 
                 this.contribuicao,
                 this.dados.contribuicaoFixa,
@@ -262,7 +257,7 @@ export default {
             this.rendaMensalTela = financeiro.valor_to_string_formatado(
                 financeiro.calculaRendaFutura(
                     this.reservaTotal,
-                    this.dados.taxa_anual_simulacao,
+                    this.taxa_mensal_assistido,
                     this.tempo,
                     this.dados.usr_tipo_plano), 2, false, true)
         },
