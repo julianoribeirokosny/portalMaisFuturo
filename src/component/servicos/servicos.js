@@ -4,6 +4,7 @@ import Vue from 'vue/dist/vue.esm.js'
 import servicos from './servicos.html'
 import './servicos.css'
 import page from 'page'
+import { FALSE } from 'node-sass';
 
 const icon_view = require('../../../public/images/View-Icons.png')
 const icon_list = require('../../../public/images/ViewList.png')
@@ -29,15 +30,23 @@ export default {
             icon_simulador_emprestimos: icon_simulador_emprestimos,
             icon_simulador_riscos: icon_simulador_riscos,
             icon_historico_servicos: icon_historico_servicos,
+            orientacao: 0
         }        
     },   
     mounted() {
         window.addEventListener('orientationchange', function(){ 
-            alert('orientação')
-            console.log("the orientation of the device is now " + screen.orientation.angle);
-            //alert('orientação' + screen.orientation.angle)
+            this.orientacao = screen.orientation.angle            
         });
     }, 
+    watch: {
+        orientacao(newVal, oldVal) {
+            if (newVal === 0 ) {
+                this.displayIcon = false
+            } else {
+                this.displayIcon = true
+            }
+        }
+    },
     methods: { 
         toggledisplayList() {
             this.displayIcon = false
