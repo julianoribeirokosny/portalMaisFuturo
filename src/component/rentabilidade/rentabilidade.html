@@ -32,14 +32,14 @@
         <div class="div_titulo_card margin-auto" style="margin-bottom: 15px;">
             Comparativo de </br>rentabilidade
         </div>
-        <div class="div_select_right">
-            <div class="div_vSelect_cadastro" style="width: 200px; padding-left: 0px !important;">
-                <span class="Span_Label_vSelect_v2">Período</span><br>
-                <v-select :searchable="false" v-model="quantidade_meses" :options="lista_quantidade_meses" style="width: 200px;z-index: 1 !important;"></v-select>
-            </div>
-        </div>
         <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
             <grafico-benchmark class="canvas_grafico_benchmark" :chartdata="grafico_benchmark" />
+        </div>
+        <div class="div_select_right">
+            <div class="div_vSelect_cadastro">
+                <span class="Span_Label_vSelect_v2">Período</span><br>
+                <v-select :searchable="false" v-model="quantidade_meses" :options="lista_quantidade_meses" style="width: 100%"></v-select>
+            </div>
         </div>
         <p class="p_margin_30"></p>
         <div class="div_titulo_card margin-auto" style="margin-bottom: 20px;">

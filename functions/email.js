@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
-const gmailEmail = 'portalmaisfuturo@gmail.com'; //functions.config().gmail.email;
-const gmailPassword = 'maisFuturo90()12!@'; //functions.config().gmail.password;
+const gmailEmail = 'previdenciadigital@maisfuturo.com.br'; //functions.config().gmail.email;
+const gmailPassword = '159+++ert'; //functions.config().gmail.password;
 const mailTransport = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'previdenciadigital@grupojmalucelli.onmicrosoft.com',
     port: 587,
     secure: false,
     requireTLS: true,
