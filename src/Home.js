@@ -302,8 +302,8 @@ export default class Home {
                     formatMoeda(value){
                         if (value === 0) {
                             return '(não contratado)'
-                        } else {
-                            let val = financeiro.valor_to_string_formatado(value.toFixed(2), 2, false, true)
+                        } else if (value && value !== 0) {
+                            let val = financeiro.valor_to_string_formatado(value, 2, false, true)
                             return `R$ ${val}`
                         }
                     },
