@@ -14,9 +14,9 @@
                             </span>
                         </p>
                         <p class="p_label_renda" style="margin-top: 30px;" >Idade Aposentadoria</p>      
-                        <v-select v-model="idade" :options="lidades" :reduce="option => option.value" style="max-width: 150px;"></v-select>
+                        <v-select :searchable="false" v-model="idade" :options="lidades" :reduce="option => option.value" style="max-width: 150px;"></v-select>
                         <p class="p_label_renda">Tempo Recebimento Renda</p>
-                        <v-select v-model="tempo" :options="ltempo" :reduce="option => option.value" style="max-width: 150px;"></v-select>         
+                        <v-select :searchable="false" v-model="tempo" :options="ltempo" :reduce="option => option.value" style="max-width: 150px;"></v-select>         
                         <div style="margin-top: 30px;">
                             <p class="p_label_renda_2">Nova Projeção</p>
                             <p class="p_label_renda">Saldo Total</p>
@@ -64,9 +64,9 @@
                             </span>
                         </p>
                         <p class="p_label_renda">Idade Aposentadoria</p>      
-                        <v-select v-model="idade" :options="lidades" :reduce="option => option.value" style="max-width: 150px;"></v-select>
+                        <v-select :searchable="false" v-model="idade" :options="lidades" :reduce="option => option.value" style="max-width: 150px;"></v-select>
                         <p class="p_label_renda">Tempo Recebimento Renda</p>
-                        <v-select v-model="tempo" :options="ltempo" :reduce="option => option.value" style="max-width: 150px;"></v-select>
+                        <v-select :searchable="false" v-model="tempo" :options="ltempo" :reduce="option => option.value" style="max-width: 150px;"></v-select>
                         <div style="margin-top: 16px;">
                             <p class="p_label_renda_2">Nova Projeção</p>
                             <p class="p_label_renda" >Saldo Total</p>
@@ -97,22 +97,22 @@
                             Continuar com R$ {{contribuicaoTela}}
                         </div>                        
                     </template>
-                    <template v-else>
+        <template v-else>
                         <div class="mdl-shadow--2dp div_btn_contratar"  @click="contratar()">
                             Contratar R$ {{contribuicaoTela}} 
                         </div>                        
-                    </template>        
-                    <div class="mdl-shadow--2dp div_btn_voltar"  @click="voltar">
-                        Voltar
-                    </div>                    
-                </div>
-            </template>
-            <template v-if="!simulador">            
+                    </template>
+        <div class="mdl-shadow--2dp div_btn_voltar" @click="voltar">
+            Voltar
+        </div>
+    </div>
+    </template>
+    <template v-if="!simulador">            
                 <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
             </template>
-        </template>
-        <template v-else>
+    </template>
+    <template v-else>
             <contratacao-aberta v-bind:dados="dados.rendaSolicitada"/>
         </template>
-    </div>
+</div>
 </div>
