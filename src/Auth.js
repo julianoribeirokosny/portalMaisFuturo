@@ -122,7 +122,8 @@ export default class Auth {
           customParameters: {
             prompt: 'select_account' //força sempre pedir o usuário do Google na entrada/login
           }
-        },        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        },        
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
         {provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
           defaultCountry: 'BR',
           recaptchaParameters: {

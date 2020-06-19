@@ -110,7 +110,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaContribExtraordinaria = listaContribExtraordinaria.split(';')
       listaSituacoesValidas = listaSituacoesValidas.split(';')
 
-      taxaAumentoSugestao = snapshotParent.child('taxa_aumento_sugestao')
+      if (snapshotParent.child('taxa_aumento_sugestao').val()) {
+        taxaAumentoSugestao = snapshotParent.child('taxa_aumento_sugestao').val()
+      }
       
       // Monta comando select com os parametros
       if (snapshotParent.hasChild('lista_chaves_carga')) {
@@ -221,12 +223,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensProjetoDeVidaProjecao[0] = {
               cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
               nome: 'Renda projetada',
-              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, true)
+              //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, false)
+              valor: Number(retGraficoReservaCompleto[3])
             }            
             listaItensProjetoDeVidaProjecao[1] = {
               cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
               nome: 'Saldo projetado',
-              valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, true)
+              //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, false)
+              valor: Number(retGraficoReservaCompleto[2])
             }     
             
             let valorContribProjetada = retGraficoReservaCompleto[4] 
@@ -339,14 +343,16 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensCoberturas[0] = {
             cor: '<<seg_coberturas.lista_itens_coberturas.0.cor>>',
             nome: rowDados.cob_nomecapitalmorte,
-            valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte, 2, false)
+            //valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte, 2, false)
+            valor: capitalMorte
           }
           //Invalidez
           capitalInvalidez = rowDados.cob_capitalinvalidez !== null ? rowDados.cob_capitalinvalidez : 0
           listaItensCoberturas[1] = {
             cor: '<<seg_coberturas.lista_itens_coberturas.1.cor>>',
             nome: rowDados.cob_nomecapitalinvalidez,
-            valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez, 2, false)
+            //valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez, 2, false)
+            valor: capitalInvalidez
           }
   
           //Bloco estrutura valores projeto de vida
@@ -368,7 +374,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaCoberturas[0] = {
             cor: '<<seg_projeto_vida.itens.coberturas.0.cor>>',
             nome: rowDados.cob_nomecapitalmorte,
-            valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte, 2, false)
+            //valor: capitalMorte === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalMorte, 2, false)
+            valor: capitalMorte
           }
   
           //cobertura por Invalidez
@@ -389,7 +396,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaItensProjetoDeVidaCoberturas[1] = {
             cor: '<<seg_projeto_vida.itens.coberturas.1.cor>>',
             nome: rowDados.cob_nomecapitalinvalidez,
-            valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez, 2, false)
+            //valor: capitalInvalidez === 0 ? '(não contratado)' : financeiro.valor_to_string_formatado(capitalInvalidez, 2, false)
+            valor: capitalInvalidez
           }            
   
         } 
@@ -495,12 +503,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaItensProjetoDeVidaProjecao[0] = {
         cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
         nome: 'Renda projetada',
-        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, true)
+        //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, false)
+        valor: Number(retGraficoReservaCompleto[3])
       }            
       listaItensProjetoDeVidaProjecao[1] = {
         cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
         nome: 'Saldo projetado',
-        valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, true)
+        //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, false)
+        valor: Number(retGraficoReservaCompleto[2])
       }     
 
       let valorContribProjetada = retGraficoReservaCompleto[4]
@@ -597,7 +607,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     },
     usr_coberturas: {
       acao: {
-        valor_cobertura_potencial: calculaCoberturaPotencial(),
+        valor_cobertura_potencial: calculaCoberturaPotencial(listaItensProjetoDeVidaCoberturas),
         vigente: true
       },
       lista_itens_coberturas: listaItensCoberturas,
@@ -826,23 +836,31 @@ function calculaContribuicaoProjetada(valorContribProjetada) {
   return utils.valorFormatoDesc(valorContribProjetada)
 }
 
-function calculaDeducaoPotencial() {
-  return 300
+function calculaDeducaoPotencial(vlrContribAtual) {
+  vlrContribAtual = vlrContribAtual * taxaAumentoSugestao
+  return utils.valorFormatoDesc(vlrContribAtual)
 }
 
 function calculaRendaPotencial(rendaProjetadaAtual) {
-  rendaProjetadaAtual = rendaProjetadaAtual.replace('.','').replace(',','.')
-  rendaProjetadaAtual = rendaProjetadaAtual.replace('R$','')
-  rendaProjetadaAtual = parseFloat(rendaProjetadaAtual)
+  if (typeof rendaProjetadaAtual === 'string') {
+    rendaProjetadaAtual = rendaProjetadaAtual.replace('.','').replace(',','.')
+    rendaProjetadaAtual = rendaProjetadaAtual.replace('R$','')
+    rendaProjetadaAtual = parseFloat(rendaProjetadaAtual)  
+  }
   rendaProjetadaAtual = rendaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
   return utils.valorFormatoDesc(rendaProjetadaAtual)
 }
 
 function calculaReservaPotencial(reservaProjetadaAtual) {
-  reservaProjetadaAtual = reservaProjetadaAtual.replace('.','').replace(',','.')
-  reservaProjetadaAtual = reservaProjetadaAtual.replace('R$','')
-  reservaProjetadaAtual = parseFloat(reservaProjetadaAtual)
+  console.log('===> reservaProjetadaAtual', reservaProjetadaAtual)
+  if (typeof reservaProjetadaAtual === 'string') {
+    reservaProjetadaAtual = reservaProjetadaAtual.replace('.','').replace(',','.')
+    reservaProjetadaAtual = reservaProjetadaAtual.replace('R$','')
+    reservaProjetadaAtual = parseFloat(reservaProjetadaAtual)
+  }
+  console.log('===> taxaAumentoSugestao', taxaAumentoSugestao)
   reservaProjetadaAtual = reservaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
+  console.log('===> reservaProjetadaAtual', reservaProjetadaAtual)  
   return utils.valorFormatoDesc(reservaProjetadaAtual)
 }
 
@@ -850,8 +868,14 @@ function validaSegmento() {
   return 'blue'
 }
 
-function calculaCoberturaPotencial() {
-  return '1,1 Mi'
+function calculaCoberturaPotencial(listaItensCoberturas) {
+  let coberturaTotal = listaItensCoberturas[0] + listaItensCoberturas[1]
+  if (coberturaTotal === 0) {
+    return "Proteja a você e sua família. Clique aqui e contrate nossas coberturas."
+  } else {
+    coberturaTotal = coberturaTotal * taxaAumentoSugestao
+    return utils.valorFormatoDesc(coberturaTotal)
+  }
 }
 
 async function getConnection () {
