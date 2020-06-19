@@ -91,11 +91,11 @@
                     bibendum. Praesent quis aliquam dui. Aliquam eu condimentum enim.
                 </div>         -->
             </template>
-            <template v-else>
+    <template v-else>
                 <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
             </template>
-        </template>
-        <template v-else>
+    </template>
+    <template v-else>
             <contratacao-aberta v-bind:dados="dados.seguroSolicitado"></contratacao-aberta>
         </template>
     </template>
@@ -109,14 +109,11 @@
             <div class="mdl-card-container div_vSelect_cadastro div-container" style="margin-top: 20px;">
                 <span class="Span_Label_vSelect_v2">Profissão</span><br>
                 <v-select v-if="profissoes" v-model="profissao" width="200px" :options="profissoes" style="line-height: 18px !important;"></v-select>
-                <!-- <div class="div-img-input" style="margin-top: -35px;">
-                    <img class="img-editar" v-bind:src="img_editar" alt=""/>
-                </div> -->
-            </div>    
-            <div class="mdl-card__supporting-text" style="margin:20px">                
+            </div>
+            <div class="mdl-card__supporting-text" style="margin:20px">
                 <div class="div_button_cancelar" style="float: left; width: 48%;" @click="modalvoltar()">voltar</div>
                 <div class="div_button_confirmar" style="float: right; width: 48%;" @click="salvarProfissao()" ref="salvar">salvar</div>
-            </div>          
+            </div>
         </div>
     </div>
 
@@ -128,10 +125,10 @@
                 <p>
                     Infelizmente não é possível a contratação de seguros para participantes com idade inferior a 15 anos.</p>
                 </p>
-            </div>                
-            <div class="mdl-card__supporting-text" style="margin:20px">                
-                <div class="div_button_cancelar" @click="modalvoltar()">voltar</div>                    
-            </div>          
+            </div>
+            <div class="mdl-card__supporting-text" style="margin:20px">
+                <div class="div_button_cancelar" @click="modalvoltar()">voltar</div>
+            </div>
         </div>
     </div>
 </div>
