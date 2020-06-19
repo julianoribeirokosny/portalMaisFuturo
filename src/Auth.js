@@ -30,7 +30,8 @@ export default class Auth {
    */
   constructor() {
     // Firebase SDK
-    this.auth = firebase.auth();
+    //firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+    this.auth = firebase.auth()
     this.auth.languageCode = 'pt-BR';
     this._waitForAuthPromiseResolver = new $.Deferred();
     this.firebaseHelper = new FirebaseHelper();
@@ -111,12 +112,17 @@ export default class Auth {
     }
 
     // FirebaseUI config.
+    //firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     this.uiConfig = {
       'signInSuccessUrl': '/',
       'signInFlow': signInFlow,
       'signInOptions': [
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        {
+          provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          customParameters: {
+            prompt: 'select_account' //força sempre pedir o usuário do Google na entrada/login
+          }
+        },        firebase.auth.EmailAuthProvider.PROVIDER_ID,
         {provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
           defaultCountry: 'BR',
           recaptchaParameters: {
@@ -176,6 +182,7 @@ export default class Auth {
       this.userId = null;
       this.signedInUserAvatar.css('background-image', '');
       this.firebaseUi.start('#firebaseui-auth-container', this.uiConfig);
+      //this.firebaseUi.disableAutoSignIn();      
       document.body.classList.remove('fp-signed-in');
       document.body.classList.add('fp-signed-out');
       Auth.disableAdminMode();

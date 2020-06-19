@@ -15,6 +15,7 @@ import servicos from './component/servicos/servicos'
 import emConstrucao from './component/emConstrucao/emConstrucao'
 import historicoContribuicao from './component/historicoContribui\cao/historicoContribuicao'
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
+import maisAmigos from './component/maisAmigos/maisAmigos'
 import page from 'page';
 import { Erros } from './Erros';
 
@@ -258,7 +259,8 @@ export default class Home {
                     servicos,
                     emConstrucao,
                     historicoContribuicao,
-                    trocaParticipacao
+                    trocaParticipacao,
+                    maisAmigos
                 },
                 data: {
                     video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
@@ -273,7 +275,8 @@ export default class Home {
                     emprestimoSimulador: dadosSimuladorEmprestimo,
                     seguroSimulador: dadosSimuladorSeguro,
                     historicoContribuicao: listaHistoricoContribuicao,
-                    historicoRentabilidade: historicoRentabilidade
+                    historicoRentabilidade: historicoRentabilidade,
+                    background: this.data_Home.mais_amigos.background
                 },
                 created() {
                     sessionStorage.ultimaPagina = 'home'
@@ -296,6 +299,9 @@ export default class Home {
                     }
                 },
                 methods: {
+                    maisamigos() {
+                        page('/mais-amigos')
+                    },
                     forceRerender() {
                         this.componentKey += 1;
                     },
@@ -303,7 +309,7 @@ export default class Home {
                         base_spinner.style.display = 'none'
                         page('/erro')
                     },
-                    toggleCategory: function() {
+                    toggleCategory() {
                         this.toggle = !this.toggle;
                     },
                     removerCampanha: function(campanha) {
@@ -497,5 +503,4 @@ export default class Home {
             }
         })
     }
-
 }
