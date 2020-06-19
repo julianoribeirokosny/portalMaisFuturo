@@ -101,7 +101,7 @@ export default {
                 { label: '29 anos', value: 29 },
                 { label: '30 anos', value: 30 }],
             simulador: true,
-            taxa_mensal: 0,
+            taxa_mensal: 5,
             taxa_mensal_assistido: 4.5,  
             date_now: '',
             date_inicio_renda: '',
@@ -163,7 +163,7 @@ export default {
         }
     },
     created(){          
-        //console.log('this.dados - CONTRIBUICAO',this.dados)
+        console.log('this.dados - CONTRIBUICAO',this.dados)
         if (this.dados.rendaSolicitada.dados != null) {
             this.rendaSolicitada = true
         } else {

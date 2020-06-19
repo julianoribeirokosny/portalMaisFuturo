@@ -241,7 +241,7 @@ export default class Home {
             this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
         }
 
-        //console.log('this.data_Home', this.data_Home)
+        console.log('this.data_Home', this.data_Home)
         let auth = this.auth.currentUser.uid
 
         if (!this.vueObj) {
@@ -299,6 +299,14 @@ export default class Home {
                     }
                 },
                 methods: {
+                    formatMoeda(value){
+                        if (value === 0) {
+                            return '(não contratado)'
+                        } else {
+                            let val = financeiro.valor_to_string_formatado(value.toFixed(2), 2, false, true)
+                            return `R$ ${val}`
+                        }
+                    },
                     maisamigos() {
                         page('/mais-amigos')
                     },
