@@ -491,7 +491,7 @@
                               <dl>
                                 <template v-for="projecao in home.projeto_vida.itens.projecao" v-if="home.projeto_vida.itens.projecao">
                                     <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
-                                    <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ projecao.valor }}</dd>
+                                    <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ formatMoeda(projecao.valor) }}</dd>
                                 </template>
     </dl>
     </div>
@@ -499,7 +499,7 @@
         <dl>
             <template v-for="coberturas in home.projeto_vida.itens.coberturas" v-if="home.projeto_vida.itens.coberturas">                          
                                   <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
-                                  <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">R$ {{ coberturas.valor }}</dd>
+                                  <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor) }}</dd>
                                 </template>
         </dl>
     </div>
@@ -541,7 +541,7 @@
                               <dl class="dl-coberturas-label" style="margin-top: 0px !important;">
                                   <template v-for="(coberturas, index) in home.coberturas.itens">
                                       <dt class="dt-coberturas-label">{{ coberturas.nome }}</dt>
-                                      <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">R$ {{ coberturas.valor }}</dd>
+                                      <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor) }}</dd>
                                       <p class="p-coberturas-label-separador" v-if="index < (home.coberturas.itens.length - 1)"></p>
                                   </template>
     </dl>
