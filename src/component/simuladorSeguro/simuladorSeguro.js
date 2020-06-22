@@ -201,7 +201,7 @@ export default {
             this.seguroSolicitado = true
         } else {
             this.getProfissaoParticipante(this.dados.chave)  
-            this.montarDados()
+            this.montarDados(this.dataSimulador)
             // this.getProfissaoParticipante(this.dados.chave)
             // this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)
             // this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
@@ -221,7 +221,7 @@ export default {
             this.consultaDados()
             // this.sliderMorte.max = profissao.seguro
             // this.sliderInvalidez.max = profissao.seguro
-            // this.closeModal()
+            this.closeModal()
         })  
         if (this.dados.bloqueio) {
             this.$refs.ModalBloqueioIdade.style.display = "block"
@@ -260,20 +260,44 @@ export default {
     },
     methods: {
         consultaDados() {
-            let dados = this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid)
+            let dados = this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((data) => {
+                    return data
+                }
+            )
+
+            let dados2 = {
+                bloqueio: false,
+                chave: "4-1817",
+                fatorInvalidez: 0.11,
+                maximoInvalidez: 1093622,
+                maximoSemDpsInvalidez: 143622,
+                minimoInvalidez: 103622,
+                coberturaInvalidez: 103622,
+                stepInvalidez: 10000,
+                fatorMorte: 0.281,
+                maximoMorte: 152536,
+                maximoSemDpsMorte: 102536,
+                minimoMorte: 72536,
+                coberturaMorte: 72536,
+                stepMorte: 10000,
+                tipo: "Seguro",
+                titulo: "Simulador de</br>Seguro de Renda",
+                uid: "94mh0zeGzBc50xo93ub5DJluxpc2"
+            }
+            this.montarDados(dados2)
             console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O',dados) 
         },
-        montarDados() {
-            this.coberturaInvalidez = this.dataSimulador.coberturaInvalidez
-            this.coberturaMorte = this.dataSimulador.coberturaMorte
-            this.sliderInvalidez.min = this.dataSimulador.minimoInvalidez
-            this.sliderInvalidez.max = this.dataSimulador.maximoInvalidez
-            this.sliderInvalidez.interval = this.dataSimulador.stepInvalidez
-            this.sliderMorte.min = this.dataSimulador.minimoMorte
-            this.sliderMorte.max = this.dataSimulador.maximoMorte
-            this.sliderMorte.interval = this.dataSimulador.stepMorte
-            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dataSimulador.maximoSemDpsInvalidez)
-            this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dataSimulador.maximoSemDpsMorte)
+        montarDados(dataSimulador) {
+            this.coberturaInvalidez = dataSimulador.coberturaInvalidez
+            this.coberturaMorte = dataSimulador.coberturaMorte
+            this.sliderInvalidez.min = dataSimulador.minimoInvalidez
+            this.sliderInvalidez.max = dataSimulador.maximoInvalidez
+            this.sliderInvalidez.interval = dataSimulador.stepInvalidez
+            this.sliderMorte.min = dataSimulador.minimoMorte
+            this.sliderMorte.max = dataSimulador.maximoMorte
+            this.sliderMorte.interval = dataSimulador.stepMorte
+            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(dataSimulador.maximoSemDpsInvalidez)
+            this.maximoSemDpsMorteTela = this.valor_to_string_formatado(dataSimulador.maximoSemDpsMorte)
             this.calculaPremioInvalidez()            
             this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
             this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
