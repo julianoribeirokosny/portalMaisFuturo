@@ -92,18 +92,6 @@ module.exports =  {
         return anos <= 0 ? 0 : anos;        
     },
 
-    valorFormatoDesc : function (num) {
-        let ret = ''
-        if (Math.abs(num) > 999) {
-            ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + ' mil' 
-        } else if (Math.abs(num) > 999999) {
-            ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + ' Mi' 
-        } else {
-            Math.sign(num)*Math.abs(num)            
-        }
-        return ret
-    },
-
     idade_hoje(nascimento) {
         let hoje = new Date()
         var diferencaAnos = hoje.getFullYear() - nascimento.getFullYear();

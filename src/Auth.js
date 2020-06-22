@@ -168,7 +168,14 @@ export default class Auth {
     //************************************************************ */
     // Reload the page unless this is the first time being loaded and no signed-in user.
     if (this._waitForAuthPromiseResolver.state() !== 'pending' || user) {
-      Router.reloadPage();
+      this.validaVersaoApp().then((ok) => {
+        if (ok) {    
+          Router.reloadPage();
+        } else {
+          Erros.registraErro(this.auth.currentUser.uid, 'appUpdate', 'redirectHomeIfSignedIn', 'Não foi possível verificar versão do App')
+          return page('/erro')  
+        }
+      })
       //return
     }
 
@@ -257,5 +264,41 @@ export default class Auth {
     }
     page('/signout');
   } 
+
+  async validaVersaoApp() {
+    //valida se há nova versão do App e limpa o cache  
+    console.log('==> localStorage.versao', localStorage.versao)
+    let versao = await this.firebaseHelper.getVersao()
+    console.log('==> versao', versao)
+    if (localStorage.versao !== versao) {
+      localStorage.versao = versao
+      console.log('==> Limpando cache para atualização do App.')
+      let p1 = new Promise((resolve) => {
+        //limpa o cache
+        self.caches.keys().then(keys => { 
+          keys.forEach(key => {
+            self.caches.delete(key)  
+            console.log(key)
+          }) 
+          resolve(true)
+        })
+      })
+      let p2 = new Promise((resolve) => {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for(let registration of registrations) {  
+            console.log(registration)
+            registration.unregister();
+          }
+          resolve(true)
+        });  
+      })
+      return Promise.all([p1, p2]).then(() => {
+        return true
+      })
+    } else {
+      return true
+    }
+  }
+
 
 };

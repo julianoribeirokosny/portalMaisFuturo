@@ -161,6 +161,27 @@ module.exports =  {
         let percCresc = valorReservaHoje / (valorContribuicaoHoje * qtdMesesDesdeAdesao)
         let percCrescAnualizado = (Math.pow(Math.pow(percCresc, (1/qtdMesesDesdeAdesao)), 12) - 1) * 100
         return percCrescAnualizado < 0 ? 0 : percCrescAnualizado
+    },
+
+    valorFormatoDesc(num) {
+        let ret = ''
+        console.log('Math.abs(num)', Math.abs(num))
+        if (Math.abs(num) > 999999) {
+            console.log('==> Math.abs(num) > 999999')
+            //ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + ' Mi' 
+            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000000)), 1, true, false)
+        } else if (Math.abs(num) > 999) {
+            //ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + ' mil' 
+            console.log('==> Math.abs(num) > 999')
+            console.log('==> Math.sign(num)', Math.sign(num))
+            console.log('==> (Math.abs(num)/1000)', (Math.abs(num)/1000))
+            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 1, true, false) + ' mil' 
+        } else {
+            console.log('==> esle')
+            ret = this.valor_to_string_formatado(num, 2, true, false)
+        }
+        console.log('==> ret', ret)
+        return ret
     }
 
 }

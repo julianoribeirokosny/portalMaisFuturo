@@ -87,6 +87,7 @@ function mostraTelaInstalacaoIOS() {
 }
 
 if (pageReset) { //limpa o cache antes de continuar
+  localStorage.isPwaInstalled = ""
   let p1 = new Promise((resolve) => {
     //limpa o cache
     self.caches.keys().then(keys => { 
