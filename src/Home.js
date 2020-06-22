@@ -108,269 +108,328 @@ export default class Home {
             return page('/erro')
         }
 
-        this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
-        this.consulta_contribuicao = new Object()
-        this.consulta_contribuicao.tipo = 'Contribuição mensal'
-        this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
-        this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
-        this.consulta_contribuicao.chave = this.chave
-            //console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
-
-        this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
-        this.consulta_emprestimo = new Object()
-        this.consulta_emprestimo.tipo = 'Empréstimo'
-        this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
-        this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null
-        this.consulta_emprestimo.chave = this.chave
-            //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
-
-        this.seguro_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado')
-        this.consulta_seguro = new Object()
-        this.consulta_seguro.tipo = 'Seguro'
-        this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
-        this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
-        this.consulta_seguro.chave = this.chave
-            //console.log('Consulta Seguro ====> ', this.consulta_seguro)    
-            //console.log('this.data_Home',this.data_Home)
-
-        let historicoRentabilidade = await firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento)
-            //console.log('TESTE-RENTABILIDADE',teste)
-
-        let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
-        let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
-        let dadosSimuladorSeguro = await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
-
-        dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
-        dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
-        dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
-        //console.log('dadosSimuladorSeguro',dadosSimuladorSeguro)
-
-        let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
-        //console.log('listaHistoricoContribuicao', listaHistoricoContribuicao)
-
-
-        Vue.component('grafico-reserva', {
-            extends: VueCharts.Doughnut,
-            mounted() {
-
-                //console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
-                //console.log('Doughnut', data_Home.saldo_reserva.grafico);
-
-                this.renderChart({
-                    labels: data_Home.saldo_reserva.grafico.labels,
-                    datasets: [{
-                        data: data_Home.saldo_reserva.grafico.data,
-                        backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
-                        borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
-                        borderColor: data_Home.saldo_reserva.grafico.borderColor,
-                    }]
-                }, {
-                    cutoutPercentage: 88,
-                    legend: false,
-                    tooltips: false,
-                });
-            }
+        let p1 = new Promise((resolve) => {
+            firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado').then((ret) => {
+                this.contribuicao_Aberta = ret
+                resolve(true)
+            })
+        })      
+        let p2 = new Promise((resolve) => {
+            firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado').then((ret) => {
+                this.emprestimo_Solicitado = ret
+                resolve(true)
+            })
         })
-        Vue.component('projeto-vida', {
-            extends: VueCharts.Line,
-            mounted() {
-                var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
-                gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
-                gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
-                gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
-                data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
-
-                this.renderChart({
-                    labels: data_Home.projeto_vida.grafico.labels,
-                    datasets: data_Home.projeto_vida.grafico.datasets
-                }, {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: false,
-                    tooltips: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                callback: function(value) {
-                                    return value / 1000 + ' k';
-                                }
-                            }
-                        }]
-                    }
-                })
-            }
+        let p3 = new Promise((resolve) => {
+            firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((ret) => {
+                this.seguro_Solicitado = ret
+                resolve(true)
+            })
         })
-        Vue.component('contribuicao', {
-            extends: VueCharts.Doughnut,
-            //template: '#contribuicao',
-            mounted() {
-                this.renderChart({
-                    labels: data_Home.contribuicao.grafico.label,
-                    datasets: [{
-                        data: data_Home.contribuicao.grafico.data,
-                        backgroundColor: data_Home.contribuicao.grafico.backgroundColor,
-                        borderWidth: data_Home.contribuicao.grafico.borderWidth,
-                        borderColor: data_Home.contribuicao.grafico.borderColor,
-                    }]
-                }, {
-                    cutoutPercentage: 88,
-                    responsive: true,
-                    legend: false,
-                    tooltips: false,
-                    rotation: 1 * Math.PI,
-                    circumference: 1 * Math.PI
-                })
-            }
+        let historicoRentabilidade
+        let p4 = new Promise((resolve) => {
+            firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento).then((ret) => {
+                historicoRentabilidade = ret
+                resolve(true)
+            })
         })
-        Vue.config.errorHandler = function(err, vm, info) {
-            console.log(`Error: ${err.toString()}\nInfo: ${info}`);
-            Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
-            page('/erro')
-        }
+        let dadosSimuladorRenda
+        let p5 = new Promise((resolve) => {
+            firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid).then((ret) => {
+                dadosSimuladorRenda = ret
+                resolve(true)
+            })
+        })
+        let dadosSimuladorEmprestimo
+        let p6 = new Promise((resolve) => {
+            firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid).then((ret) => {
+                dadosSimuladorEmprestimo = ret
+                resolve(true)
+            })
+        })
+        let dadosSimuladorSeguro 
+        let p7 = new Promise((resolve) => {
+            firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid).then((ret) => {
+                dadosSimuladorSeguro = ret
+                resolve(true)
+            })
+        })
+        let listaHistoricoContribuicao
+        let p8 = new Promise((resolve) => {
+            firebaseHelper.getHistoricoContribuicao(this.chave).then((ret) => {
+                listaHistoricoContribuicao = ret
+                resolve(true)
+            })
+        })
 
-        if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {
-            //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
-            this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
-        }
+        return Promise.all([p1, p2, p3, p4, p5, p6, p7, p8]).then((retPromises) => {
 
-        if (this.data_Home.contribuicao.itens.patronal.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.patronal.valor)) {
-            this.data_Home.contribuicao.itens.patronal.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.patronal.valor.toFixed(2), 2, false, true)
-        }
+            //this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
+            this.consulta_contribuicao = new Object()
+            this.consulta_contribuicao.tipo = 'Contribuição mensal'
+            this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
+            this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
+            this.consulta_contribuicao.chave = this.chave
+                //console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
 
-        if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
-            this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
-        }
+            //this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
+            this.consulta_emprestimo = new Object()
+            this.consulta_emprestimo.tipo = 'Empréstimo'
+            this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
+            this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null
+            this.consulta_emprestimo.chave = this.chave
+                //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
 
-        console.log('this.data_Home', this.data_Home)
-        let auth = this.auth.currentUser.uid
+            //this.seguro_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado')
+            this.consulta_seguro = new Object()
+            this.consulta_seguro.tipo = 'Seguro'
+            this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
+            this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
+            this.consulta_seguro.chave = this.chave
+                //console.log('Consulta Seguro ====> ', this.consulta_seguro)    
+                //console.log('this.data_Home',this.data_Home)
 
-        if (!this.vueObj) {
-            this.vueObj = new Vue({
-                renderError(h, err) {
-                    location.reload()
-                },
-                components: {
-                    simuladorEmprestimo,
-                    rentabilidade,
-                    simuladorSeguro,
-                    simuladorRenda,
-                    contratacaoAberta,
-                    cadastro,
-                    servicos,
-                    emConstrucao,
-                    historicoContribuicao,
-                    trocaParticipacao,
-                    maisAmigos
-                },
-                data: {
-                    video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
-                    componentKey: 0,
-                    home: this.data_Home,
-                    toggle: false,
-                    chave: this.chave,
-                    url_foto: sessionStorage.url_foto,
-                    uid: this.auth.currentUser.uid,
-                    contribuicaoSimulador: this.consulta_contribuicao,
-                    rendaSimulador: dadosSimuladorRenda,
-                    emprestimoSimulador: dadosSimuladorEmprestimo,
-                    seguroSimulador: dadosSimuladorSeguro,
-                    historicoContribuicao: listaHistoricoContribuicao,
-                    historicoRentabilidade: historicoRentabilidade,
-                    background: this.data_Home.mais_amigos.background
-                },
-                created() {
-                    sessionStorage.ultimaPagina = 'home'
-                },
+            //let historicoRentabilidade = await firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento)
+                //console.log('TESTE-RENTABILIDADE',teste)
+
+            //let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
+            //let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
+            //let dadosSimuladorSeguro = await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
+
+            dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
+            dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
+            dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
+            //console.log('dadosSimuladorSeguro',dadosSimuladorSeguro)
+
+            //let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
+            //console.log('listaHistoricoContribuicao', listaHistoricoContribuicao)
+
+
+            Vue.component('grafico-reserva', {
+                extends: VueCharts.Doughnut,
                 mounted() {
-                    let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
-                    if (rowParticipante) {
-                        document.querySelector('#div-contribuicao-row-participante-total').style.height = rowParticipante.clientHeight + "px"
-                        document.querySelector('#div-contribuicao-row-participante-totalh').style.height = rowParticipante.clientHeight + "px"
-                    }
-                    let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
-                    if (rowPatronal) {
-                        document.querySelector('#div-contribuicao-row-patronal-total').style.height = rowPatronal.clientHeight + "px"
-                        document.querySelector('#div-contribuicao-row-patronal-totalh').style.height = rowPatronal.clientHeight + "px"
-                    }
-                    let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
-                    if (rowSeguro) {
-                        document.querySelector('#div-contribuicao-row-seguro-total').style.height = rowSeguro.clientHeight + "px"
-                        document.querySelector('#div-contribuicao-row-seguro-totalh').style.height = rowSeguro.clientHeight + "px"
-                    }
-                },
-                methods: {
-                    formatMoeda(value){
-                        if (value === 0) {
-                            return '(não contratado)'
-                        } else if (value && value !== 0) {
-                            let val = financeiro.valor_to_string_formatado(value, 2, false, true)
-                            return `R$ ${val}`
-                        }
-                    },
-                    maisamigos() {
-                        page('/mais-amigos')
-                    },
-                    forceRerender() {
-                        this.componentKey += 1;
-                    },
-                    error() {
-                        base_spinner.style.display = 'none'
-                        page('/erro')
-                    },
-                    toggleCategory() {
-                        this.toggle = !this.toggle;
-                    },
-                    removerCampanha: function(campanha) {
-                        campanha.ativo = false
-                        firebaseHelper.removerCampanha(this.chave, campanha.nome)
-                    },
-                    contratarCampanha(link) {
-                        sessionStorage.ultimaPagina = 'home'
-                        page(`/${link}`)
-                    },
-                    simuladorSeguro(link) {
-                        sessionStorage.ultimaPagina = 'home'
-                        page(`/${link}`)
-                    },
-                    simuladorRenda(link, origem) {
-                        sessionStorage.ultimaPagina = origem
-                        page(`/${link}`)
-                    },
-                    contratacaoAberta() {
-                        sessionStorage.ultimaPagina = 'home'
-                        page('/contratacao-aberta')
 
-                    }
-                },
-                errorCaptured(err, component, details) {
-                    base_spinner.style.display = 'none'
-                    Erros.registraErro(err, 'vuejs', 'showHome', JSON.stringify(err))
-                    return page('/erro')
+                    //console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
+                    //console.log('Doughnut', data_Home.saldo_reserva.grafico);
+
+                    this.renderChart({
+                        labels: data_Home.saldo_reserva.grafico.labels,
+                        datasets: [{
+                            data: data_Home.saldo_reserva.grafico.data,
+                            backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
+                            borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
+                            borderColor: data_Home.saldo_reserva.grafico.borderColor,
+                        }]
+                    }, {
+                        cutoutPercentage: 88,
+                        legend: false,
+                        tooltips: false,
+                    });
                 }
             })
-            this.vueObj.$mount('#app');
-        } else {
-            this.vueObj.home = this.data_Home
-            this.vueObj.contribuicaoAberta = this.consulta_contribuicao
-            this.vueObj.rendaSimulador = dadosSimuladorRenda
-            this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
-            this.vueObj.seguroSimulador = dadosSimuladorSeguro
-            this.vueObj.chave = this.chave
-            this.vueObj.url_foto = sessionStorage.url_foto
-            this.vueObj.uid = this.auth.currentUser.uid
-            this.vueObj.historicoContribuicao = listaHistoricoContribuicao
-            this.vueObj.$forceUpdate()
-            this.vueObj.forceRerender()
-                //console.log('this.vueObj',this.vueObj)
-        }
+            Vue.component('projeto-vida', {
+                extends: VueCharts.Line,
+                mounted() {
+                    var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
+                    gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
+                    gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
+                    gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
+                    data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
 
-        setTimeout(function() {
-            base_spinner.style.display = 'none'
-        }, 20)
+                    this.renderChart({
+                        labels: data_Home.projeto_vida.grafico.labels,
+                        datasets: data_Home.projeto_vida.grafico.datasets
+                    }, {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        legend: false,
+                        tooltips: false,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    callback: function(value) {
+                                        return value / 1000 + ' k';
+                                    }
+                                }
+                            }]
+                        }
+                    })
+                }
+            })
+            Vue.component('contribuicao', {
+                extends: VueCharts.Doughnut,
+                //template: '#contribuicao',
+                mounted() {
+                    this.renderChart({
+                        labels: data_Home.contribuicao.grafico.label,
+                        datasets: [{
+                            data: data_Home.contribuicao.grafico.data,
+                            backgroundColor: data_Home.contribuicao.grafico.backgroundColor,
+                            borderWidth: data_Home.contribuicao.grafico.borderWidth,
+                            borderColor: data_Home.contribuicao.grafico.borderColor,
+                        }]
+                    }, {
+                        cutoutPercentage: 88,
+                        responsive: true,
+                        legend: false,
+                        tooltips: false,
+                        rotation: 1 * Math.PI,
+                        circumference: 1 * Math.PI
+                    })
+                }
+            })
+            Vue.config.errorHandler = function(err, vm, info) {
+                console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+                Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
+                page('/erro')
+            }
 
-        //Escuta por alterações na home ou no usuario
-        firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
-        firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
+            if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {
+                //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
+                this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
+            }
+
+            if (this.data_Home.contribuicao.itens.patronal.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.patronal.valor)) {
+                this.data_Home.contribuicao.itens.patronal.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.patronal.valor.toFixed(2), 2, false, true)
+            }
+
+            if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
+                this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
+            }
+
+            console.log('this.data_Home', this.data_Home)
+            let auth = this.auth.currentUser.uid
+
+            if (!this.vueObj) {
+                this.vueObj = new Vue({
+                    renderError(h, err) {
+                        location.reload()
+                    },
+                    components: {
+                        simuladorEmprestimo,
+                        rentabilidade,
+                        simuladorSeguro,
+                        simuladorRenda,
+                        contratacaoAberta,
+                        cadastro,
+                        servicos,
+                        emConstrucao,
+                        historicoContribuicao,
+                        trocaParticipacao,
+                        maisAmigos
+                    },
+                    data: {
+                        video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
+                        componentKey: 0,
+                        home: this.data_Home,
+                        toggle: false,
+                        chave: this.chave,
+                        url_foto: sessionStorage.url_foto,
+                        uid: this.auth.currentUser.uid,
+                        contribuicaoSimulador: this.consulta_contribuicao,
+                        rendaSimulador: dadosSimuladorRenda,
+                        emprestimoSimulador: dadosSimuladorEmprestimo,
+                        seguroSimulador: dadosSimuladorSeguro,
+                        historicoContribuicao: listaHistoricoContribuicao,
+                        historicoRentabilidade: historicoRentabilidade,
+                        background: this.data_Home.mais_amigos.background
+                    },
+                    created() {
+                        sessionStorage.ultimaPagina = 'home'
+                    },
+                    mounted() {
+                        let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
+                        if (rowParticipante) {
+                            document.querySelector('#div-contribuicao-row-participante-total').style.height = rowParticipante.clientHeight + "px"
+                            document.querySelector('#div-contribuicao-row-participante-totalh').style.height = rowParticipante.clientHeight + "px"
+                        }
+                        let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
+                        if (rowPatronal) {
+                            document.querySelector('#div-contribuicao-row-patronal-total').style.height = rowPatronal.clientHeight + "px"
+                            document.querySelector('#div-contribuicao-row-patronal-totalh').style.height = rowPatronal.clientHeight + "px"
+                        }
+                        let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
+                        if (rowSeguro) {
+                            document.querySelector('#div-contribuicao-row-seguro-total').style.height = rowSeguro.clientHeight + "px"
+                            document.querySelector('#div-contribuicao-row-seguro-totalh').style.height = rowSeguro.clientHeight + "px"
+                        }
+                    },
+                    methods: {
+                        formatMoeda(value){
+                            if (value === 0) {
+                                return '(não contratado)'
+                            } else if (value && value !== 0) {
+                                let val = financeiro.valor_to_string_formatado(value, 2, false, true)
+                                return `R$ ${val}`
+                            }
+                        },
+                        maisamigos() {
+                            page('/mais-amigos')
+                        },
+                        forceRerender() {
+                            this.componentKey += 1;
+                        },
+                        error() {
+                            base_spinner.style.display = 'none'
+                            page('/erro')
+                        },
+                        toggleCategory() {
+                            this.toggle = !this.toggle;
+                        },
+                        removerCampanha: function(campanha) {
+                            campanha.ativo = false
+                            firebaseHelper.removerCampanha(this.chave, campanha.nome)
+                        },
+                        contratarCampanha(link) {
+                            sessionStorage.ultimaPagina = 'home'
+                            page(`/${link}`)
+                        },
+                        simuladorSeguro(link) {
+                            sessionStorage.ultimaPagina = 'home'
+                            page(`/${link}`)
+                        },
+                        simuladorRenda(link, origem) {
+                            sessionStorage.ultimaPagina = origem
+                            page(`/${link}`)
+                        },
+                        contratacaoAberta() {
+                            sessionStorage.ultimaPagina = 'home'
+                            page('/contratacao-aberta')
+
+                        }
+                    },
+                    errorCaptured(err, component, details) {
+                        base_spinner.style.display = 'none'
+                        Erros.registraErro(err, 'vuejs', 'showHome', JSON.stringify(err))
+                        return page('/erro')
+                    }
+                })
+                this.vueObj.$mount('#app');
+            } else {
+                this.vueObj.home = this.data_Home
+                this.vueObj.contribuicaoAberta = this.consulta_contribuicao
+                this.vueObj.rendaSimulador = dadosSimuladorRenda
+                this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
+                this.vueObj.seguroSimulador = dadosSimuladorSeguro
+                this.vueObj.chave = this.chave
+                this.vueObj.url_foto = sessionStorage.url_foto
+                this.vueObj.uid = this.auth.currentUser.uid
+                this.vueObj.historicoContribuicao = listaHistoricoContribuicao
+                this.vueObj.$forceUpdate()
+                this.vueObj.forceRerender()
+                    //console.log('this.vueObj',this.vueObj)
+            }
+
+            setTimeout(function() {
+                base_spinner.style.display = 'none'
+            }, 20)
+
+            //Escuta por alterações na home ou no usuario
+            firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
+            firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
+
+        })
+
     }
 
     isFloat(n) {

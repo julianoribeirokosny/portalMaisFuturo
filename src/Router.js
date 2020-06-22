@@ -46,22 +46,16 @@ export default class Router {
     });
     page('/home', async () => {
       verificaPrimeiroLogin().then((primeiroLogin) => {
-        if (primeiroLogin===null) {
-          Erros.registraErro(this.auth.currentUser.uid, 'auth', 'showHome', 'primeiroLogin === null')
-          return page('/erro')  
-        } else if (primeiroLogin) {
+        //if (primeiroLogin===null) {
+        //  Erros.registraErro(this.auth.currentUser.uid, 'auth', 'showHome', 'primeiroLogin === null')
+        //  return page('/erro')  
+        //} else 
+        if (primeiroLogin) {
           telaPrimeiroLoginConfig()
           this.displayPage('primeiro-login');
-        } else {
-          this.validaVersaoApp().then((ok) => {
-            if (ok) {
-              showHome();       
-              this.displayPage('home', true);        
-            } else {
-              Erros.registraErro(this.auth.currentUser.uid, 'appUpdate', 'redirectHomeIfSignedIn', 'Não foi possível verificar versão do App')
-              return page('/erro')  
-            }
-          })
+        } else if (!primeiroLogin) {
+          showHome();       
+          this.displayPage('home', true);        
         }
       }).catch((e) => {
         console.log('Erro!', e)
@@ -130,8 +124,8 @@ export default class Router {
     page('*', () => {
       page('/')
     });
-    // Start routing.
-    page();
+    
+    page(); // Start routing.
   }
 
   /**
@@ -210,40 +204,6 @@ export default class Router {
     $('.is-active').removeClass('is-active');
     $(`[href="${canonicalPath}"]`).addClass('is-active');
     next();
-  }
-
-  async validaVersaoApp() {
-    //valida se há nova versão do App e limpa o cache  
-    console.log('==> localStorage.versao', localStorage.versao)
-    let versao = await this.firebaseHelper.getVersao()
-    console.log('==> versao', versao)
-    if (localStorage.versao !== versao) {
-      localStorage.versao = versao
-      console.log('==> Limpando cache para atualização do App.')
-      let p1 = new Promise((resolve) => {
-        //limpa o cache
-        self.caches.keys().then(keys => { 
-          keys.forEach(key => {
-            self.caches.delete(key)  
-            console.log(key)
-          }) 
-          resolve(true)
-        })
-      })
-      let p2 = new Promise((resolve) => {
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-          for(let registration of registrations) {  
-            console.log(registration)
-            registration.unregister();
-          }
-          resolve(true)
-        });  
-      })
-      await Promise.all([p1, p2])
-      return true
-    } else {
-      return true
-    }
   }
 
 };
