@@ -31,6 +31,7 @@ export default {
     },    
     data: function() {
         return {
+            dataSimulador: null,
             firebaseHelper: new FirebaseHelper(),
             img_editar: img_editar,
             premioInicio: '',
@@ -44,25 +45,25 @@ export default {
             premioTotal: 0,
             premioTelaTotal: '0',
             corInvalidez: '#fc955b',
-            coberturaInvalidez: this.dados.coberturaInvalidez,
+            coberturaInvalidez: 0,
             coberturaTelaInvalidez: '0',
             premioInvalidez: 0,
             premioTelaInvalidez: '0',
             maximoSemDpsInvalidezTela: '0',
             corMorte: '#8BCF7B',
-            coberturaMorte: this.dados.coberturaMorte,
+            coberturaMorte: 0,
             coberturaTelaMorte: '0',
             maximoSemDpsMorteTela: '0',
             premioMorte: 0,
             premioTelaMorte: '0',
-            money: {
-                decimal: '',
-                thousands: '.',
-                prefix: '',
-                suffix: ' ',
-                precision: 0,
-                masked: false /* doesn't work with directive */
-            },            
+            // money: {
+            //     decimal: '',
+            //     thousands: '.',
+            //     prefix: '',
+            //     suffix: ' ',
+            //     precision: 0,
+            //     masked: false /* doesn't work with directive */
+            // },            
             sliderInvalidez: {
                 dotSize: 14,
                 height: 380,
@@ -70,9 +71,9 @@ export default {
                 direction: 'btt',
                 contained: false,
                 data: null,
-                min: this.dados.minimoInvalidez,
-                max: this.dados.maximoInvalidez,
-                interval: this.dados.stepInvalidez,
+                min: 0,
+                max: 0,
+                interval: 0,
                 disabled: false,
                 clickable: true,
                 duration: 0.5,
@@ -124,9 +125,9 @@ export default {
                 direction: 'btt',
                 contained: false,
                 data: null,
-                min: this.dados.minimoMorte,
-                max: this.dados.maximoMorte,
-                interval: this.dados.stepMorte,
+                min: 0,
+                max: 0,
+                interval: 0,
                 disabled: false,
                 clickable: true,
                 duration: 0.5,
@@ -194,34 +195,34 @@ export default {
         }
     },
     created(){        
-        console.log('THIS.DADOS.SEGUROS',this.dados)  
-        
+        console.log('T H I S  D A D O S  S E G U R O S:',this.dados)
+        this.dataSimulador = this.dados      
         if(this.dados.seguroSolicitado.dados != null) {
             this.seguroSolicitado = true
         } else {
-            this.getProfissaoParticipante(this.dados.chave)
-            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)            
-            this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
-            this.calculaPremioInvalidez()            
-            this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
-            this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
-            this.calculaPremioMorte()            
-            this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
-            this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
-            this.calculaTotal()
-            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)            
+            this.getProfissaoParticipante(this.dados.chave)  
+            this.montarDados()
+            // this.getProfissaoParticipante(this.dados.chave)
+            // this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)
+            // this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
+            // this.calculaPremioInvalidez()            
+            // this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
+            // this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
+            // this.calculaPremioMorte()            
+            // this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
+            // this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
+            // this.calculaTotal()
+            // this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
         }
-        this.$root.$on('novaProfissao', (profissao) => { 
-            //console.log('N O V A  P R O F I S S Ã O:',profissao)
-            //this.getProfissaoParticipante(this.dados.chave)
-            this.profissao = profissao.nome
-            this.sliderMorte.max = profissao.seguro
-            this.sliderInvalidez.max = profissao.seguro
-            this.closeModal()
-            //this.profissao = valor
-        })        
+              
     },
     mounted(){
+        this.$root.$on('nova::Profissao', () => {
+            this.consultaDados()
+            // this.sliderMorte.max = profissao.seguro
+            // this.sliderInvalidez.max = profissao.seguro
+            // this.closeModal()
+        })  
         if (this.dados.bloqueio) {
             this.$refs.ModalBloqueioIdade.style.display = "block"
             // let modal = document.getElementById('ModalBloqueioIdade')
@@ -258,6 +259,30 @@ export default {
         }
     },
     methods: {
+        consultaDados() {
+            let dados = this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid)
+            console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O',dados) 
+        },
+        montarDados() {
+            this.coberturaInvalidez = this.dataSimulador.coberturaInvalidez
+            this.coberturaMorte = this.dataSimulador.coberturaMorte
+            this.sliderInvalidez.min = this.dataSimulador.minimoInvalidez
+            this.sliderInvalidez.max = this.dataSimulador.maximoInvalidez
+            this.sliderInvalidez.interval = this.dataSimulador.stepInvalidez
+            this.sliderMorte.min = this.dataSimulador.minimoMorte
+            this.sliderMorte.max = this.dataSimulador.maximoMorte
+            this.sliderMorte.interval = this.dataSimulador.stepMorte
+            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dataSimulador.maximoSemDpsInvalidez)
+            this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dataSimulador.maximoSemDpsMorte)
+            this.calculaPremioInvalidez()            
+            this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
+            this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
+            this.calculaPremioMorte()            
+            this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
+            this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
+            this.calculaTotal()
+            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
+        },
         salvarProfissao() {
             let profissao = this.listaProfissoes.filter(p => {
                 if (p[0] === this.profissao)

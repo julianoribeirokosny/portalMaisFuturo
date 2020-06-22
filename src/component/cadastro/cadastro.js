@@ -130,7 +130,7 @@ export default {
         },
         salvar() { 
             
-                       
+            //debugger
             let profissao = this.listaProfissoes.filter(p => { 
                                                                 if (p[0] === this.profissao) {
                                                                     return Object.entries(p)  
@@ -144,17 +144,19 @@ export default {
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
                 if(cadastro) {
-                    this.$root.$emit('novaProfissao',this.cadastro.informacoes_pessoais.profissao)
+                    this.$root.$emit('nova::Profissao')
                     this.finalizado = true
+                    
                      
                 } else {
                     this.finalizado = false
                     this.error_banco = true                    
-                    
+                    //return false 
                 }
             } else {
                 this.finalizado = false
-                this.error_banco = true  
+                this.error_banco = true
+                //return false  
             }
         },
         getEndereco(val) {
