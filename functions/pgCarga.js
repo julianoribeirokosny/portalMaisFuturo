@@ -627,6 +627,10 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   let valorTotal = Number(usuarioTotalContr.valor.replace('.','').replace(',','.'))
   let contribProjetada = calculaContribuicaoProjetada(valorContribParticipanteAtual)
   let percAumentoContribProjetada
+  console.log('==> chave: ', chave)
+  console.log('==> contribProjetada[1]: ', contribProjetada[1])
+  console.log('==> valorContribParticipanteAtual: ', valorContribParticipanteAtual)
+
   if (valorContribParticipanteAtual > 0) {
     percAumentoContribProjetada = (contribProjetada[1] - valorContribParticipanteAtual) / valorContribParticipanteAtual
   } else {
@@ -634,11 +638,6 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   }
   console.log('==> listaItensProjetoDeVidaProjecao[0].valor',listaItensProjetoDeVidaProjecao[0].valor) 
   console.log('==> percAumentoContribProjetada',percAumentoContribProjetada) 
-  if (percAumentoContribProjetada===Infinity) {
-    console.log('==> chave: ', chave)
-    console.log('==> contribProjetada[1]: ', contribProjetada[1])
-    console.log('==> valorContribParticipanteAtual: ', valorContribParticipanteAtual)
-  }
   let rendaPotencial = calculaRendaPotencial(listaItensProjetoDeVidaProjecao[0].valor * (1+ percAumentoContribProjetada))
   let coberturaPotencial = calculaCoberturaPotencial(listaItensProjetoDeVidaCoberturas)
   //carrega estrutura da Home
@@ -929,7 +928,7 @@ function calculaRendaPotencial(rendaProjetadaAtual) {
     rendaProjetadaAtual = rendaProjetadaAtual.replace('R$','')
     rendaProjetadaAtual = parseFloat(rendaProjetadaAtual)  
   }
-  rendaProjetadaAtual = rendaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
+  rendaProjetadaAtual = rendaProjetadaAtual 
   return financeiro.valorFormatoDesc(rendaProjetadaAtual)
 }
 

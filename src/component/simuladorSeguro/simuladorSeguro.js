@@ -262,35 +262,10 @@ export default {
     },
     methods: {
         consultaDados() {    
-
-            // let promise = new Promise((resolve) => {
-            //         this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
-            //             resolve(ret)
-            //             //return ret 
-            //     })
-            // })
-
-            let dados2 = {
-                bloqueio: false,
-                chave: "4-1817",
-                fatorInvalidez: 0.11,
-                maximoInvalidez: 1093622,
-                maximoSemDpsInvalidez: 143622,
-                minimoInvalidez: 103622,
-                coberturaInvalidez: 103622,
-                stepInvalidez: 10000,
-                fatorMorte: 0.281,
-                maximoMorte: 152536,
-                maximoSemDpsMorte: 102536,
-                minimoMorte: 72536,
-                coberturaMorte: 72536,
-                stepMorte: 10000,
-                tipo: "Seguro",
-                titulo: "Simulador de</br>Seguro de Renda",
-                uid: "94mh0zeGzBc50xo93ub5DJluxpc2"
-            }
-            console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O',dados2) 
-            this.montarDados(dados2)
+            this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
+                //console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O!',ret) 
+                this.montarDados(ret)       
+            })
         },
         montarDados(dataSimulador) {
             this.maximoSemDpsInvalidez =  dataSimulador.maximoSemDpsInvalidez
