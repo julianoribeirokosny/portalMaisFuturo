@@ -2,8 +2,10 @@
     <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
         <template v-if="!rendaSolicitada">
             <template v-if="simulador">
-                <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>            
                 <!--Planos Instituidos-->
+                <div class="div_titulo_card margin-auto" v-if="dados.usr_tipo_plano == 'instituido'">
+                    Defina sua <br>contribuição<br>mensal
+                </div>            
                 <div style="margin-top: 40px;" v-if="dados.usr_tipo_plano == 'instituido'">
                     <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
                     <div style="float: left; width: 75% !important; height: 320px; margin-top: 40px;">
@@ -42,6 +44,9 @@
                     </div>           
                 </div>
                 <!--Plano JMalucelli-->
+                <div class="div_titulo_card margin-auto" v-if="dados.usr_tipo_plano == 'jmalucelli'">
+                    Contrate uma<br>contribuição<br>adicional
+                </div>
                 <div style="margin-top: 30px;" v-if="dados.usr_tipo_plano == 'jmalucelli'">
                     <div class="div_descricao margin-auto" v-html="dados.descricao"></div>
                     <div style="float: left; width: 75% !important; height: 310px; margin-top: 10px;">

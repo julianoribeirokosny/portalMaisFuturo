@@ -130,7 +130,7 @@ export default {
         },
         salvar() { 
             
-            //debugger
+            console.log('$ R O O T:', this.$root)
             let profissao = this.listaProfissoes.filter(p => { 
                                                                 if (p[0] === this.profissao) {
                                                                     return Object.entries(p)  
@@ -150,13 +150,11 @@ export default {
                      
                 } else {
                     this.finalizado = false
-                    this.error_banco = true                    
-                    //return false 
+                    this.error_banco = true
                 }
             } else {
                 this.finalizado = false
                 this.error_banco = true
-                //return false  
             }
         },
         getEndereco(val) {

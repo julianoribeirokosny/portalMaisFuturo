@@ -263,12 +263,12 @@ export default {
     methods: {
         consultaDados() {    
 
-            let promise = new Promise((resolve) => {
-                    this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
-                        resolve(ret)
-                        //return ret 
-                })
-            })
+            // let promise = new Promise((resolve) => {
+            //         this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
+            //             resolve(ret)
+            //             //return ret 
+            //     })
+            // })
 
             let dados2 = {
                 bloqueio: false,
@@ -334,10 +334,14 @@ export default {
             }
         },
         showModal() {
-            this.$refs.ModalProfissao.style.display = "block"
+            if (this.$refs.ModalProfissao) {
+                this.$refs.ModalProfissao.style.display = "block"
+            }
         },
         closeModal() {
-            this.$refs.ModalProfissao.style.display = "none"
+            if(this.$refs.ModalProfissao) {
+                this.$refs.ModalProfissao.style.display = "none"
+            }
         },
         getProfissaoParticipante(chave){
             return this.firebaseHelper.getProfissaoParticipante(chave)

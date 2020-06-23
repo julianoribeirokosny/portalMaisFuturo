@@ -81,6 +81,7 @@ export default class Home {
         }
         this.chave = sessionStorage.chave
 
+        console.log('U i D:', this.auth.currentUser.uid)
         //console.log('=====> CHAVE: ', sessionStorage.chave)
         if (this.chave === null || this.chave === '') {
             base_spinner.style.display = 'none'
