@@ -33,6 +33,8 @@ export default {
         return {
             dataSimulador: null,
             firebaseHelper: new FirebaseHelper(),
+            maximoSemDpsInvalidez: 0,
+            maximoSemDpsMorte:0,
             img_editar: img_editar,
             premioInicio: '',
             simulador: true,
@@ -259,11 +261,14 @@ export default {
         }
     },
     methods: {
-        consultaDados() {
-            let dados = this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((data) => {
-                    return data
-                }
-            )
+        consultaDados() {    
+
+            let promise = new Promise((resolve) => {
+                    this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
+                        resolve(ret)
+                        //return ret 
+                })
+            })
 
             let dados2 = {
                 bloqueio: false,
@@ -284,10 +289,12 @@ export default {
                 titulo: "Simulador de</br>Seguro de Renda",
                 uid: "94mh0zeGzBc50xo93ub5DJluxpc2"
             }
+            console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O',dados2) 
             this.montarDados(dados2)
-            console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O',dados) 
         },
         montarDados(dataSimulador) {
+            this.maximoSemDpsInvalidez =  dataSimulador.maximoSemDpsInvalidez
+            this.maximoSemDpsMorte = dataSimulador.maximoSemDpsMorte
             this.coberturaInvalidez = dataSimulador.coberturaInvalidez
             this.coberturaMorte = dataSimulador.coberturaMorte
             this.sliderInvalidez.min = dataSimulador.minimoInvalidez
@@ -323,6 +330,7 @@ export default {
                 this.sliderInvalidez.max = profissao[0][1]
                 this.sliderMorte.max = profissao[0][1]
                 this.closeModal()
+                this.consultaDados()
             }
         },
         showModal() {
