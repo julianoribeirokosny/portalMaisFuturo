@@ -203,39 +203,24 @@ export default {
             this.seguroSolicitado = true
         } else {
             this.getProfissaoParticipante(this.dados.chave)  
-            this.montarDados(this.dataSimulador)
-            // this.getProfissaoParticipante(this.dados.chave)
-            // this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(this.dados.maximoSemDpsInvalidez)
-            // this.maximoSemDpsMorteTela = this.valor_to_string_formatado(this.dados.maximoSemDpsMorte)
-            // this.calculaPremioInvalidez()            
-            // this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
-            // this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
-            // this.calculaPremioMorte()            
-            // this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
-            // this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
-            // this.calculaTotal()
-            // this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
+            this.montarDados(this.dataSimulador)        
         }
-              
     },
     mounted(){
         this.$root.$on('nova::Profissao', () => {
             this.consultaDados()
-            // this.sliderMorte.max = profissao.seguro
-            // this.sliderInvalidez.max = profissao.seguro
-            this.closeModal()
+            this.closeModal()            
         })  
         if (this.dados.bloqueio) {
-            this.$refs.ModalBloqueioIdade.style.display = "block"
-            // let modal = document.getElementById('ModalBloqueioIdade')
-            // modal.style.display = "block"
+            if(this.$refs.ModalBloqueioIdade){
+                this.$refs.ModalBloqueioIdade.style.display = "block"
+            }            
         }
     },
     watch: {
         coberturaInvalidez(newVal, oldVal) {
             if(newVal !== oldVal) {
-                this.calculaPremioInvalidez()
-                console.log('==> this.premioInvalidez', this.premioInvalidez)
+                this.calculaPremioInvalidez()                
                 this.coberturaTelaInvalidez = this.valor_to_string_formatado(newVal)
                 this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
                 this.calculaTotal()
@@ -243,8 +228,7 @@ export default {
         },
         coberturaMorte(newVal, oldVal) {
             if(newVal !== oldVal) {
-                this.calculaPremioMorte()
-                console.log('==> this.premioMorte', this.premioMorte)
+                this.calculaPremioMorte()                
                 this.coberturaTelaMorte = this.valor_to_string_formatado(newVal)
                 this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
@@ -252,19 +236,22 @@ export default {
         },
         profissao(newVal){
             if(newVal) {
-                this.$refs.salvar.style.pointerEvents = 'visible'
-                this.$refs.salvar.style.opacity = 1
+                if(this.$refs.salvar){
+                    this.$refs.salvar.style.pointerEvents = 'visible'
+                    this.$refs.salvar.style.opacity = 1
+                }
             } else {
-                this.$refs.salvar.style.pointerEvents = 'none'
-                this.$refs.salvar.style.opacity = 0.6
+                if(this.$refs.salvar){
+                    this.$refs.salvar.style.pointerEvents = 'none'
+                    this.$refs.salvar.style.opacity = 0.6
+                }
             }
         }
     },
     methods: {
         consultaDados() {    
             this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
-                //console.log('C O N S U L T A  D A D O S  S I M U L A D O R  S E G U R O!',ret) 
-                this.montarDados(ret)       
+                this.montarDados(ret)
             })
         },
         montarDados(dataSimulador) {
@@ -323,8 +310,10 @@ export default {
                 .then(profissao => {
                     if (!profissao) {
                         this.profissao = profissao
-                        this.$refs.salvar.style.pointerEvents = 'none'
-                        this.$refs.salvar.style.opacity = 0.6
+                        if (this.$refs.salvar) {
+                            this.$refs.salvar.style.pointerEvents = 'none'
+                            this.$refs.salvar.style.opacity = 0.6
+                        }
                         this.showModal()
                         return this.firebaseHelper.getProfissoes()
                             .then(ret => {

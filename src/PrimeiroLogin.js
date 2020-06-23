@@ -179,12 +179,14 @@ export default class PrimeiroLogin {
         let celular = document.querySelector('#celular')
         let email = document.querySelector('#email')
         celular.addEventListener("keydown", function(event) {
+            alert(event.key)
             if (event.key === "Enter") {
                 event.preventDefault()
                 email.focus()
             }
         })
         email.addEventListener("keydown", function(event) {
+            alert(event.key)
             if (event.key === "Enter") {
                 event.preventDefault()
                 celular.focus()
