@@ -62,8 +62,7 @@ export default {
             }            
         },
         retornar(){
-            //page(`/${sessionStorage.ultimaPagina}`)
-            page(`/home`)
+            page(`/${sessionStorage.ultimaPagina}`)
         }
     }
 }
