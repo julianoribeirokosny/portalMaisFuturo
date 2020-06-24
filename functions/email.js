@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-const account = 'previdenciadigital@maisfuturo.com.br'; //functions.config().gmail.email;
+/*const account = 'previdenciadigital@maisfuturo.com.br'; //functions.config().gmail.email;
 const pass = '159+++ert'; //functions.config().gmail.password;
 const mailTransport = nodemailer.createTransport({
     host: 'smtp.office365.com',
@@ -11,7 +11,22 @@ const mailTransport = nodemailer.createTransport({
         user: account,
         pass: pass,
     },
+});*/
+
+const account = 'portalmaisfuturo@gmail.com'; //functions.config().gmail.email;
+const pass = 'maisFuturo90()12!@'; //functions.config().gmail.password;
+const mailTransport = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+    //service: 'gmail',
+    auth: {
+        user: account,
+        pass: pass,
+    },
 });
+
 
 module.exports =  {
 

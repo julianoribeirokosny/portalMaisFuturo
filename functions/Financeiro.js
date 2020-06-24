@@ -77,16 +77,21 @@ module.exports =  {
 
     valor_to_string_formatado(num, casasDecimais, incluiCifrao, fromWeb) {
         let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
+        console.log('**===> numFormatado', numFormatado)
         if (incluiCifrao) {
+            console.log('**===> Com Cifrao')
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
         } else {
+            console.log('**===> Sem Cifrao')
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
         }
+        console.log('**===> numFormatado2', numFormatado)
         if (!fromWeb) {
             numFormatado = numFormatado.replace(/,/g,'#')
             numFormatado = numFormatado.replace('.',',')
             numFormatado = numFormatado.replace(/#/g,'.')
         }
+        console.log('**===> numFormatado3', numFormatado)
         return numFormatado
     },
 
@@ -107,7 +112,7 @@ module.exports =  {
         if(tipoPlano == 'jmalucelli') { //se plano J projeta contribuições de 13o
             let decimoTerceiro = this.valorFuturo(
                 0, 
-                5, 
+                taxaAnual, 
                 Math.trunc(qtdMeses / 12), //incluído por Leandro: garantir somente anos completos 
                 (contribParticipantePlanoPatrocinado + contribPatronal).toFixed(2)
             )
@@ -167,20 +172,23 @@ module.exports =  {
         let ret = ''
         console.log('Math.abs(num)', Math.abs(num))
         if (Math.abs(num) > 999999) {
-            console.log('==> Math.abs(num) > 999999')
-            //ret = Math.sign(num)*((Math.abs(num)/1000000).toFixed(1)) + ' Mi' 
-            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000000)), 1, true, false)
+            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000000)), 1, true, false) 
+            if (ret.indexOf(',0') >= 0) { //se o final do valor for ",0" retira...
+                ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000000)), 0, true, false) 
+            }
+            ret = ret + ' Mi'
         } else if (Math.abs(num) > 999) {
-            //ret = Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + ' mil' 
-            console.log('==> Math.abs(num) > 999')
-            console.log('==> Math.sign(num)', Math.sign(num))
-            console.log('==> (Math.abs(num)/1000)', (Math.abs(num)/1000))
-            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 1, true, false) + ' mil' 
+            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 3, true, false) 
+            if (ret.indexOf(',0') >= 0) { //se o final do valor for ",0" retira...
+                ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 0, true, false) 
+            }
+            ret = ret + ' mil'
         } else {
-            console.log('==> esle')
             ret = this.valor_to_string_formatado(num, 2, true, false)
+            if (ret.indexOf(',0') >= 0) { //se o final do valor for ",0" retira...
+                ret = this.valor_to_string_formatado(num, 0, true, false) 
+            }
         }
-        console.log('==> ret', ret)
         return ret
     }
 

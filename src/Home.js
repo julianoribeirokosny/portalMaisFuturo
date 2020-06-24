@@ -129,7 +129,7 @@ export default class Home {
         })
         let historicoRentabilidade
         let p4 = new Promise((resolve) => {
-            firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento).then((ret) => {
+            firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento ? this.data_Home.perfil_investimento : "Conservador").then((ret) => {
                 historicoRentabilidade = ret
                 resolve(true)
             })
@@ -356,12 +356,13 @@ export default class Home {
                         }
                     },
                     methods: {
-                        formatMoeda(value){
+                        formatMoeda(value, incluiCifrao){
                             if (value === 0) {
                                 return '(não contratado)'
                             } else if (value && value !== 0) {
-                                let val = financeiro.valor_to_string_formatado(value, 2, false, true)
-                                return `R$ ${val}`
+                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
+                                //return `R$ ${val}`
+                                return val
                             }
                         },
                         maisamigos() {
@@ -490,6 +491,8 @@ export default class Home {
 
                 let stringHome = JSON.stringify(homeAux)
 
+                let ultPos = 0
+
                 // MERGE HOME + DADOS USUÁRIOS + SEGMENTO
                 while (stringHome.indexOf('<<') >= 0) {
 
@@ -500,6 +503,12 @@ export default class Home {
                     let valor
                     let achouCaminhoPart = false,
                         achouCaminhoSeg = false
+
+                    if (ultPos === posIni) {
+                        return null
+                    } else {
+                        ultPos = posIni
+                    }
 
                     // busca chave em usuario
                     if (chave.substring(0, 4) === 'usr_') {

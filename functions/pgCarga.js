@@ -26,6 +26,7 @@ var select
 var stepRenda
 var stepInvalidez
 var stepMorte
+var configCardAcao
 
 exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{plano}/data_base_carga').onWrite(
   async (change, context) => {
@@ -134,6 +135,10 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         taxaAumentoSugestao = snapshotParent.child('taxa_aumento_sugestao').val()
       }
       
+      if (snapshotParent.child('card_acao').val()) {
+        configCardAcao = snapshotParent.child('card_acao').val()
+      }
+      
       // Monta comando select com os parametros
       if (snapshotParent.hasChild('lista_chaves_carga')) {
         //console.log('===> dadosPortalLista!')
@@ -179,6 +184,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       contribRisco: 0
     }
     let capitalMorte, capitalInvalidez
+    let valorRendaProjetada, valorReservaProjetada
     console.log('#pgCarga - iniciando forEach', retDadosPG)
     retDadosPG.forEach((rowDados) => {
       //primeiro verifica se está em situação do plano válida para o portal:
@@ -264,8 +270,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
               valor: Number(retGraficoReservaCompleto[2])
             }     
             
-            console.log('==> retGraficoReservaCompleto[4]', retGraficoReservaCompleto[4])
-            console.log('==> valorContribParticipanteAtual', valorContribParticipanteAtual)      
             if (retGraficoReservaCompleto[4] > 0) {
               valorContribParticipanteAtual = retGraficoReservaCompleto[4] 
             }      
@@ -278,7 +282,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)            
             usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2, false)
             usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2, false)
-            usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual)
+            valorReservaProjetada = retGraficoReservaCompleto[5]
+            valorRendaProjetada = retGraficoReservaCompleto[6]
+            usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual, valorReservaProjetada, valorRendaProjetada)
           }
           //carrega dados novo registro do usuário
           chave = rowDados.chave              
@@ -347,6 +353,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaMesesProjetoDeVida = {}
           capitalMorte = 0
           capitalInvalidez = 0
+          valorRendaProjetada = 0
+          valorReservaProjetada = 0
   
           //Bloco estrutura valores de Reserva
           listaItensReservaChave[0] = {
@@ -575,7 +583,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       usuarios = incluiUsuarioHistContribJSON(usuarios, chave, usuarioContrib, anoMes)
       usuarioTotalContr.valor = financeiro.valor_to_string_formatado(usuarioTotalContr.valor, 2, false)
       usrReservaTotal.valor = financeiro.valor_to_string_formatado(usrReservaTotal.valor, 2, false)
-      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual)
+      valorReservaProjetada = retGraficoReservaCompleto[5]
+      valorRendaProjetada = retGraficoReservaCompleto[6]
+      usuarios = incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual, valorReservaProjetada, valorRendaProjetada)
     }
     
     //insere registros de testes
@@ -623,13 +633,15 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
 })
 
-function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual) {
+function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual, reservaPotencial, rendaPotencial) {
   let valorTotal = Number(usuarioTotalContr.valor.replace('.','').replace(',','.'))
-  let contribProjetada = calculaContribuicaoProjetada(valorContribParticipanteAtual)
+  let contribProjetada = calculaContribuicaoProjetada(valorContribParticipanteAtual, 0)
   let percAumentoContribProjetada
   console.log('==> chave: ', chave)
   console.log('==> contribProjetada[1]: ', contribProjetada[1])
   console.log('==> valorContribParticipanteAtual: ', valorContribParticipanteAtual)
+  console.log('==> reservaPotencial: ', reservaPotencial)
+  console.log('==> rendaPotencial: ', rendaPotencial)
 
   if (valorContribParticipanteAtual > 0) {
     percAumentoContribProjetada = (contribProjetada[1] - valorContribParticipanteAtual) / valorContribParticipanteAtual
@@ -638,7 +650,10 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   }
   console.log('==> listaItensProjetoDeVidaProjecao[0].valor',listaItensProjetoDeVidaProjecao[0].valor) 
   console.log('==> percAumentoContribProjetada',percAumentoContribProjetada) 
-  let rendaPotencial = calculaRendaPotencial(listaItensProjetoDeVidaProjecao[0].valor * (1+ percAumentoContribProjetada))
+
+  rendaPotencial = financeiro.valorFormatoDesc(rendaPotencial)
+  reservaPotencial = financeiro.valorFormatoDesc(reservaPotencial)
+
   let coberturaPotencial = calculaCoberturaPotencial(listaItensProjetoDeVidaCoberturas)
   //carrega estrutura da Home
   usuarios[chave].home = {
@@ -661,7 +676,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
         valor_renda_potencial: rendaPotencial,        
         valor_deducao_potencial: 0, //calculaDeducaoPotencial(),
         qtd_steps_entrada: contribProjetada[2],
-        vigente: true
+        vigente: configCardAcao && configCardAcao.contribuicao[usr.sitPart] ? true  : "_"
       },
       lista_itens_contribuicao: listaItensContribuicaoChave,
       lista_valores_contribuicao: listaValoresContribuicaoChave.length > 0 ? listaValoresContribuicaoChave : [valorTotal],
@@ -679,7 +694,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
         valor_cobertura_potencial: coberturaPotencial[0],
         valor_morte_entrada: coberturaPotencial[2],
         valor_invalidez_entrada: coberturaPotencial[3],
-        vigente: true
+        vigente: configCardAcao && configCardAcao.coberturas[usr.sitPart] ? true  : "_"
       },
       lista_itens_coberturas: listaItensCoberturas,
       vigente: true
@@ -687,10 +702,10 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_projeto_vida : {
       acao: {
         valor_renda_potencial: rendaPotencial,
-        valor_reserva_potencial: calculaReservaPotencial(listaItensProjetoDeVidaProjecao[1].valor),
+        valor_reserva_potencial: reservaPotencial, //calculaReservaPotencial(listaItensProjetoDeVidaProjecao[1].valor),
         valor_contribuicao_projetada: contribProjetada[1],
         qtd_steps_entrada: contribProjetada[2],
-        vigente: true
+        vigente: configCardAcao && configCardAcao.projeto_vida[usr.sitPart] ? true  : "_"
       },
       lista_datasets_projetoDeVida: listaDatasetsProjetoDeVida,
       lista_itens_projetoDeVida: {
@@ -822,14 +837,7 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   }
   
   //calculo de IdadeApos, datas e tempos
-  let idadeNaAdesao = utils.diffDatasEmAnos(dataNasc, dataAdesao)
-  let idadeApos = 65
-  if (idadeNaAdesao > 55) {
-    idadeApos = idadeNaAdesao + 10
-  }
-  if (idade > idadeApos) {
-    idadeApos = idade
-  }
+  let idadeApos = calculaIdadeApos(dataNasc, dataAdesao, idade)
   //console.log('==> dataAdesao', dataAdesao)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
   let dataAposentadoria = financeiro.calculaDataInicioRenda(dataNasc, idadeApos)
@@ -838,7 +846,22 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
 
   let valorReservaAposentadoria = financeiro.calculaReservaFutura(valorHoje, taxa, listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
   let valorRendaAposentadoria = financeiro.calculaRendaFutura(valorReservaAposentadoria, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos             
-  //let valorContribProjetada = financeiro.calculaContribProjetada(taxa, difMesesHojeAposentadoria, valorHoje, valorReservaAposentadoria)
+
+  let valorContribProjetada = 0
+  let valorReservaAposentadoriaProjetada = 0
+  let valorRendaAposentadoriaProjetada = 0
+  if (amplitude==='completo') {
+    console.log('=====> calculando Valores Projetados')
+    valorContribProjetada = calculaContribuicaoProjetada(listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado)
+    console.log('=====> valorContribProjetada', valorContribProjetada)
+    valorReservaAposentadoriaProjetada = financeiro.calculaReservaFutura(valorHoje, taxa, valorContribProjetada[1], listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
+    console.log('=====> valorReservaAposentadoriaProjetada', valorReservaAposentadoriaProjetada)
+    console.log('=====> valorHoje, taxa, valorContribProjetada[1], 0, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano', valorHoje, taxa, valorContribProjetada[1], listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
+    valorRendaAposentadoriaProjetada = financeiro.calculaRendaFutura(valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos             
+    console.log('=====> valorRendaAposentadoriaProjetada', valorRendaAposentadoriaProjetada)
+    console.log('=====> valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano', valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano)
+
+  }
 
   //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e idadeAposentadoria
   let crescPorFaixas = difMesesDaAdesaoAposentadoria / 5
@@ -901,11 +924,29 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
     retDataset[5] = valorReservaAposentadoria    //inclui valor projetado de 65 anos na última faixa
   }
 
-  return [retDataset, retListaMeses, valorReservaAposentadoria, valorRendaAposentadoria, listaUsuarioContrib.contribParticipante + listaUsuarioContrib.contribParticipantePlanoPatrocinado]
+  console.log('++> valorHoje', valorHoje)
+  console.log('++> amplitude', amplitude)
+  if (valorHoje===0 && amplitude==='até hoje') { //acontece para alguns participantes...
+    retDataset[0] = 0
+    retDataset[1] = 0
+    retDataset[2] = 0
+    retDataset[3] = 0
+    retDataset[4] = 0
+    retDataset[5] = 0
+  }
+
+  return [  retDataset, 
+            retListaMeses, 
+            valorReservaAposentadoria, 
+            valorRendaAposentadoria, 
+            listaUsuarioContrib.contribParticipante + listaUsuarioContrib.contribParticipantePlanoPatrocinado, 
+            valorReservaAposentadoriaProjetada, 
+            valorRendaAposentadoriaProjetada
+          ]
 }
 
-function calculaContribuicaoProjetada(valorContribParticipanteAtual) {
-  let valorDifContribProjetada = valorContribParticipanteAtual * (taxaAumentoSugestao - 1)
+function calculaContribuicaoProjetada(valorContribParticipanteAtual, valorContribParticipantePatrocAtual) {
+  let valorDifContribProjetada = (valorContribParticipanteAtual + valorContribParticipantePatrocAtual) * (taxaAumentoSugestao - 1)
   let valorContribProjetada = 0
   let qtdStepsRenda = 1
   if (valorDifContribProjetada < stepRenda) {
@@ -1272,15 +1313,15 @@ function insereRegistroTestesHome(usuarios, chave, apelido){
   return usuarios
 }
 
+function calculaIdadeApos(dataNasc, dataAdesao, idade) {
+  let idadeNaAdesao = utils.diffDatasEmAnos(dataNasc, dataAdesao)
+  let idadeApos = 65
+  if (idadeNaAdesao > 55) {
+    idadeApos = idadeNaAdesao + 10
+  }
+  if (idade > idadeApos) {
+    idadeApos = idade
+  }
 
-function sleep(ms) {
-  var waitTill = new Date(new Date().getTime() + ms);
-  while(waitTill > new Date()){}  
-}  
-
-function groupByArray (xs, key) {
-  return xs.reduce(function(rv, x) {
-    (rv[x[key]] = rv[x[key]] || []).push(x);
-    return rv;
-  }, {})
+  return idadeApos
 }
