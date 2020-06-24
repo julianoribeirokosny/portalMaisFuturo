@@ -77,21 +77,16 @@ module.exports =  {
 
     valor_to_string_formatado(num, casasDecimais, incluiCifrao, fromWeb) {
         let numFormatado = parseFloat(parseFloat(num).toFixed(casasDecimais)) //arruma qqr forma que entrar
-        console.log('**===> numFormatado', numFormatado)
         if (incluiCifrao) {
-            console.log('**===> Com Cifrao')
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais, style: 'currency', currency: 'BRL'});
         } else {
-            console.log('**===> Sem Cifrao')
             numFormatado = numFormatado.toLocaleString('pt-BR', {minimumFractionDigits: casasDecimais, maximumFractionDigits: casasDecimais});
         }
-        console.log('**===> numFormatado2', numFormatado)
         if (!fromWeb) {
             numFormatado = numFormatado.replace(/,/g,'#')
             numFormatado = numFormatado.replace('.',',')
             numFormatado = numFormatado.replace(/#/g,'.')
         }
-        console.log('**===> numFormatado3', numFormatado)
         return numFormatado
     },
 

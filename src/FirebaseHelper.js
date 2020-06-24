@@ -437,17 +437,18 @@ export default class FirebaseHelper {
       console.error(e);
     }
 
-    const updateData = {
-      profile_picture: imageUrl || null,
-      full_name: displayName,
-    };
-    updateData._search_index = {
-      full_name: searchFullName,
-      reversed_full_name: searchReversedFullName,
-    };
-    this.database.ref(`/login/${user.uid}`).update(updateData).then(() => {
-      console.log('Public profile updated.');
-    });
+    if (imageUrl) {
+      const updateData = {
+        profile_picture: imageUrl
+      };
+      updateData._search_index = {
+        full_name: searchFullName,
+        reversed_full_name: searchReversedFullName,
+      };
+      this.database.ref(`/login/${user.uid}`).update(updateData).then(() => {
+        console.log('Public profile updated.');
+      });  
+    }
     return this.getTermoServicoSettings(user.uid)
   }
 
@@ -668,8 +669,10 @@ export default class FirebaseHelper {
    * Saves the given notification token.
    */
   saveNotificationToken(token) {
-    return this.database.ref(`/login/${this.auth.currentUser.uid}/notificationTokens/${token}`)
-        .set(true);
+    if (this.auth.currentUser) {
+      return this.database.ref(`/login/${this.auth.currentUser.uid}/notificationTokens/${token}`)
+      .set(true);
+    }
   }
 
   /**

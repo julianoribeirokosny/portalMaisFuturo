@@ -194,6 +194,7 @@ export default class UserPage {
         this.userAvatar.css('background-image',
             `url("${Utils.addSizeToGoogleProfilePic(userInfo.profile_picture) || '/images/silhouette.jpg'}")`);
         this.userUsername.text(userInfo.full_name || 'Anonymous');
+        sessionStorage.nome = userInfo.full_name
         this.userInfoContainer.show();
       } else {
         let data = {
