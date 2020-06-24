@@ -9,7 +9,7 @@ import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { VueMaskDirective } from 'v-mask'
-import {TheMask} from 'vue-the-mask'
+import { TheMask } from 'vue-the-mask'
 
 Vue.directive('mask', VueMaskDirective)
 
@@ -22,10 +22,10 @@ export default {
         TheMask
     },
     props: {
-        foto:'',
-        chave_usuario:'',
+        foto: '',
+        chave_usuario: '',
         uid: '',
-        testeProf:''
+        testeProf: ''
     },
     data: function() {
         return {
@@ -39,10 +39,11 @@ export default {
             img_editar: img_editar,
             reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
             estados_civis: [{ label: 'Casado', value: 'Casado' },
-                            { label: 'Solteiro', value: 'Solteiro' },
-                            { label: 'Viúvo', value: 'Viúvo' },
-                            { label: 'Separado', value: 'Separado' },
-                            { label: 'Divorciado', value: 'Divorciado' }],
+                { label: 'Solteiro', value: 'Solteiro' },
+                { label: 'Viúvo', value: 'Viúvo' },
+                { label: 'Separado', value: 'Separado' },
+                { label: 'Divorciado', value: 'Divorciado' }
+            ],
             classValid: {
                 'hasvalid': false,
                 'hasinvalid': false
@@ -52,29 +53,28 @@ export default {
             profissao: ''
         }
     },
-    created(){        
+    created() {
         this.getParticipante()
-        this.getProfissoes()        
-        this.$root.$on('atualizaProfissao', (valor) => { 
+        this.getProfissoes()
+        this.$root.$on('atualizaProfissao', (valor) => {
             this.profissao = valor
         })
     },
-    watch: {        
-        cep(val){
-            if(val.length === 10) {
+    watch: {
+        cep(val) {
+            if (val.length === 10) {
                 this.getEndereco(val)
             }
         },
         email(newVal, oldVal) {
-            if(oldVal && newVal.length >= 6) {
+            if (oldVal && newVal.length >= 6) {
                 var teste = this.isEmailValid(newVal)
-                if(teste) {
+                if (teste) {
                     this.classValid.hasvalid = true
                     this.classValid.hasinvalid = false
                     this.$refs.salvar.style.pointerEvents = 'visible'
                     this.$refs.salvar.style.opacity = 1
-                }
-                else {
+                } else {
                     this.classValid.hasvalid = false
                     this.classValid.hasinvalid = true
                     this.$refs.salvar.style.pointerEvents = 'none'
@@ -83,33 +83,32 @@ export default {
             }
         },
         finalizado(val) {
-            if(val) {
+            if (val) {
                 this.intervaloMSG()
             }
-        }        
+        }
     },
-    methods: {        
-        getProfissoes() {            
+    methods: {
+        getProfissoes() {
             return this.firebaseHelper.getProfissoes()
-                .then(ret => {                                    
-                    this.listaProfissoes = Object.entries(ret)                    
+                .then(ret => {
+                    this.listaProfissoes = Object.entries(ret)
                     this.listaProfissoes.forEach(prof => {
-                         this.profissoes.push(prof[0])
-                    })                        
-                }
-            )
+                        this.profissoes.push(prof[0])
+                    })
+                })
         },
         isEmailValid(email) {
             return this.reg.test(email)
         },
-        intervaloMSG(){
+        intervaloMSG() {
             setInterval(() => {
                 this.finalizado = false
-             }, 5000);
+            }, 5000);
         },
         getParticipante() {
             this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
-                .then( cad => {
+                .then(cad => {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
                     this.email = this.cadastro.informacoes_pessoais.email
@@ -117,37 +116,35 @@ export default {
                     if (this.cadastro.informacoes_pessoais.profissao) {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
                     }
-                }
-            )
+                })
             this.firebaseHelper.getUsuario(this.uid)
-                .then( response => {                    
+                .then(response => {
                     this.emailPrincipal = response.email_principal
-                }
-            )
+                })
         },
         voltar() {
             page('/home')
         },
-        salvar() { 
-            
+        salvar() {
+
             console.log('$ R O O T:', this.$root)
-            let profissao = this.listaProfissoes.filter(p => { 
-                                                                if (p[0] === this.profissao) {
-                                                                    return Object.entries(p)  
-                                                                }
-                                                            })
-            if(profissao.length > 0) {
-                this.cadastro.informacoes_pessoais.profissao =  {
-                                                                    nome: profissao[0][0],
-                                                                    seguro: profissao[0][1]
-                                                                }            
+            let profissao = this.listaProfissoes.filter(p => {
+                if (p[0] === this.profissao) {
+                    return Object.entries(p)
+                }
+            })
+            if (profissao.length > 0) {
+                this.cadastro.informacoes_pessoais.profissao = {
+                    nome: profissao[0][0],
+                    seguro: profissao[0][1]
+                }
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
-                if(cadastro) {
+                if (cadastro) {
                     this.$root.$emit('nova::Profissao')
                     this.finalizado = true
-                    
-                     
+
+
                 } else {
                     this.finalizado = false
                     this.error_banco = true
@@ -158,27 +155,18 @@ export default {
             }
         },
         getEndereco(val) {
-            let cep_num = val.replace('.','').replace('-','')
+            let cep_num = val.replace('.', '').replace('-', '')
             cep(cep_num)
-            .then(retorno => {
-                if(this.cadastro.endereco) {
-                    this.cadastro.endereco.logradouro = retorno.street
-                    this.cadastro.endereco.bairro = retorno.neighborhood
-                    this.cadastro.endereco.cidade = retorno.city
-                    this.cadastro.endereco.estado = retorno.state
-                    this.cadastro.endereco.cep = val
-                }
-            })
-            .catch(console.log)
+                .then(retorno => {
+                    if (this.cadastro.endereco) {
+                        this.cadastro.endereco.logradouro = retorno.street
+                        this.cadastro.endereco.bairro = retorno.neighborhood
+                        this.cadastro.endereco.cidade = retorno.city
+                        this.cadastro.endereco.estado = retorno.state
+                        this.cadastro.endereco.cep = val
+                    }
+                })
+                .catch(console.log)
         }
     }
 }
-
-
-
-
-
-
-
-
-

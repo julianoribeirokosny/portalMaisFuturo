@@ -9,15 +9,14 @@ export default {
     template: trocaParticipacao,
     props: {
         uid: '',
-        competencia: '',
-        perfil: ''
+        competencia: ''
     },
     data: function() {
         return {
             firebaseHelper: new FirebaseHelper(),
             listaChaves: new Array(),
             showDialog: false,
-            foto: sessionStorage.url_foto,
+            foto: sessionStorage.url_foto ? sessionStorage.url_foto : "../images/silhouette.jpg",
             novaChave: null
         }
     },
@@ -26,7 +25,6 @@ export default {
     },
     methods: {
         getParticipacoes() {
-            //console.log('U I D: ',this.uid)
             return this.firebaseHelper.getUsuarioChave(this.uid)
                 .then(chaves => {
                     if (chaves) {
