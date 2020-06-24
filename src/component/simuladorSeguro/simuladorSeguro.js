@@ -1,6 +1,5 @@
 'use strict';
 
-//import Vue from 'vue/dist/vue.esm.js'
 import vSelect from 'vue-select'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/antd.css'
@@ -31,6 +30,10 @@ export default {
     },    
     data: function() {
         return {
+            novaCoberturaInvalidez: 0,
+            novaCoberturaMorte: 0,
+            novaCoberturaInvalidezTela: 0,
+            novaCoberturaMorteTela: 0,
             dataSimulador: null,
             firebaseHelper: new FirebaseHelper(),
             maximoSemDpsInvalidez: 0,
@@ -57,15 +60,7 @@ export default {
             coberturaTelaMorte: '0',
             maximoSemDpsMorteTela: '0',
             premioMorte: 0,
-            premioTelaMorte: '0',
-            // money: {
-            //     decimal: '',
-            //     thousands: '.',
-            //     prefix: '',
-            //     suffix: ' ',
-            //     precision: 0,
-            //     masked: false /* doesn't work with directive */
-            // },            
+            premioTelaMorte: '0',                 
             sliderInvalidez: {
                 dotSize: 14,
                 height: 380,
@@ -218,18 +213,18 @@ export default {
         }
     },
     watch: {
-        coberturaInvalidez(newVal, oldVal) {
+        novaCoberturaInvalidez(newVal, oldVal) {
             if(newVal !== oldVal) {
-                this.calculaPremioInvalidez()                
-                this.coberturaTelaInvalidez = this.valor_to_string_formatado(newVal)
+                this.calculaPremioInvalidez()
+                this.novaCoberturaInvalidezTela = this.valor_to_string_formatado(newVal)
                 this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
                 this.calculaTotal()
             }
         },
-        coberturaMorte(newVal, oldVal) {
+        novaCoberturaMorte(newVal, oldVal) {
             if(newVal !== oldVal) {
                 this.calculaPremioMorte()                
-                this.coberturaTelaMorte = this.valor_to_string_formatado(newVal)
+                this.novaCoberturaMorteTela = this.valor_to_string_formatado(newVal)
                 this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
             }
@@ -259,6 +254,8 @@ export default {
             this.maximoSemDpsMorte = dataSimulador.maximoSemDpsMorte
             this.coberturaInvalidez = dataSimulador.coberturaInvalidez
             this.coberturaMorte = dataSimulador.coberturaMorte
+            this.novaCoberturaInvalidez = dataSimulador.minimoInvalidez
+            this.novaCoberturaMorte = dataSimulador.minimoMorte
             this.sliderInvalidez.min = dataSimulador.minimoInvalidez
             this.sliderInvalidez.max = dataSimulador.maximoInvalidez
             this.sliderInvalidez.interval = dataSimulador.stepInvalidez
@@ -335,14 +332,14 @@ export default {
         calculaTotal(){
             let premio = (parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)).toFixed(2)
             this.premioTelaTotal = this.valor_to_string_formatado(premio)
-            let cobertura = parseFloat(this.coberturaInvalidez) + parseFloat(this.coberturaMorte)
+            let cobertura = parseFloat(this.novaCoberturaInvalidez) + parseFloat(this.novaCoberturaMorte)
             this.coberturaTelaTotal = this.valor_to_string_formatado(cobertura)
         },
         calculaPremioInvalidez(){
-            this.premioInvalidez = (this.coberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(2)            
+            this.premioInvalidez = (this.novaCoberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(2)            
         },
         calculaPremioMorte(){
-            this.premioMorte = (this.coberturaMorte * this.dados.fatorMorte / 1000).toFixed(2)            
+            this.premioMorte = (this.novaCoberturaMorte * this.dados.fatorMorte / 1000).toFixed(2)            
         },
         valor_to_string_formatado(num) {
             return financeiro.valor_to_string_formatado(num, 2, false, true)            
@@ -385,7 +382,14 @@ export default {
             this.contratacao.chave = this.dados.chave
             this.contratacao.uid =  this.dados.uid
             this.contratacao.label_button = 'Confirma novo valor'
-            this.contratacao.tipo = 'Seguro'            
+            this.contratacao.tipo = 'Seguro'
+            this.contratacao.detalhes = {
+                premio_total_solicitado: this.premioTelaTotal,
+                premio_invalidez_solicitado: this.premioInvalidez,
+                premio_morte_solicitado: this.premioMorte,                
+                cobertura_invalidez_solicitado: this.novaCoberturaInvalidez,
+                cobertura_morte_solicitado: this.novaCoberturaMorte
+            }
             this.simulador = false
         }
     },

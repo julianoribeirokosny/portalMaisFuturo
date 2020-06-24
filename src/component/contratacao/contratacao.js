@@ -18,8 +18,9 @@ export default {
                     msg_inicial: '',
                     msg_vigencia: '',
                     msg_novo_valor: '',
-                    valor_novo: 300,
-                    valor_antigo: 200,
+                    valor_novo: 0,
+                    valor_antigo: 0,
+                    detalhes: null,
                     uid:''
                 }
             }
@@ -39,13 +40,19 @@ export default {
         confirmar(){
             let objeto_contratacao = new Object()     
             let dateFormat = Utils.dateFormat(new Date(), true, true)
+            let detalhes = ''
+            if (this.dados.detalhes) {
+                detalhes = this.dados.detalhes
+            }
             objeto_contratacao[dateFormat] = {
                                                 uid: this.dados.uid,
                                                 tipo: this.dados.tipo,
                                                 valor_anterior: this.dados.valor_antigo,
                                                 valor_solicitado: this.dados.valor_novo,
                                                 status: 'solicitado',
-                                            }            
+                                                detalhes: detalhes
+                                            }
+                                        
             var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)
             if(contratacao) {
                 this.finalizado = true

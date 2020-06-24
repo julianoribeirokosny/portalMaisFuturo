@@ -20,6 +20,19 @@
     font-size: 22px;
     letter-spacing: -3px;    
 }
+
+.span_coberturaatual_valor {
+    font-family: 'MaisFuturo-Bold';            
+    font-size: 40px;
+    letter-spacing: -3px;  
+}
+.span_coberturaatual_prefixo {
+    font-family: 'MaisFuturo-Bold';        
+    font-size: 22px;
+    letter-spacing: -1px;
+    margin-right: 5px;
+}
+
 .p_label_seguro {
     margin-bottom: 2px; 
     margin-left: 2px;
@@ -61,7 +74,7 @@
 
 .span_premio_valor2 {
     font-family: 'MaisFuturo-Bold';            
-    font-size: 22px;
+    font-size: 18px;
     letter-spacing: -2px;  
 }
 
