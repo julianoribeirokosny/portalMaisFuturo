@@ -12,6 +12,7 @@ export default {
         competencia: ''
     },
     data: function() {
+        console.log('---------->sessionStorage.url_foto:', sessionStorage.url_foto)
         return {
             firebaseHelper: new FirebaseHelper(),
             listaChaves: new Array(),
