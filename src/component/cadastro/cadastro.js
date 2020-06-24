@@ -29,6 +29,7 @@ export default {
     },
     data: function() {
         return {
+            avatar: this.foto ? this.foto : "../images/silhouette.jpg",
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
             cep: null,
