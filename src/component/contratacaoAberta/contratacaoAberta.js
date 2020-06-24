@@ -52,8 +52,7 @@ export default {
                 this.finalizado = true
             }
         },         
-        retornaHome() {
-            //page(`/home`)
+        retornar() {            
             page(`/${sessionStorage.ultimaPagina}`)
         },
         cancelarContratacao() {            

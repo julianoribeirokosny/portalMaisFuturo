@@ -66,7 +66,7 @@ export default {
                       { label: '63 anos', value: 63 },{ label: '64 anos', value: 64 },{ label: '65 anos', value: 65 },
                       { label: '66 anos', value: 66 },{ label: '67 anos', value: 67 },{ label: '68 anos', value: 68 },
                       { label: '69 anos', value: 69 },{ label: '70 anos', value: 70 }],            
-            contribuicao: this.dados.minimoContribuicao,
+            contribuicao: 0,
             formatter1: v => `${('' + v).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
             contribuicaoTela: '',
             reservaTotalTela: '',
@@ -163,10 +163,11 @@ export default {
         }
     },
     created(){          
-        console.log('this.dados - CONTRIBUICAO',this.dados)
+        console.log('S I M U L A D O R  R E N D A:',this.dados)
         if (this.dados.rendaSolicitada.dados != null) {
             this.rendaSolicitada = true
         } else {
+            this.contribuicao = this.dados.minimoContribuicao + (this.dados.stepContribuicao * this.dados.stepEntrada),
             this.date_inicio_renda = financeiro.calculaDataInicioRenda(this.dados.usr_dtnasc, this.idade)
             this.contribuicaoTela = financeiro.valor_to_string_formatado(this.contribuicao.toFixed(2), 2, false, true)
             this.reservaTotalTela = financeiro.valor_to_string_formatado(this.dados.reservaTotalFutura, 2, false, true)
@@ -199,13 +200,14 @@ export default {
     },
     methods: {
         cancelarContratacao(value) {
+            alert(value)
             this.simulador = value
         },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
         },
-        continuar(link) {
-            page(`/${link}`)
+        continuar() {
+            page(`/${sessionStorage.ultimaPagina}`)
         },
         contratar() {
             var d = new Date()

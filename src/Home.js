@@ -81,7 +81,7 @@ export default class Home {
         }
         this.chave = sessionStorage.chave
 
-        console.log('U i D:', this.auth.currentUser.uid)
+        //console.log('U i D:', this.auth.currentUser.uid)
         //console.log('=====> CHAVE: ', sessionStorage.chave)
         if (this.chave === null || this.chave === '') {
             base_spinner.style.display = 'none'
@@ -198,9 +198,13 @@ export default class Home {
             //let dadosSimuladorSeguro = await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
 
             dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
+            //console.log('dadosSimuladorRenda::',dadosSimuladorRenda)
+            
             dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
+            //console.log('dadosSimuladorSeguro::',dadosSimuladorSeguro)
+            
             dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
-            //console.log('dadosSimuladorSeguro',dadosSimuladorSeguro)
+            //console.log('dadosSimuladorEmprestimo::',dadosSimuladorEmprestimo)
 
             //let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
             //console.log('listaHistoricoContribuicao', listaHistoricoContribuicao)
@@ -298,7 +302,7 @@ export default class Home {
                 this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
             }
 
-            console.log('this.data_Home', this.data_Home)
+            //console.log('this.data_Home', this.data_Home)
             let auth = this.auth.currentUser.uid
 
             if (!this.vueObj) {

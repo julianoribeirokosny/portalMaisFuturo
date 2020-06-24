@@ -1213,28 +1213,29 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorRenda(chave, uid) {
-    let usuario = await this.getParticipante(chave)    
-    let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
-    let minimoContribuicao = usuario.data.valores.contribParticipante    
-    let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 40)    
-    let dadosSimuladorRenda = {
-      usr_tipo_plano: usuario.home.usr_tipo_plano,
-      taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
-      titulo: 'Defina sua</br>contribuição</br>mensal',
-      minimoContribuicao: minimoContribuicao,
-      contribuicaoFixa: usuario.data.valores.contribParticipantePlanoPatrocinado,
-      contribuicaoPatronal: usuario.data.valores.contribEmpresa,
-      maximoContribuicao: maximoContribuicao,
-      stepContribuicao: simuladorRendaSettings.step_contribuicao,
-      reservaTotalAtual: usuario.data.valores.reservaTotalAtual,
-      reservaTotalFutura: usuario.data.valores.reservaTotalFutura,
-      rendaMensalFutura: usuario.data.valores.rendaMensalFutura,
-      usr_dtnasc: usuario.home.usr_dtnasc,
-      idadeBeneficio: simuladorRendaSettings.idade_beneficio,        
-      chave: chave,
-      uid: uid
-    }    
-    return dadosSimuladorRenda
+      let usuario = await this.getParticipante(chave)    
+      let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
+      let minimoContribuicao = usuario.data.valores.contribParticipante    
+      let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 40)    
+      let dadosSimuladorRenda = {
+          usr_tipo_plano: usuario.home.usr_tipo_plano,
+          taxa_anual_simulacao: simuladorRendaSettings.taxa_anual,
+          titulo: 'Defina sua</br>contribuição</br>mensal',
+          minimoContribuicao: minimoContribuicao,
+          contribuicaoFixa: usuario.data.valores.contribParticipantePlanoPatrocinado,
+          contribuicaoPatronal: usuario.data.valores.contribEmpresa,
+          maximoContribuicao: maximoContribuicao,
+          stepContribuicao: simuladorRendaSettings.step_contribuicao,
+          reservaTotalAtual: usuario.data.valores.reservaTotalAtual,
+          reservaTotalFutura: usuario.data.valores.reservaTotalFutura,
+          rendaMensalFutura: usuario.data.valores.rendaMensalFutura,
+          usr_dtnasc: usuario.home.usr_dtnasc,
+          idadeBeneficio: simuladorRendaSettings.idade_beneficio,        
+          chave: chave,
+          uid: uid,
+          stepEntrada: usuario.home.usr_contribuicao.acao.qtd_steps_entrada
+      }    
+      return dadosSimuladorRenda
   }
 
   async getDadosSimuladorEmprestimo(chave, uid) {
