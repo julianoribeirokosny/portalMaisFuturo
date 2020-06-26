@@ -92,7 +92,8 @@ export default class Home {
         firebaseHelper.solicitaDadosSinqia(this.chave)
 
         let dadosHome = await this.dadosHome(this.chave)
-        let data_Home = dadosHome.dataHome
+        
+        let data_Home = dadosHome.dataHome 
         let contratacaoContrib = dadosHome.contratacaoContrib
         let contratacaoEmp =  dadosHome.contratacaoEmp
         let contratacaoSeg = dadosHome.contratacaoSeg
