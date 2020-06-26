@@ -144,7 +144,10 @@ export default {
             this.calcularParcela(parseFloat(this.valorprincipal.toString().replace(/\./g,'')))
         }
     },  
-    methods: {      
+    methods: {        
+        recarregarDados() {
+            alert("recarregarDadosSimuladorEmprestimo")
+        },     
         calcularParcela(principal){    
             //console.log('principal',principal)
             //this.principal = this.principal.replace('R$','')

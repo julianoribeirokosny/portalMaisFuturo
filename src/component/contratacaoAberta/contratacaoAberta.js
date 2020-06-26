@@ -29,14 +29,16 @@ export default {
             valor_anterior: 0,
             valor_atual: 0,
             finalizado: false,
+
             error_banco: false
         }
     },       
-    created() {        
+    created() {
         this.carregarDados()
-    },    
+    },
     methods: {
         carregarDados(){
+            console.log('this.dados',this.dados)
             if(this.dados.dados) {
                 let name = Object.getOwnPropertyNames(this.dados.dados).sort()                
                 this.id = name[0]           
@@ -52,11 +54,14 @@ export default {
                 this.finalizado = true
             }
         },         
-        retornar() {            
+        retornar() {
+            if(sessionStorage.ultimaPagina == 'servicos') {
+                this.$emit('recarregarDados')          
+            }  
             page(`/${sessionStorage.ultimaPagina}`)
         },
         cancelarContratacao() {            
-            var contratacao = this.firebaseHelper.cancelarContratacao(this.dados.chave, this.id, this.tipo)            
+            var contratacao = this.firebaseHelper.cancelarContratacao(this.dados.chave, this.id, this.tipo)
             if(contratacao) {
                 this.finalizado = true
             } else if(!contratacao) {

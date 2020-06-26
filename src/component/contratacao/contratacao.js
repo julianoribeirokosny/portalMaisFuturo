@@ -62,6 +62,9 @@ export default {
             }            
         },
         retornar(){
+            if(sessionStorage.ultimaPagina == 'servicos') {
+                this.$emit('recarregarDados')          
+            } 
             page(`/${sessionStorage.ultimaPagina}`)
         }
     }

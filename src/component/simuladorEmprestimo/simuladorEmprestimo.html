@@ -42,11 +42,11 @@
                 </div>
             </template>
             <template v-if="!simulador">            
-                <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
+                <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao" @recarregarDados="recarregarDados"></contratacao>
             </template>
         </template>
         <template v-else>
-            <contratacao-aberta v-bind:dados="dados.emprestimoSolicitado"></contratacao-aberta>
+            <contratacao-aberta v-bind:dados="dados.emprestimoSolicitado" @recarregarDados="recarregarDados"></contratacao-aberta>
         </template>
     </div>
 </div>

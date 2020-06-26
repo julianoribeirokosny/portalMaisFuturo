@@ -18,18 +18,17 @@ export default {
     components: { 
         VueSlider, Contratacao, ContratacaoAberta, vSelect
     },
-    props: { 
-        dados: {
-            type: Object,
-            default: () => { 
-                return {                    
-                    tipo: 'Seguro'                    
-                }
-            }
-        }
+    props: {         
+        uid:'',
+        chave:''
     },    
     data: function() {
         return {
+            fatorInvalidez: 0,
+            fatorMorte: 0,
+            titulo: '',
+            bloqueio: false,
+            dadosSeguroSolicitado: new Object(),
             novaCoberturaInvalidez: 0,
             novaCoberturaMorte: 0,
             novaCoberturaInvalidezTela: 0,
@@ -37,7 +36,7 @@ export default {
             dataSimulador: null,
             firebaseHelper: new FirebaseHelper(),
             maximoSemDpsInvalidez: 0,
-            maximoSemDpsMorte:0,
+            maximoSemDpsMorte: 0,
             img_editar: img_editar,
             premioInicio: '',
             simulador: true,
@@ -191,22 +190,15 @@ export default {
             cadastro: {profissao: null}
         }
     },
-    created(){        
-        console.log('T H I S  D A D O S  S E G U R O S:',this.dados)
-        this.dataSimulador = this.dados      
-        if(this.dados.seguroSolicitado.dados != null) {
-            this.seguroSolicitado = true
-        } else {
-            this.getProfissaoParticipante(this.dados.chave)  
-            this.montarDados(this.dataSimulador)        
-        }
+    created(){
+        this.consultaDadosContratados()        
     },
     mounted(){
         this.$root.$on('nova::Profissao', () => {
             this.consultaDados()
             this.closeModal()            
         })  
-        if (this.dados.bloqueio) {
+        if (this.bloqueio) {
             if(this.$refs.ModalBloqueioIdade){
                 this.$refs.ModalBloqueioIdade.style.display = "block"
             }            
@@ -244,12 +236,38 @@ export default {
         }
     },
     methods: {
+        consultaDadosContratados() {            
+            this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((data) => {
+                this.processaDadosContratados(data)                
+            })
+        },
+        processaDadosContratados(data) {            
+            if (data) {
+                this.simulador = false
+                this.seguroSolicitado = true                        
+                this.dadosSeguroSolicitado.tipo = 'Seguro'
+                this.dadosSeguroSolicitado.titulo = 'Consulta </br>contratação em </br>aberto'
+                this.dadosSeguroSolicitado.dados = data
+                this.dadosSeguroSolicitado.chave = this.chave                
+            } else {                
+                this.seguroSolicitado = false
+                this.carregarDados()
+            }
+        },
+        carregarDados() {
+            this.consultaDados()
+            this.closeModal()      
+        },
         consultaDados() {    
-            this.firebaseHelper.getDadosSimuladorSeguro(this.dados.chave, this.dados.uid).then((ret) => {
+            this.firebaseHelper.getDadosSimuladorSeguro(this.chave, this.uid).then((ret) => {
                 this.montarDados(ret)
             })
         },
-        montarDados(dataSimulador) {
+        montarDados(dataSimulador) {            
+            this.fatorInvalidez = dataSimulador.fatorInvalidez
+            this.fatorMorte = dataSimulador.fatorMorte
+            this.titulo = dataSimulador.titulo
+            this.bloqueio = dataSimulador.bloqueio
             this.maximoSemDpsInvalidez =  dataSimulador.maximoSemDpsInvalidez
             this.maximoSemDpsMorte = dataSimulador.maximoSemDpsMorte
             this.coberturaInvalidez = dataSimulador.coberturaInvalidez
@@ -271,7 +289,7 @@ export default {
             this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
             this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
             this.calculaTotal()
-            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)
+            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)            
         },
         salvarProfissao() {
             let profissao = this.listaProfissoes.filter(p => {
@@ -283,7 +301,7 @@ export default {
                 nome: profissao[0][0],
                 seguro: profissao[0][1]
             }
-            var cadastro = this.firebaseHelper.salvarCadastro(this.dados.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
+            var cadastro = this.firebaseHelper.salvarCadastro(this.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
             if(cadastro) {
                 this.$root.$emit('atualizaProfissao',this.cadastro.profissao.nome)
                 this.sliderInvalidez.max = profissao[0][1]
@@ -336,10 +354,10 @@ export default {
             this.coberturaTelaTotal = this.valor_to_string_formatado(cobertura)
         },
         calculaPremioInvalidez(){
-            this.premioInvalidez = (this.novaCoberturaInvalidez * this.dados.fatorInvalidez / 1000).toFixed(2)            
+            this.premioInvalidez = (this.novaCoberturaInvalidez * this.fatorInvalidez / 1000).toFixed(2)            
         },
         calculaPremioMorte(){
-            this.premioMorte = (this.novaCoberturaMorte * this.dados.fatorMorte / 1000).toFixed(2)            
+            this.premioMorte = (this.novaCoberturaMorte * this.fatorMorte / 1000).toFixed(2)            
         },
         valor_to_string_formatado(num) {
             return financeiro.valor_to_string_formatado(num, 2, false, true)            
@@ -379,8 +397,8 @@ export default {
             this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Seu prêmio </br> foi alterado'
             this.contratacao.finalizacao_msg = 'Prêmio mensal alterado com sucesso.'
             this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
-            this.contratacao.chave = this.dados.chave
-            this.contratacao.uid =  this.dados.uid
+            this.contratacao.chave = this.chave
+            this.contratacao.uid =  this.uid
             this.contratacao.label_button = 'Confirma novo valor'
             this.contratacao.tipo = 'Seguro'
             this.contratacao.detalhes = {

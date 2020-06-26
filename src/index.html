@@ -791,19 +791,19 @@
     <!--Simulador Emprestimo-->
     <section id="page-simulador-emprestimo" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <simulador-emprestimo v-bind:dados="emprestimoSimulador" :key="componentKey"></simulador-emprestimo>
+        <simulador-emprestimo v-bind:dados="emprestimoSimulador" :key="componentKey" :uid="uid" :chave="chave"></simulador-emprestimo>
     </section>
 
     <!--Simulador Seguro -->
     <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <simulador-seguro v-bind:dados="seguroSimulador" :key="componentKey"></simulador-seguro>
+        <simulador-seguro :key="componentKey" :uid="uid" :chave="chave"></simulador-seguro>
     </section>
 
     <!--Simulador Renda-->
     <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <simulador-renda v-bind:dados="rendaSimulador" :key="componentKey" />
+        <simulador-renda v-bind:dados="rendaSimulador" :key="componentKey" :uid="uid" :chave="chave"/>
     </section>
 
     <!--Rentabilidade-->

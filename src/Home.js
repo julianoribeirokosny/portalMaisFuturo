@@ -120,13 +120,7 @@ export default class Home {
                 this.emprestimo_Solicitado = ret
                 resolve(true)
             })
-        })
-        let p3 = new Promise((resolve) => {
-            firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((ret) => {
-                this.seguro_Solicitado = ret
-                resolve(true)
-            })
-        })
+        })        
         let historicoRentabilidade
         let p4 = new Promise((resolve) => {
             firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento).then((ret) => {
@@ -134,6 +128,7 @@ export default class Home {
                 resolve(true)
             })
         })
+
         let dadosSimuladorRenda
         let p5 = new Promise((resolve) => {
             firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid).then((ret) => {
@@ -148,13 +143,6 @@ export default class Home {
                 resolve(true)
             })
         })
-        let dadosSimuladorSeguro 
-        let p7 = new Promise((resolve) => {
-            firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid).then((ret) => {
-                dadosSimuladorSeguro = ret
-                resolve(true)
-            })
-        })
         let listaHistoricoContribuicao
         let p8 = new Promise((resolve) => {
             firebaseHelper.getHistoricoContribuicao(this.chave).then((ret) => {
@@ -163,52 +151,23 @@ export default class Home {
             })
         })
 
-        return Promise.all([p1, p2, p3, p4, p5, p6, p7, p8]).then((retPromises) => {
-
-            //this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
+        return Promise.all([p1, p2, p4, p5, p6, p8]).then((retPromises) => {            
+            
             this.consulta_contribuicao = new Object()
             this.consulta_contribuicao.tipo = 'Contribuição mensal'
             this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
             this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
-            this.consulta_contribuicao.chave = this.chave
-                //console.log('consulta_contribuicao ====>',this.consulta_contribuicao)
-
-            //this.emprestimo_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado')
+            this.consulta_contribuicao.chave = this.chave            
+            dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
+            //console.log('dadosSimuladorRenda::',dadosSimuladorRenda)            
+            
             this.consulta_emprestimo = new Object()
             this.consulta_emprestimo.tipo = 'Empréstimo'
             this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
             this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null
-            this.consulta_emprestimo.chave = this.chave
-                //console.log('consulta_emprestimo ====> ',this.consulta_emprestimo)
-
-            //this.seguro_Solicitado = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado')
-            this.consulta_seguro = new Object()
-            this.consulta_seguro.tipo = 'Seguro'
-            this.consulta_seguro.titulo = 'Consulta </br>contratação em </br>aberto'
-            this.consulta_seguro.dados = this.seguro_Solicitado != null ? this.seguro_Solicitado : null
-            this.consulta_seguro.chave = this.chave
-                //console.log('Consulta Seguro ====> ', this.consulta_seguro)    
-                //console.log('this.data_Home',this.data_Home)
-
-            //let historicoRentabilidade = await firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento)
-                //console.log('TESTE-RENTABILIDADE',teste)
-
-            //let dadosSimuladorRenda = await firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid)
-            //let dadosSimuladorEmprestimo = await firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid)
-            //let dadosSimuladorSeguro = await firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid)
-
-            dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
-            //console.log('dadosSimuladorRenda::',dadosSimuladorRenda)
-            
-            dadosSimuladorSeguro.seguroSolicitado = this.consulta_seguro
-            //console.log('dadosSimuladorSeguro::',dadosSimuladorSeguro)
-            
+            this.consulta_emprestimo.chave = this.chave            
             dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
             //console.log('dadosSimuladorEmprestimo::',dadosSimuladorEmprestimo)
-
-            //let listaHistoricoContribuicao = await firebaseHelper.getHistoricoContribuicao(this.chave)
-            //console.log('listaHistoricoContribuicao', listaHistoricoContribuicao)
-
 
             Vue.component('grafico-reserva', {
                 extends: VueCharts.Doughnut,
@@ -289,8 +248,7 @@ export default class Home {
                 page('/erro')
             }
 
-            if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {
-                //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
+            if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {     
                 this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
             }
 
@@ -334,7 +292,7 @@ export default class Home {
                         contribuicaoSimulador: this.consulta_contribuicao,
                         rendaSimulador: dadosSimuladorRenda,
                         emprestimoSimulador: dadosSimuladorEmprestimo,
-                        seguroSimulador: dadosSimuladorSeguro,
+                        //seguroSimulador: dadosSimuladorSeguro,
                         historicoContribuicao: listaHistoricoContribuicao,
                         historicoRentabilidade: historicoRentabilidade,
                         background: this.data_Home.mais_amigos.background
@@ -415,7 +373,7 @@ export default class Home {
                 this.vueObj.contribuicaoAberta = this.consulta_contribuicao
                 this.vueObj.rendaSimulador = dadosSimuladorRenda
                 this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
-                this.vueObj.seguroSimulador = dadosSimuladorSeguro
+                //this.vueObj.seguroSimulador = dadosSimuladorSeguro
                 this.vueObj.chave = this.chave
                 this.vueObj.url_foto = sessionStorage.url_foto
                 this.vueObj.uid = this.auth.currentUser.uid

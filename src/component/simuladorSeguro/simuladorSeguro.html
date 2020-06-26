@@ -1,12 +1,10 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-    <template v-if="!dados.bloqueio">
+    <template v-if="!bloqueio">
         <template v-if="!seguroSolicitado">
             <template v-if="simulador">
                 <div class="mdl-card__supporting-text mdl-card-container div_margem_card" style="width: 95%;">
-                    <div class="div_titulo_card margin-auto" v-html="dados.titulo"></div>
-                    <div style="margin-top: 20px;">                    
-                        <div class="div_descricao margin-auto" v-html="dados.descricao">                            
-                        </div>
+                    <div class="div_titulo_card margin-auto" v-html="titulo"></div>
+                    <div style="margin-top: 20px;">
                         <div style="float: left; width: 75% !important; height: 430px;">
                             <p class="p_label_seguro">Cobertura atual | Invalidez</p>
                             <div style="margin-left: 2px;margin-right: 20px;" v-if="coberturaInvalidez > 0">
@@ -109,12 +107,12 @@
                     bibendum. Praesent quis aliquam dui. Aliquam eu condimentum enim.
                 </div>         -->
             </template>
-    <template v-else>
-                <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao"></contratacao>
+            <template v-else>
+                <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao" @recarregarDados="consultaDadosContratados"></contratacao>
             </template>
-    </template>
-    <template v-else>
-            <contratacao-aberta v-bind:dados="dados.seguroSolicitado"></contratacao-aberta>
+        </template>
+        <template v-else>
+            <contratacao-aberta v-bind:dados="dadosSeguroSolicitado" @recarregarDados="consultaDadosContratados"></contratacao-aberta>
         </template>
     </template>
     <!-- The Modals -->

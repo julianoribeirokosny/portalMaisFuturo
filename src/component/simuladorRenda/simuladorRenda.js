@@ -199,6 +199,9 @@ export default {
         }
     },
     methods: {
+        recarregarDados() {
+            alert("recarregarDadosSimuladorRenda")
+        },
         cancelarContratacao(value) {
             alert(value)
             this.simulador = value
