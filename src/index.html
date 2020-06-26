@@ -653,7 +653,7 @@
     <div id="div-contribuicao-row-patronal-total" class="div-contribuicao-total">
         <dl class="dl-contribuicao-total">
             <dt class="dt_contribuicao-total">Total empresa</dt>
-            <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.patronal.valor }}</dd>
+            <dd class="dd_contribuicao-total">{{ formatMoeda(home.contribuicao.itens.patronal.valor, false) }}</dd>
         </dl>
     </div>
     </div>
@@ -690,7 +690,7 @@
     <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
         <dl class="dl-contribuicao-total">
             <dt class="dt_contribuicao-total">Total prêmios</dt>
-            <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.seguro.valor }}</dd>
+            <dd class="dd_contribuicao-total">{{ formatMoeda(home.contribuicao.itens.seguro.valor,false) }}</dd>
         </dl>
     </div>
     </div>
