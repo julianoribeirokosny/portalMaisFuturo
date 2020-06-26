@@ -435,7 +435,9 @@
                                       <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
                                           <span class="span_reserva_text_1">R$</span>
                                           <span class="span_reserva_text_2">{{ home.saldo_reserva.total.valor }}</span>
-                                          <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
+                                          <template v-if="home.saldo_reserva.total.valor !== '0,00'">
+                                                <i class="material-icons" v-bind:class="{ rotate: toggle }">keyboard_arrow_down</i>                                
+                                          </template>
                                       </dd>
                                   </dl>
                               </div>                              
@@ -475,56 +477,56 @@
 
     <!--Projeto de Vida-->
     <template v-if="home.projeto_vida && home.projeto_vida.vigente">          
-                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                          <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-                              <div class="mdl-card__supporting-text div_titulo_card">
-                                  Projeto de <br>Vida
-                              </div>
-                          </div>
-                      </div>
-                      <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">                    
-                          <projeto-vida class="canvas_grafico_line"></projeto-vida>
-                      </div>
-                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                        <div class="mdl-card__supporting-text mdl-card-container">
-                            <div class="mdl-card-left">
-                              <dl>
-                                <template v-for="projecao in home.projeto_vida.itens.projecao" v-if="home.projeto_vida.itens.projecao">
-                                    <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
-                                    <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ formatMoeda(projecao.valor) }}</dd>
-                                </template>
-    </dl>
-    </div>
-    <div class="mdl-card-right">
-        <dl>
-            <template v-for="coberturas in home.projeto_vida.itens.coberturas" v-if="home.projeto_vida.itens.coberturas">                          
-                                  <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
-                                  <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor) }}</dd>
-                                </template>
-        </dl>
-    </div>
-    </div>
-    </div>
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                <div class="mdl-card__supporting-text div_titulo_card">
+                    Projeto de <br>Vida
+                </div>
+            </div>
+        </div>
+        <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">                    
+            <projeto-vida class="canvas_grafico_line"></projeto-vida>
+        </div>
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <div class="mdl-card__supporting-text mdl-card-container">
+                <div class="mdl-card-left">
+                    <dl>
+                        <template v-for="projecao in home.projeto_vida.itens.projecao" v-if="home.projeto_vida.itens.projecao">
+                            <dt class="dt_projeto_vida">{{ projecao.nome }}</dt>
+                            <dd class="dd_projeto_vida" v-bind:style="projecao.cor">{{ formatMoeda(projecao.valor, true) }}</dd>
+                        </template>
+                    </dl>
+                </div>
+                <div class="mdl-card-right">
+                    <dl>
+                        <template v-for="coberturas in home.projeto_vida.itens.coberturas" v-if="home.projeto_vida.itens.coberturas">                          
+                            <dt class="dt_projeto_vida">{{ coberturas.nome }}</dt>
+                            <dd class="dd_projeto_vida" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor, true) }}</dd>
+                        </template>
+                    </dl>
+                </div>
+            </div>
+        </div>
 
-    <!--mini card ação-->
-    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-        <template v-if="home.projeto_vida.acao.vigente">
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container">
-                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.projeto_vida.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
-                                      <span class="span-minicard-text">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
-                                      <i class="material-icons icon-button-minicard">arrow_forward</i>                                      
-                                  </div>
-                              </div>
-                          </template>
-        <template v-else>
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                                  
-                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
-                                      <span class="span-minicard-text">Sua nova contribuição estará vigente a partir do proximo mês, veja aqui</span>&nbsp;
-                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
-                                  </div>
-                              </div>
-                          </template>
-    </div>
+        <!--mini card ação-->
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <template v-if="home.projeto_vida.acao.vigente===true">
+                <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.projeto_vida.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
+                        <span class="span-minicard-text">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
+                        <i class="material-icons icon-button-minicard">arrow_forward</i>                                      
+                    </div>
+                </div>
+            </template>
+            <template v-else-if="home.projeto_vida.acao.vigente===false">
+                <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                                  
+                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
+                        <span class="span-minicard-text">Sua nova contribuição estará vigente a partir do proximo mês, veja aqui</span>&nbsp;
+                        <i class="material-icons icon-button-minicard">arrow_forward</i>
+                    </div>
+                </div>
+            </template>
+        </div>
     </template>
 
     <!--Minhas Coberturas-->
@@ -541,7 +543,7 @@
                               <dl class="dl-coberturas-label" style="margin-top: 0px !important;">
                                   <template v-for="(coberturas, index) in home.coberturas.itens">
                                       <dt class="dt-coberturas-label">{{ coberturas.nome }}</dt>
-                                      <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor) }}</dd>
+                                      <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor, true) }}</dd>
                                       <p class="p-coberturas-label-separador" v-if="index < (home.coberturas.itens.length - 1)"></p>
                                   </template>
     </dl>
@@ -614,7 +616,7 @@
     <div id="div-contribuicao-row-participante-total" class="div-contribuicao-total">
         <dl class="dl-contribuicao-total">
             <dt class="dt_contribuicao-total">Total participante</dt>
-            <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.participante.valor }}</dd>
+            <dd class="dd_contribuicao-total">{{ formatMoeda(home.contribuicao.itens.participante.valor, false) }}</dd>
         </dl>
     </div>
     </div>
@@ -651,7 +653,7 @@
     <div id="div-contribuicao-row-patronal-total" class="div-contribuicao-total">
         <dl class="dl-contribuicao-total">
             <dt class="dt_contribuicao-total">Total empresa</dt>
-            <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.patronal.valor }}</dd>
+            <dd class="dd_contribuicao-total">{{ formatMoeda(home.contribuicao.itens.patronal.valor, false) }}</dd>
         </dl>
     </div>
     </div>
@@ -688,31 +690,31 @@
     <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
         <dl class="dl-contribuicao-total">
             <dt class="dt_contribuicao-total">Total prêmios</dt>
-            <dd class="dd_contribuicao-total">{{ home.contribuicao.itens.seguro.valor }}</dd>
+            <dd class="dd_contribuicao-total">{{ formatMoeda(home.contribuicao.itens.seguro.valor,false) }}</dd>
         </dl>
     </div>
     </div>
     </div>
     </template>
-    <!--mini card ação-->
-    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-        <template v-if="home.contribuicao.acao.vigente">                              
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
-                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
-                                      <span class="span-minicard-text">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
-                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
-                                  </div>
-                              </div>
-                          </template>
-        <template v-else>                              
-                              <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;margin-top: 20px;" @click.prevent="contratacaoAberta">
-                                  <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
-                                      <span class="span-minicard-text">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
-                                      <i class="material-icons icon-button-minicard">arrow_forward</i>
-                                  </div>
-                              </div>
-                          </template>
-    </div>
+        <!--mini card ação-->
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <template v-if="home.contribuicao.acao.vigente === true">
+                <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
+                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
+                        <span class="span-minicard-text">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
+                        <i class="material-icons icon-button-minicard">arrow_forward</i>
+                    </div>
+                </div>
+            </template>
+            <template v-else-if="home.contribuicao.acao.vigente === false">
+                <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;margin-top: 20px;" @click.prevent="contratacaoAberta">
+                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
+                        <span class="span-minicard-text">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
+                        <i class="material-icons icon-button-minicard">arrow_forward</i>
+                    </div>
+                </div>
+            </template>
+        </div>
     </template>
 
     <!--Mais Amigos-->
@@ -970,7 +972,7 @@
         </template>
 
         <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-            <template v-if="home.contribuicao.acao.vigente">
+            <template v-if="home.contribuicao.acao.vigente===true">
                               <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">
                                   <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background"
                                   style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','servicos')">
@@ -979,7 +981,7 @@
                                   </div>
                               </div>
                           </template>
-            <template v-else>
+            <template v-else-if="home.contribuicao.acao.vigente===true">
                               <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer; margin-top: 20px;" @click.prevent="contratacaoAberta">
                                   <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
                                       <span class="span-minicard-text">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;

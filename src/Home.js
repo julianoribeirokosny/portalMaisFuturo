@@ -123,7 +123,7 @@ export default class Home {
         })        
         let historicoRentabilidade
         let p4 = new Promise((resolve) => {
-            firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento).then((ret) => {
+            firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento ? this.data_Home.perfil_investimento : "Conservador").then((ret) => {
                 historicoRentabilidade = ret
                 resolve(true)
             })
@@ -248,7 +248,8 @@ export default class Home {
                 page('/erro')
             }
 
-            if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {     
+            /*if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {
+                //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
                 this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
             }
 
@@ -258,7 +259,7 @@ export default class Home {
 
             if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
                 this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
-            }
+            }*/
 
             //console.log('this.data_Home', this.data_Home)
             let auth = this.auth.currentUser.uid
@@ -318,12 +319,13 @@ export default class Home {
                         }
                     },
                     methods: {
-                        formatMoeda(value){
+                        formatMoeda(value, incluiCifrao){
                             if (value === 0) {
                                 return '(não contratado)'
                             } else if (value && value !== 0) {
-                                let val = financeiro.valor_to_string_formatado(value, 2, false, true)
-                                return `R$ ${val}`
+                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
+                                //return `R$ ${val}`
+                                return val
                             }
                         },
                         maisamigos() {
@@ -452,6 +454,8 @@ export default class Home {
 
                 let stringHome = JSON.stringify(homeAux)
 
+                let ultPos = 0
+
                 // MERGE HOME + DADOS USUÁRIOS + SEGMENTO
                 while (stringHome.indexOf('<<') >= 0) {
 
@@ -462,6 +466,12 @@ export default class Home {
                     let valor
                     let achouCaminhoPart = false,
                         achouCaminhoSeg = false
+
+                    if (ultPos === posIni) {
+                        return null
+                    } else {
+                        ultPos = posIni
+                    }
 
                     // busca chave em usuario
                     if (chave.substring(0, 4) === 'usr_') {

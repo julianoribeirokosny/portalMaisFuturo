@@ -5,7 +5,7 @@
 
         <div style="width: 100%; display: flex; justify-content: center;">
           <div class="card-tipo-plano" @click="showModal(chave)">
-              <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + foto + ')' }"></div>
+              <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + chave.foto + ')' }"></div>
               <div class="body">
                   <div class="content">                              
                     <div class="nome">{{ chave.nome }}</div>                        

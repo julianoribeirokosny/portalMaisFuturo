@@ -108,6 +108,7 @@ export default class PrimeiroLogin {
                 page('/confirmacao-dados')      // pede confirmação de mais dados!
             } else { //achou ou email ou celular na lista
                 sessionStorage.nome = participacoes.nome
+                sessionStorage.emailCadastro = usr.email && usr.email !== '' ? usr.email : email
                 let chavePrincipal = Object.keys(listaChaves)[0] ? Object.keys(listaChaves)[0] : ''  //pega a primeira key com a chave            
                 let primeiroLogin = {
                     chave_principal: chavePrincipal, 
@@ -178,18 +179,6 @@ export default class PrimeiroLogin {
     telaPrimeiroLoginConfig() {
         let celular = document.querySelector('#celular')
         let email = document.querySelector('#email')
-        celular.addEventListener("keydown", function(event) {            
-            if (event.key === "Enter") {
-                event.preventDefault()
-                email.focus()
-            }
-        })
-        email.addEventListener("keydown", function(event) {            
-            if (event.key === "Enter") {
-                event.preventDefault()
-                celular.focus()
-            }
-        })
         let labelCelular = document.querySelector('#label-primeiro-login-celular')
         let labelEmail = document.querySelector('#label-primeiro-login-email')
         if (this.validaSeLoginCelular(this.auth.currentUser)) {            

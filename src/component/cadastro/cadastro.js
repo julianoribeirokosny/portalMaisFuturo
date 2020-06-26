@@ -10,6 +10,7 @@ import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { VueMaskDirective } from 'v-mask'
 import { TheMask } from 'vue-the-mask'
+import $ from 'jquery';
 
 Vue.directive('mask', VueMaskDirective)
 
@@ -28,8 +29,9 @@ export default {
         testeProf: ''
     },
     data: function() {
+        let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
         return {
-            avatar: this.foto ? this.foto : "../images/silhouette.jpg",
+            avatar: foto ? foto : "../images/silhouette.jpg",
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
             cep: null,
