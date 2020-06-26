@@ -41,7 +41,6 @@ export default class Home {
         this.auth = firebase.auth();
         this.uid = ''
         this.participante = {}
-        this.home = null
         this.data_Home = null
         this.vueObj = null
         this.chave = null
@@ -92,7 +91,12 @@ export default class Home {
         //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
         firebaseHelper.solicitaDadosSinqia(this.chave)
 
-        let data_Home = await this.dadosHome(this.chave)
+        let dadosHome = await this.dadosHome(this.chave)
+        let data_Home = dadosHome.dataHome
+        let contratacaoContrib = dadosHome.contratacaoContrib
+        let contratacaoEmp =  dadosHome.contratacaoEmp
+        let contratacaoSeg = dadosHome.contratacaoSeg
+
         if (data_Home === null) {
             //zera a session para tentar carregar em próximas vezes
             base_spinner.style.display = 'none'
@@ -429,11 +433,6 @@ export default class Home {
             setTimeout(function() {
                 base_spinner.style.display = 'none'
             }, 20)
-
-            //Escuta por alterações na home ou no usuario
-            firebaseHelper.registerForHomeUpdate((item, vigente) => this.refreshHome(item, vigente, 'home', this.chave))
-            firebaseHelper.registerForUserUpdate(this.chave, (item, vigente) => this.refreshHome(item, vigente, 'usuarios', this.chave))
-
         })
 
     }
@@ -443,145 +442,145 @@ export default class Home {
     }
 
     async dadosHome(chave) {
-        let homeAux = {}
 
-        let p1 = new Promise((resolve, reject) => {
-            resolve(this.firebaseHelper.getHome().then((data) => {
-                if (data) {
-                    //console.log('DATA-HOME:',data)
-                    this.home = data
-                    homeAux = data
-                    return true
-                } else {
-                    return false
-                }
-            }))
+        let p0 = this.firebaseHelper.getHome().then((data) => {
+            if (data) {
+                return data
+            } else {
+                return false
+            }
         })
 
-        let p2 = new Promise((resolve, reject) => {
-            //if (Object.keys(this.participante).length === 0) {
-            resolve(this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
+        let p1 = new Promise((resolve) => {
+            if (Object.keys(this.participante).length === 0) {
+                resolve(this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
                     if (part === null) {
                         return false
                     } else {
-                        this.participante = part
-                            //console.log('PARTICIPANTE:',this.participante)
-                        return true
+                        return part
                     }
                 }))
-                //} else {
-                //  resolve(this.participante)
-                //  return true
-                //}
+            } else {
+                resolve(this.participante)
+                return true
+            }
         })
 
-        return Promise.all([p1, p2]).then(async(retPromises) => {
+        let p2 = this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado').then((contratacao) => {
+            return contratacao
+        })
 
-            if (!retPromises[0] || !retPromises[1]) {
+        let p3 = this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado').then((contratacao) => {
+            return contratacao
+        })
+        
+        let p4 = this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((contratacao) => {
+            return contratacao
+        })
+
+        return Promise.all([p0, p1, p2, p3, p4]).then(async(retPromises) => {
+
+            if (!retPromises[0] || !retPromises[1] ) {
                 return null
             } else {
 
-                let part = this.participante
+                let home = retPromises[0]
+                let part = retPromises[1]
                 let segmentoUsuario = await this.firebaseHelper.getSegmento(part.segmento)
+                let contratacaoContrib = retPromises[2]
+                let contratacaoEmp = retPromises[3]
+                let contratacaoSeg = retPromises[4]
+                let stringHome = this.montaStringHome(home, part, segmentoUsuario)
 
-                //Verifica se há chaves "não vigentes" ou "para o usuário específico
-                for (let u in part) {
-                    if (part[u].hasOwnProperty('vigente') && !part[u].vigente) {
-                        if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
-                            homeAux[u].vigente = false
-                        }
-                    }
-                }
-
-                let stringHome = JSON.stringify(homeAux)
-
-                let ultPos = 0
-
-                // MERGE HOME + DADOS USUÁRIOS + SEGMENTO
-                while (stringHome.indexOf('<<') >= 0) {
-
-                    let posIni = stringHome.indexOf('<<')
-                    let posFim = stringHome.indexOf('>>')
-                    let chave = stringHome.substring(posIni + 2, posFim)
-                    let caminho = chave.split('.')
-                    let valor
-                    let achouCaminhoPart = false,
-                        achouCaminhoSeg = false
-
-                    if (ultPos === posIni) {
-                        return null
-                    } else {
-                        ultPos = posIni
-                    }
-
-                    // busca chave em usuario
-                    if (chave.substring(0, 4) === 'usr_') {
-                        // console.log('&&&& chave', chave)
-                        // console.log('&&&& valor', part)
-                        valor = part
-                        for (let i in caminho) {
-                            //console.log('&&&& caminho[i]', caminho[i])              
-                            if (valor[caminho[i]] !== undefined) {
-                                achouCaminhoPart = true
-                                valor = valor[caminho[i]]
-                                if (chave === 'usr_projeto_vida.acao.vigente') {
-                                    //console.log('===> ', valor)
-                                }
-
-                            }
-                        }
-                    }
-
-                    // busca chave em segmento
-                    if (chave.substring(0, 4) === 'seg_') {
-                        valor = segmentoUsuario
-                        for (let i in caminho) {
-                            if (valor[caminho[i]] !== undefined) {
-                                achouCaminhoSeg = true
-                                valor = valor[caminho[i]]
-                            }
-                        }
-                    }
-
-                    if (valor === undefined || (!achouCaminhoPart && !achouCaminhoSeg)) {
-                        valor = ''
-                    }
-
-                    if (stringHome.indexOf('<<' + chave + '>>') < 0) {
-                        stringHome = stringHome.replace('"<<' + chave + '>>"', 0)
-                    } else if (typeof valor === "object" || valor === true || valor === false) {
-                        valor = JSON.stringify(valor)
-                        stringHome = stringHome.replace('"<<' + chave + '>>"', valor)
-                    } else {
-                        stringHome = stringHome.replace('<<' + chave + '>>', valor)
-                    }
-                }
+                this.participante = part
                 this.data_Home = JSON.parse(stringHome)
-                    //console.log('this.data_Home', this.data_Home)
-                return this.data_Home
+                
+                console.log('this.data_Home', this.data_Home)
+                return {
+                    dataHome: this.data_Home,
+                    contratacaoContrib: contratacaoContrib,
+                    contratacaoEmp: contratacaoEmp,
+                    contratacaoSeg: contratacaoSeg
+                }
             }
         })
     }
 
-    'refreshHome' (item, vigente, origem, chave) {
-        //console.log('====> refreshing home')
-        return this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
-            if (!vigente) { //se for para desligar, não precisa avaliar critério
-                this.data_Home[item].vigente = vigente
+    montaStringHome(homeAux, part, segmentoUsuario) {
+
+        //Verifica se há chaves "não vigentes" ou "para o usuário específico
+        for (let u in part) {
+            if (part[u].hasOwnProperty('vigente') && !part[u].vigente) {
+                if (homeAux[u] && homeAux[u].hasOwnProperty('vigente')) {
+                    homeAux[u].vigente = false
+                }
+            }
+        }
+
+        let stringHome = JSON.stringify(homeAux)
+
+        let ultPos = 0
+
+        // MERGE HOME + DADOS USUÁRIOS + SEGMENTO
+        while (stringHome.indexOf('<<') >= 0) {
+
+            let posIni = stringHome.indexOf('<<')
+            let posFim = stringHome.indexOf('>>')
+            let chave = stringHome.substring(posIni + 2, posFim)
+            let caminho = chave.split('.')
+            let valor
+            let achouCaminhoPart = false,
+                achouCaminhoSeg = false
+
+            if (ultPos === posIni) {
+                return null
             } else {
-                if (this.data_Home[item]) {
-                    if (part[item] && part[item].vigente !== undefined) {
-                        if (origem === 'home' && part[item].vigente) {
-                            this.data_Home[item].vigente = vigente
-                        } else if (origem === 'usuarios' && this.home[item].vigente) {
-                            this.data_Home[item].vigente = vigente
+                ultPos = posIni
+            }
+
+            // busca chave em usuario
+            if (chave.substring(0, 4) === 'usr_') {
+                // console.log('&&&& chave', chave)
+                // console.log('&&&& valor', part)
+                valor = part
+                for (let i in caminho) {
+                    //console.log('&&&& caminho[i]', caminho[i])              
+                    if (valor[caminho[i]] !== undefined) {
+                        achouCaminhoPart = true
+                        valor = valor[caminho[i]]
+                        if (chave === 'usr_projeto_vida.acao.vigente') {
+                            //console.log('===> ', valor)
                         }
-                    } else {
-                        this.data_Home[item].vigente = vigente
+
                     }
                 }
-
             }
-        })
+
+            // busca chave em segmento
+            if (chave.substring(0, 4) === 'seg_') {
+                valor = segmentoUsuario
+                for (let i in caminho) {
+                    if (valor[caminho[i]] !== undefined) {
+                        achouCaminhoSeg = true
+                        valor = valor[caminho[i]]
+                    }
+                }
+            }
+
+            if (valor === undefined || (!achouCaminhoPart && !achouCaminhoSeg)) {
+                valor = ''
+            }
+
+            if (stringHome.indexOf('<<' + chave + '>>') < 0) {
+                stringHome = stringHome.replace('"<<' + chave + '>>"', 0)
+            } else if (typeof valor === "object" || valor === true || valor === false) {
+                valor = JSON.stringify(valor)
+                stringHome = stringHome.replace('"<<' + chave + '>>"', valor)
+            } else {
+                stringHome = stringHome.replace('<<' + chave + '>>', valor)
+            }
+        }   
+        
+        return stringHome     
     }
 }
