@@ -823,7 +823,7 @@
     <!--Cadastro-->
     <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <cadastro v-bind:chave_usuario="chave" v-bind:foto="url_foto" :uid="uid" :key="componentKey"></cadastro>
+        <cadastro v-bind:chave_usuario="chave" v-bind:foto="url_foto" v-bind:competencia="competencia" :uid="uid" :key="componentKey"></cadastro>
     </section>
 
     <!--Serviços-->
@@ -1029,8 +1029,8 @@
                 </div>
                 <div style="display: flex; align-items: center; justify-content: center;">
                     <button class="mdl-button mdl-js-button mdl-color--light-blue-800 fp-erro-sair">
-                                <span class="mdl-color-text--white">Sair</span>
-                            </button>
+                        <span class="mdl-color-text--white">Sair</span>
+                    </button>
                 </div>
             </div>
         </div>

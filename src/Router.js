@@ -116,6 +116,7 @@ export default class Router {
       this.displayPage('mais-amigos')
     });    
     page('/erro', () => {
+      $('.fp-erro-sair').click(() => this.firebaseHelper.signOut())  
       Erros.displayMensagemErro()
       this.displayPage('erro')
     })

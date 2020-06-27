@@ -2,7 +2,7 @@
 
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import Vue from 'vue/dist/vue.esm.js'
+import Vue from 'vue'
 import VueCharts from 'vue-chartjs'
 import money from 'v-money'
 import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo'
@@ -18,12 +18,14 @@ import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
 import page from 'page';
 import { Erros } from './Erros';
+import { VueMaskDirective } from 'v-mask'
 
 const financeiro = require('../functions/Financeiro')
 
 // register directive v-money and component <money>
 Vue.use(money, { precision: 4 })
     //Vue.use(VueMask);
+Vue.directive('mask', VueMaskDirective)
 
 /**
  * Handles the Home UI.
@@ -94,9 +96,9 @@ export default class Home {
         let dadosHome = await this.dadosHome(this.chave)
         
         let data_Home = dadosHome.dataHome 
-        let contratacaoContrib = dadosHome.contratacaoContrib
-        let contratacaoEmp =  dadosHome.contratacaoEmp
-        let contratacaoSeg = dadosHome.contratacaoSeg
+        this.contribuicao_Aberta = dadosHome.contratacaoContrib
+        this.emprestimo_Solicitado =  dadosHome.contratacaoEmp
+        this.seguro_Solicitado = dadosHome.contratacaoSeg
 
         if (data_Home === null) {
             //zera a session para tentar carregar em próximas vezes
@@ -114,24 +116,6 @@ export default class Home {
             return page('/erro')
         }
 
-        let p1 = new Promise((resolve) => {
-            firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado').then((ret) => {
-                this.contribuicao_Aberta = ret
-                resolve(true)
-            })
-        })      
-        let p2 = new Promise((resolve) => {
-            firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado').then((ret) => {
-                this.emprestimo_Solicitado = ret
-                resolve(true)
-            })
-        })
-        let p3 = new Promise((resolve) => {
-            firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((ret) => {
-                this.seguro_Solicitado = ret
-                resolve(true)
-            })
-        })
         let historicoRentabilidade
         let p4 = new Promise((resolve) => {
             firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento ? this.data_Home.perfil_investimento : "Conservador").then((ret) => {
@@ -141,21 +125,21 @@ export default class Home {
         })
         let dadosSimuladorRenda
         let p5 = new Promise((resolve) => {
-            firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid).then((ret) => {
+            firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid, this.participante).then((ret) => {
                 dadosSimuladorRenda = ret
                 resolve(true)
             })
         })
         let dadosSimuladorEmprestimo
         let p6 = new Promise((resolve) => {
-            firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid).then((ret) => {
+            firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid, this.participante).then((ret) => {
                 dadosSimuladorEmprestimo = ret
                 resolve(true)
             })
         })
         let dadosSimuladorSeguro 
         let p7 = new Promise((resolve) => {
-            firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid).then((ret) => {
+            firebaseHelper.getDadosSimuladorSeguro(this.chave, this.auth.currentUser.uid, this.participante).then((ret) => {
                 dadosSimuladorSeguro = ret
                 resolve(true)
             })
@@ -168,7 +152,7 @@ export default class Home {
             })
         })
 
-        return Promise.all([p1, p2, p3, p4, p5, p6, p7, p8]).then((retPromises) => {
+        return Promise.all([p4, p5, p6, p7, p8]).then((retPromises) => {
 
             //this.contribuicao_Aberta = await firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado')
             this.consulta_contribuicao = new Object()
@@ -289,27 +273,14 @@ export default class Home {
                 }
             })
             Vue.config.errorHandler = function(err, vm, info) {
-                console.log(`Error: ${err.toString()}\nInfo: ${info}`);
+                console.error(`Error: ${err.toString()}\nInfo: ${info}`);
                 Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
                 page('/erro')
             }
 
-            /*if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {
-                //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
-                this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
-            }
-
-            if (this.data_Home.contribuicao.itens.patronal.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.patronal.valor)) {
-                this.data_Home.contribuicao.itens.patronal.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.patronal.valor.toFixed(2), 2, false, true)
-            }
-
-            if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
-                this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
-            }*/
-
-            //console.log('this.data_Home', this.data_Home)
             let auth = this.auth.currentUser.uid
 
+            //Vue.config.silent = true
             if (!this.vueObj) {
                 this.vueObj = new Vue({
                     renderError(h, err) {
@@ -329,7 +300,7 @@ export default class Home {
                         maisAmigos
                     },
                     data: {
-                        video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
+                        //video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
                         componentKey: 0,
                         home: this.data_Home,
                         toggle: false,
@@ -342,7 +313,8 @@ export default class Home {
                         seguroSimulador: dadosSimuladorSeguro,
                         historicoContribuicao: listaHistoricoContribuicao,
                         historicoRentabilidade: historicoRentabilidade,
-                        background: this.data_Home.mais_amigos.background
+                        background: this.data_Home.mais_amigos.background,
+                        competencia: this.data_Home.competencia
                     },
                     created() {
                         sessionStorage.ultimaPagina = 'home'
@@ -425,6 +397,7 @@ export default class Home {
                 this.vueObj.chave = this.chave
                 this.vueObj.url_foto = sessionStorage.url_foto
                 this.vueObj.uid = this.auth.currentUser.uid
+                this.vueObj.competencia = this.data_Home.competencia
                 this.vueObj.historicoContribuicao = listaHistoricoContribuicao
                 this.vueObj.$forceUpdate()
                 this.vueObj.forceRerender()
@@ -453,17 +426,21 @@ export default class Home {
         })
 
         let p1 = new Promise((resolve) => {
-            if (Object.keys(this.participante).length === 0) {
-                resolve(this.firebaseHelper.getParticipante(chave, 'home').then((part) => {
-                    if (part === null) {
-                        return false
-                    } else {
-                        return part
+            if (Object.keys(this.participante).length === 0 || this.participante.chave !== chave) {
+                this.firebaseHelper.getParticipante(chave).then((ret) => {
+                    if (ret === null) {
+                        base_spinner.style.display = 'none'
+                        Erros.registraErro(this.auth.currentUser.uid, 'chave', 'dadosHome', 'dados Home nulo ou inválido')
+                        sessionStorage.chave = ''
+                        return page('/erro')
                     }
-                }))
+                    sessionStorage.chave = chave
+                    resolve(ret)
+                    //return true    
+                })
             } else {
                 resolve(this.participante)
-                return true
+                //return true
             }
         })
 
@@ -481,19 +458,19 @@ export default class Home {
 
         return Promise.all([p0, p1, p2, p3, p4]).then(async(retPromises) => {
 
-            if (!retPromises[0] || !retPromises[1] ) {
+            if (!retPromises[0] || !retPromises[1] || retPromises[1] === null) {
                 return null
             } else {
 
                 let home = retPromises[0]
-                let part = retPromises[1]
+                this.participante = retPromises[1]
+                let part = this.participante.home
                 let segmentoUsuario = await this.firebaseHelper.getSegmento(part.segmento)
                 let contratacaoContrib = retPromises[2]
                 let contratacaoEmp = retPromises[3]
                 let contratacaoSeg = retPromises[4]
                 let stringHome = this.montaStringHome(home, part, segmentoUsuario)
 
-                this.participante = part
                 this.data_Home = JSON.parse(stringHome)
                 
                 console.log('this.data_Home', this.data_Home)

@@ -9,7 +9,6 @@ import page from 'page';
 import {Utils} from './Utils';
 import FirebaseHelper from './FirebaseHelper';
 import PrimeiroLogin from './PrimeiroLogin';
-// import { debug } from 'webpack';
 
 /**
  * Handles the user auth flows and updating the UI depending on the auth state.
@@ -53,7 +52,6 @@ export default class Auth {
     this.confirmVoltarButton = $('.fp-confirm-voltar')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
     this.confirmDadosButton2 = $('.fp-confirm-dados2')   
-    this.sairErroButton = $('.fp-erro-sair')   
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -68,7 +66,7 @@ export default class Auth {
         IDPButtons.attr('disabled', 'disabled');
       }
     });
-    this.signOutButton.click(() => this.signOut());
+    this.signOutButton.click(() => this.firebaseHelper.signOut());
     this.deleteAccountButton.click(() => this.deleteAccount());
     this.updateAll.click(() => this.updateAllAccounts());
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
@@ -88,7 +86,7 @@ export default class Auth {
       this.primeiroLogin.confirmEmailFone(celular, email);
     });
     this.cancelarDadosButton.click(() => {
-      this.signOut()
+      this.firebaseHelper.signOut()
     });
     this.confirmVoltarButton.click(() => {
       page('/primeiro-login')
@@ -97,8 +95,6 @@ export default class Auth {
       let cpf = $('.fp-input-cpf').val()
       this.primeiroLogin.confirmDados(cpf);
     });
-
-    this.sairErroButton.click(() => this.signOut())
   }  
 
   configureFirebaseUi() {
@@ -258,13 +254,6 @@ export default class Auth {
       }
     }
   }
-
-  signOut() {
-    if(this.auth) {
-      this.auth.signOut(); 
-    }
-    page('/signout');
-  } 
 
   async validaVersaoApp() {
     //valida se há nova versão do App e limpa o cache  

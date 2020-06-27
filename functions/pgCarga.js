@@ -20,7 +20,7 @@ const runtimeOpts = {
 
 var logProcessamento = {}
 var dataProcessamento
-var dataBase, anoMes
+var periodoBase, anoMes
 var taxaAumentoSugestao = 1.20
 var select
 var stepRenda
@@ -37,8 +37,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     return
   }
 
-  dataBase = change.after.val()
-  anoMes = dataBase.substring(5, 7) + '/' + dataBase.substring(0, 4)
+  periodoBase = change.after.val()
+  anoMes = periodoBase.substring(5, 7) + '/' + periodoBase.substring(0, 4)
   let plano = context.params.plano
 
   dataProcessamento = utils.dateFormat(new Date(), true, false)
@@ -69,13 +69,11 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let ref = admin.database().ref('settings/simulador_renda/'+plano)
   ref.once('value').then((simRenda) => {
     stepRenda = simRenda.val().step_contribuicao
-    console.log('==> steps - stepRenda', stepRenda)
   })
   ref = admin.database().ref('settings/simulador_seguro/'+plano)
   ref.once('value').then((simSeguro) => {
     stepInvalidez = simSeguro.val().step_invalidez
     stepMorte = simSeguro.val().step_morte
-    console.log('==> steps - Invalidez e Morte', stepInvalidez, stepMorte)
   })
 
   ref = change.after.ref.parent;
@@ -98,9 +96,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       listaContribPortabilidade = snapshotParent.child('listaContribSaida').val()
       listaContribExtraordinaria = snapshotParent.child('listaContribExtraordinaria').val()
       listaSituacoesValidas = snapshotParent.child('listaSituacoesValidas').val()
-      //console.log('***> listaContribSaldo', listaContribSaldo)
-      //console.log('***> listaContribSaldo13', listaContribSaldo13)
-      //console.log('***> listaContribSaldoPartPlanoPatroc', listaContribSaldoPartPlanoPatroc)
       if (
         listaContribSaldo === null ||
         listaContribSaldo13 === null ||
@@ -141,15 +136,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       
       // Monta comando select com os parametros
       if (snapshotParent.hasChild('lista_chaves_carga')) {
-        //console.log('===> dadosPortalLista!')
         select = jsonDataSelects.dadosPortalLista
         select = select.replace(/--lista_dados_carga--/g, snapshotParent.child('lista_chaves_carga').val())
-        //console.log('===> select', select)        
       } else {
-        //console.log('===> dadosPortal Geral!')
         select = jsonDataSelects.dadosPortal
       }
-      select = select.replace(/--data_base_carga--/g, dataBase)
+      select = select.replace(/--data_base_carga--/g, periodoBase)
       select = select.replace(/--nome_plano--/g, plano)
       console.log('===> select', select)        
     }
@@ -187,10 +179,14 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     let valorRendaProjetada, valorReservaProjetada
     console.log('#pgCarga - iniciando forEach', retDadosPG)
     retDadosPG.forEach((rowDados) => {
+      console.log('##### Participante', rowDados.chave, '######')
+      periodoBase = utils.dateFormat(rowDados.datacomp, false, true, false)
+      periodoBase = periodoBase.substring(4,6)+'/'+periodoBase.substring(0,4)
       //primeiro verifica se está em situação do plano válida para o portal:
       //se não achou situação OK ou se saldoTotal is null, marca para bloquear
       let naoAchouSituacaoPlano = listaSituacoesValidas.indexOf(rowDados.cad_sitpart)<0
       if ( naoAchouSituacaoPlano || rowDados.res_saldototal === null) { 
+        console.log('===========> Bloqueado')
         usuariosBloquear[`${rowDados.chave}/home`] = {
           usr_apelido: rowDados.cad_apelido,
           usr_matricula: rowDados.cad_matricula,
@@ -198,17 +194,16 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           usr_plano: rowDados.cad_plano,
           usr_tipoPlano: rowDados.cad_tipo_plano,
           segmento: validaSegmento(chave),
-          usr_competencia: dataBase.substring(0,7),
+          usr_competencia: periodoBase,
           usr_dtnasc: utils.dateFormat(rowDados.cad_nasc, false, false, true),
           usr_dtadesao: rowDados.cad_dataadesao,
           usr_vigente: false,
           motivo_bloqueio_carga: naoAchouSituacaoPlano ? 'situação não permitida para carga' : 'sem saldo total',
           usr_situacao_plano: rowDados.cad_sitpart
         }
-        //console.log('====> Bloqueando participante: ', rowDados.chave, rowDados.cad_sitpart)
       } else {
+        console.log('===========> Processando', chave, rowDados.chave)
         if (chave !== rowDados.chave) {
-
           //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
           if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
             usuarioContrib.contribParticipante = usuarioContribCadastro.contribParticipante
@@ -239,7 +234,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             usuarioTotalContr.valor = usuarioContribCadastro.contribParticipante + usuarioContribCadastro.contribRisco
           } 
 
-          if (chave !== '' && (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0) {
+          if (chave !== '') { //&& (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0
             let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)          
             let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)                    
             listaDatasetsProjetoDeVida[2] = {
@@ -312,7 +307,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             plano: rowDados.cad_plano,
             tipoPlano: rowDados.cad_tipo_plano,
             segmento: validaSegmento(chave),
-            competencia: dataBase.substring(0,7),
+            competencia: periodoBase,
             nasc: utils.dateFormat(rowDados.cad_nasc, false, false, true),
             dataadesao: utils.dateFormat(rowDados.cad_dataadesao, false, false, true),
             taxa: 5.000000,
@@ -460,7 +455,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           éContribSeguro = listaContribSeguro.indexOf(rowDados.contr_eventocod.toString()) >= 0  
           éContribPartEmpresa = listaContribSaldoPartEmpresa.indexOf(rowDados.contr_eventocod.toString()) >= 0  
         }
-        console.log('***> rowDados.contr_eventocod', rowDados.contr_eventocod, éContribSaldo, éContribSaldo13, éContribSaldoPartPlanoPatroc, éContribSeguro)
         if (éContribSaldo || éContribSaldo13 || éContribSaldoPartPlanoPatroc || éContribSeguro || éContribPartEmpresa) {
           usuarioTotalContr.valor += rowDados.contr_valor
           listaValoresContribuicaoChave.push(rowDados.contr_valor)
@@ -482,13 +476,10 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             })  
           }  
 
-          console.log('===> éContribSeguro', éContribSeguro)
           if (éContribSeguro) {
             usuarioContrib.contribRisco += rowDados.contr_valor
             listaItensContribuicaoChave.seguro.nome = 'Contribuição de risco'
             listaItensContribuicaoChave.seguro.valor += rowDados.contr_valor            
-            console.log('==> rowDados.contr_valor', rowDados.contr_valor)
-            console.log('==> listaItensContribuicaoChave.seguro', listaItensContribuicaoChave.seguro)
             listaItensContribuicaoChave.seguro.eventos.push({
               cor: `<<seg_contribuicao.itens.seguro.${listaItensContribuicaoChave.seguro.eventos.length}.cor>>`,
               nome: rowDados.contr_eventonome,
@@ -509,6 +500,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       } 
     })
 
+    console.log('+++++++++++ SAINDO +++++++++++++')
     if (chave!=='') {
       //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
       if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
@@ -568,9 +560,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, false)
         valor: Number(retGraficoReservaCompleto[2])
       }     
-
-      console.log('==> retGraficoReservaCompleto[4]', retGraficoReservaCompleto[4])
-      console.log('==> valorContribParticipanteAtual', valorContribParticipanteAtual)
       if (retGraficoReservaCompleto[4] > 0) {
         valorContribParticipanteAtual = retGraficoReservaCompleto[4] 
       }      
@@ -614,6 +603,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].qtd_participantes_carregados = Object.keys(usuarios).length
       logProcessamento[dataProcessamento].qtd_participantes_bloqueados = (!usuariosBloquear) ? 0 : Object.keys(usuariosBloquear).length
       logProcessamento[dataProcessamento].msg = 'Processamento finalizado com sucesso.'
+      console.log('#pgCarga - finalizando carga - Atualizando Log do Processamento ', logProcessamento)
       let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       console.log('#pgCarga - dados atualizados dos usuários foram salvos com sucesso.')
@@ -637,20 +627,11 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   let valorTotal = Number(usuarioTotalContr.valor.replace('.','').replace(',','.'))
   let contribProjetada = calculaContribuicaoProjetada(valorContribParticipanteAtual, 0)
   let percAumentoContribProjetada
-  console.log('==> chave: ', chave)
-  console.log('==> contribProjetada[1]: ', contribProjetada[1])
-  console.log('==> valorContribParticipanteAtual: ', valorContribParticipanteAtual)
-  console.log('==> reservaPotencial: ', reservaPotencial)
-  console.log('==> rendaPotencial: ', rendaPotencial)
-
   if (valorContribParticipanteAtual > 0) {
     percAumentoContribProjetada = (contribProjetada[1] - valorContribParticipanteAtual) / valorContribParticipanteAtual
   } else {
     percAumentoContribProjetada = 0
   }
-  console.log('==> listaItensProjetoDeVidaProjecao[0].valor',listaItensProjetoDeVidaProjecao[0].valor) 
-  console.log('==> percAumentoContribProjetada',percAumentoContribProjetada) 
-
   rendaPotencial = financeiro.valorFormatoDesc(rendaPotencial)
   reservaPotencial = financeiro.valorFormatoDesc(reservaPotencial)
 
@@ -692,8 +673,8 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
     usr_coberturas: {
       acao: {
         valor_cobertura_potencial: coberturaPotencial[0],
-        valor_morte_entrada: coberturaPotencial[2],
-        valor_invalidez_entrada: coberturaPotencial[3],
+        valor_morte_entrada: coberturaPotencial[1],
+        valor_invalidez_entrada: coberturaPotencial[1],
         vigente: configCardAcao && configCardAcao.coberturas[usr.sitPart] ? true  : "_"
       },
       lista_itens_coberturas: listaItensCoberturas,
@@ -851,16 +832,9 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   let valorReservaAposentadoriaProjetada = 0
   let valorRendaAposentadoriaProjetada = 0
   if (amplitude==='completo') {
-    console.log('=====> calculando Valores Projetados')
     valorContribProjetada = calculaContribuicaoProjetada(listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado)
-    console.log('=====> valorContribProjetada', valorContribProjetada)
     valorReservaAposentadoriaProjetada = financeiro.calculaReservaFutura(valorHoje, taxa, valorContribProjetada[1], listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
-    console.log('=====> valorReservaAposentadoriaProjetada', valorReservaAposentadoriaProjetada)
-    console.log('=====> valorHoje, taxa, valorContribProjetada[1], 0, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano', valorHoje, taxa, valorContribProjetada[1], listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
     valorRendaAposentadoriaProjetada = financeiro.calculaRendaFutura(valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos             
-    console.log('=====> valorRendaAposentadoriaProjetada', valorRendaAposentadoriaProjetada)
-    console.log('=====> valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano', valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano)
-
   }
 
   //monta array de Idades (EIXO X DO GRÀFICO) de acordo com a Adesão e idadeAposentadoria
@@ -873,13 +847,6 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
       Math.trunc(1 + (crescPorFaixas * 4)), 
       difMesesDaAdesaoAposentadoria
   ]
-
-  //console.log('==> Variáveis:')
-  //console.log('==> difMesesDaAdesaoHoje', difMesesDaAdesaoHoje)
-  //console.log('==> dataAposentadoria', dataAposentadoria)
-  //console.log('==> difMesesHojeAposentadoria', difMesesHojeAposentadoria)
-  //console.log('==> difMesesDaAdesaoAposentadoria', difMesesDaAdesaoAposentadoria)
-  //console.log('==> aIdades', aIdades)
 
   let aDistribCurvaGrafico = [
     0, 0.40, 0.55, 0.70, 0.85, 1
@@ -894,18 +861,14 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
     valorReservaAposentadoria
   ]
 
-  //console.log('==> valorReservaAposentadoria', valorReservaAposentadoria, ' - aIdades', aIdades, ' - valorHoje', valorHoje, ' - difMesesHojeAposentadoria',difMesesHojeAposentadoria)
   for (let linha in aIdades) {
     let dif = aIdades[linha] - difMesesDaAdesaoHoje 
-    //console.log('===> dif:', dif)   
-    //console.log('===> crescPorFaixas', crescPorFaixas)
     if (linha > 0) {
       if (dif < 0) { 
         retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
-          //console.log('===> Entrei dif <= crescPorFaixas')
           retListaMeses[linha] = 'Hoje'        
           retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
           if (amplitude==='até hoje') {
@@ -924,8 +887,6 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
     retDataset[5] = valorReservaAposentadoria    //inclui valor projetado de 65 anos na última faixa
   }
 
-  console.log('++> valorHoje', valorHoje)
-  console.log('++> amplitude', amplitude)
   if (valorHoje===0 && amplitude==='até hoje') { //acontece para alguns participantes...
     retDataset[0] = 0
     retDataset[1] = 0
@@ -992,14 +953,11 @@ function calculaCoberturaPotencial(listaItensCoberturas) {
   let coberturaMorte = listaItensCoberturas[0].valor
   let coberturaInvalidez = listaItensCoberturas[1].valor
   let dif, qtdSteps, qtdStepsValorAtual
-  console.log('==> coberturaMorte , coberturaInvalidez', coberturaMorte , coberturaInvalidez)
   if (coberturaMorte + coberturaInvalidez === 0) {
     let vlr = 100000.00
-    console.log('==> vlr', vlr)
-    return [financeiro.valorFormatoDesc(vlr), vlr, 50000, 50000]
+    return [financeiro.valorFormatoDesc(vlr), vlr]
   } else {
-    console.log('==> listaItensCoberturas[0].valor', listaItensCoberturas[0].valor)
-    if (listaItensCoberturas[0].valor > 0) {
+    if (coberturaMorte > 0) {
       dif = coberturaMorte * (1 - taxaAumentoSugestao)
       qtdStepsValorAtual = Math.trunc( coberturaMorte / stepMorte)
       if (dif < stepMorte) {
@@ -1009,7 +967,7 @@ function calculaCoberturaPotencial(listaItensCoberturas) {
         coberturaMorte = (qtdStepsValorAtual + qtdSteps + 1) * stepMorte
       }
     } 
-    if (listaItensCoberturas[1].valor > 0) {
+    if (coberturaInvalidez > 0) {
       dif = coberturaInvalidez * (1 - taxaAumentoSugestao)
       qtdStepsValorAtual = Math.trunc( coberturaInvalidez / stepInvalidez)
       if (dif < stepInvalidez) {
@@ -1020,8 +978,8 @@ function calculaCoberturaPotencial(listaItensCoberturas) {
       }
     }
 
-    coberturaTotal = coberturaMorte + coberturaInvalidez
-    return [financeiro.valorFormatoDesc(coberturaTotal), coberturaTotal, coberturaMorte, coberturaInvalidez]
+    coberturaTotal = coberturaMorte > coberturaInvalidez ? coberturaMorte : coberturaInvalidez
+    return [financeiro.valorFormatoDesc(coberturaTotal), coberturaTotal] //, coberturaMorte, coberturaInvalidez]
   }
 }
 

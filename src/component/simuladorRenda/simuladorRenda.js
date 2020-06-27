@@ -38,6 +38,9 @@ export default {
         }
     },    
     data: function() {
+        console.log('===> this.dados.minimoContribuicao', this.dados.minimoContribuicao)
+        console.log('===> this.dados.maximoContribuicao', this.dados.maximoContribuicao)
+
         return {
             firebaseHelper: new FirebaseHelper(),
             rendaSolicitada: false,
