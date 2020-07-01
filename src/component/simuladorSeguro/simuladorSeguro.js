@@ -12,6 +12,7 @@ import FirebaseHelper from '../../FirebaseHelper'
 
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
+const Enum = require('../../Enum')
 
 export default {    
     template: simuladorSeguro,
@@ -24,6 +25,12 @@ export default {
     },    
     data: function() {
         return {
+            sliderInvalidezmin: 1,
+            sliderInvalidezmax: 10,
+            sliderInvalidezinterval: 1,
+            sliderMortemin: 1,          
+            sliderMortemax: 10,          
+            sliderMorteinterval: 1,          
             fatorInvalidez: 0,
             fatorMorte: 0,
             titulo: '',
@@ -61,15 +68,16 @@ export default {
             premioMorte: 0,
             premioTelaMorte: '0',                 
             sliderInvalidez: {
+                silent: true,
                 dotSize: 14,
                 height: 380,
                 with: 15,
                 direction: 'btt',
                 contained: false,
                 data: null,
-                min: 0,
-                max: 0,
-                interval: 0,
+                min: 1,
+                max: 10,
+                interval: 1,
                 disabled: false,
                 clickable: true,
                 duration: 0.5,
@@ -115,15 +123,16 @@ export default {
                 },
             },
             sliderMorte: {
+                silent: true,
                 dotSize: 14,
                 height: 380,
                 with: 15,
                 direction: 'btt',
                 contained: false,
                 data: null,
-                min: 0,
-                max: 0,
-                interval: 0,
+                min: 1,
+                max: 10,
+                interval: 1,
                 disabled: false,
                 clickable: true,
                 duration: 0.5,
@@ -190,7 +199,7 @@ export default {
             cadastro: {profissao: null}
         }
     },
-    created(){
+    created(){        
         this.consultaDadosContratados()        
     },
     mounted(){
@@ -237,8 +246,14 @@ export default {
     },
     methods: {
         consultaDadosContratados() {            
-            this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((data) => {
-                this.processaDadosContratados(data)                
+            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((data) => {                
+                if (data) {
+                    this.processaDadosContratados(data)                
+                } else {  
+                    this.simulador = true              
+                    this.seguroSolicitado = false
+                    this.carregarDados()
+                }
             })
         },
         processaDadosContratados(data) {            
@@ -248,10 +263,7 @@ export default {
                 this.dadosSeguroSolicitado.tipo = 'Seguro'
                 this.dadosSeguroSolicitado.titulo = 'Consulta </br>contratação em </br>aberto'
                 this.dadosSeguroSolicitado.dados = data
-                this.dadosSeguroSolicitado.chave = this.chave                
-            } else {                
-                this.seguroSolicitado = false
-                this.carregarDados()
+                this.dadosSeguroSolicitado.chave = this.chave     
             }
         },
         carregarDados() {
@@ -259,37 +271,43 @@ export default {
             this.closeModal()      
         },
         consultaDados() {    
-            this.firebaseHelper.getDadosSimuladorSeguro(this.chave, this.uid).then((ret) => {
-                this.montarDados(ret)
+            this.firebaseHelper.getDadosSimuladorSeguro(this.chave, this.uid).then((data) => {
+                if(data){
+                    this.montarDados(data)
+                }
             })
         },
-        montarDados(dataSimulador) {            
-            this.fatorInvalidez = dataSimulador.fatorInvalidez
-            this.fatorMorte = dataSimulador.fatorMorte
-            this.titulo = dataSimulador.titulo
-            this.bloqueio = dataSimulador.bloqueio
-            this.maximoSemDpsInvalidez =  dataSimulador.maximoSemDpsInvalidez
-            this.maximoSemDpsMorte = dataSimulador.maximoSemDpsMorte
-            this.coberturaInvalidez = dataSimulador.coberturaInvalidez
-            this.coberturaMorte = dataSimulador.coberturaMorte
-            this.novaCoberturaInvalidez = dataSimulador.minimoInvalidez
-            this.novaCoberturaMorte = dataSimulador.minimoMorte
-            this.sliderInvalidez.min = dataSimulador.minimoInvalidez
-            this.sliderInvalidez.max = dataSimulador.maximoInvalidez
-            this.sliderInvalidez.interval = dataSimulador.stepInvalidez
-            this.sliderMorte.min = dataSimulador.minimoMorte
-            this.sliderMorte.max = dataSimulador.maximoMorte
-            this.sliderMorte.interval = dataSimulador.stepMorte
-            this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(dataSimulador.maximoSemDpsInvalidez)
-            this.maximoSemDpsMorteTela = this.valor_to_string_formatado(dataSimulador.maximoSemDpsMorte)
-            this.calculaPremioInvalidez()            
-            this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
-            this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
-            this.calculaPremioMorte()            
-            this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
-            this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
-            this.calculaTotal()
-            this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)            
+        montarDados(dataSimulador) {
+            if(!dataSimulador.profissao) {
+                this.getProfissaoParticipante(this.chave)
+            } else {
+                this.fatorInvalidez = dataSimulador.fatorInvalidez
+                this.fatorMorte = dataSimulador.fatorMorte
+                this.titulo = dataSimulador.titulo
+                this.bloqueio = dataSimulador.bloqueio
+                this.maximoSemDpsInvalidez =  dataSimulador.maximoSemDpsInvalidez
+                this.maximoSemDpsMorte = dataSimulador.maximoSemDpsMorte
+                this.coberturaInvalidez = dataSimulador.coberturaInvalidez
+                this.coberturaMorte = dataSimulador.coberturaMorte
+                this.novaCoberturaInvalidez = dataSimulador.minimoInvalidez
+                this.novaCoberturaMorte = dataSimulador.minimoMorte
+                this.sliderInvalidezmin = dataSimulador.minimoInvalidez
+                this.sliderInvalidezmax = dataSimulador.maximoInvalidez
+                this.sliderInvalidezinterval = dataSimulador.stepInvalidez
+                this.sliderMortemin = dataSimulador.minimoMorte
+                this.sliderMortemax = dataSimulador.maximoMorte
+                this.sliderMorteinterval = dataSimulador.stepMorte
+                this.maximoSemDpsInvalidezTela = this.valor_to_string_formatado(dataSimulador.maximoSemDpsInvalidez)
+                this.maximoSemDpsMorteTela = this.valor_to_string_formatado(dataSimulador.maximoSemDpsMorte)
+                this.calculaPremioInvalidez()            
+                this.coberturaTelaInvalidez = this.valor_to_string_formatado(this.coberturaInvalidez)
+                this.premioTelaInvalidez = this.valor_to_string_formatado(this.premioInvalidez)
+                this.calculaPremioMorte()            
+                this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
+                this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
+                this.calculaTotal()
+                this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)      
+            }                  
         },
         salvarProfissao() {
             let profissao = this.listaProfissoes.filter(p => {

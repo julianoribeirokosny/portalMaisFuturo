@@ -69,12 +69,12 @@
                         <div style="float: right;width: 25% !important;height: 400px;display: flex;justify-content: flex-end;">                
                             <div style="float: left; width: 50% !important;">
                                 <p class="p_slider_vertical">
-                                    <vue-slider v-model="novaCoberturaInvalidez" ref="slider" v-bind="sliderInvalidez" :tooltip-formatter="formatter1"></vue-slider>
+                                    <vue-slider v-model="novaCoberturaInvalidez" ref="sliderInvalid" v-bind="sliderInvalidez" :min="sliderInvalidezmin" :max="sliderInvalidezmax" :interval="sliderInvalidezinterval" :tooltip-formatter="formatter1"></vue-slider>
                                 </p>
                             </div>
                             <div style="float: right; width: 50% !important;">
                                 <p class="p_slider_vertical">
-                                    <vue-slider v-model="novaCoberturaMorte" ref="slider" v-bind="sliderMorte" :tooltip-formatter="formatter1"></vue-slider>
+                                    <vue-slider v-model="novaCoberturaMorte" ref="sliderMorte" v-bind="sliderMorte" :min="sliderMortemin" :max="sliderMortemax" :interval="sliderMorteinterval" :tooltip-formatter="formatter1"></vue-slider>
                                 </p>                
                             </div>
                         </div>            

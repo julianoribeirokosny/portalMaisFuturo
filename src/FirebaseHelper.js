@@ -1260,10 +1260,8 @@ export default class FirebaseHelper {
     return dadosSimuladorEmprestimo
   }
 
-  async getDadosSimuladorSeguro(chave, uid) {
-
+  async getDadosSimuladorSeguro(chave, uid) {            
       let usuario = await this.getParticipante(chave)
-
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)      
@@ -1275,14 +1273,31 @@ export default class FirebaseHelper {
       let maximoInval = 0//maximoSemDPSInvalidez      
       let stepMorte = simuladorSeguroSettings.step_morte
       let stepInvalidez = simuladorSeguroSettings.step_invalidez      
+      let maximoSemSDPSMorte = 0
+      let maximoSemDPSInvalidez = 0
+      let profissao = false
       if(usuario.data.cadastro.informacoes_pessoais.profissao) {
         maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
         maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
-      }      
-      maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
-      maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
-      let maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
-      let maximoSemDPSInvalidez = Number(this.calculaMaximoSemDPSSeguro(maximoInval, coberturaInvalidez, simuladorSeguroSettings.regra_dps).toFixed(0))  
+        maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
+        maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
+        maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
+        maximoSemDPSInvalidez = Number(this.calculaMaximoSemDPSSeguro(maximoInval, coberturaInvalidez, simuladorSeguroSettings.regra_dps).toFixed(0))  
+        profissao = true
+      } else {
+        coberturaMorte = 100
+        coberturaInvalidez = 100
+        maximoMorte = 1000
+        maximoInval = 1000
+        minimoMorte = 100
+        minimoInvalidez = 100
+        maximoSemSDPSMorte = 1000
+        maximoSemDPSInvalidez = 1000  
+        stepMorte = 10
+        stepInvalidez = 10
+        profissao = false
+      } 
+
       let dadosSimuladorSeguro = {
           titulo: 'Simulador de</br>Seguro de Renda',
           tipo: 'Seguro',
@@ -1300,7 +1315,8 @@ export default class FirebaseHelper {
           coberturaMorte: coberturaMorte === 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
           chave: chave,
           uid: uid,          
-          bloqueio: idade >= 15 ? false : true
+          bloqueio: idade >= 15 ? false : true,
+          profissao: profissao
       }
       return dadosSimuladorSeguro      
   }

@@ -510,54 +510,46 @@
 
         <!--mini card ação-->
         <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-            <template v-if="home.projeto_vida.acao.vigente===true">
-                <div class="mdl-card__supporting-text margin_auto mdl-card-container">
-                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.projeto_vida.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
-                        <span class="span-minicard-text">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
-                        <i class="material-icons icon-button-minicard">arrow_forward</i>                                      
-                    </div>
+            <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.projeto_vida.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
+                    <span v-if="contratacaoContrib === false" class="span-minicard-text">{{ home.projeto_vida.acao.descricao }}</span>&nbsp;
+                    <span v-if="contratacaoContrib === true" class="span-minicard-text">Sua nova contribuição estará vigente a partir do proximo mês, veja aqui</span>&nbsp;
+                    <i class="material-icons icon-button-minicard">arrow_forward</i>                                      
                 </div>
-            </template>
-            <template v-else-if="home.projeto_vida.acao.vigente===false">
-                <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">                                  
-                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
-                        <span class="span-minicard-text">Sua nova contribuição estará vigente a partir do proximo mês, veja aqui</span>&nbsp;
-                        <i class="material-icons icon-button-minicard">arrow_forward</i>
-                    </div>
-                </div>
-            </template>
+            </div>     
         </div>
     </template>
 
     <!--Minhas Coberturas-->
     <template v-if="home.coberturas && home.coberturas.vigente">
-                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                          <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-                              <div class="mdl-card__supporting-text div_titulo_card">
-                                  Minhas <br>Coberturas
-                              </div>
-                          </div>
-                      </div>
-                      <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-                          <div class="mdl-card__supporting-text mdl-card-container div_coberturas_label">
-                              <dl class="dl-coberturas-label" style="margin-top: 0px !important;">
-                                  <template v-for="(coberturas, index) in home.coberturas.itens">
-                                      <dt class="dt-coberturas-label">{{ coberturas.nome }}</dt>
-                                      <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor, true) }}</dd>
-                                      <p class="p-coberturas-label-separador" v-if="index < (home.coberturas.itens.length - 1)"></p>
-                                  </template>
-    </dl>
-    </div>
-    </div>
-    <!--mini card ação-->
-    <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-        <div class="mdl-card__supporting-text margin_auto mdl-card-container">
-            <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.coberturas.acao.card_background" @click.prevent="simuladorSeguro('simulador-seguro')" style="cursor: pointer;">
-                <span class="span-minicard-text">{{ home.coberturas.acao.descricao }}</span>&nbsp;
-                <i class="material-icons icon-button-minicard">arrow_forward</i>
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                <div class="mdl-card__supporting-text div_titulo_card">
+                    Minhas <br>Coberturas
+                </div>
             </div>
         </div>
-    </div>
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <div class="mdl-card__supporting-text mdl-card-container div_coberturas_label">
+                <dl class="dl-coberturas-label" style="margin-top: 0px !important;">
+                    <template v-for="(coberturas, index) in home.coberturas.itens">
+                        <dt class="dt-coberturas-label">{{ coberturas.nome }}</dt>
+                        <dd class="dd-coberturas-label" v-bind:style="coberturas.cor">{{ formatMoeda(coberturas.valor, true) }}</dd>
+                        <p class="p-coberturas-label-separador" v-if="index < (home.coberturas.itens.length - 1)"></p>
+                    </template>
+                </dl>
+            </div>
+        </div>
+        <!--mini card ação-->
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+            <div class="mdl-card__supporting-text margin_auto mdl-card-container">
+                <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.coberturas.acao.card_background" @click.prevent="simuladorSeguro('simulador-seguro')" style="cursor: pointer;">
+                    <span v-if="contratacaoSeg === false" class="span-minicard-text">{{ home.coberturas.acao.descricao }}</span>&nbsp;
+                    <span v-if="contratacaoSeg === true" class="span-minicard-text">Acompanhe aqui seu pedido de nova cobertura</span>&nbsp;
+                    <i class="material-icons icon-button-minicard">arrow_forward</i>
+                </div>
+            </div>
+        </div>
     </template>
 
     <!--Minha Contribuição-->
@@ -698,22 +690,13 @@
     </template>
         <!--mini card ação-->
         <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-            <template v-if="home.contribuicao.acao.vigente === true">
-                <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
-                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
-                        <span class="span-minicard-text">{{ home.contribuicao.acao.descricao }}</span>&nbsp;
-                        <i class="material-icons icon-button-minicard">arrow_forward</i>
-                    </div>
+            <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
+                <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
+                    <span v-if="contratacaoContrib === false" class="span-minicard-text">{{ home.contribuicao.acao.descricao }} </span>&nbsp;                            
+                    <span v-if="contratacaoContrib === true" class="span-minicard-text">Acompanhe aqui sua contratação de renda</span>&nbsp;
+                    <i class="material-icons icon-button-minicard">arrow_forward</i>
                 </div>
-            </template>
-            <template v-else-if="home.contribuicao.acao.vigente === false">
-                <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="cursor: pointer;margin-top: 20px;" @click.prevent="contratacaoAberta">
-                    <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background">
-                        <span class="span-minicard-text">Você tem uma alteração de renda em aberto, acompanhe aqui</span>&nbsp;
-                        <i class="material-icons icon-button-minicard">arrow_forward</i>
-                    </div>
-                </div>
-            </template>
+            </div>  
         </div>
     </template>
 
@@ -793,32 +776,26 @@
     <!--Simulador Emprestimo-->
     <section id="page-simulador-emprestimo" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <simulador-emprestimo v-bind:dados="emprestimoSimulador" :key="componentKey" :uid="uid" :chave="chave"></simulador-emprestimo>
+        <simulador-emprestimo :key="componentKey" :uid="uid" :chave="chave"/>
     </section>
 
     <!--Simulador Seguro -->
     <section id="page-simulador-seguro" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <simulador-seguro :key="componentKey" :uid="uid" :chave="chave"></simulador-seguro>
+        <simulador-seguro :key="componentKey" :uid="uid" :chave="chave"/>
     </section>
 
     <!--Simulador Renda-->
     <section id="page-simulador-renda" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <simulador-renda v-bind:dados="rendaSimulador" :key="componentKey" :uid="uid" :chave="chave"/>
+        <simulador-renda :key="componentKey" :uid="uid" :chave="chave"/>
     </section>
 
     <!--Rentabilidade-->
     <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
         <a></a>
         <rentabilidade v-bind:lista="historicoRentabilidade" :key="componentKey" />
-    </section>
-
-    <!--Consulta Contratação em Aberto-->
-    <section id="page-contratacao-aberta" class="mdl-grid fp-content" style="display: none;">
-        <a></a>
-        <contratacao-aberta v-bind:dados="contribuicaoSimulador" :key="componentKey"></contratacao-aberta>
-    </section>
+    </section>    
 
     <!--Cadastro-->
     <section id="page-cadastro" class="mdl-grid fp-content" style="display: none;">

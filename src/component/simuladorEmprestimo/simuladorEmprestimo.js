@@ -7,39 +7,36 @@ import simuladorEmprestimo from './simuladorEmprestimo.html'
 import './simuladorEmprestimo.css'
 import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
+import FirebaseHelper from '../../FirebaseHelper'
 
 const financeiro = require('../../../functions/Financeiro')
+const Enum = require('../../Enum')
 
 export default {
     template: simuladorEmprestimo,
     components: { 
         VueSlider, Contratacao, ContratacaoAberta
     },
-    props: { 
-        dados: {
-            type: Object,
-            default: () => { 
-                return {
-                    titulo: '',
-                    pre_aprovado: 0,
-                    saldo_devedor: 0,
-                    taxa_adm: 0,
-                    fundo_risco: 0,
-                    taxa_mensal: 0,
-                    indice_anterior: 0,
-                }
-            }
-        }        
+    props: {
+        uid:'',
+        chave:''  
     },    
     data: function() {
         return {   
-            taxa_mensal: this.dados.taxa_mensal,
+            firebaseHelper: new FirebaseHelper(),
+            titulo: '',
+            pre_aprovado: 0,
+            saldo_devedor: 0,
+            taxa_adm: 0,
+            fundo_risco: 0,
+            taxa_mensal: 0,
+            indice_anterior: 0,
             formatter1: '{value} x',
             quantidade: 36,
-            maximo: this.dados.pre_aprovado - this.dados.saldo_devedor, 
+            maximo: 0,
             str_maximo: '',
-            saldo_devedor: this.dados.saldo_devedor,
-            minimo: this.dados.saldo_devedor,
+            saldo_devedor: 0,
+            minimo: 0,
             str_minimo: '',
             principal: 0,
             valorprincipal:0,
@@ -48,6 +45,7 @@ export default {
             parcela: 0,
             simulador: true,
             emprestimoSolicitado: false,
+            dadosEmprestimoSolicitado: new Object(),
             money: {
                 decimal: ',',
                 thousands: '.',
@@ -57,6 +55,7 @@ export default {
                 masked: false /* doesn't work with directive */
             },            
             sliderOptions: {
+                silent: true,
                 dotSize: 14,                
                 height: 10,
                 contained: false,                
@@ -123,17 +122,9 @@ export default {
                 resumo: [],
             },
         }
-    },    
-    created(){
-        if(this.dados.emprestimoSolicitado.dados != null) {
-            this.emprestimoSolicitado = true            
-        } else {
-            this.dados.pre_aprovado = financeiro.valor_to_string_formatado(this.dados.pre_aprovado.toFixed(2), 2, false, true)
-            this.dados.saldo_devedor = financeiro.valor_to_string_formatado(this.dados.saldo_devedor.toFixed(2), 2, false, true)
-            this.str_maximo = financeiro.valor_to_string_formatado(this.maximo.toFixed(2), 2, false, true)
-            this.str_minimo = financeiro.valor_to_string_formatado(this.minimo.toFixed(2), 2, false, true)
-            this.principal = (this.maximo / 2).toFixed(0)
-        }
+    },
+    created(){        
+        this.consultaDadosContratados()
     },  
     watch: {
         principal(newValue, oldValue) {
@@ -144,10 +135,47 @@ export default {
             this.calcularParcela(parseFloat(this.valorprincipal.toString().replace(/\./g,'')))
         }
     },  
-    methods: {        
-        recarregarDados() {
-            alert("recarregarDadosSimuladorEmprestimo")
-        },     
+    methods: {      
+        consultaDadosContratados() {            
+            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.EMPRESTIMO, Enum.statusContratacao.SOLICITADO).then((data) => {
+                if(data){
+                    this.processaDadosContratados(data)                
+                } else {   
+                    this.simulador = true                    
+                    this.emprestimoSolicitado = false
+                    this.consultaDados()
+                } 
+            })
+        },
+        processaDadosContratados(data) {            
+            if (data) {
+                this.simulador = false
+                this.emprestimoSolicitado = true                        
+                this.dadosEmprestimoSolicitado.tipo = 'Seguro'
+                this.dadosEmprestimoSolicitado.titulo = 'Consulta </br>contratação em </br>aberto'
+                this.dadosEmprestimoSolicitado.dados = data
+                this.dadosEmprestimoSolicitado.chave = this.chave                
+            }
+        },        
+        consultaDados() {    
+            this.firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.uid).then((ret) => {
+                this.montarDados(ret)
+            })
+        },
+        montarDados(dataSimulador) { 
+            this.pre_aprovado = financeiro.valor_to_string_formatado(dataSimulador.pre_aprovado, 2, false, true)
+            this.saldo_devedor = financeiro.valor_to_string_formatado(dataSimulador.saldo_devedor, 2, false, true)
+            this.fundo_risco = dataSimulador.fundo_risco
+            this.indice_anterior = dataSimulador.indice_anterior
+            this.taxa_adm = dataSimulador.taxa_adm
+            this.taxa_mensal = dataSimulador.taxa_mensal
+            this.titulo = dataSimulador.titulo
+            this.maximo = dataSimulador.pre_aprovado - dataSimulador.saldo_devedor, 
+            this.str_maximo = financeiro.valor_to_string_formatado(this.maximo, 2, false, true)
+            this.minimo = dataSimulador.saldo_devedor
+            this.str_minimo = financeiro.valor_to_string_formatado(this.minimo, 2, false, true)
+            this.principal = (this.maximo / 2).toFixed(0)
+        },             
         calcularParcela(principal){    
             //console.log('principal',principal)
             //this.principal = this.principal.replace('R$','')
@@ -190,9 +218,9 @@ export default {
                 let liquido = 0
                 let risco = 0
                 let taxa_adm = 0
-                if(this.dados.fundo_risco > 0) {
-                    risco = principal * this.dados.fundo_risco / 100
-                    taxa_adm = principal * this.dados.taxa_adm / 100
+                if(this.fundo_risco > 0) {
+                    risco = principal * this.fundo_risco / 100
+                    taxa_adm = principal * this.taxa_adm / 100
                     this.contratacao.resumo.push(
                                                     {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm.toFixed(2), 2, false, true)}`},
                                                     {nome:'(c) Fundo de risco:', valor: `R$ ${financeiro.valor_to_string_formatado(risco.toFixed(2), 2, false, true)}`}
@@ -201,7 +229,7 @@ export default {
                     if(this.saldo_devedor !== 0) {
                         liquido -= this.saldo_devedor
                         this.contratacao.resumo.push(
-                                    { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
+                                    { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${this.saldo_devedor}`},
                                     { nome:'&nbsp;', valor:' ' },
                                     { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
                         )
@@ -212,7 +240,7 @@ export default {
                         )
                     }                    
                 } else {                    
-                    taxa_adm = principal * this.dados.taxa_adm / 100
+                    taxa_adm = principal * this.taxa_adm / 100
                     this.contratacao.resumo.push(
                                                     {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm.toFixed(2), 2, false, true)}`},
                                                 )
@@ -220,7 +248,7 @@ export default {
                     if(this.saldo_devedor !== 0) {
                         liquido -= this.saldo_devedor
                         this.contratacao.resumo.push(
-                                    { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${this.dados.saldo_devedor}`},
+                                    { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${this.saldo_devedor}`},
                                     { nome:'&nbsp;', valor:' ' },
                                     { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
                         )
@@ -237,12 +265,12 @@ export default {
                 this.contratacao.observacao = '*Sobre este valor incidirá IOF, calculado na data da assinatura do contrato.'
                 this.contratacao.valor_novo = parseFloat(principal)
                 this.contratacao.valor_novo_Tela = financeiro.valor_to_string_formatado(principal, 2, false, true)
-                this.contratacao.valor_antigo = parseFloat(this.dados.saldo_devedor.toString().replace(/\./g,''))
+                this.contratacao.valor_antigo = parseFloat(this.saldo_devedor.toString().replace(/\./g,''))
                 this.contratacao.titulo_finalizacao = 'Solicitação </br> de empréstimo </br>encaminhada'
                 this.contratacao.finalizacao_msg = 'Em breve entraremos em contato para assinatura do contrato.'
                 this.contratacao.finalizacao_msg_novo_valor = 'Valor bruto simulado de R$ '
-                this.contratacao.chave = this.dados.chave
-                this.contratacao.uid = this.dados.uid
+                this.contratacao.chave = this.chave
+                this.contratacao.uid = this.uid
                 this.contratacao.label_button = 'Solicitar'
                 this.contratacao.tipo = 'Empréstimo'
                 this.simulador = false

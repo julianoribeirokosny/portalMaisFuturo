@@ -9,7 +9,6 @@ import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmpres
 import rentabilidade from './component/rentabilidade/rentabilidade'
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro'
 import simuladorRenda from './component/simuladorRenda/simuladorRenda'
-import contratacaoAberta from './component/contratacaoAberta/contratacaoAberta'
 import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
 import emConstrucao from './component/emConstrucao/emConstrucao'
@@ -20,6 +19,7 @@ import page from 'page';
 import { Erros } from './Erros';
 
 const financeiro = require('../functions/Financeiro')
+const Enum = require('../src/Enum')
 
 // register directive v-money and component <money>
 Vue.use(money, { precision: 4 })
@@ -43,16 +43,11 @@ export default class Home {
         this.participante = {}
         this.data_Home = null
         this.vueObj = null
-        this.chave = null
-        this.contribuicao_Aberta = null
-        this.emprestimo_Solicitado = null
-        this.seguro_Solicitado = null
-        this.consulta_contribuicao = null
-        this.consulta_emprestimo = null
-        this.consulta_seguro = null
+        this.chave = null        
     }
 
     async showHome() {
+        
         let base_spinner = document.querySelector('#base_spinner')
         base_spinner.style.display = 'flex'
 
@@ -91,13 +86,12 @@ export default class Home {
         //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
         firebaseHelper.solicitaDadosSinqia(this.chave)
 
-        let dadosHome = await this.dadosHome(this.chave)
-        
+        let dadosHome = await this.dadosHome(this.chave)        
         let data_Home = dadosHome.dataHome 
         let contratacaoContrib = dadosHome.contratacaoContrib
         let contratacaoEmp =  dadosHome.contratacaoEmp
         let contratacaoSeg = dadosHome.contratacaoSeg
-
+        
         if (data_Home === null) {
             //zera a session para tentar carregar em próximas vezes
             base_spinner.style.display = 'none'
@@ -112,42 +106,14 @@ export default class Home {
             base_spinner.style.display = 'none'
             Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome', 'data_Home.vigente === false')
             return page('/erro')
-        }
-
-        let p1 = new Promise((resolve) => {
-            firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado').then((ret) => {
-                this.contribuicao_Aberta = ret
-                resolve(true)
-            })
-        })      
-        let p2 = new Promise((resolve) => {
-            firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado').then((ret) => {
-                this.emprestimo_Solicitado = ret
-                resolve(true)
-            })
-        })        
+        }  
         let historicoRentabilidade
         let p4 = new Promise((resolve) => {
             firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento ? this.data_Home.perfil_investimento : "Conservador").then((ret) => {
                 historicoRentabilidade = ret
                 resolve(true)
             })
-        })
-
-        let dadosSimuladorRenda
-        let p5 = new Promise((resolve) => {
-            firebaseHelper.getDadosSimuladorRenda(this.chave, this.auth.currentUser.uid).then((ret) => {
-                dadosSimuladorRenda = ret
-                resolve(true)
-            })
-        })
-        let dadosSimuladorEmprestimo
-        let p6 = new Promise((resolve) => {
-            firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.auth.currentUser.uid).then((ret) => {
-                dadosSimuladorEmprestimo = ret
-                resolve(true)
-            })
-        })
+        })          
         let listaHistoricoContribuicao
         let p8 = new Promise((resolve) => {
             firebaseHelper.getHistoricoContribuicao(this.chave).then((ret) => {
@@ -156,23 +122,7 @@ export default class Home {
             })
         })
 
-        return Promise.all([p1, p2, p4, p5, p6, p8]).then((retPromises) => {            
-            
-            this.consulta_contribuicao = new Object()
-            this.consulta_contribuicao.tipo = 'Contribuição mensal'
-            this.consulta_contribuicao.titulo = 'Consulta </br>contratação em </br>aberto'
-            this.consulta_contribuicao.dados = this.contribuicao_Aberta != null ? this.contribuicao_Aberta : null
-            this.consulta_contribuicao.chave = this.chave            
-            dadosSimuladorRenda.rendaSolicitada = this.consulta_contribuicao
-            //console.log('dadosSimuladorRenda::',dadosSimuladorRenda)            
-            
-            this.consulta_emprestimo = new Object()
-            this.consulta_emprestimo.tipo = 'Empréstimo'
-            this.consulta_emprestimo.titulo = 'Consulta </br>contratação de </br>empréstimo'
-            this.consulta_emprestimo.dados = this.emprestimo_Solicitado != null ? this.emprestimo_Solicitado : null
-            this.consulta_emprestimo.chave = this.chave            
-            dadosSimuladorEmprestimo.emprestimoSolicitado = this.consulta_emprestimo
-            //console.log('dadosSimuladorEmprestimo::',dadosSimuladorEmprestimo)
+        return Promise.all([p4, p8]).then((retPromises) => {
 
             Vue.component('grafico-reserva', {
                 extends: VueCharts.Doughnut,
@@ -253,20 +203,6 @@ export default class Home {
                 page('/erro')
             }
 
-            /*if (this.data_Home.contribuicao.itens.participante.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.participante.valor)) {
-                //console.log('this.data_Home.contribuicao.itens.participante.valor',this.data_Home.contribuicao.itens.participante.valor)
-                this.data_Home.contribuicao.itens.participante.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.participante.valor.toFixed(2), 2, false, true)
-            }
-
-            if (this.data_Home.contribuicao.itens.patronal.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.patronal.valor)) {
-                this.data_Home.contribuicao.itens.patronal.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.patronal.valor.toFixed(2), 2, false, true)
-            }
-
-            if (this.data_Home.contribuicao.itens.seguro.valor !== 0 && this.isFloat(this.data_Home.contribuicao.itens.seguro.valor)) {
-                this.data_Home.contribuicao.itens.seguro.valor = financeiro.valor_to_string_formatado(this.data_Home.contribuicao.itens.seguro.valor.toFixed(2), 2, false, true)
-            }*/
-
-            //console.log('this.data_Home', this.data_Home)
             let auth = this.auth.currentUser.uid
 
             if (!this.vueObj) {
@@ -278,8 +214,7 @@ export default class Home {
                         simuladorEmprestimo,
                         rentabilidade,
                         simuladorSeguro,
-                        simuladorRenda,
-                        contratacaoAberta,
+                        simuladorRenda,                        
                         cadastro,
                         servicos,
                         emConstrucao,
@@ -287,21 +222,19 @@ export default class Home {
                         trocaParticipacao,
                         maisAmigos
                     },
-                    data: {
-                        video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
+                    data: {                        
                         componentKey: 0,
                         home: this.data_Home,
                         toggle: false,
                         chave: this.chave,
                         url_foto: sessionStorage.url_foto,
-                        uid: this.auth.currentUser.uid,
-                        contribuicaoSimulador: this.consulta_contribuicao,
-                        rendaSimulador: dadosSimuladorRenda,
-                        emprestimoSimulador: dadosSimuladorEmprestimo,
-                        //seguroSimulador: dadosSimuladorSeguro,
+                        uid: this.auth.currentUser.uid,                        
                         historicoContribuicao: listaHistoricoContribuicao,
                         historicoRentabilidade: historicoRentabilidade,
-                        background: this.data_Home.mais_amigos.background
+                        background: this.data_Home.mais_amigos.background,
+                        contratacaoContrib: contratacaoContrib,
+                        contratacaoEmp: contratacaoEmp,    
+                        contratacaoSeg: contratacaoSeg,
                     },
                     created() {
                         sessionStorage.ultimaPagina = 'home'
@@ -328,8 +261,7 @@ export default class Home {
                             if (value === 0) {
                                 return '(não contratado)'
                             } else if (value && value !== 0) {
-                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
-                                //return `R$ ${val}`
+                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)                                
                                 return val
                             }
                         },
@@ -376,20 +308,17 @@ export default class Home {
                 })
                 this.vueObj.$mount('#app');
             } else {
-                this.vueObj.home = this.data_Home
-                this.vueObj.contribuicaoAberta = this.consulta_contribuicao
-                this.vueObj.rendaSimulador = dadosSimuladorRenda
-                this.vueObj.emprestimoSimulador = dadosSimuladorEmprestimo
-                //this.vueObj.seguroSimulador = dadosSimuladorSeguro
+                this.vueObj.home = this.data_Home                
+                this.vueObj.contratacaoContrib = contratacaoContrib
+                this.vueObj.contratacaoEmp = contratacaoEmp    
+                this.vueObj.contratacaoSeg = contratacaoSeg
                 this.vueObj.chave = this.chave
                 this.vueObj.url_foto = sessionStorage.url_foto
                 this.vueObj.uid = this.auth.currentUser.uid
                 this.vueObj.historicoContribuicao = listaHistoricoContribuicao
                 this.vueObj.$forceUpdate()
                 this.vueObj.forceRerender()
-                    //console.log('this.vueObj',this.vueObj)
             }
-
             setTimeout(function() {
                 base_spinner.style.display = 'none'
             }, 20)
@@ -426,16 +355,28 @@ export default class Home {
             }
         })
 
-        let p2 = this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Contribuição mensal', 'solicitado').then((contratacao) => {
-            return contratacao
+        let p2 = this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.RENDA, Enum.statusContratacao.SOLICITADO).then((contratacao) => {
+            if(contratacao) {
+                return true
+            } else {
+                return false
+            }
         })
 
-        let p3 = this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Empréstimo', 'solicitado').then((contratacao) => {
-            return contratacao
+        let p3 = this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.EMPRESTIMO, Enum.statusContratacao.SOLICITADO).then((contratacao) => {
+            if(contratacao) {
+                return true
+            } else {
+                return false
+            }
         })
         
-        let p4 = this.firebaseHelper.getContratacaoEmAberto(this.chave, 'Seguro', 'solicitado').then((contratacao) => {
-            return contratacao
+        let p4 = this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((contratacao) => {
+            if(contratacao) {
+                return true
+            } else {
+                return false
+            }
         })
 
         return Promise.all([p0, p1, p2, p3, p4]).then(async(retPromises) => {
