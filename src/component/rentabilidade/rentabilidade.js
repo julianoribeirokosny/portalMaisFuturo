@@ -3,10 +3,10 @@
 import vSelect from 'vue-select'; 
 import GraficoPerfil from './graficoPerfil';
 import GraficoBenchmark from './graficoBenchmark';
-
 import rentabilidade from './rentabilidade.html';
 import 'vue-select/dist/vue-select.css';
 import './rentabilidade.css';
+import FirebaseHelper from '../../FirebaseHelper'
 
 export default {    
     template: rentabilidade,
@@ -15,28 +15,11 @@ export default {
         GraficoBenchmark,
         vSelect
     },
-    props: {  
-        lista: {
-            type: Array,
-            default: () => {
-                return {
-
-                }
-            }
-        },      
-        dados: {
-            type: Object,
-            default: () => { 
-                return {                    
-                    titulo:'Confira a rentabilidade <br>do seu Plano',
-                    legenda_perfil: [],
-                    indices: []
-                }
-            }
-        }        
-    },
     data: function() {
         return {
+            titulo:'Confira a rentabilidade <br>do seu Plano',
+            firebaseHelper: new FirebaseHelper(), 
+            lista: null,
             acumulados: [],
             listaIndices: [],
             grafico_benchmark:null,
@@ -51,15 +34,9 @@ export default {
             nome_perfil:''
         }
     },
-    created() {    
-        this.legenda_perfil = this.lista[0].composicao        
-        this.nome_perfil = this.lista[0].nome        
-        this.carregaListaIndice()
-    },
-    mounted() {        
-        this.alteraQuantidadeMeses(this.size)
-        this.graficoPerfil()
-    },
+    created() {
+        this.getListaDados()
+    },    
     watch: {
         quantidade_meses(newVal, oldVal) {
             if (newVal !== oldVal) {
@@ -68,7 +45,19 @@ export default {
             }
         }
     },
-    methods: {        
+    methods: {      
+        getListaDados () {
+            this.firebaseHelper.getRentabilidade(sessionStorage.plano, sessionStorage.perfil_investimento).then((data) => {
+                if (data) {
+                    this.lista = data
+                    this.legenda_perfil = this.lista[0].composicao        
+                    this.nome_perfil = this.lista[0].nome        
+                    this.carregaListaIndice()
+                    this.alteraQuantidadeMeses(this.size)
+                    this.graficoPerfil()
+                }
+            })
+        },
         graficoPerfil() {
             let labels = []
             let data = []
@@ -121,8 +110,7 @@ export default {
                 this.acumulados.push(objeto)
             }
         },
-        graficoBenchmark(size) {
-            console.log('size',size)
+        graficoBenchmark(size) {            
             let grafico = new Object()
             let arr = new Array()
             let labels = new Array()

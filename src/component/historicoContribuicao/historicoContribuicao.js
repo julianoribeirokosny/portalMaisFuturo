@@ -3,17 +3,18 @@
 import page from 'page';
 import historicoContribuicao from './historicoContribuicao.html';
 import './historicoContribuicao.css';
+import FirebaseHelper from '../../FirebaseHelper'
 
 const img_boleto = require('../../../public/images/Boleto.png')
 const img_check = require('../../../public/images/Check.png')
 
 export default {
-    template: historicoContribuicao,
-    props: { 
-        historico: ''        
-    },    
+    template: historicoContribuicao,      
     data: function() {
-        return {      
+        return { 
+            chave:'',
+            historico: '',
+            firebaseHelper: new FirebaseHelper(),     
             titulo: 'Histórico de<br/>contribuição',
             showDialog: false,
             img_boleto: img_boleto,
@@ -21,9 +22,17 @@ export default {
         }
     },        
     created(){
-        console.log('historicoDeContribuição:', this.historico)
+        this.chave = sessionStorage.chave
+        this.getHistoricoContribuicao()
     },
     methods: {
+        getHistoricoContribuicao () {
+            this.firebaseHelper.getHistoricoContribuicao(this.chave).then((data) => {
+                if (data) {
+                    this.historico = data
+                }
+            })
+        },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
         },

@@ -12,7 +12,7 @@ import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
 import emConstrucao from './component/emConstrucao/emConstrucao'
-import historicoContribuicao from './component/historicoContribui\cao/historicoContribuicao'
+import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
 import page from 'page';
@@ -70,15 +70,12 @@ export default class Home {
             firebaseHelper.gravaLoginSucesso(this.auth.currentUser.uid) //loga data-hora do login
             sessionStorage.dataUltimoLogin = new Date()
         }
-
-        //console.log('=====> currentUser: ', this.auth.currentUser)
+        
         if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '') {
             sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
         }
         this.chave = sessionStorage.chave
-
-        //console.log('U i D:', this.auth.currentUser.uid)
-        //console.log('=====> CHAVE: ', sessionStorage.chave)
+        
         if (this.chave === null || this.chave === '') {
             base_spinner.style.display = 'none'
             Erros.registraErro(this.auth.currentUser.uid, 'chave', 'showHome', 'chave nula ou em branco')
@@ -90,6 +87,8 @@ export default class Home {
 
         let dadosHome = await this.dadosHome(this.chave)        
         let data_Home = dadosHome.dataHome 
+        sessionStorage.plano = data_Home.plano
+        sessionStorage.perfil_investimento = data_Home.perfil_investimento ? data_Home.perfil_investimento : "Conservador"
         let contratacaoContrib = dadosHome.contratacaoContrib
         let contratacaoEmp =  dadosHome.contratacaoEmp
         let contratacaoSeg = dadosHome.contratacaoSeg
@@ -109,22 +108,8 @@ export default class Home {
             Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome', 'data_Home.vigente === false')
             return page('/erro')
         }
-        let historicoRentabilidade
-        let p4 = new Promise((resolve) => {
-            firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento ? this.data_Home.perfil_investimento : "Conservador").then((ret) => {
-                historicoRentabilidade = ret
-                resolve(true)
-            })
-        })          
-        let listaHistoricoContribuicao
-        let p8 = new Promise((resolve) => {
-            firebaseHelper.getHistoricoContribuicao(this.chave).then((ret) => {
-                listaHistoricoContribuicao = ret
-                resolve(true)
-            })
-        })
 
-        return Promise.all([p4, p8]).then((retPromises) => {
+        return Promise.all([]).then((retPromises) => {
 
             Vue.component('grafico-reserva', {
                 extends: VueCharts.Doughnut,
@@ -206,8 +191,7 @@ export default class Home {
             }
 
             let auth = this.auth.currentUser.uid
-
-            //Vue.config.silent = true
+            
             if (!this.vueObj) {
                 this.vueObj = new Vue({
                     renderError(h, err) {
@@ -226,15 +210,12 @@ export default class Home {
                         maisAmigos
                     },
                     data: {
-                        //video: 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/videos%2FReforma%20da%20Previd%C3%AAncia%20-%20Com%20Renato%20Follador%20e%20Thiago%20Nieweglowski.mp4?alt=media&token=883d2fe4-c6be-463e-8de2-727c0b5d0ea9',
                         componentKey: 0,
                         home: this.data_Home,
                         toggle: false,
                         chave: this.chave,
                         url_foto: sessionStorage.url_foto,
-                        uid: this.auth.currentUser.uid,                        
-                        historicoContribuicao: listaHistoricoContribuicao,
-                        historicoRentabilidade: historicoRentabilidade,
+                        uid: this.auth.currentUser.uid,
                         background: this.data_Home.mais_amigos.background,
                         contratacaoContrib: contratacaoContrib,
                         contratacaoEmp: contratacaoEmp,    
@@ -320,8 +301,7 @@ export default class Home {
                 this.vueObj.chave = this.chave
                 this.vueObj.url_foto = sessionStorage.url_foto
                 this.vueObj.uid = this.auth.currentUser.uid
-                this.vueObj.competencia = this.data_Home.competencia
-                this.vueObj.historicoContribuicao = listaHistoricoContribuicao
+                this.vueObj.competencia = this.data_Home.competencia                
                 this.vueObj.$forceUpdate()
                 this.vueObj.forceRerender()
             }
@@ -409,7 +389,7 @@ export default class Home {
 
                 this.data_Home = JSON.parse(stringHome)
                 
-                console.log('this.data_Home', this.data_Home)
+                //console.log('this.data_Home', this.data_Home)
                 return {
                     dataHome: this.data_Home,
                     contratacaoContrib: contratacaoContrib,

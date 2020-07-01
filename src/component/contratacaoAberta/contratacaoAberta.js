@@ -37,8 +37,7 @@ export default {
         this.carregarDados()
     },
     methods: {
-        carregarDados(){
-            console.log('this.dados',this.dados)
+        carregarDados(){            
             if(this.dados.dados) {
                 let name = Object.getOwnPropertyNames(this.dados.dados).sort()                
                 this.id = name[0]           

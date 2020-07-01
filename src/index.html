@@ -794,7 +794,7 @@
     <!--Rentabilidade-->
     <section id="page-rentabilidade" class="mdl-grid fp-content" style="display: none;">
         <a></a>
-        <rentabilidade v-bind:lista="historicoRentabilidade" :key="componentKey" />
+        <rentabilidade :key="componentKey" />
     </section>    
 
     <!--Cadastro-->
@@ -968,7 +968,7 @@
                           </template>
         </div>
         </template>
-        <historico-contribuicao v-bind:historico="historicoContribuicao" :key="componentKey"></historico-contribuicao>
+        <historico-contribuicao :key="componentKey"/>
     </section>
 
     <!--Troca Participação-->
