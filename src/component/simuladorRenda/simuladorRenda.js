@@ -24,9 +24,6 @@ export default {
         chave:''
     },    
     data: function() {
-        console.log('===> this.dados.minimoContribuicao', this.dados.minimoContribuicao)
-        console.log('===> this.dados.maximoContribuicao', this.dados.maximoContribuicao)
-
         return {
             reservaTotalAtual: 0,
             taxa_anual_simulacao: 0,
@@ -36,9 +33,9 @@ export default {
             minimoContribuicao:0,
             usr_tipo_plano:'',
             firebaseHelper: new FirebaseHelper(),            
-            min: 10,
-            max: 1000,
-            interval: 10,
+            min: 1,
+            max: 10,
+            interval: 1,
             rendaSolicitada: false,
             contratacao: {
                 titulo:'',
@@ -294,6 +291,9 @@ export default {
                     this.taxa_mensal_assistido,
                     this.tempo,
                     this.usr_tipo_plano), 2, false, true)
+        },
+        cancelarContratacao(value) {
+            this.simulador = value
         },
     },
 }

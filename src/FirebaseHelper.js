@@ -1215,7 +1215,8 @@ export default class FirebaseHelper {
       })
   }
 
-  async getDadosSimuladorRenda(chave, uid, usuario) {
+  async getDadosSimuladorRenda(chave, uid) {
+    let usuario = JSON.parse(sessionStorage.participante)
       if (!usuario || usuario === null) {
         usuario = await this.getParticipante(chave)    
       }
@@ -1243,7 +1244,8 @@ export default class FirebaseHelper {
       return dadosSimuladorRenda
   }
 
-  async getDadosSimuladorEmprestimo(chave, uid, usuario) {
+  async getDadosSimuladorEmprestimo(chave, uid) {
+    let usuario = JSON.parse(sessionStorage.participante)
     if (!usuario || usuario === null) {
       usuario = await this.getParticipante(chave)    
     }
@@ -1264,7 +1266,8 @@ export default class FirebaseHelper {
     return dadosSimuladorEmprestimo
   }
 
-  async getDadosSimuladorSeguro(chave, uid, usuario) {
+  async getDadosSimuladorSeguro(chave, uid) {
+      let usuario = JSON.parse(sessionStorage.participante)
       if (!usuario || usuario === null) {
         usuario = await this.getParticipante(chave)    
       }

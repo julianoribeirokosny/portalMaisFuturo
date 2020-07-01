@@ -108,9 +108,7 @@ export default class Home {
             base_spinner.style.display = 'none'
             Erros.registraErro(this.auth.currentUser.uid, 'Participante não vigente', 'showHome', 'data_Home.vigente === false')
             return page('/erro')
-        }  
-        
-
+        }
         let historicoRentabilidade
         let p4 = new Promise((resolve) => {
             firebaseHelper.getRentabilidade(this.data_Home.plano, this.data_Home.perfil_investimento ? this.data_Home.perfil_investimento : "Conservador").then((ret) => {
@@ -358,6 +356,9 @@ export default class Home {
                         return page('/erro')
                     }
                     sessionStorage.chave = chave
+                    if (!sessionStorage.participante) {
+                        sessionStorage.participante = JSON.stringify(ret)
+                    }
                     resolve(ret)
                     //return true    
                 })
