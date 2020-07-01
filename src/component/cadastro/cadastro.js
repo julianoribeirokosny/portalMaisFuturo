@@ -1,6 +1,5 @@
 'use strict'
 
-import Vue from 'vue/dist/vue.esm.js'
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
 import cadastro from './cadastro.html'
@@ -8,11 +7,8 @@ import './cadastro.css'
 import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
-import { VueMaskDirective } from 'v-mask'
 import { TheMask } from 'vue-the-mask'
 import $ from 'jquery';
-
-Vue.directive('mask', VueMaskDirective)
 
 const img_editar = require('../../../public/images/Editar.png')
 
@@ -26,7 +22,7 @@ export default {
         foto: '',
         chave_usuario: '',
         uid: '',
-        testeProf: ''
+        competencia: ''
     },
     data: function() {
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
@@ -110,6 +106,7 @@ export default {
             }, 5000);
         },
         getParticipante() {
+            console.log('=====> this.competencia', this.competencia)
             this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then(cad => {
                     this.cadastro = cad

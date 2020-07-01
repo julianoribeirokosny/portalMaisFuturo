@@ -165,7 +165,6 @@ module.exports =  {
 
     valorFormatoDesc(num) {
         let ret = ''
-        console.log('Math.abs(num)', Math.abs(num))
         if (Math.abs(num) > 999999) {
             ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000000)), 1, true, false) 
             if (ret.indexOf(',0') >= 0) { //se o final do valor for ",0" retira...

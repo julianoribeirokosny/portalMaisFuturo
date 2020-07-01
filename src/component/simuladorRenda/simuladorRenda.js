@@ -24,6 +24,9 @@ export default {
         chave:''
     },    
     data: function() {
+        console.log('===> this.dados.minimoContribuicao', this.dados.minimoContribuicao)
+        console.log('===> this.dados.maximoContribuicao', this.dados.maximoContribuicao)
+
         return {
             reservaTotalAtual: 0,
             taxa_anual_simulacao: 0,

@@ -197,6 +197,11 @@ module.exports = (env, argv) => {
                 importWorkboxFrom: 'local',
                 importsDirectory: 'workbox',
             }),
-        ]
+        ],
+        resolve: {
+            alias: {
+              vue: 'vue/dist/vue.js'
+            }
+        }
     };
 };

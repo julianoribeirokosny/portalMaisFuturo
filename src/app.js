@@ -50,7 +50,7 @@ const checkIfIsPwaInstalled = (isIos) => {
     }
 }
 
-document.querySelector('#div-footer-versao').innerHTML = `Versão: ${localStorage.versao}`
+document.querySelector('#div-footer-versao').innerHTML = `Versão: ${localStorage.versao && localStorage.versao !== "" ? localStorage.versao : '0'}`
 
 function detectStandalone() {
   const hash = window.location.hash;
@@ -86,33 +86,36 @@ function mostraTelaInstalacaoIOS() {
   $('#page-acesso-browser').hide()
 }
 
+
 if (pageReset) { //limpa o cache antes de continuar
   localStorage.isPwaInstalled = ""
-  let p1 = new Promise((resolve) => {
-    //limpa o cache
-    self.caches.keys().then(keys => { 
-      keys.forEach(key => {
-        self.caches.delete(key)  
-        console.log(key)
-      }) 
-      resolve(true)
-    })
-  })
-  let p2 = new Promise((resolve) => {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for(let registration of registrations) {  
-        console.log(registration)
-        registration.unregister();
-      }
-      resolve(true)
-    });  
-  })
-  Promise.all([p1, p2]).then(() => {
-    montaApp()
-  })
-} else {
-  montaApp()
 }
+//PROVISORIO - SEMPRE RESET AO ENTRAR
+let p1 = new Promise((resolve) => {
+  //limpa o cache
+  self.caches.keys().then(keys => { 
+    keys.forEach(key => {
+      self.caches.delete(key)  
+      console.log(key)
+    }) 
+    resolve(true)
+  })
+})
+let p2 = new Promise((resolve) => {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for(let registration of registrations) {  
+      console.log(registration)
+      registration.unregister();
+    }
+    resolve(true)
+  });  
+})
+Promise.all([p1, p2]).then(() => {
+  montaApp()
+})
+/*   PROVISORIO - SEMPRE RESET AO ENTRAR} else {
+  montaApp()
+}*/
 
 
 function montaApp() {

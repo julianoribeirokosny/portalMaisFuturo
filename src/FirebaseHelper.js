@@ -8,7 +8,7 @@ import latinize from 'latinize';
 import {Utils} from './Utils';
 import $ from 'jquery';
 import {Erros} from './Erros';
-
+import page from 'page';
 
 const utils = require('../functions/utilsFunctions')
 const financeiro = require('../functions/Financeiro')
@@ -1215,8 +1215,10 @@ export default class FirebaseHelper {
       })
   }
 
-  async getDadosSimuladorRenda(chave, uid) {
-      let usuario = await this.getParticipante(chave)    
+  async getDadosSimuladorRenda(chave, uid, usuario) {
+      if (!usuario || usuario === null) {
+        usuario = await this.getParticipante(chave)    
+      }
       let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
       let minimoContribuicao = usuario.data.valores.contribParticipante    
       let maximoContribuicao = minimoContribuicao + ( simuladorRendaSettings.step_contribuicao * 40)    
@@ -1241,8 +1243,10 @@ export default class FirebaseHelper {
       return dadosSimuladorRenda
   }
 
-  async getDadosSimuladorEmprestimo(chave, uid) {
-    let usuario = await this.getParticipante(chave)
+  async getDadosSimuladorEmprestimo(chave, uid, usuario) {
+    if (!usuario || usuario === null) {
+      usuario = await this.getParticipante(chave)    
+    }
     let simuladorEmprestimoSettings = await this.getSimuladorEmprestimoSettings(usuario.home.usr_plano)
 
     let dadosSimuladorEmprestimo = {
@@ -1260,8 +1264,10 @@ export default class FirebaseHelper {
     return dadosSimuladorEmprestimo
   }
 
-  async getDadosSimuladorSeguro(chave, uid) {            
-      let usuario = await this.getParticipante(chave)
+  async getDadosSimuladorSeguro(chave, uid, usuario) {
+      if (!usuario || usuario === null) {
+        usuario = await this.getParticipante(chave)    
+      }
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)      
@@ -1363,7 +1369,9 @@ export default class FirebaseHelper {
     }
     return ref.once('value').then((data) => {    
       if (data.val()) {
-        return data.val()
+        let dataRet = data.val()
+        dataRet['chave'] = chave
+        return dataRet
       } else {
         return null
       }
@@ -1566,4 +1574,13 @@ export default class FirebaseHelper {
       Array.prototype.push.apply(retorno, benchmark)
       return retorno
   }
+
+  signOut() {
+    if(this.auth) {
+      this.auth.signOut(); 
+    }
+    sessionStorage.chave = ''
+    page('/signout');
+  } 
+
 };

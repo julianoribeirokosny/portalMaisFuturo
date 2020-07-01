@@ -1,6 +1,5 @@
 'use strict';
 
-import Vue from 'vue/dist/vue.esm.js'
 import servicos from './servicos.html'
 import './servicos.css'
 import page from 'page'
