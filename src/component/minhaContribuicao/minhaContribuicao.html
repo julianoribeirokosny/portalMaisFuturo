@@ -1,0 +1,130 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">   
+        <template v-if="contribuicao && contribuicao.vigente">            
+            <div class="mdl-card__supporting-text div_titulo_card">
+                Minha <br>Contribuição
+            </div>               
+            <div class="fp-post mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing div_grafico">
+
+                <grafico-minha-contribuicao class="canvas_grafico_semi_circle" :chartdata="contribuicao.grafico"/>
+
+                <div class="div_grafico_contribuicao_legenda">                    
+                    <div class="div_contribuicao_text_1">
+                        <template>
+                            <dl class="dl_contribuicao_legenda">
+                                <dt class="dt_contribuicao_legenda">{{ contribuicao.total.nome }}</dt>
+                                <dd class="dd_contribuicao_text">
+                                    <span class="span_contribuicao_legenda_1_total" v-bind:style="contribuicao.total.color">R$</span>
+                                    <span class="span_contribuicao_legenda_2_total" v-bind:style="contribuicao.total.color">{{ contribuicao.total.valor }}</span> 
+                                </dd>
+                            </dl>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <!--Participante-->
+            <template v-if="contribuicao.itens.participante.valor !== 0">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto" style="display: flex; justify-content: center;">
+                    <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px; margin: 0px !important;">
+                        <div class="mdl-card-container">                              
+                            <span class="span-contribuicao-titulo">Participante</span>
+                        </div>                             
+                        <div id="div-contribuicao-row-participante" class="div-contribuicao-row">
+                            <template v-if="contribuicao.itens.participante.eventos.length == 1" v-for="participante in contribuicao.itens.participante.eventos">                                
+                                <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                    {{participante.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor"></div>
+                            </template>
+                            <template v-if="contribuicao.itens.participante.eventos.length > 1" v-for="participante in contribuicao.itens.participante.eventos">
+                                <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                    {{participante.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor">
+                                    {{participante.valor }}
+                                </div>
+                            </template>
+                        </div>
+                        <div id="div-contribuicao-row-participante-total" class="div-contribuicao-total">
+                            <dl class="dl-contribuicao-total">
+                                <dt class="dt_contribuicao-total">Total participante</dt>
+                                <dd class="dd_contribuicao-total">{{ formatMoeda(contribuicao.itens.participante.valor, false) }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!--Patronal-->
+            <template v-if="contribuicao.itens.patronal.valor !== 0">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto" style="display: flex; justify-content: center;">
+                    <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px; margin: 0px !important;">
+                        <div class="mdl-card-container">
+                            <span class="span-contribuicao-titulo">Empresa</span>
+                        </div>   
+                        <div id="div-contribuicao-row-patronal" class="div-contribuicao-row">
+                            <template v-if="contribuicao.itens.patronal.eventos.length == 1" v-for="patronal in contribuicao.itens.patronal.eventos">
+                                <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
+                                    {{ patronal.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor"></div>    
+                            </template>
+                            <template v-if="contribuicao.itens.patronal.eventos.length > 1" v-for="patronal in contribuicao.itens.patronal.eventos">
+                                <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
+                                    {{ patronal.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor">
+                                    {{ patronal.valor }}                                        
+                                </div>    
+                            </template>
+                        </div>
+                        <div id="div-contribuicao-row-patronal-total" class="div-contribuicao-total">
+                            <dl class="dl-contribuicao-total">
+                                <dt class="dt_contribuicao-total">Total empresa</dt>
+                                <dd class="dd_contribuicao-total">{{ formatMoeda(contribuicao.itens.patronal.valor, false) }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!--Seguro-->
+            <template v-if="contribuicao.itens.seguro.valor !== 0">
+                <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto" style="display: flex; justify-content: center;">
+                    <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px;margin: 0px !important;">
+                        <div class="mdl-card-container">
+                            <span class="span-contribuicao-titulo">Prêmios riscos</span>
+                        </div>                             
+                        <div id="div-contribuicao-row-seguro" class="div-contribuicao-row">
+                            <template v-if="contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in contribuicao.itens.seguro.eventos">
+                                <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                    {{seguro.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor">                                    
+                                </div>    
+                            </template>
+                            <template v-if="contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in contribuicao.itens.seguro.eventos">
+                                <div class="div-contribuicao-nome">
+                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                    {{seguro.nome }}
+                                </div>
+                                <div class="div-contribiucao-valor">
+                                    {{seguro.valor }}       
+                                </div>    
+                            </template>
+                        </div>
+                        <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
+                            <dl class="dl-contribuicao-total">
+                                <dt class="dt_contribuicao-total">Total prêmios</dt>
+                                <dd class="dd_contribuicao-total">{{ formatMoeda(contribuicao.itens.seguro.valor,false) }}</dd>                                
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</div>
