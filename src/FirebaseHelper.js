@@ -5,7 +5,6 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 import latinize from 'latinize';
-import {Utils} from './Utils';
 import $ from 'jquery';
 import {Erros} from './Erros';
 import page from 'page';
@@ -880,7 +879,7 @@ export default class FirebaseHelper {
       if (data.campanhas && Object.keys(data.campanhas).length > 0) {
         let campanhas = data.campanhas
         campanhas.forEach((usr_campanha) => {
-          let dataHoje = Utils.dateFormat(new Date());
+          let dataHoje = utils.dateFormat(new Date(), false, true, false);
           if (dataHoje < campanhas.data_inicio || dataHoje > campanhas.data_fim) {
             delete data.campanhas[usr_campanha];
           }
@@ -922,7 +921,7 @@ export default class FirebaseHelper {
   }*/
 
   gravaLoginSucesso(uid) {
-    let dataHoje = Utils.dateFormat(new Date(), true)
+    let dataHoje = utils.dateFormat(new Date(), true, false, false)
     let ref = this.database.ref(`login/${uid}`)    
     ref.update({data_ultimo_login: dataHoje})
   }
@@ -978,7 +977,7 @@ export default class FirebaseHelper {
       if (!idToken) {
         return false
       }
-      let dataEnvio = Utils.dateFormat(new Date(), true, true)
+      let dataEnvio = utils.dateFormat(new Date(), true, true, false)
       /*
       let emailLinkKey = usr.uid
       emailLinkKey += dataEnvio
@@ -1484,8 +1483,27 @@ export default class FirebaseHelper {
     return Object.keys(ret).length > 0 ? ret : null
   }
 
-  solicitaDadosSinqia(chave) {
-    let ref = this.database.ref(`usuarios/${chave}/home`)
+  solicitaDadosSinqia(chave, dadosCadastro, competencia, uid) {
+    let ref = this.database.ref(`usuarios/${chave}/integracoes/sinqia/api/request`)
+    ref.once('value').then((request) => {
+      let req = request.val()
+      // só vai atualizar novamente a partir de 5 horas da anterior
+      if (!req || !req.data_request || utils.diffDatasEmHoras(req.data_request, new Date()) > 5) {
+        let cpf = dadosCadastro.informacoes_pessoais.cpf.replace('.','').replace('-','').replace('.','')
+        let mesCompetencia = Number(competencia.substring(0,2))
+        let datacompetencia = utils.dateFormat(new Date(competencia.substring(3,7), mesCompetencia, 0), false, false, true)
+    
+        ref.update({
+          ambiente: 'PRD',
+          cpf: cpf,
+          matricula: dadosCadastro.dados_plano.matricula,
+          data_request: utils.dateFormat(new Date(), true, false, false),
+          data_adesao: dadosCadastro.dados_plano.data_adesao,
+          data_competencia: datacompetencia,
+          uid: uid
+        })  
+      }  
+    })
   }
 
   logErros(uid, data, codErro, origem, erroDesc) {
@@ -1585,5 +1603,32 @@ export default class FirebaseHelper {
     sessionStorage.chave = ''
     page('/signout');
   } 
+
+  downloadStorageFile(storageRef, callback) {
+    var gsReference = this.storage.refFromURL(storageRef)
+    gsReference.getDownloadURL().then((url) => {
+      callback(url)
+    }).catch(function(error) {
+      // A full list of error codes is available at
+      // https://firebase.google.com/docs/storage/web/handle-errors
+      switch (error.code) {
+        case 'storage/object-not-found':
+          console.log('storage/object-not-found')
+          break;
+
+        case 'storage/unauthorized':
+          console.log('storage/unauthorized')
+          break;
+
+        case 'storage/canceled':
+          console.log('storage/canceled')
+          break;
+
+        case 'storage/unknown':
+          console.log('storage/unknown')
+          break;
+      }      
+    })
+  }
 
 };

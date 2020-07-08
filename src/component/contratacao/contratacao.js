@@ -4,7 +4,8 @@ import contratacao from './contratacao.html';
 import './contratacao.css';
 import page from 'page'; 
 import FirebaseHelper from '../../FirebaseHelper';
-import { Utils } from '../../Utils';
+
+const utils = require('../../../functions/utilsFunctions')
 
 export default {    
     template: contratacao,
@@ -39,7 +40,7 @@ export default {
         },
         confirmar(){
             let objeto_contratacao = new Object()     
-            let dateFormat = Utils.dateFormat(new Date(), true, true)
+            let dateFormat = utils.dateFormat(new Date(), true, true, false)
             let detalhes = ''
             if (this.dados.detalhes) {
                 detalhes = this.dados.detalhes

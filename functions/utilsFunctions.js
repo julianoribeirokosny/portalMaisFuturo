@@ -53,22 +53,25 @@ module.exports =  {
         return ret
     },
 
+    diffDatasEmHoras : function (dataMenor, dataMaior) {
+        dataMenor = this.arruma_data(dataMenor)
+        dataMaior = this.arruma_data(dataMaior)       
+        const diff = Math.abs(dataMaior.getTime() - dataMenor.getTime()); // Subtrai uma data pela outra
+        const horas = Math.trunc(diff / (1000 * 60 * 60 )); // Divide o total pelo total de milisegundos correspondentes a 1 hora. 
+        return horas        
+    },
+
+    diffDatasEmDias : function (dataMenor, dataMaior) {
+        dataMenor = this.arruma_data(dataMenor)
+        dataMaior = this.arruma_data(dataMaior)       
+        const diff = Math.abs(dataMaior.getTime() - dataMenor.getTime()); // Subtrai uma data pela outra
+        const days = Math.trunc(diff / (1000 * 60 * 60 * 24)); // Divide o total pelo total de milisegundos correspondentes a 1 dia. (1000 milisegundos = 1 segundo).
+        return days        
+    },
+    
     diffDatasEmMeses : function (dataMenor, dataMaior) {
-        if (!(dataMaior instanceof Date)) {
-            console.log('!dataMaior instanceof Date')
-            let aData = dataMaior.split('/')
-            if (aData.length === 0) {
-                aData = dataMaior.split('-')
-            }
-            dataMaior = new Date(Number(aData[2]), Number(aData[1]) - 1, Number(aData[0]))
-        }
-        if (!(dataMenor instanceof Date)) {
-            let aData = dataMenor.split('/')
-            if (aData.length === 0) {
-                aData = dataMenor.split('-')
-            }
-            dataMenor = new Date(Number(aData[2]), Number(aData[1]) - 1, Number(aData[0]))
-        }
+        dataMenor = this.arruma_data(dataMenor)
+        dataMaior = this.arruma_data(dataMaior)       
         let diminuiMes = dataMenor.getDate() > dataMaior.getDate() ? 1 : 0
         let months;
         months = (dataMaior.getFullYear() - dataMenor.getFullYear()) * 12;
@@ -79,12 +82,8 @@ module.exports =  {
     },
 
     diffDatasEmAnos : function (dataMenor, dataMaior) {
-        if (!(dataMaior instanceof Date)) {
-            dataMaior = new Date(dataMaior)
-        }
-        if (!(dataMenor instanceof Date)) {
-            dataMenor = new Date(dataMenor)
-        }
+        dataMenor = this.arruma_data(dataMenor)
+        dataMaior = this.arruma_data(dataMaior)       
         let anos = (dataMaior.getFullYear() - dataMenor.getFullYear())
         if (dataMaior.getMonth() < dataMenor.getMonth()) { //se não completou aniversário
             anos--
@@ -99,5 +98,43 @@ module.exports =  {
              new Date(hoje.getFullYear(), nascimento.getMonth(), nascimento.getDate()) )
             diferencaAnos--;
         return diferencaAnos;
+    },
+
+    arruma_data(data) {
+        let hora = ''
+        if (!(data instanceof Date)) {
+            if (data.length > 11 && data.indexOf(':') > 0) { //se tem hora na data...
+                hora = data.substring(data.indexOf(':') - 2)
+                data = data.substring(0, data.indexOf(':') - 3)
+            }
+            let aData = data.split('/')
+            if (aData.length <= 1) {
+                aData = data.split('-')
+            }
+            let ano, mes, dia
+            if (aData[0] > aData[2]) { //entrou data no formato "AAAA-MM-DD"
+                ano = aData[0]
+                mes = aData[1]
+                dia = aData[2]
+            } else {
+                ano = aData[2]
+                mes = aData[1]
+                dia = aData[0]
+            }
+            if (hora !== '') {
+                let aHora = hora.split(':')
+                data = new Date(
+                    Number(ano), 
+                    Number(mes) - 1, 
+                    Number(dia), 
+                    aHora[0] ? Number(aHora[0]) : 0,
+                    aHora[1] ? Number(aHora[1]) : 0,
+                    aHora[2] ? Number(aHora[2]) : 0)
+            } else {
+                data = new Date(Number(ano), Number(mes) - 1, Number(dia))
+            }
+            
+        }
+        return data
     }
 }
