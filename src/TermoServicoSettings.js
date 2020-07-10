@@ -18,8 +18,7 @@
 import $ from 'jquery';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import Router from './Router';
-import {Utils} from './Utils';
+const utils = require('../functions/utilsFunctions')
 
 /**
  * Handles the TermoServico Settings UI.
@@ -101,7 +100,7 @@ export default class TermoServicoSettings {
     const uid = firebase.auth().currentUser.uid;
     const settings = {
       termo_servico: this.allowTermoServico.prop('checked'),
-      data_aceite: Utils.dateFormat(new Date())
+      data_aceite: utils.dateFormat(new Date(), true, false, true)
     };
 
     this.firebaseHelper.setTermoServicoSettings(uid, settings);
@@ -109,8 +108,6 @@ export default class TermoServicoSettings {
       this.firebaseHelper.removeFromSearch(uid);
     }
     this.termoServicoDialog.get(0).close();
-    //Router.reloadPage();
-    //this.setUploadButtonState(this.allowContent.prop('checked'));
   }
 
   setUploadButtonState(enabled) {

@@ -9,6 +9,11 @@ function isAdmin() {
   return request.auth.token != null && request.auth.token.admin == true;
 }
 
+// Returns true if the user authenticated
+function isAuth() {
+  return request.auth.uid != null && request.auth.uid != '';
+}
+
 // Returns true if the resource is being deleted.
 function isResourceBeingDeleted() {
   return request.resource == null;
@@ -21,7 +26,15 @@ function isOwner(uid) {
 
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{userId}/thumb/{postId}/{fileName} {
+    match /login/{userId}/{chave}/{fileName} {
+      allow read: if isOwner(userId);
+      allow write: if (isAdmin() || isOwner(userId)) && isImageBelowMaxSize(2); //&& (isResourceBeingDeleted() || isImageBelowMaxSize(1));
+    }
+		match /usuarios/{chave}/avatar.jpg {
+      allow read;
+      allow write: if isAuth() && isImageBelowMaxSize(2);
+    }    
+		match /{userId}/thumb/{postId}/{fileName} {
       allow read;
       allow write: if isAdmin() || isOwner(userId) && (isResourceBeingDeleted() || isImageBelowMaxSize(1));
     }

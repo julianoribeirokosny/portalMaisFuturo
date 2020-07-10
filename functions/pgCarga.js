@@ -235,8 +235,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           } 
 
           if (chave !== '') { //&& (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0
-            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)          
-            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)                    
+            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)          
+            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)                    
             listaDatasetsProjetoDeVida[2] = {
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -532,8 +532,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         usuarioTotalContr.valor = usuarioContribCadastro.contribParticipante + usuarioContribCadastro.contribRisco
       } 
 
-      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)          
-      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria)                    
+      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)          
+      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)                    
       listaDatasetsProjetoDeVida[2] = {
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -625,13 +625,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 
 function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, listaValoresContribuicaoChave, usuarioTotalContr, listaItensReservaChave, listaValoresReservaChave, usrReservaTotal, listaItensCoberturas, listaDatasetsProjetoDeVida, listaItensProjetoDeVidaProjecao, listaItensProjetoDeVidaCoberturas, listaMesesProjetoDeVida, valorContribParticipanteAtual, reservaPotencial, rendaPotencial) {
   let valorTotal = Number(usuarioTotalContr.valor.replace('.','').replace(',','.'))
-  let contribProjetada = calculaContribuicaoProjetada(valorContribParticipanteAtual, 0)
-  let percAumentoContribProjetada
-  if (valorContribParticipanteAtual > 0) {
-    percAumentoContribProjetada = (contribProjetada[1] - valorContribParticipanteAtual) / valorContribParticipanteAtual
-  } else {
-    percAumentoContribProjetada = 0
-  }
+  let contribProjetada = calculaContribuicaoProjetada(valorContribParticipanteAtual, 0, usr.sitPart)
   rendaPotencial = financeiro.valorFormatoDesc(rendaPotencial)
   reservaPotencial = financeiro.valorFormatoDesc(reservaPotencial)
 
@@ -655,7 +649,7 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
       acao: {
         valor_dif_contribuicao_potencial: contribProjetada[0],
         valor_renda_potencial: rendaPotencial,        
-        valor_deducao_potencial: 0, //calculaDeducaoPotencial(),
+        valor_deducao_potencial: 0, 
         qtd_steps_entrada: contribProjetada[2],
         vigente: configCardAcao && configCardAcao.contribuicao[usr.sitPart] ? true  : "_"
       },
@@ -808,7 +802,7 @@ function incluiUsuarioCadastroJSON(usuarios, chave, usr) {
   return usuarios
 }
   
-function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano, taxaAposentadoria) {
+function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAdesao, taxa, amplitude, idade, tipoPlano, taxaAposentadoria, situacaoPlano) {
 
   let retDataset = {
     0: 0    
@@ -832,7 +826,7 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   let valorReservaAposentadoriaProjetada = 0
   let valorRendaAposentadoriaProjetada = 0
   if (amplitude==='completo') {
-    valorContribProjetada = calculaContribuicaoProjetada(listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado)
+    valorContribProjetada = calculaContribuicaoProjetada(listaUsuarioContrib.contribParticipante, listaUsuarioContrib.contribParticipantePlanoPatrocinado, situacaoPlano)
     valorReservaAposentadoriaProjetada = financeiro.calculaReservaFutura(valorHoje, taxa, valorContribProjetada[1], listaUsuarioContrib.contribParticipantePlanoPatrocinado, listaUsuarioContrib.contribEmpresa, dataAposentadoria, tipoPlano)
     valorRendaAposentadoriaProjetada = financeiro.calculaRendaFutura(valorReservaAposentadoriaProjetada, taxaAposentadoria, 20, tipoPlano) //calculo de renda por 20 anos             
   }
@@ -906,7 +900,7 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
           ]
 }
 
-function calculaContribuicaoProjetada(valorContribParticipanteAtual, valorContribParticipantePatrocAtual) {
+function calculaContribuicaoProjetada(valorContribParticipanteAtual, valorContribParticipantePatrocAtual, situacaoPlano) {
   let valorDifContribProjetada = (valorContribParticipanteAtual + valorContribParticipantePatrocAtual) * (taxaAumentoSugestao - 1)
   let valorContribProjetada = 0
   let qtdStepsRenda = 1
@@ -916,32 +910,11 @@ function calculaContribuicaoProjetada(valorContribParticipanteAtual, valorContri
     qtdStepsRenda = Math.trunc(valorDifContribProjetada / stepRenda)
     valorContribProjetada = valorContribParticipanteAtual + (stepRenda * qtdStepsRenda)
   }
-  return [financeiro.valorFormatoDesc(valorContribProjetada - valorContribParticipanteAtual), valorContribProjetada, qtdStepsRenda]
-}
-
-function calculaDeducaoPotencial(vlrContribAtual) {
-  vlrContribAtual = vlrContribAtual * taxaAumentoSugestao
-  return financeiro.valorFormatoDesc(vlrContribAtual)
-}
-
-function calculaRendaPotencial(rendaProjetadaAtual) {
-  if (typeof rendaProjetadaAtual === 'string') {
-    rendaProjetadaAtual = rendaProjetadaAtual.replace('.','').replace(',','.')
-    rendaProjetadaAtual = rendaProjetadaAtual.replace('R$','')
-    rendaProjetadaAtual = parseFloat(rendaProjetadaAtual)  
-  }
-  rendaProjetadaAtual = rendaProjetadaAtual 
-  return financeiro.valorFormatoDesc(rendaProjetadaAtual)
-}
-
-function calculaReservaPotencial(reservaProjetadaAtual) {
-  if (typeof reservaProjetadaAtual === 'string') {
-    reservaProjetadaAtual = reservaProjetadaAtual.replace('.','').replace(',','.')
-    reservaProjetadaAtual = reservaProjetadaAtual.replace('R$','')
-    reservaProjetadaAtual = parseFloat(reservaProjetadaAtual)
-  }
-  reservaProjetadaAtual = reservaProjetadaAtual * taxaAumentoSugestao  //aumento de 20%
-  return financeiro.valorFormatoDesc(reservaProjetadaAtual)
+  let ret = [financeiro.valorFormatoDesc(valorContribProjetada - valorContribParticipanteAtual), valorContribProjetada, qtdStepsRenda]
+  if (situacaoPlano === "Com Contribuição Suspensa") {
+    ret = [0, valorContribParticipanteAtual + valorContribParticipantePatrocAtual, 0]
+  } 
+  return ret
 }
 
 function validaSegmento() {

@@ -36,6 +36,14 @@ export default {
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
         },
+        extrato() {
+            const extratoShow = (url) => {
+                //window.location = url
+                //page(`/${sessionStorage.ultimaPagina}`)
+                window.open(url, '_blank');
+            }
+            this.firebaseHelper.downloadStorageFile("gs://portalmaisfuturo-teste.appspot.com/login/fYK5gpbuyQZk1Xy7qaCl02PketW2/1-686/extratoParticipante.pdf", extratoShow)
+        }, 
         showModal() {
             this.$refs.myModal.style.display = "block";
         },

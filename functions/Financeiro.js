@@ -172,7 +172,7 @@ module.exports =  {
             }
             ret = ret + ' Mi'
         } else if (Math.abs(num) > 999) {
-            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 3, true, false) 
+            ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 1, true, false) 
             if (ret.indexOf(',0') >= 0) { //se o final do valor for ",0" retira...
                 ret = this.valor_to_string_formatado(Math.sign(num)*((Math.abs(num)/1000)), 0, true, false) 
             }

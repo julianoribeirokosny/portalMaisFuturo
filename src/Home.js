@@ -83,17 +83,18 @@ export default class Home {
             return page('/erro')
         }
 
-        //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
-        firebaseHelper.solicitaDadosSinqia(this.chave)
-
-        let dadosHome = await this.dadosHome(this.chave)        
-        let data_Home = dadosHome.dataHome 
+        let dadosParticipante = await this.dadosHome(this.chave)        
+        let data_Home = dadosParticipante.dataHome 
         sessionStorage.plano = data_Home.plano
-        sessionStorage.perfil_investimento = data_Home.perfil_investimento ? data_Home.perfil_investimento : Enum.perfilInvestimento.CONSERVADOR
-        let contratacaoContrib = dadosHome.contratacaoContrib
-        let contratacaoEmp =  dadosHome.contratacaoEmp
-        let contratacaoSeg = dadosHome.contratacaoSeg
-        
+        sessionStorage.perfil_investimento = data_Home.perfil_investimento ? data_Home.perfil_investimento : "Conservador"
+        //sessionStorage.perfil_investimento = data_Home.perfil_investimento ? data_Home.perfil_investimento : Enum.perfilInvestimento.CONSERVADOR        
+        let contratacaoContrib = dadosParticipante.contratacaoContrib
+        let contratacaoEmp =  dadosParticipante.contratacaoEmp
+        let contratacaoSeg = dadosParticipante.contratacaoSeg
+
+        //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
+        firebaseHelper.solicitaDadosSinqia(this.chave, dadosParticipante.data.cadastro, data_Home.competencia, this.auth.currentUser.uid)
+
         if (data_Home === null) {
             //zera a session para tentar carregar em próximas vezes
             base_spinner.style.display = 'none'
@@ -341,12 +342,11 @@ export default class Home {
                 let contratacaoContrib = retPromises[2]
                 let contratacaoEmp = retPromises[3]
                 let contratacaoSeg = retPromises[4]
-                let stringHome = this.montaStringHome(home, part, segmentoUsuario)
-
-                this.data_Home = JSON.parse(stringHome)
+                this.data_Home = this.montaStringHome(home, part, segmentoUsuario)
                 
                 //console.log('this.data_Home', this.data_Home)
                 return {
+                    data: this.participante.data,
                     dataHome: this.data_Home,
                     contratacaoContrib: contratacaoContrib,
                     contratacaoEmp: contratacaoEmp,
@@ -430,7 +430,14 @@ export default class Home {
                 stringHome = stringHome.replace('<<' + chave + '>>', valor)
             }
         }   
+
+        let retHome = JSON.parse(stringHome)
+
+        //ajustes de mensagens para situações específicas
+        if (part.usr_situacao_plano === "Com Contribuição Suspensa") {
+            retHome.usr_contribuicao.acao.descricao = 'Garanta um futuro melhor. Que tal voltar a contribuir?'
+        }
         
-        return stringHome     
+        return retHome     
     }
 }
