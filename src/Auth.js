@@ -192,13 +192,11 @@ export default class Auth {
       document.body.classList.add('fp-signed-out');
       Auth.disableAdminMode();
     } else {
-      debugger      
       if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '' || sessionStorage.chave === '[object Promise]') {
           sessionStorage.chave = await this.firebaseHelper.getUsuarioChavePrincipal(user.uid)
       }
       let photoUrl = user.photoURL
       let stringURL = `gs://portalmaisfuturo-teste.appspot.com/usuarios/${sessionStorage.chave}/avatar.jpg`
-
       const avatarStorage = (url) => {
           photoUrl = url ? url :  photoUrl
           this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(photoUrl) || '/images/silhouette.jpg'}")`)

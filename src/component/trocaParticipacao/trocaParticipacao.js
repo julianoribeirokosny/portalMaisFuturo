@@ -4,6 +4,7 @@ import trocaParticipacao from './trocaParticipacao.html';
 import './trocaParticipacao.css';
 import page from 'page';
 import FirebaseHelper from '../../FirebaseHelper';
+import {Utils} from '../../Utils';
 import $ from 'jquery';
 
 export default {
@@ -33,21 +34,30 @@ export default {
                     if (chaves) {
                         let arrayChaves = Object.entries(chaves)
                         arrayChaves.forEach(item => {
+                            let stringURL = `gs://portalmaisfuturo-teste.appspot.com/usuarios/${item[0]}/avatar.jpg`
                             let fotoParticipante = sessionStorage.nome && sessionStorage.nome !== "" && sessionStorage.nome === item[1].nome ? foto : "../images/silhouette.jpg"
-                            let objeto = {
-                                chave: item[0],
-                                nome: item[1].nome,
-                                plano: item[1].plano,
-                                segmento: item[1].segmento,
-                                foto: fotoParticipante
+                            const avatarStorage = (url) => {
+                                fotoParticipante = url ? url :  fotoParticipante
+                                //this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(photoUrl) || '/images/silhouette.jpg'}")`)
+                                let objeto = {
+                                    chave: item[0],
+                                    nome: item[1].nome,
+                                    plano: item[1].plano,
+                                    segmento: item[1].segmento,
+                                    foto: fotoParticipante
+                                }
+                                this.listaChaves.push(objeto)
                             }
-                            this.listaChaves.push(objeto)
+                            this.firebaseHelper.downloadStorageFile(stringURL,avatarStorage)
                         })
                     }
                 })
         },
-        selecionarNovaChave(chave) {
-            sessionStorage.chave = chave
+        selecionarNovaChave(novaChave) {
+            sessionStorage.chave = novaChave.chave
+            var signedInUserContainer = $('.fp-signed-in-user-container');
+            this.signedInUserAvatar = $('.fp-avatar', signedInUserContainer);
+            this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(novaChave.foto) || '../../images/silhouette.jpg'}")`)
             page('/home')
         },
         showModal(chave) {
