@@ -10,6 +10,7 @@ import cep from 'cep-promise'
 import { TheMask } from 'vue-the-mask'
 import vueAnkaCropper from 'vue-anka-cropper'
 import '../../../node_modules/vue-anka-cropper/dist/VueAnkaCropper.css'
+import {Utils} from '../../Utils';
 import $ from 'jquery'
 
 const img_editar = require('../../../public/images/Editar.png')
@@ -29,7 +30,8 @@ export default {
     },
     data: function() {
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
-        return {            
+        return {  
+            signedInUserAvatar:'',          
             avatar: foto ? foto : "../images/silhouette.jpg",
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
@@ -215,10 +217,11 @@ export default {
             //console.log('cropperPreview',imageSource)
         },
         cropperSaved(cropData) {
-            this.avatar = cropData.croppedImageURI            
-            console.log('cropperSaved',cropData)
-            let retorno = this.firebaseHelper.uploadNewAvatar(this.chave_usuario, cropData)
-            console.log('cropperSaved_retorno',retorno)
+            this.avatar = cropData.croppedImageURI
+            var signedInUserContainer = $('.fp-signed-in-user-container');
+            this.signedInUserAvatar = $('.fp-avatar', signedInUserContainer);
+            this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(this.avatar) || '../../images/silhouette.jpg'}")`)
+            let retorno = this.firebaseHelper.uploadNewAvatar(this.chave_usuario, cropData)            
             if (this.$refs.ModalAvatar) {
                 this.$refs.ModalAvatar.style.display = "none"                
             }
