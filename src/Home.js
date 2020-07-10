@@ -5,6 +5,7 @@ import 'firebase/auth'
 import Vue from 'vue'
 import VueCharts from 'vue-chartjs'
 import money from 'v-money'
+import minhaContribuicao from './component/minhaContribuicao/minhaContribuicao'
 import simuladorEmprestimo from './component/simuladorEmprestimo/simuladorEmprestimo'
 import rentabilidade from './component/rentabilidade/rentabilidade'
 import simuladorSeguro from './component/simuladorSeguro/simuladorSeguro'
@@ -86,13 +87,14 @@ export default class Home {
         let data_Home = dadosParticipante.dataHome 
         sessionStorage.plano = data_Home.plano
         sessionStorage.perfil_investimento = data_Home.perfil_investimento ? data_Home.perfil_investimento : "Conservador"
+        //sessionStorage.perfil_investimento = data_Home.perfil_investimento ? data_Home.perfil_investimento : Enum.perfilInvestimento.CONSERVADOR        
         let contratacaoContrib = dadosParticipante.contratacaoContrib
         let contratacaoEmp =  dadosParticipante.contratacaoEmp
         let contratacaoSeg = dadosParticipante.contratacaoSeg
 
         //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
         firebaseHelper.solicitaDadosSinqia(this.chave, dadosParticipante.data.cadastro, data_Home.competencia, this.auth.currentUser.uid)
-        
+
         if (data_Home === null) {
             //zera a session para tentar carregar em próximas vezes
             base_spinner.style.display = 'none'
@@ -114,10 +116,6 @@ export default class Home {
             Vue.component('grafico-reserva', {
                 extends: VueCharts.Doughnut,
                 mounted() {
-
-                    //console.log('labelsDoughnut', data_Home.saldo_reserva.grafico.labels);
-                    //console.log('Doughnut', data_Home.saldo_reserva.grafico);
-
                     this.renderChart({
                         labels: data_Home.saldo_reserva.grafico.labels,
                         datasets: [{
@@ -133,6 +131,7 @@ export default class Home {
                     });
                 }
             })
+
             Vue.component('projeto-vida', {
                 extends: VueCharts.Line,
                 mounted() {
@@ -161,29 +160,8 @@ export default class Home {
                         }
                     })
                 }
-            })
-            Vue.component('contribuicao', {
-                extends: VueCharts.Doughnut,
-                //template: '#contribuicao',
-                mounted() {
-                    this.renderChart({
-                        labels: data_Home.contribuicao.grafico.label,
-                        datasets: [{
-                            data: data_Home.contribuicao.grafico.data,
-                            backgroundColor: data_Home.contribuicao.grafico.backgroundColor,
-                            borderWidth: data_Home.contribuicao.grafico.borderWidth,
-                            borderColor: data_Home.contribuicao.grafico.borderColor,
-                        }]
-                    }, {
-                        cutoutPercentage: 88,
-                        responsive: true,
-                        legend: false,
-                        tooltips: false,
-                        rotation: 1 * Math.PI,
-                        circumference: 1 * Math.PI
-                    })
-                }
-            })
+            })            
+
             Vue.config.errorHandler = function(err, vm, info) {
                 console.error(`Error: ${err.toString()}\nInfo: ${info}`);
                 Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
@@ -207,7 +185,8 @@ export default class Home {
                         emConstrucao,
                         historicoContribuicao,
                         trocaParticipacao,
-                        maisAmigos
+                        maisAmigos,
+                        minhaContribuicao
                     },
                     data: {
                         componentKey: 0,
@@ -224,30 +203,13 @@ export default class Home {
                     },
                     created() {
                         sessionStorage.ultimaPagina = 'home'
-                    },
-                    mounted() {
-                        let rowParticipante = document.querySelector('#div-contribuicao-row-participante')
-                        if (rowParticipante) {
-                            document.querySelector('#div-contribuicao-row-participante-total').style.height = rowParticipante.clientHeight + "px"
-                            document.querySelector('#div-contribuicao-row-participante-totalh').style.height = rowParticipante.clientHeight + "px"
-                        }
-                        let rowPatronal = document.querySelector('#div-contribuicao-row-patronal')
-                        if (rowPatronal) {
-                            document.querySelector('#div-contribuicao-row-patronal-total').style.height = rowPatronal.clientHeight + "px"
-                            document.querySelector('#div-contribuicao-row-patronal-totalh').style.height = rowPatronal.clientHeight + "px"
-                        }
-                        let rowSeguro = document.querySelector('#div-contribuicao-row-seguro')
-                        if (rowSeguro) {
-                            document.querySelector('#div-contribuicao-row-seguro-total').style.height = rowSeguro.clientHeight + "px"
-                            document.querySelector('#div-contribuicao-row-seguro-totalh').style.height = rowSeguro.clientHeight + "px"
-                        }
-                    },
+                    },                    
                     methods: {
                         formatMoeda(value, incluiCifrao){
                             if (value === 0) {
                                 return '(não contratado)'
                             } else if (value && value !== 0) {
-                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)                                
+                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
                                 return val
                             }
                         },
@@ -279,11 +241,6 @@ export default class Home {
                         simuladorRenda(link, origem) {
                             sessionStorage.ultimaPagina = origem
                             page(`/${link}`)
-                        },
-                        contratacaoAberta() {
-                            sessionStorage.ultimaPagina = 'home'
-                            page('/contratacao-aberta')
-
                         }
                     },
                     errorCaptured(err, component, details) {

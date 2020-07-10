@@ -7,7 +7,6 @@ export default {
     },
     watch: {
         chartdata(val) {
-            //console.log('chartdata Perfil', val)
             this.renderChart({
                 labels: val.labels,
                 datasets: [{

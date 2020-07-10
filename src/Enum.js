@@ -10,6 +10,12 @@ export const statusContratacao = {
     SOLICITADO: 'solicitado'
 }
 
+export const perfilInvestimento = {
+    CONSERVADOR: 'Conservador',
+    MODERADO: 'Moderado',
+    AGRESSIVO: 'Agressivo'
+}
+
 export default class Enum {
     
 }
