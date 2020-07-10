@@ -154,7 +154,7 @@ export default class Auth {
    * Displays the signed-in user information in the UI or hides it and displays the
    * "Sign-In" button if the user isn't signed-in.
    */
-  onAuthStateChanged(user) {
+  async onAuthStateChanged(user) {
     console.log('onAuthStateChanged -> Auth')
     if (Utils.isSupportedNotification()) {
       console.log('Push suportado!');
@@ -192,27 +192,25 @@ export default class Auth {
       document.body.classList.add('fp-signed-out');
       Auth.disableAdminMode();
     } else {
-      debugger
+      debugger      
+      if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '' || sessionStorage.chave === '[object Promise]') {
+          sessionStorage.chave = await this.firebaseHelper.getUsuarioChavePrincipal(user.uid)
+      }
       let photoUrl = user.photoURL
-      if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '') {
-           sessionStorage.chave = this.firebaseHelper.getUsuarioChavePrincipal(user.uid)
+      let stringURL = `gs://portalmaisfuturo-teste.appspot.com/usuarios/${sessionStorage.chave}/avatar.jpg`
+
+      const avatarStorage = (url) => {
+          photoUrl = url ? url :  photoUrl
+          this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(photoUrl) || '/images/silhouette.jpg'}")`)
       }
-      if(sessionStorage.chave) {
-          let photoStorage = this.firebaseHelper.getAvatarStorare(sessionStorage.chave) 
-          photoUrl = photoStorage ? photoStorage :  photoUrl
-      }
+      this.firebaseHelper.downloadStorageFile(stringURL,avatarStorage)      
       this.toggleAdminMode();
       document.body.classList.remove('fp-signed-out');
       document.body.classList.add('fp-signed-in');
       this.userId = user.uid;
-      this.signedInUserAvatar.css('background-image',
-          `url("${Utils.addSizeToGoogleProfilePic(photoUrl) || '/images/silhouette.jpg'}")`);
       this.signedInUsername.text(user.displayName || 'Anonymous');
       this.usernameLink.attr('href', `/user/${user.uid}`);   
     }
-    console.log('user',user)
-    console.log('this.userId',this.userId)
-    console.log('this.signedInUserAvatar',this.signedInUserAvatar)
   }
 
   /**
