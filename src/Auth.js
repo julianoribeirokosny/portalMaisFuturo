@@ -192,15 +192,27 @@ export default class Auth {
       document.body.classList.add('fp-signed-out');
       Auth.disableAdminMode();
     } else {
+      debugger
+      let photoUrl = user.photoURL
+      if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '') {
+           sessionStorage.chave = this.firebaseHelper.getUsuarioChavePrincipal(user.uid)
+      }
+      if(sessionStorage.chave) {
+          let photoStorage = this.firebaseHelper.getAvatarStorare(sessionStorage.chave) 
+          photoUrl = photoStorage ? photoStorage :  photoUrl
+      }
       this.toggleAdminMode();
       document.body.classList.remove('fp-signed-out');
       document.body.classList.add('fp-signed-in');
       this.userId = user.uid;
       this.signedInUserAvatar.css('background-image',
-          `url("${Utils.addSizeToGoogleProfilePic(user.photoURL) || '/images/silhouette.jpg'}")`);
+          `url("${Utils.addSizeToGoogleProfilePic(photoUrl) || '/images/silhouette.jpg'}")`);
       this.signedInUsername.text(user.displayName || 'Anonymous');
       this.usernameLink.attr('href', `/user/${user.uid}`);   
     }
+    console.log('user',user)
+    console.log('this.userId',this.userId)
+    console.log('this.signedInUserAvatar',this.signedInUserAvatar)
   }
 
   /**

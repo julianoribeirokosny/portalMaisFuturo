@@ -8,7 +8,9 @@ import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { TheMask } from 'vue-the-mask'
-import $ from 'jquery';
+import vueAnkaCropper from 'vue-anka-cropper'
+import '../../../node_modules/vue-anka-cropper/dist/VueAnkaCropper.css'
+import $ from 'jquery'
 
 const img_editar = require('../../../public/images/Editar.png')
 
@@ -16,7 +18,8 @@ export default {
     template: cadastro,
     components: {
         vSelect,
-        TheMask
+        TheMask,
+        vueAnkaCropper
     },
     props: {
         foto: '',
@@ -26,7 +29,7 @@ export default {
     },
     data: function() {
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
-        return {
+        return {            
             avatar: foto ? foto : "../images/silhouette.jpg",
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
@@ -49,17 +52,50 @@ export default {
             },
             profissoes: [],
             listaProfissoes: [],
-            profissao: ''
+            profissao: '',
+            optionsCropper: {
+                aspectRatio: 1,
+                closeOnSave: true,
+                cropArea: 'circle',
+                croppedHeight: 140,
+                croppedWidth: 140,
+                cropperHeight: false,
+                dropareaMessage: 'Solte a foto aqui ou use o botão abaixo.',
+                frameLineDash: [5,3],
+                frameStrokeColor: 'rgba(255, 255, 255, 0.8)',
+                handleFillColor: 'rgba(255, 255, 255, 0.2)',
+                handleHoverFillColor: 'rgba(255, 255, 255, 0.4)',
+                handleHoverStrokeColor: 'rgba(255, 255, 255, 1)',
+                handleSize: 10,
+                handleStrokeColor: 'rgba(255, 255, 255, 0.8)',
+                layoutBreakpoint: 220,
+                maxCropperHeight: 220,
+                maxFileSize: 8000000,
+                overlayFill: 'rgba(0, 0, 0, 0.5)',
+                previewOnDrag: true,
+                previewQuality: 0.65,
+                resultQuality: 0.8,
+                resultMimeType: 'image/jpeg',
+                selectButtonLabel: 'Nova imagem',
+                showPreview: true,
+                skin: 'light',
+                uploadData: {},
+                uploadTo: false                
+            },
+            save:null
         }
     },
-    created() {
+    created() {        
         this.getParticipante()
         this.getProfissoes()
         this.$root.$on('atualizaProfissao', (valor) => {
             this.profissao = valor
         })
+        if (this.$refs.ModalAvatar) {
+            this.$refs.ModalAvatar.style.display = "none"
+        }        
     },
-    watch: {
+    watch: {        
         cep(val) {
             if (val.length === 10) {
                 this.getEndereco(val)
@@ -167,6 +203,41 @@ export default {
                     }
                 })
                 .catch(console.log)
-        }
+        },
+        
+        cropperError(errorMessage) {
+            //console.log('cropperError',errorMessage)
+        },
+        cropperFileSelected(file) {
+            
+        },
+        cropperPreview(imageSource) {
+            //console.log('cropperPreview',imageSource)
+        },
+        cropperSaved(cropData) {
+            this.avatar = cropData.croppedImageURI            
+            console.log('cropperSaved',cropData)
+            let retorno = this.firebaseHelper.uploadNewAvatar(this.chave_usuario, cropData)
+            console.log('cropperSaved_retorno',retorno)
+            if (this.$refs.ModalAvatar) {
+                this.$refs.ModalAvatar.style.display = "none"                
+            }
+        },
+        cropperCancelled() {
+            console.log('cropperCancelled')
+        },
+        cropperUploaded(serverResponse) {
+            console.log('cropperUploaded',serverResponse)
+        },
+        showModalAvatar() {
+            if (this.$refs.ModalAvatar) {
+                this.$refs.ModalAvatar.style.display = "block"                
+            }
+        },
+        modalvoltar(){
+            if (this.$refs.ModalAvatar) {
+                this.$refs.ModalAvatar.style.display = "none"                
+            }
+        }   
     }
 }

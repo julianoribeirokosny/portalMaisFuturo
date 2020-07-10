@@ -73,6 +73,7 @@
     "v-money": "^0.8.1",
     "vanilla-masker": "^1.2.0",
     "vue": "^2.6.11",
+    "vue-anka-cropper": "^1.1.0",
     "vue-chartjs": "^3.5.0",
     "vue-material": "^1.0.0-beta-13",
     "vue-router": "~ 3.0",

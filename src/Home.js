@@ -72,9 +72,9 @@ export default class Home {
             sessionStorage.dataUltimoLogin = new Date()
         }
         
-        if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '') {
-            sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
-        }
+        // if (!sessionStorage.chave || sessionStorage.chave === "undefined" || sessionStorage.chave === '') {
+        //     sessionStorage.chave = await firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
+        // }
         this.chave = sessionStorage.chave
         
         if (this.chave === null || this.chave === '') {

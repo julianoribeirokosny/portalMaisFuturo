@@ -6,9 +6,9 @@
         </div-->
 
         <!--Resumo do Perfil (Box)-->        
-        <div style="width: 100%; display: flex; justify-content: center;">
-            <div class="card-tipo-plano">
-                <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + avatar + ')' }"></div>
+        <div style="width: 100%; display: flex; justify-content: center;" @click="showModalAvatar">
+            <div class="card-tipo-plano">                
+                <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + avatar + ')' }"></div>                
                 <div class="body">
                     <div class="content">                              
                       <div class="nome">{{ cadastro.informacoes_pessoais.nome }}</div>                        
@@ -30,8 +30,19 @@
                       </div>
                     </div>
                 </div>
-              </div>
-          </div>
+            </div>
+        </div>
+
+        <!-- <div style="display: flex; justify-content: center; align-items: center;">
+            <vue-anka-cropper :options="optionsCropper"
+                                @cropper-error="cropperError"
+                                @cropper-file-selected="cropperFileSelected"
+                                @cropper-preview="cropperPreview"
+                                @cropper-saved="cropperSaved"
+                                @cropper-cancelled="cropperCancelled"
+                                @cropper-uploaded="cropperUploaded">
+            </vue-anka-cropper>
+        </div> -->
 
 
 
@@ -252,6 +263,26 @@
                 <span class="Span_Button_v2">Voltar</span>
             </div>
         </div>
-
     </template>
+    <div id="ModalAvatar" ref="ModalAvatar" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content" style="height: auto">
+            <div class="mdl-card-container div-container" style="width: 90%; margin-top: 30px;">
+                <p>Para continuar vc precisa selecionar sua profissão:</p>
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <vue-anka-cropper :options="optionsCropper"
+                                    @cropper-error="cropperError"
+                                    @cropper-file-selected="cropperFileSelected"
+                                    @cropper-preview="cropperPreview"
+                                    @cropper-saved="cropperSaved"
+                                    @cropper-cancelled="cropperCancelled"
+                                    @cropper-uploaded="cropperUploaded">
+                </vue-anka-cropper>
+            </div>
+            <div class="mdl-card__supporting-text" style="margin:20px">
+                <div class="div_button_cancelar" @click="modalvoltar()">voltar</div>                
+            </div>
+        </div>
+    </div>
 </div>

@@ -292,3 +292,27 @@
 .vs__actions {
     display: none;
 }
+
+.ankaCropper__selectButton {
+    width: auto;
+}
+a[title="Rotate counterclockwise"].ankaCropper__navButton {
+    display: none;
+}
+a[title="Rotate clockwise"].ankaCropper__navButton {
+    display: none;
+}
+a[title="Flip horizontally"].ankaCropper__navButton {
+    display: none;
+}
+a[title="Flip vertically"].ankaCropper__navButton {
+    display: none;
+}
+.ankaCropper__mainArea {
+    max-width: 250px;
+    max-height: 380px;
+}
+.ankaCropper__previewArea {
+    width: 140px;
+    height: 140px !important;
+}

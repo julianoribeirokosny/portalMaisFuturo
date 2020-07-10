@@ -1434,6 +1434,47 @@ export default class FirebaseHelper {
       }
   }
 
+  uploadNewAvatar(chave, cropData) {
+      try {
+        cropData.filename = 'avatar.jpg'
+        cropData.croppedFile.name = 'avatar.jpg'      
+        var storageRef = this.storage.ref(`usuarios/${chave}/${cropData.croppedFile.name}`)        
+        var metadata = {
+          contentType: cropData.croppedFile.type
+        }
+        var file = cropData.croppedFile
+        storageRef.put(file, metadata).then(function(snapshot) {
+          console.log('Uploaded a blob or file!');
+        })        
+        return true  
+      }
+      catch (e) {
+          return false
+      }
+  }
+
+  getAvatarStorare(chave) {
+      debugger
+      let ref = this.storage.ref(`usuarios/${chave}/avatar.jpg`)
+      return ref.getDownloadURL().then((url) => {    
+          if (url) {
+              return url
+          } else {
+              return null
+          }
+      })
+      //   const thumbRef = this.storage.ref(`${this.auth.currentUser.uid}/thumb/${newPostKey}/${fileName}`);
+      // const tumbUploadTask = thumbRef.put(thumb, metadata).then((snapshot) => {
+      //   console.log('New thumb uploaded. Size:', snapshot.totalBytes, 'bytes.');
+      //   return snapshot.ref.getDownloadURL().then((url) => {
+      //     console.log('File available at', url);
+      //     return url;
+      //   });
+      // }).catch((error) => {
+      //   console.error('Error while uploading new thumb', error);
+      // });
+  }
+
   async getUsuario(uid) {
     let ref = this.database.ref(`login/${uid}`)    
     return ref.once('value').then((data) => {    
