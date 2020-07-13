@@ -311,10 +311,13 @@ a[title="Flip vertically"].ankaCropper__navButton {
 .ankaCropper__mainArea {
     max-width: 250px !important;
     max-height: 380px !important;
+    display: grid;
+    grid-template-columns: 100%;
+    justify-content: center;
+    
 }
 .ankaCropper__previewArea {
-    width: 140px !important;
-    height: 140px !important;
+    margin: auto !important;
 }
 
 .upload-avatar {
@@ -326,3 +329,8 @@ a[title="Flip vertically"].ankaCropper__navButton {
     border-radius: 50px; 
     background-color: white;    
 }
+a[title="Save"].ankaCropper__saveButton {
+    text-overflow: "Salvar";
+}
+
+

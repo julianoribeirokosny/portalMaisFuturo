@@ -97,8 +97,8 @@ export default {
         if (this.$refs.ModalAvatar) {
             this.$refs.ModalAvatar.style.display = "none"
         }        
-    },
-    watch: {        
+    },    
+    watch: {          
         cep(val) {
             if (val.length === 10) {
                 this.getEndereco(val)
@@ -165,8 +165,6 @@ export default {
             page('/home')
         },
         salvar() {
-
-            console.log('$ R O O T:', this.$root)
             let profissao = this.listaProfissoes.filter(p => {
                 if (p[0] === this.profissao) {
                     return Object.entries(p)
@@ -207,12 +205,21 @@ export default {
                 })
                 .catch(console.log)
         },
-        
+        cropperMounted() {            
+            //console.log('cropperMounted',document.querySelector('[title="Save"]'))
+        },
         cropperError(errorMessage) {
             //console.log('cropperError',errorMessage)
         },
         cropperFileSelected(file) {
-            
+            setTimeout(() => 
+                this.cropperCustomBtnSave(), 250
+            )
+        },
+        cropperCustomBtnSave() {
+            let btnSalvar = $('.ankaCropper__saveButton')[0]
+            btnSalvar.innerHTML = 'Salvar'         
+            //console.log('cropperCustomBtnSave',btnSalvar)
         },
         cropperPreview(imageSource) {
             //console.log('cropperPreview',imageSource)

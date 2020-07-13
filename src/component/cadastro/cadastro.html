@@ -9,7 +9,7 @@
         <div style="width: 100%; display: flex; justify-content: center;" @click="showModalAvatar">
             <div class="card-tipo-plano">    
                 <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + avatar + ')' }">
-                        <i class="material-icons upload-avatar" >file_upload</i>
+                    <i class="material-icons upload-avatar">file_upload</i>
                 </div>
                 <div class="body">
                     <div class="content">                              
@@ -34,21 +34,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- <div style="display: flex; justify-content: center; align-items: center;">
-            <vue-anka-cropper :options="optionsCropper"
-                                @cropper-error="cropperError"
-                                @cropper-file-selected="cropperFileSelected"
-                                @cropper-preview="cropperPreview"
-                                @cropper-saved="cropperSaved"
-                                @cropper-cancelled="cropperCancelled"
-                                @cropper-uploaded="cropperUploaded">
-            </vue-anka-cropper>
-        </div> -->
-
-
-
-        
+       
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card margin_30">
             <div class="div_titulo_card">
                 Informações<br />pessoais
@@ -274,16 +260,17 @@
             </div>
             <div style="display: flex; justify-content: center; align-items: center;">
                 <vue-anka-cropper :options="optionsCropper"
-                                    @cropper-error="cropperError"
-                                    @cropper-file-selected="cropperFileSelected"
-                                    @cropper-preview="cropperPreview"
-                                    @cropper-saved="cropperSaved"
-                                    @cropper-cancelled="cropperCancelled"
-                                    @cropper-uploaded="cropperUploaded">
+                                  @cropper-mounted="cropperMounted"
+                                  @cropper-error="cropperError"
+                                  @cropper-file-selected="cropperFileSelected"
+                                  @cropper-preview="cropperPreview"
+                                  @cropper-saved="cropperSaved"
+                                  @cropper-cancelled="cropperCancelled"
+                                  @cropper-uploaded="cropperUploaded">
                 </vue-anka-cropper>
             </div>
             <div class="mdl-card__supporting-text" style="margin:20px">
-                <div class="div_button_cancelar" @click="modalvoltar()">voltar</div>                
+                <div class="div_button_cancelar" @click="modalvoltar()">Voltar</div>                
             </div>
         </div>
     </div>

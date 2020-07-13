@@ -289,10 +289,8 @@ export default class Home {
                         sessionStorage.chave = ''
                         return page('/erro')
                     }
-                    sessionStorage.chave = chave
-                    if (!sessionStorage.participante) {
-                        sessionStorage.participante = JSON.stringify(ret)
-                    }
+                    sessionStorage.chave = chave                
+                    sessionStorage.participante = JSON.stringify(ret)                
                     resolve(ret)
                     //return true    
                 })

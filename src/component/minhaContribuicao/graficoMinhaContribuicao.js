@@ -5,8 +5,7 @@ export default {
     props: {
         chartdata: null
     },
-    mounted(){
-        console.log("chartdata.CONTRIBUICAO",this.chartdata)
+    mounted(){        
         if(this.chartdata) {
             this.renderChart({
                 labels: this.chartdata.label,
