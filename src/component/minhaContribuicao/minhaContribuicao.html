@@ -30,26 +30,28 @@
                             <span class="span-contribuicao-titulo">Participante</span>
                         </div>                             
                         <div id="div-contribuicao-row-participante" class="div-contribuicao-row">
-                            <template v-if="contribuicao.itens.participante.eventos.length == 1" v-for="participante in contribuicao.itens.participante.eventos">                                
-                                <div class="div-contribuicao-nome">
-                                    <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
-                                    {{participante.nome }}
-                                </div>
-                                <div class="div-contribiucao-valor"></div>
-                            </template>
-                            <template v-if="contribuicao.itens.participante.eventos.length > 1" v-for="participante in contribuicao.itens.participante.eventos">
-                                <div class="div-contribuicao-nome">
-                                    <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
-                                    {{participante.nome }}
-                                </div>
-                                <div class="div-contribiucao-valor">
-                                    {{participante.valor }}
-                                </div>
-                            </template>
+                            <div>
+                                <template v-if="contribuicao.itens.participante.eventos.length == 1" v-for="participante in contribuicao.itens.participante.eventos">                                
+                                    <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                        {{participante.nome }}
+                                    </div>
+                                    <div class="div-contribiucao-valor"></div>
+                                </template>
+                                <template v-if="contribuicao.itens.participante.eventos.length > 1" v-for="participante in contribuicao.itens.participante.eventos">
+                                    <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
+                                        {{participante.nome }}
+                                    </div>
+                                    <div class="div-contribiucao-valor">
+                                        {{participante.valor }}
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                         <div id="div-contribuicao-row-participante-total" class="div-contribuicao-total">
                             <dl class="dl-contribuicao-total">
-                                <dt class="dt_contribuicao-total">Total participante</dt>
+                                <dt class="dt_contribuicao-total">Total</dt>
                                 <dd class="dd_contribuicao-total">{{ formatMoeda(contribuicao.itens.participante.valor, false) }}</dd>
                             </dl>
                         </div>
@@ -83,7 +85,7 @@
                         </div>
                         <div id="div-contribuicao-row-patronal-total" class="div-contribuicao-total">
                             <dl class="dl-contribuicao-total">
-                                <dt class="dt_contribuicao-total">Total empresa</dt>
+                                <dt class="dt_contribuicao-total">Total</dt>
                                 <dd class="dd_contribuicao-total">{{ formatMoeda(contribuicao.itens.patronal.valor, false) }}</dd>
                             </dl>
                         </div>
@@ -98,15 +100,18 @@
                             <span class="span-contribuicao-titulo">Prêmios riscos</span>
                         </div>                             
                         <div id="div-contribuicao-row-seguro" class="div-contribuicao-row">
-                            <template v-if="contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in contribuicao.itens.seguro.eventos">
-                                <div class="div-contribuicao-nome">
-                                    <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
-                                    {{seguro.nome }}
-                                </div>
-                                <div class="div-contribiucao-valor">                                    
-                                </div>    
-                            </template>
-                            <template v-if="contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in contribuicao.itens.seguro.eventos">
+                            <div>
+                                <template v-if="contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in contribuicao.itens.seguro.eventos">
+                                    <div class="div-contribuicao-nome">
+                                        <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                        {{seguro.nome }}
+                                    </div>
+                                    <div class="div-contribiucao-valor">                                    
+                                    </div>    
+                                </template>
+                            </div>
+                            <div>
+                                <template v-if="contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in contribuicao.itens.seguro.eventos">
                                 <div class="div-contribuicao-nome">
                                     <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
                                     {{seguro.nome }}
@@ -114,11 +119,12 @@
                                 <div class="div-contribiucao-valor">
                                     {{seguro.valor }}       
                                 </div>    
-                            </template>
+                                </template>
+                            </div>
                         </div>
                         <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
                             <dl class="dl-contribuicao-total">
-                                <dt class="dt_contribuicao-total">Total prêmios</dt>
+                                <dt class="dt_contribuicao-total">Total</dt>
                                 <dd class="dd_contribuicao-total">{{ formatMoeda(contribuicao.itens.seguro.valor,false) }}</dd>                                
                             </dl>
                         </div>

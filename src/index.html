@@ -83,12 +83,14 @@
         <div class="mdl-card__supporting-text mdl-card-container">
             <h4 class="mdl-dialog__title" style="margin-left: 5px;font-size: 31px;">Nós protegemos sua privacidade!</h4>
             <div class="mdl-dialog__content">
-                <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de serviço e confirme abaixo:</p>
+                <p style="margin-left: 5px;"> A privacidade de suas informações é nossa prioridade. Leia atentamente o nosso termo de confidencialidade e confirme abaixo:</p>
+                <a href="http://portal.maisfuturo.com.br/termoconfidencialidade.html">Toque aqui para ler o termo.</a>
+
                 <form class="col s12">
-                    <p style="display: flex;">
+                    <p style="display: flex; padding-top: 13px">
                         <input type="checkbox" name="allow-data-termo-servico" id="allow-termo-servico" style="width:120px;" />
                         <label for="allow-data-termo-servico">
-                      Eu li e concordo com os termos de serviço do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
+                      Eu li e concordo com o termo de confidencialidade do portal, bem como concordo com o uso exclusivo das minhas informações para fins de manutenção do meu plano e projeto de vida junto ao Mais Futuro Previdência Privada.            
                     </label>
                     </p>
                 </form>
@@ -418,7 +420,7 @@
                             <div class="mdl-card__supporting-text mdl-card-container div_reserva_total" style="margin-top: 0px;">
                                 <div class="div_reserva_text_1">
                                     <dl class="dl_reserva_text">
-                                        <dt class="dt_reserva_text">Saldo total atual</dt>
+                                        <dt class="dt_reserva_text">Saldo Total atual</dt>
                                         <dd @click.prevent="toggleCategory()" class="dd_reserva_text">
                                             <span class="span_reserva_text_1">R$</span>
                                             <span class="span_reserva_text_2">{{ home.saldo_reserva.total.valor }}</span>
@@ -586,7 +588,7 @@
                                             <span class="span-mais_amigos-numero">3</span>
                                             <div class="div-mais_amigos">
                                                 <span class="span-mais_amigos-texto">
-                                                    Quantos mais amigos, Mais Futuro você tem.
+                                                    Quanto mais amigos, Mais Futuro você tem.
                                                 </span>
                                             </div>
                                             </div>

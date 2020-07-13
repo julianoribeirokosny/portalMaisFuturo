@@ -146,7 +146,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
             listaItensProjetoDeVidaProjecao[0] = {
               cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-              nome: 'Renda projetada',
+              nome: 'Renda Projetada',
               valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3],2)
             }            
             listaItensProjetoDeVidaProjecao[1] = {
@@ -184,7 +184,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaValoresContribuicaoChave = []
           usuarioTotalContr =  {
             color: "<<seg_contribuicao.total.color>>",
-            nome: "Contribuição total",
+            nome: "Contribuição Total",
             valor: 0
           }
           usuarioContrib = {
@@ -332,7 +332,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       }          
       listaItensProjetoDeVidaProjecao[0] = {
         cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-        nome: 'Renda projetada',
+        nome: 'Renda Projetada',
         valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3],2)
       }            
       listaItensProjetoDeVidaProjecao[1] = {
@@ -642,11 +642,11 @@ function insereRegistroTestes(usuarios){
         "valor" : "178,70"
       }, {
         "cor" : "<<seg_contribuicao.itens.1.cor>>",
-        "nome" : "Cobertura | morte",
+        "nome" : "Cobertura | Morte",
         "valor" : "40,96"
       }, {
         "cor" : "<<seg_contribuicao.itens.2.cor>>",
-        "nome" : "Cobertura | invalidez",
+        "nome" : "Cobertura | Invalidez",
         "valor" : "47,56"
       }, {
         "cor" : "<<seg_contribuicao.itens.3.cor>>",
@@ -656,7 +656,7 @@ function insereRegistroTestes(usuarios){
       "lista_valores_contribuicao" : [ 178.7, 40.96, 47.56, 32.78 ],
       "total" : {
         "color" : "<<seg_contribuicao.total.color>>",
-        "nome" : "Contribuição total",
+        "nome" : "Contribuição Total",
         "valor" : "300,00"
       },
       "vigente" : true
@@ -714,7 +714,7 @@ function insereRegistroTestes(usuarios){
         } ],
         "projecao" : [ {
           "cor" : "<<seg_projeto_vida.itens.projecao.0.cor>>",
-          "nome" : "Renda projetada",
+          "nome" : "Renda Projetada",
           "valor" : "R$ 2.158,54"
         }, {
           "cor" : "<<seg_projeto_vida.itens.projecao.1.cor>>",
@@ -796,11 +796,11 @@ function insereRegistroTestes(usuarios){
         "valor" : "178,70"
       }, {
         "cor" : "<<seg_contribuicao.itens.1.cor>>",
-        "nome" : "Cobertura | morte",
+        "nome" : "Cobertura | Morte",
         "valor" : "40,96"
       }, {
         "cor" : "<<seg_contribuicao.itens.2.cor>>",
-        "nome" : "Cobertura | invalidez",
+        "nome" : "Cobertura | Invalidez",
         "valor" : "47,56"
       }, {
         "cor" : "<<seg_contribuicao.itens.3.cor>>",
@@ -810,7 +810,7 @@ function insereRegistroTestes(usuarios){
       "lista_valores_contribuicao" : [ 178.7, 40.96, 47.56, 32.78 ],
       "total" : {
         "color" : "<<seg_contribuicao.total.color>>",
-        "nome" : "Contribuição total",
+        "nome" : "Contribuição Total",
         "valor" : "300,00"
       },
       "vigente" : true
@@ -868,7 +868,7 @@ function insereRegistroTestes(usuarios){
         } ],
         "projecao" : [ {
           "cor" : "<<seg_projeto_vida.itens.projecao.0.cor>>",
-          "nome" : "Renda projetada",
+          "nome" : "Renda Projetada",
           "valor" : "R$ 2.158,54"
         }, {
           "cor" : "<<seg_projeto_vida.itens.projecao.1.cor>>",

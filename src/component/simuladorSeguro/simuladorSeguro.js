@@ -61,7 +61,7 @@ export default {
             premioInvalidez: 0,
             premioTelaInvalidez: '0',
             maximoSemDpsInvalidezTela: '0',
-            corMorte: '#8BCF7B',
+            corMorte: '#45703a',
             coberturaMorte: 0,
             coberturaTelaMorte: '0',
             maximoSemDpsMorteTela: '0',
@@ -107,19 +107,19 @@ export default {
                 labelStyle: void 0,
                 labelActiveStyle: void 0,
                 processStyle: {
-                    "backgroundColor": "#8BCF7B"
+                    "backgroundColor": "#45703a"
                 },
                 tooltipStyle: {
                     "font-size":"9px",
                     "margin":"1px",
-                    "backgroundColor": "#8BCF7B",
+                    "backgroundColor": "#45703a",
                     "border-radius": "50%",
-                    "border-color": "#8BCF7B",
+                    "border-color": "#45703a",
                     "display": "inline"
                 },
                 dotStyle: {
-                    "backgroundColor": "#8BCF7B",
-                    "border-color": "#8BCF7B"
+                    "backgroundColor": "#45703a",
+                    "border-color": "#45703a"
                 },
             },
             sliderMorte: {
@@ -162,19 +162,19 @@ export default {
                 labelStyle: void 0,
                 labelActiveStyle: void 0,
                 processStyle: {
-                    "backgroundColor": "#003366"
+                    "backgroundColor": "#73ad65"
                 },
                 tooltipStyle: {
                     "font-size":"9px",
                     "margin":"1px",
-                    "backgroundColor": "#003366",
+                    "backgroundColor": "#73ad65",
                     "border-radius": "50%",
-                    "border-color": "#003366",
+                    "border-color": "#73ad65",
                     "display": "inline"
                 },
                 dotStyle: {
-                    "backgroundColor": "#003366",
-                    "border-color": "#003366"
+                    "backgroundColor": "#73ad65",
+                    "border-color": "#73ad65"
                 },
             },
             contratacao: {

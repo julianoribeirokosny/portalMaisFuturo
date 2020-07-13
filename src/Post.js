@@ -576,7 +576,7 @@ export default class Post {
     var doughnutOverlay = document.getElementById('doughnutOverlay');
     doughnutOverlay.innerHTML = `
           <div style="text-align: left;">
-            <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 17px;">Saldo total</span>
+            <span style="letter-spacing: -0.24px; color: #3B3C3E; font-family: 'MaisFuturo-Medium'; font-size: 17px;">Saldo Total</span>
           </div>
           <div style"text-align: left; ">
             <span style="letter-spacing: 0; color: #0F0F0F; font-family: 'MaisFuturo-Medium'; font-size: 11px; float:left; ">R$</span>

@@ -432,7 +432,9 @@ export default class Home {
 
         //ajustes de mensagens para situações específicas
         if (part.usr_situacao_plano === "Com Contribuição Suspensa") {
-            retHome.usr_contribuicao.acao.descricao = 'Garanta um futuro melhor. Que tal voltar a contribuir?'
+            let msg = 'Garanta um futuro melhor. Que tal voltar a contribuir?'
+            retHome.contribuicao.acao.descricao = msg
+            retHome.projeto_vida.acao.descricao = msg
         }
         
         return retHome     

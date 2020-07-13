@@ -212,7 +212,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
             listaItensContribuicaoChave.participante.eventos.push({
               cor: `<<seg_contribuicao.itens.participante.0.cor>>`,
-              nome: 'Contribuição normal participante',
+              nome: 'Contribuição Normal participante',
               valor: financeiro.valor_to_string_formatado(usuarioContribCadastro.contribParticipante, 2, false)
             })  
             listaValoresContribuicaoChave.push(usuarioContribCadastro.contribParticipante)            
@@ -254,13 +254,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   
             listaItensProjetoDeVidaProjecao[0] = {
               cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-              nome: 'Renda projetada',
+              nome: 'Renda Projetada',
               //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, false)
               valor: Number(retGraficoReservaCompleto[3])
             }            
             listaItensProjetoDeVidaProjecao[1] = {
               cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-              nome: 'Saldo projetado',
+              nome: 'Saldo Projetado',
               //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, false)
               valor: Number(retGraficoReservaCompleto[2])
             }     
@@ -325,7 +325,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           listaValoresContribuicaoChave = []
           usuarioTotalContr =  {
             color: "<<seg_contribuicao.total.color>>",
-            nome: "Contribuição total",
+            nome: "Contribuição Total",
             valor: 0
           }
           usuarioContrib = {
@@ -510,7 +510,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         listaItensContribuicaoChave.participante.nome = 'Contribuição participante'
         listaItensContribuicaoChave.participante.eventos.push({
           cor: `<<seg_contribuicao.itens.participante.0.cor>>`,
-          nome: 'Contribuição normal participante',
+          nome: 'Contribuição Normal participante',
           valor: financeiro.valor_to_string_formatado(usuarioContribCadastro.contribParticipante, 2, false)
         })  
         listaValoresContribuicaoChave.push(usuarioContribCadastro.contribParticipante)
@@ -550,13 +550,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       }          
       listaItensProjetoDeVidaProjecao[0] = {
         cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
-        nome: 'Renda projetada',
+        nome: 'Renda Projetada',
         //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, false)
         valor: Number(retGraficoReservaCompleto[3])
       }            
       listaItensProjetoDeVidaProjecao[1] = {
         cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
-        nome: 'Saldo projetado',
+        nome: 'Saldo Projetado',
         //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, false)
         valor: Number(retGraficoReservaCompleto[2])
       }     
@@ -1066,11 +1066,11 @@ function insereRegistroTestesHome(usuarios, chave, apelido){
             "seguro" : {
               "eventos" : [ {
                 "cor" : "<<seg_contribuicao.itens.1.cor>>",
-                "nome" : "Cobertura | morte",
+                "nome" : "Cobertura | Morte",
                 "valor" : "40,96"
               }, {
                 "cor" : "<<seg_contribuicao.itens.2.cor>>",
-                "nome" : "Cobertura | invalidez",
+                "nome" : "Cobertura | Invalidez",
                 "valor" : "47,56"
               }],
               "nome" : "Contribuição de riscos",
@@ -1080,7 +1080,7 @@ function insereRegistroTestesHome(usuarios, chave, apelido){
         "lista_valores_contribuicao" : [ 178.70, 32.70, 40.96, 47.56],
         "total" : {
           "color" : "<<seg_contribuicao.total.color>>",
-          "nome" : "Contribuição total",
+          "nome" : "Contribuição Total",
           "valor" : "299,92"
         },
         "vigente" : true
@@ -1138,7 +1138,7 @@ function insereRegistroTestesHome(usuarios, chave, apelido){
           } ],
           "projecao" : [ {
             "cor" : "<<seg_projeto_vida.itens.projecao.0.cor>>",
-            "nome" : "Renda projetada",
+            "nome" : "Renda Projetada",
             "valor" : "R$ 2.158,54"
           }, {
             "cor" : "<<seg_projeto_vida.itens.projecao.1.cor>>",
