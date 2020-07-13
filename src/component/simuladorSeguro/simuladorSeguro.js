@@ -270,7 +270,7 @@ export default {
             this.consultaDados()
             this.closeModal()      
         },
-        consultaDados() {    
+        consultaDados() {            
             this.firebaseHelper.getDadosSimuladorSeguro(this.chave, this.uid).then((data) => {
                 if(data){
                     this.montarDados(data)
