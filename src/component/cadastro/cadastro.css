@@ -294,25 +294,35 @@
 }
 
 .ankaCropper__selectButton {
-    width: auto;
+    width: auto !important;
 }
 a[title="Rotate counterclockwise"].ankaCropper__navButton {
-    display: none;
+    display: none !important;
 }
 a[title="Rotate clockwise"].ankaCropper__navButton {
-    display: none;
+    display: none !important;
 }
 a[title="Flip horizontally"].ankaCropper__navButton {
-    display: none;
+    display: none !important;
 }
 a[title="Flip vertically"].ankaCropper__navButton {
-    display: none;
+    display: none !important;
 }
 .ankaCropper__mainArea {
-    max-width: 250px;
-    max-height: 380px;
+    max-width: 250px !important;
+    max-height: 380px !important;
 }
 .ankaCropper__previewArea {
-    width: 140px;
+    width: 140px !important;
     height: 140px !important;
+}
+
+.upload-avatar {
+    color: blue; 
+    font-size: 35px; 
+    position: absolute; 
+    bottom: 21px; 
+    right: -25px; 
+    border-radius: 50px; 
+    background-color: white;    
 }

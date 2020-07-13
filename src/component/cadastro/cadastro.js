@@ -2,14 +2,15 @@
 
 import vSelect from 'vue-select'
 import 'vue-select/dist/vue-select.css'
+import vueAnkaCropper from 'vue-anka-cropper'
+import 'vue-anka-cropper/dist/VueAnkaCropper.css'
 import cadastro from './cadastro.html'
 import './cadastro.css'
 import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { TheMask } from 'vue-the-mask'
-import vueAnkaCropper from 'vue-anka-cropper'
-import '../../../node_modules/vue-anka-cropper/dist/VueAnkaCropper.css'
+
 import {Utils} from '../../Utils';
 import $ from 'jquery'
 
@@ -32,7 +33,7 @@ export default {
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
         return {  
             signedInUserAvatar:'',          
-            avatar: foto ? foto : "../images/silhouette.jpg",
+            avatar: foto ? foto : "../images/silhouette-edit.jpg",
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
             cep: null,
@@ -62,7 +63,7 @@ export default {
                 croppedHeight: 140,
                 croppedWidth: 140,
                 cropperHeight: false,
-                dropareaMessage: 'Solte a foto aqui ou use o botão abaixo.',
+                dropareaMessage: 'Clique abaixo para escolher uma existente ou tirar uma nova foto.',
                 frameLineDash: [5,3],
                 frameStrokeColor: 'rgba(255, 255, 255, 0.8)',
                 handleFillColor: 'rgba(255, 255, 255, 0.2)',
@@ -78,7 +79,7 @@ export default {
                 previewQuality: 0.65,
                 resultQuality: 0.8,
                 resultMimeType: 'image/jpeg',
-                selectButtonLabel: 'Nova imagem',
+                selectButtonLabel: 'Incluir foto',
                 showPreview: true,
                 skin: 'light',
                 uploadData: {},

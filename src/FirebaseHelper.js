@@ -1434,25 +1434,24 @@ export default class FirebaseHelper {
   }
 
   uploadNewAvatar(chave, cropData) {
-      try {
-        cropData.filename = 'avatar.jpg'
-        cropData.croppedFile.name = 'avatar.jpg'      
-        var storageRef = this.storage.ref(`usuarios/${chave}/${cropData.croppedFile.name}`)        
-        var metadata = {
-          contentType: cropData.croppedFile.type
-        }
-        var file = cropData.croppedFile
-        storageRef.put(file, metadata).then(function(snapshot) {
-          console.log('Uploaded a blob or file!');
-        })        
-        return true  
+    try {
+      cropData.filename = 'avatar.jpg'
+      cropData.croppedFile.name = 'avatar.jpg'      
+      var storageRef = this.storage.ref(`usuarios/${chave}/${cropData.croppedFile.name}`)        
+      var metadata = {
+        contentType: cropData.croppedFile.type
       }
-      catch (e) {
-          return false
-      }
+      var file = cropData.croppedFile
+      storageRef.put(file, metadata).then(function(snapshot) {
+        console.log('Uploaded a blob or file!');
+      })        
+      return true  
+    }
+    catch (e) {
+        return false
+    }
   }
 
-     
   async getUsuario(uid) {
     let ref = this.database.ref(`login/${uid}`)    
     return ref.once('value').then((data) => {    
@@ -1631,24 +1630,8 @@ export default class FirebaseHelper {
         callback(url)
       }
     }).catch(function(error) {
-      // A full list of error codes is available at
-      // https://firebase.google.com/docs/storage/web/handle-errors
-      switch (error.code) {
-        case 'storage/object-not-found':
-          console.log('storage/object-not-found')
-          break;
-
-        case 'storage/unauthorized':
-          console.log('storage/unauthorized')
-          break;
-
-        case 'storage/canceled':
-          console.log('storage/canceled')
-          break;
-
-        case 'storage/unknown':
-          console.log('storage/unknown')
-          break;
+      if (callback) {
+        callback(null)
       }      
     })
   }

@@ -7,8 +7,10 @@
 
         <!--Resumo do Perfil (Box)-->        
         <div style="width: 100%; display: flex; justify-content: center;" @click="showModalAvatar">
-            <div class="card-tipo-plano">                
-                <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + avatar + ')' }"></div>                
+            <div class="card-tipo-plano">    
+                <div class="avatar" v-bind:style="{ backgroundImage: 'url(' + avatar + ')' }">
+                        <i class="material-icons upload-avatar" >file_upload</i>
+                </div>
                 <div class="body">
                     <div class="content">                              
                       <div class="nome">{{ cadastro.informacoes_pessoais.nome }}</div>                        
@@ -268,7 +270,7 @@
         <!-- Modal content -->
         <div class="modal-content" style="height: auto">
             <div class="mdl-card-container div-container" style="width: 90%; margin-top: 30px;">
-                <p>Para continuar vc precisa selecionar sua profissão:</p>
+                <p>Legal! Vamos incluir sua foto.</p>
             </div>
             <div style="display: flex; justify-content: center; align-items: center;">
                 <vue-anka-cropper :options="optionsCropper"
