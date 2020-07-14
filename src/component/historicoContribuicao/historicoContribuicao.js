@@ -7,6 +7,7 @@ import FirebaseHelper from '../../FirebaseHelper'
 
 const img_boleto = require('../../../public/images/Boleto.png')
 const img_check = require('../../../public/images/Check.png')
+const img_download_historico = require('../../../public/images/Download_historico.png')
 
 export default {
     template: historicoContribuicao,      
@@ -18,7 +19,8 @@ export default {
             titulo: 'Histórico de<br/>contribuição',
             showDialog: false,
             img_boleto: img_boleto,
-            img_check: img_check
+            img_check: img_check,
+            img_download_historico: img_download_historico
         }
     },        
     created(){
@@ -26,6 +28,9 @@ export default {
         this.getHistoricoContribuicao()
     },
     methods: {
+        downloadHistorico () {
+            alert('Palmeiras não tem mundial!!!')
+        },
         getHistoricoContribuicao () {
             this.firebaseHelper.getHistoricoContribuicao(this.chave).then((data) => {
                 if (data) {
