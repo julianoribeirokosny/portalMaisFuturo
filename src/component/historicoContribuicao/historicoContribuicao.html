@@ -1,7 +1,10 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
     <!--Historico de Contribuicao-->        
    <div class="mdl-card__supporting-text mdl-card-container div-container gridTitle" style="margin-top: 20px;">
-      <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>      
+      <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>  
+      <div class="DivExtratoImg">
+         <img class="ExtratoImg" v-bind:src="img_download_historico" alt="download" @click="downloadHistorico"/>            
+      </div>    
    </div>
    <!-- Tabela Histórico de Contribuição Div-->
    <div class="mdl-card__supporting-text mdl-card-container div-container gridHeader">
