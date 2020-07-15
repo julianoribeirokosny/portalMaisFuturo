@@ -179,14 +179,12 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     let valorRendaProjetada, valorReservaProjetada
     console.log('#pgCarga - iniciando forEach', retDadosPG)
     retDadosPG.forEach((rowDados) => {
-      console.log('##### Participante', rowDados.chave, '######')
       periodoBase = utils.dateFormat(rowDados.datacomp, false, true, false)
       periodoBase = periodoBase.substring(4,6)+'/'+periodoBase.substring(0,4)
       //primeiro verifica se está em situação do plano válida para o portal:
       //se não achou situação OK ou se saldoTotal is null, marca para bloquear
       let naoAchouSituacaoPlano = listaSituacoesValidas.indexOf(rowDados.cad_sitpart)<0
       if ( naoAchouSituacaoPlano || rowDados.res_saldototal === null) { 
-        console.log('===========> Bloqueado')
         usuariosBloquear[`${rowDados.chave}/home`] = {
           usr_apelido: rowDados.cad_apelido,
           usr_matricula: rowDados.cad_matricula,
@@ -202,7 +200,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
           usr_situacao_plano: rowDados.cad_sitpart
         }
       } else {
-        console.log('===========> Processando', chave, rowDados.chave)
         if (chave !== rowDados.chave) {
           //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
           if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
@@ -234,9 +231,9 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             usuarioTotalContr.valor = usuarioContribCadastro.contribParticipante + usuarioContribCadastro.contribRisco
           } 
 
-          if (chave !== '') { //&& (usuarioContrib.contribParticipante+usuarioContrib.contribParticipantePlanoPatrocinado) > 0
-            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)          
-            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)                    
+          if (chave !== '') { 
+            let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, usr.sitpart)          
+            let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, usr.sitpart)                    
             listaDatasetsProjetoDeVida[2] = {
               backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
               borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -255,13 +252,11 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
             listaItensProjetoDeVidaProjecao[0] = {
               cor: '<<seg_projeto_vida.itens.projecao.0.cor>>',
               nome: 'Renda Projetada',
-              //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[3], 2, false)
               valor: Number(retGraficoReservaCompleto[3])
             }            
             listaItensProjetoDeVidaProjecao[1] = {
               cor: '<<seg_projeto_vida.itens.projecao.1.cor>>',
               nome: 'Saldo Projetado',
-              //valor: financeiro.valor_to_string_formatado(retGraficoReservaCompleto[2], 2, false)
               valor: Number(retGraficoReservaCompleto[2])
             }     
             
@@ -500,7 +495,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       } 
     })
 
-    console.log('+++++++++++ SAINDO +++++++++++++')
     if (chave!=='') {
       //ajusta com contribuições base de cadastro caso não tenha pago contribuições no mês
       if (usuarioContrib.contribParticipante + usuarioContrib.contribParticipantePlanoPatrocinado === 0) {
@@ -532,8 +526,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
         usuarioTotalContr.valor = usuarioContribCadastro.contribParticipante + usuarioContribCadastro.contribRisco
       } 
 
-      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)          
-      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, rowDados.cad_sitpart)                    
+      let retGraficoReservaCompleto = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'completo', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, usr.sitpart)          
+      let retGraficoReservaAteHoje = calculaGraficoReserva(usrReservaTotal.valor, usuarioContrib, usr.nasc, usr.dataadesao, usr.taxa, 'até hoje', usr.idade, usr.tipoPlano, usr.taxaAposentadoria, usr.sitpart)                    
       listaDatasetsProjetoDeVida[2] = {
         backgroundColor: "<<seg_projeto_vida.grafico.datasets.2.backgroundColor>>",
         borderColor: "<<seg_projeto_vida.grafico.datasets.2.borderColor>>",
@@ -612,7 +606,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Finalizado com erro'
       logProcessamento[dataProcessamento].msg = 'Erro ao final do processo. Dados não foram salvos.'
-      logProcessamento[dataProcessamento].erro = e
+      logProcessamento[dataProcessamento].erro = JSON.stringify(e)
       let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
 
@@ -813,7 +807,6 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
   
   //calculo de IdadeApos, datas e tempos
   let idadeApos = calculaIdadeApos(dataNasc, dataAdesao, idade)
-  //console.log('==> dataAdesao', dataAdesao)
   let difMesesDaAdesaoHoje = utils.diffDatasEmMeses(dataAdesao, new Date())
   let dataAposentadoria = financeiro.calculaDataInicioRenda(dataNasc, idadeApos)
   let difMesesHojeAposentadoria = utils.diffDatasEmMeses(new Date(), dataAposentadoria)
@@ -968,8 +961,6 @@ async function getConnection () {
 }
 
 async function buscaDadosPG(select) {
-  console.log('#buscaDadosPG - Iniciando - select:', select)
-
   return getConnection().then( async (pgConn) => {
     console.log('#buscaDadosPG - Banco conectado.')
     let result = await pgConn.query(select)

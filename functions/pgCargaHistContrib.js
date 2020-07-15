@@ -52,15 +52,23 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let usuarios = {} //lista de usuários que serão atualizados na base
   let usrAnterior
   let ref = change.after.ref.parent;
+
   return ref.once('value').then((snapshotParent)  => {
     if (!snapshotParent.val()) {
       console.error('#pgCarga - Processamento cancelado. Estrutura do settings do plano inconsistente.')
+      logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
+      logProcessamento[dataProcessamento].status = 'Cancelado'
+      logProcessamento[dataProcessamento].msg = 'Processamento cancelado. Estrutura do settings do plano inconsistente'
+      let refProc = admin.database().ref(`admin/carga/logProcessamento`)
+      refProc.update(logProcessamento)
       return false
     }
     console.log('===> verificando se há chaves específicas para a carga.')
     if (snapshotParent.hasChild('lista_chaves_carga')) {
-      console.log('===> dadosPortalLista!')
+      select = jsonDataSelects.historicoContribLista
       select = select.replace(/--lista_dados_carga--/g, snapshotParent.child('lista_chaves_carga').val())
+    } else {
+      select = jsonDataSelects.historicoContrib
     }
     select = select.replace(/--nome_plano--/g, plano)
     console.log('===> select', select)        
@@ -77,10 +85,8 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       console.error('#pgCargaHistContrib - Processamento cancelado. Verifique mensagens anteriores.')
       return false
     }
-    //console.log('===> usuarios', usuarios)
-    console.log('#pgCargaHistContrib - iniciando forEach', retDadosPG)
+
     retDadosPG.forEach((rowDados) => {
-      console.log('===> chave', rowDados.chave)
       if (usuarios[rowDados.chave] !== undefined && usuarios[rowDados.chave].data !== undefined) {
         usuarios[rowDados.chave].data.valores.historicoContribuicao = rowDados.jsonhistcontrib
       }
@@ -103,7 +109,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       logProcessamento[dataProcessamento].fim = utils.dateFormat(new Date(), true, false).substring(-8)
       logProcessamento[dataProcessamento].status = 'Finalizado com erro'
       logProcessamento[dataProcessamento].msg = 'Erro ao final do processo. Dados não foram salvos.'
-      logProcessamento[dataProcessamento].erro = e
+      logProcessamento[dataProcessamento].erro = JSON.stringify(e)
       let refProc = admin.database().ref(`admin/carga/logProcessamento`)
       refProc.update(logProcessamento)          
       return false

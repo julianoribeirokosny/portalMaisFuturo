@@ -19,7 +19,6 @@ module.exports =  {
     valorFuturo(pv, i, n, pmt) {
         if (n===0) n = 1
         let pow = Math.pow(1 + (i/100), n)
-        //console.log('===> pmt, i, pow, pv', pmt, i, pow, pv)
         return ((pmt*(1+(i/100)*0)*(1-pow)/(i/100))-pv*pow).toFixed(2)*(-1)
     },
 
@@ -93,9 +92,6 @@ module.exports =  {
     calculaReservaFutura (reservaTotal, taxaAnual, contribParticipante, contribParticipantePlanoPatrocinado, contribPatronal, dataInicioRenda, tipoPlano) {
         //let qtdMeses = this.calculaQuantidadeMeses(dataInicioRenda)
         let qtdMeses = utils.diffDatasEmMeses(new Date(), dataInicioRenda)
-
-        //console.log('===> qtdMeses, dataInicioRenda', qtdMeses, dataInicioRenda)
-
         let taxaMensal = this.calculaTaxaMensal(taxaAnual)
         let reservaFutura = this.valorFuturo(
             reservaTotal,

@@ -2,8 +2,12 @@
     <!--Historico de Contribuicao-->        
    <div class="mdl-card__supporting-text mdl-card-container div-container gridTitle" style="margin-top: 20px;">
       <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>  
-      <div class="DivExtratoImg">
-         <img class="ExtratoImg" v-bind:src="img_download_historico" alt="download" @click="downloadHistorico"/>            
+      <div class="DivExtratoImg" style="text-align: center;vertical-align: middle;">
+         <div style="justify-content: center; align-items: center; text-align: center; " @click="extrato()">
+            <img v-bind:src="icon_extrato_contribuicoes" width="60" height="60" style="cursor:pointer;">
+            <span class="TableHeader" style="color:#033166;font-weight: 500; font-size:12px; line-height: 15px;">Download<br>Extrato</span>
+         </div>
+         <!--<img class="ExtratoImg" v-bind:src="img_download_historico" alt="download" @click="downloadHistorico"/>            -->
       </div>    
    </div>
    <!-- Tabela Histórico de Contribuição Div-->
@@ -29,12 +33,6 @@
          Voltar
       </div>   
    </div>
-   <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-      <div class="mdl-shadow--2dp div_btn_voltar" @click="extrato()">
-         Extrato
-      </div>   
-   </div>
-
    <!-- The Modal -->
    <div id="myModal" ref="myModal" class="modal" @click="closeModal">
       <!-- Modal content -->

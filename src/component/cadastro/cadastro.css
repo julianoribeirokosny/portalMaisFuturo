@@ -309,7 +309,7 @@ a[title="Flip vertically"].ankaCropper__navButton {
     display: none !important;
 }
 .ankaCropper__mainArea {
-    max-width: 250px !important;
+    min-width: 90% !important;
     max-height: 380px !important;
     display: grid;
     grid-template-columns: 100%;
@@ -317,7 +317,12 @@ a[title="Flip vertically"].ankaCropper__navButton {
     
 }
 .ankaCropper__previewArea {
+    min-width: 90% !important;
     margin: auto !important;
+}
+
+.vueAnkaCropper{
+    min-width: 100% !important;
 }
 
 .upload-avatar {
