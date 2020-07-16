@@ -1877,10 +1877,10 @@ _dialog_overlay {
 
 .div_grafico_contribuicao_legenda {
     position: absolute;
-    width: 280px;
+    width: 300px;
     height: 60%;
     background-color: transparent;
-    margin: 90px 0px 0px 0px;
+    margin: 130px 0px 0px 0px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -2110,8 +2110,8 @@ _dialog_overlay {
         height: 250px;
     }
     .div_grafico_contribuicao_legenda {
-        width: 220px;
-        margin: 70px 0px 0px 0px;
+        width: 250px;
+        margin: 100px 0px 0px 0px;
     }
     .div_grafico_reserva_legenda {
         width: 220px;
@@ -2237,8 +2237,8 @@ _dialog_overlay {
         margin: 30px 0px 0px 0px;
     }
     .div_grafico_contribuicao_legenda {
-        width: 150px;
-        margin: 55px 0px 0px 0px;
+        width: 200px;
+        margin: 75px 0px 0px 0px;
     }
     .span_reserva_text_2 {
         font-size: 30px;

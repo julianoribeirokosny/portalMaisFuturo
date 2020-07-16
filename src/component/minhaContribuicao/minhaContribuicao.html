@@ -43,7 +43,7 @@
                                         <div class="div-contribiucao-dot" v-bind:style="participante.cor"></div>
                                         {{participante.nome }}
                                     </div>
-                                    <div class="div-contribiucao-valor">
+                                    <div class="div-contribiucao-valor" style="height: 27px;">
                                         {{participante.valor }}
                                     </div>
                                 </template>
@@ -78,7 +78,7 @@
                                     <div class="div-contribiucao-dot" v-bind:style="patronal.cor"></div>                                    
                                     {{ patronal.nome }}
                                 </div>
-                                <div class="div-contribiucao-valor">
+                                <div class="div-contribiucao-valor" style="height: 27px;">
                                     {{ patronal.valor }}                                        
                                 </div>    
                             </template>
@@ -97,30 +97,26 @@
                 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto" style="display: flex; justify-content: center;">
                     <div class="mdl-card__supporting-text mdl-card-container" style="max-width: 500px;margin: 0px !important;">
                         <div class="mdl-card-container">
-                            <span class="span-contribuicao-titulo">Prêmios riscos</span>
+                            <span class="span-contribuicao-titulo">Seguro de Renda</span>
                         </div>                             
                         <div id="div-contribuicao-row-seguro" class="div-contribuicao-row">
-                            <div>
-                                <template v-if="contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in contribuicao.itens.seguro.eventos">
-                                    <div class="div-contribuicao-nome">
-                                        <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
-                                        {{seguro.nome }}
-                                    </div>
-                                    <div class="div-contribiucao-valor">                                    
-                                    </div>    
-                                </template>
-                            </div>
-                            <div>
-                                <template v-if="contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in contribuicao.itens.seguro.eventos">
+                            <template v-if="contribuicao.itens.seguro.eventos.length == 1" v-for="seguro in contribuicao.itens.seguro.eventos">
                                 <div class="div-contribuicao-nome">
                                     <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
                                     {{seguro.nome }}
                                 </div>
-                                <div class="div-contribiucao-valor">
-                                    {{seguro.valor }}       
+                                <div class="div-contribiucao-valor">                                    
                                 </div>    
-                                </template>
+                            </template>
+                            <template v-if="contribuicao.itens.seguro.eventos.length > 1" v-for="seguro in contribuicao.itens.seguro.eventos">
+                            <div class="div-contribuicao-nome">
+                                <div class="div-contribiucao-dot" v-bind:style="seguro.cor"></div>
+                                {{seguro.nome }}
                             </div>
+                            <div class="div-contribiucao-valor" style="height: 27px;">
+                                {{seguro.valor }}       
+                            </div>    
+                            </template>
                         </div>
                         <div id="div-contribuicao-row-seguro-total" class="div-contribuicao-total">
                             <dl class="dl-contribuicao-total">

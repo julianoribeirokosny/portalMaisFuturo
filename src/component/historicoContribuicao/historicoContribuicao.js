@@ -11,7 +11,7 @@ const img_download_historico = require('../../../public/images/Download_historic
 const icon_extrato_contribuicoes = require('../../../public/images/ExtratoContribuicoes-IconS.png')
 
 export default {
-    template: historicoContribuicao,      
+    template: historicoContribuicao,    
     data: function() {
         return { 
             chave:'',
@@ -27,26 +27,30 @@ export default {
     },        
     created(){
         this.chave = sessionStorage.chave
+        this.uid = sessionStorage.uid
         this.getHistoricoContribuicao()
     },
     methods: {
         getHistoricoContribuicao () {
-            this.firebaseHelper.getHistoricoContribuicao(this.chave).then((data) => {
-                if (data) {
-                    this.historico = data
-                }
-            })
+            if (!sessionStorage.historicoContribuicao || sessionStorage.historicoContribuicao === '') {
+                this.firebaseHelper.getHistoricoContribuicao(this.chave).then((data) => {
+                    if (data) {
+                        sessionStorage.historicoContribuicao = JSON.stringify(data)
+                        this.historico = data
+                    }
+                })    
+            } else {
+                this.historico = JSON.parse(sessionStorage.historicoContribuicao)
+            }
         },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
         },
         extrato() {
             const extratoShow = (url) => {
-                //window.location = url
-                //page(`/${sessionStorage.ultimaPagina}`)
                 window.open(url, '_blank');
             }
-            this.firebaseHelper.downloadStorageFile("gs://portalmaisfuturo-teste.appspot.com/login/fYK5gpbuyQZk1Xy7qaCl02PketW2/1-686/extratoParticipante.pdf", extratoShow)
+            this.firebaseHelper.downloadStorageFile(`gs://portalmaisfuturo-teste.appspot.com/login/${this.uid}/${this.chave}/extratoParticipante.pdf`, extratoShow)
         }, 
         showModal() {
             this.$refs.myModal.style.display = "block";

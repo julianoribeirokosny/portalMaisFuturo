@@ -272,11 +272,29 @@ export default {
             this.closeModal()      
         },
         consultaDados() {            
-            this.firebaseHelper.getDadosSimuladorSeguro(this.chave, this.uid).then((data) => {
-                if(data){
+            if (!sessionStorage.dadosSimuladorSeguro || sessionStorage.dadosSimuladorSeguro === '') {
+                this.firebaseHelper.getDadosSimuladorSeguro(this.chave, this.uid).then((data) => {
+                    if(data){
+                        sessionStorage.dadosSimuladorSeguro = JSON.stringify(data)
+                        if (data.bloqueio) {
+                            if(this.$refs.ModalBloqueioIdade){
+                                this.$refs.ModalBloqueioIdade.style.display = "block"
+                            }            
+                        } else {
+                            this.montarDados(data)
+                        }
+                    }
+                })    
+            } else {
+                let data = JSON.parse(sessionStorage.dadosSimuladorSeguro)
+                if (data.bloqueio) {
+                    if(this.$refs.ModalBloqueioIdade){
+                        this.$refs.ModalBloqueioIdade.style.display = "block"
+                    }            
+                } else {
                     this.montarDados(data)
                 }
-            })
+            }
         },
         montarDados(dataSimulador) {
             if(!dataSimulador.profissao) {
@@ -325,6 +343,9 @@ export default {
                 this.$root.$emit('atualizaProfissao',this.cadastro.profissao.nome)
                 this.sliderInvalidez.max = profissao[0][1]
                 this.sliderMorte.max = profissao[0][1]
+                //limpa as váriaveis de session para recarregar com dados atualizados
+                sessionStorage.dadosSimuladorSeguro = ''
+                sessionStorage.participante = ''
                 this.closeModal()
                 this.consultaDados()
             }
@@ -440,7 +461,7 @@ export default {
                 this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
                 this.contratacao.chave = this.chave
                 this.contratacao.uid =  this.uid
-                this.contratacao.label_button = 'Confirma novo valor'
+                this.contratacao.label_button = 'Confirmar novo valor'
                 this.contratacao.tipo = 'Seguro'
                 this.contratacao.detalhes = {
                     premio_total_solicitado: this.premioTelaTotal,

@@ -84,10 +84,7 @@ module.exports =  {
     diffDatasEmAnos : function (dataMenor, dataMaior) {
         dataMenor = this.arruma_data(dataMenor)
         dataMaior = this.arruma_data(dataMaior)    
-        console.log('=====> dataMenor', dataMenor)   
-        console.log('=====> dataMaior', dataMaior)   
         let anos = (dataMaior.getFullYear() - dataMenor.getFullYear())
-        console.log('=====> anos', anos)
         if (dataMaior.getMonth() < dataMenor.getMonth()) { //se não completou aniversário
             anos--
         }
@@ -105,8 +102,6 @@ module.exports =  {
 
     arruma_data(data) {
         let hora = ''
-        console.log('=======> data:', data)
-        console.log('=======> data instanceof Date:', data instanceof Date)
         if (!(data instanceof Date)) {
             if (data.length > 11 && data.indexOf(':') > 0) { //se tem hora na data...
                 hora = data.substring(data.indexOf(':') - 2)

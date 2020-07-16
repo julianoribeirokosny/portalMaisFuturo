@@ -8,7 +8,9 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "hosting": {
+  "hosting": [
+    {
+    "target": "portal",
     "predeploy": "npm run build",
     "public": "public",
     "rewrites": [{
@@ -30,5 +32,13 @@
         "value" : "max-age=0, no-cache, no-store, must-revalidate"
       }]
     }]
-  }
+  },
+  {
+    "target": "termos",
+    "public": "public/estatico",
+    "rewrites": [{
+      "source": "**",
+      "destination": "/index.html"
+    }]
+  }]
 }

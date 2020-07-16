@@ -62,6 +62,7 @@ export default class Home {
             return page('/erro')
         }
 
+        sessionStorage.uid = this.auth.currentUser.uid
         sessionStorage.url_foto = this.auth.currentUser.photoURL
 
         let firebaseHelper = this.firebaseHelper
@@ -289,6 +290,7 @@ export default class Home {
                         sessionStorage.chave = ''
                         return page('/erro')
                     }
+                    sessionStorage.dadosSimuladorSeguro = ''
                     sessionStorage.chave = chave                
                     sessionStorage.participante = JSON.stringify(ret)                
                     resolve(ret)

@@ -1,0 +1,198 @@
+
+body {
+  font-family: 'Objectivity Regular';
+  color: #808080;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 26px;
+  word-spacing: 2px;
+  -webkit-font-smoothing: antialiased;
+  background-color:#FAFAFA;
+  text-align:left;
+  margin-left: 10px;
+}
+p {
+	margin-bottom: 5px;
+	
+}
+h1{
+	font-family:'Objectivity Medium';
+	margin-top: 15px;
+}
+h2{
+	padding-top:10px;
+	background-color:#99B2FF;
+	color: #FFF;
+	height:35px;
+	text-align:left;
+}
+
+a {
+  color: #4ecdc4;
+  text-decoration: none !important;
+  -webkit-transition: color 0.3s;
+          transition: color 0.3s;
+}
+a:hover {
+  color: #4c4c4c;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:'Objectivity Thin Slanted';
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+
+.painel-branco{
+	background-color:#FFFFFF;
+	text-align:left;
+	font-size:15px;
+}
+
+ div.op1 {
+        width: 78%;
+        display: inline-block;
+        min-width:40vw;
+		padding-top:20px;
+    }
+
+div.op2 {
+	width: 18%;
+	display: inline-block;
+	margin-right: 0vw;
+	float:right;
+	text-align:right!important;
+}
+
+
+@font-face {
+font-family: 'Objectivity Regular';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Regular'), url('Objectivity-Regular.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Regular Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Regular Slanted'), url('Objectivity-RegularSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Thin';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Thin'), url('Objectivity-Thin.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Thin Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Thin Slanted'), url('Objectivity-ThinSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Light';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Light'), url('Objectivity-Light.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Light Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Light Slanted'), url('Objectivity-LightSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Medium';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Medium'), url('Objectivity-Medium.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Medium Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Medium Slanted'), url('Objectivity-MediumSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Bold';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Bold'), url('Objectivity-Bold.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Bold Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Bold Slanted'), url('Objectivity-BoldSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Extra Bold';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Extra Bold'), url('Objectivity-ExtraBold.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Extra Bold Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Extra Bold Slanted'), url('Objectivity-ExtraBoldSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Black';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Black'), url('Objectivity-Black.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Black Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Black Slanted'), url('Objectivity-BlackSlanted.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Super';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Super'), url('Objectivity-Super.woff') format('woff');
+}
+
+
+@font-face {
+font-family: 'Objectivity Super Slanted';
+font-style: normal;
+font-weight: normal;
+src: local('Objectivity Super Slanted'), url('Objectivity-SuperSlanted.woff') format('woff');
+}
+

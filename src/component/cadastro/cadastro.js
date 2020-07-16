@@ -145,8 +145,8 @@ export default {
             }, 5000);
         },
         getParticipante() {
-            console.log('=====> this.competencia', this.competencia)
-            this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
+            if (!sessionStorage.participante || sessionStorage.participante === '') {
+                this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then(cad => {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
@@ -156,6 +156,16 @@ export default {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
                     }
                 })
+            } else {
+                let cad = JSON.parse(sessionStorage.participante).data.cadastro
+                this.cadastro = cad
+                this.cep = this.cadastro.endereco.cep
+                this.email = this.cadastro.informacoes_pessoais.email
+                this.profissao = ''
+                if (this.cadastro.informacoes_pessoais.profissao) {
+                    this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
+                }
+            }
             this.firebaseHelper.getUsuario(this.uid)
                 .then(response => {
                     this.emailPrincipal = response.email_principal

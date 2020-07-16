@@ -1266,10 +1266,16 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorSeguro(chave, uid) {
-      let usuario = JSON.parse(sessionStorage.participante)
-      if (!usuario || usuario === null) {
+      let usuario
+      if (!sessionStorage.participante || sessionStorage.participante === '') {
         usuario = await this.getParticipante(chave)    
+      } else {
+        usuario = JSON.parse(sessionStorage.participante)
+        if (!usuario || usuario === null) {
+          usuario = await this.getParticipante(chave)    
+        }
       }
+
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
       let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)      
@@ -1287,8 +1293,8 @@ export default class FirebaseHelper {
       if(usuario.data.cadastro.informacoes_pessoais.profissao) {
         maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
         maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
-        maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
-        maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
+        //maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
+        //maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
         maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
         maximoSemDPSInvalidez = Number(this.calculaMaximoSemDPSSeguro(maximoInval, coberturaInvalidez, simuladorSeguroSettings.regra_dps).toFixed(0))  
         profissao = true

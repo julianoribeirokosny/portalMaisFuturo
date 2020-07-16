@@ -268,7 +268,7 @@ export default {
             }
             this.contratacao.chave = this.chave
             this.contratacao.uid =  this.uid
-            this.contratacao.label_button = 'Confirma novo valor'
+            this.contratacao.label_button = 'Confirmar novo valor'
             this.simulador = false
         },
         calculaReservaFutura() {
