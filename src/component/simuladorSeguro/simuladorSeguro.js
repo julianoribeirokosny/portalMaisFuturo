@@ -26,6 +26,7 @@ export default {
     },    
     data: function() {
         return {
+            stringRequest: '',
             sliderInvalidezmin: 1,
             sliderInvalidezmax: 10,
             sliderInvalidezinterval: 1,
@@ -412,69 +413,70 @@ export default {
             page(`/${sessionStorage.ultimaPagina}`)
         },    
         contratar() {
-            if (this.novaCoberturaMorte > this.maximoSemDpsMorte || this.novaCoberturaInvalidez > this.maximoSemDpsInvalidez) {
-                debugger
-                let usuario = JSON.parse(sessionStorage.participante)
-                console.log('USUARIO',usuario)
-                let nome = usuario.data.cadastro.informacoes_pessoais.nome
-                let nasc = usuario.data.cadastro.informacoes_pessoais.nascimento
-                let cpf = usuario.data.cadastro.informacoes_pessoais.cpf
-                let fone = usuario.data.cadastro.informacoes_pessoais.celular
-                let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil
-                let sexo = usuario.data.cadastro.informacoes_pessoais.sexo
-                let contr = ''
-                let email = usuario.data.cadastro.informacoes_pessoais.email
-                let teto = ''
-                let idade_apos = '' //se não informada é o maior entre 60 ou a idade atual +10}
-                let premio_morte = ''
-                let premio_inva = '' 
-                let cob_morte = ''
-                let cob_invalidez = ''
-                let prof = usuario.data.cadastro.informacoes_pessoais.profissao.nome
-                let stringRequest = 'https://previdenciadigital.com.br/contratar-portal/?nome=teste+testando&sexo=masculino&nasc=01-01-2001&cpf=05977358911&contr=80.00&email=tiago%2Bteste%40historymakers.com.br&fone=41999867344&estadocivil=solteiro&teto=1500000&idade_apos=46&premio_morte=30%2C00&premio_inva=50%2C00&cob_morte=100.000%2C00&cob_invalidez=200.000%2C00&prof=Analista+de+sistemas+(informática)'
-                this.requestDPS(stringRequest)
-            } else {
-                var d = new Date()
-                var month = new Array()
-                month[0] = "Jan"
-                month[1] = "Fev"
-                month[2] = "Mar"
-                month[3] = "Abr"
-                month[4] = "Mai"
-                month[5] = "Jun"
-                month[6] = "Jul"
-                month[7] = "Ago"
-                month[8] = "Set"
-                month[9] = "Out"
-                month[10] = "Nov"
-                month[11] = "Dez"
-                var n = month[d.getMonth() + 1]
-                this.contratacao.titulo = 'Confirme a </br> alteração do </br>seu seguro'
-                this.contratacao.msg_inicial = 'Você está alterando o valor do seu seguro.'
-                this.contratacao.msg_vigencia = `A sua nova cobertura estará vigente a partir do mês de ${n}/${d.getFullYear()}.`
-                this.contratacao.msg_novo_valor = `O valor do seu novo prêmio mensal é R$ ${this.premioTelaTotal}.`
-                this.contratacao.valor_novo = parseFloat(this.premioTelaTotal)
-                this.contratacao.valor_novo_Tela = this.premioTelaTotal
-                this.contratacao.valor_antigo = this.premioInicio
-                this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Seu prêmio </br> foi alterado'
-                this.contratacao.finalizacao_msg = 'Prêmio mensal alterado com sucesso.'
-                this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
-                this.contratacao.chave = this.chave
-                this.contratacao.uid =  this.uid
-                this.contratacao.label_button = 'Confirmar novo valor'
-                this.contratacao.tipo = 'Seguro'
-                this.contratacao.detalhes = {
-                    premio_total_solicitado: this.premioTelaTotal,
-                    premio_invalidez_solicitado: this.premioInvalidez,
-                    premio_morte_solicitado: this.premioMorte,                
-                    cobertura_invalidez_solicitado: this.novaCoberturaInvalidez,
-                    cobertura_morte_solicitado: this.novaCoberturaMorte
-                }
-                this.simulador = false
+            var d = new Date()
+            var month = new Array()
+            month[0] = "Jan"
+            month[1] = "Fev"
+            month[2] = "Mar"
+            month[3] = "Abr"
+            month[4] = "Mai"
+            month[5] = "Jun"
+            month[6] = "Jul"
+            month[7] = "Ago"
+            month[8] = "Set"
+            month[9] = "Out"
+            month[10] = "Nov"
+            month[11] = "Dez"
+            var n = month[d.getMonth() + 1]
+            this.contratacao.titulo = 'Confirme a </br> alteração do </br>seu seguro'
+            this.contratacao.msg_inicial = 'Você está alterando o valor do seu seguro.'
+            this.contratacao.msg_vigencia = `A sua nova cobertura estará vigente a partir do mês de ${n}/${d.getFullYear()}.`
+            this.contratacao.msg_novo_valor = `O valor do seu novo prêmio mensal é R$ ${this.premioTelaTotal}.`
+            this.contratacao.valor_novo = parseFloat(this.premioTelaTotal)
+            this.contratacao.valor_novo_Tela = this.premioTelaTotal
+            this.contratacao.valor_antigo = this.premioInicio
+            this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Seu prêmio </br> foi alterado'
+            this.contratacao.finalizacao_msg = 'Prêmio mensal alterado com sucesso.'
+            this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
+            this.contratacao.chave = this.chave
+            this.contratacao.uid =  this.uid
+            this.contratacao.label_button = 'Confirma novo valor'
+            this.contratacao.tipo = 'Seguro'
+            this.contratacao.detalhes = {
+                premio_total_solicitado: this.premioTelaTotal,
+                premio_invalidez_solicitado: this.premioInvalidez,
+                premio_morte_solicitado: this.premioMorte,                
+                cobertura_invalidez_solicitado: this.novaCoberturaInvalidez,
+                cobertura_morte_solicitado: this.novaCoberturaMorte
             }
+            this.simulador = false            
         },
-        requestDPS(string) {
-            window.location.href = string
+        preencherDPS(){
+            let usuario = JSON.parse(sessionStorage.participante)
+            let nome = usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toLowerCase()
+            let sexo = usuario.data.cadastro.informacoes_pessoais.sexo.toLowerCase()
+            let nasc = usuario.data.cadastro.informacoes_pessoais.nascimento.replace('/','-').replace('/','-')
+            let cpf = usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-','')
+            let contr = (parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)).toFixed(2)
+            let email = usuario.data.cadastro.informacoes_pessoais.email.replace('@','%40')
+            let fone = usuario.data.cadastro.informacoes_pessoais.celular.replace(/ /gi,'').replace(/\+/gi,'').replace(/-/gi,'').replace('(','').replace(')','')
+            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toLowerCase()
+            let teto = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
+            //let idade_apos = '' //se não informada é o maior entre 60 ou a idade atual +10}
+            let premio_morte = this.premioMorte.replace('.','%2c')
+            let premio_inva = this.premioInvalidez.replace('.','%2c') 
+            let cob_morte = this.novaCoberturaMorte
+            let cob_invalidez = this.novaCoberturaInvalidez
+            let prof = usuario.data.cadastro.informacoes_pessoais.profissao.nome.replace(/ /gi,'+').toLowerCase()           
+            let stringRequest = `https://previdenciadigital.com.br/contratar-portal/?nome=${nome}&sexo=${sexo}&nasc=${nasc}&cpf=${cpf}&contr=${contr}&email=${email}&fone=${fone}&estadocivil=${estadocivil}&teto=${teto}&premio_morte=${premio_morte}&premio_inva=${premio_inva}&cob_morte=${cob_morte}&cob_invalidez=${cob_invalidez}&prof=${prof}`
+            this.requestDPS(stringRequest)
+        },
+        requestDPS(string) {   
+            this.$refs.ModalDPS.style.display = "block"         
+            this.stringRequest = string
+        },
+        fecharModalDPS(){
+            this.$refs.ModalDPS.style.display = "none"
         }
     },
 }
