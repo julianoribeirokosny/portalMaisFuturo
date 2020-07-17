@@ -2446,6 +2446,9 @@ p.p_valor_simulado__se {
 .div_btn_contratar:hover {
     background-color: rgb(49, 129, 182);
 }
+.div_btn_contratar:active {    
+    background-color: rgb(69, 151, 206);
+}
 
 .div_btn_voltar {
     height: 40px;
