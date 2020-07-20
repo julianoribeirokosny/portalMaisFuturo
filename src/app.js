@@ -86,36 +86,24 @@ function mostraTelaInstalacaoIOS() {
   $('#page-acesso-browser').hide()
 }
 
-
-if (pageReset) { //limpa o cache antes de continuar
-  localStorage.isPwaInstalled = ""
+// Register the Service Worker that enables offline.
+if ('serviceWorker' in navigator) {
+  // Use the window load event to keep the page load performant
+  $(window).on('load', () => {
+    window.navigator.serviceWorker.register('/workbox-sw.js').then(() => {
+      if (pageReset) { //reseta o App para ser reinstalado!
+        resetaAppInfo().then(() => {
+          montaApp()
+        })
+      } else {
+        resetaCache().then(() => {
+          montaApp()
+        })
+      }
+      
+    })
+  });
 }
-//PROVISORIO - SEMPRE RESET AO ENTRAR
-let p1 = new Promise((resolve) => {
-  //limpa o cache
-  self.caches.keys().then(keys => { 
-    keys.forEach(key => {
-      self.caches.delete(key)  
-      console.log(key)
-    }) 
-    resolve(true)
-  })
-})
-let p2 = new Promise((resolve) => {
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    for(let registration of registrations) {  
-      console.log(registration)
-      registration.unregister();
-    }
-    resolve(true)
-  });  
-})
-Promise.all([p1, p2]).then(() => {
-  montaApp()
-})
-/*   PROVISORIO - SEMPRE RESET AO ENTRAR} else {
-  montaApp()
-}*/
 
 
 function montaApp() {
@@ -231,15 +219,7 @@ function montaApp() {
       }
   
     });
-  
-    // Register the Service Worker that enables offline.
-    if ('serviceWorker' in navigator) {
-      // Use the window load event to keep the page load performant
-      $(window).on('load', () => {
-        window.navigator.serviceWorker.register('/workbox-sw.js');
-      });
-    }
-  
+
     // Initialize Google Analytics.
     import(/* webpackPrefetch: true */ 'universal-ga').then((analytics) => {
       analytics.initialize('UA-25993200-10');
@@ -252,4 +232,60 @@ function montaApp() {
  
 }
 
+function resetaAppInfo() {
+  //limpa todos os storages
+  localStorage.clear();
+  sessionStorage.clear()
+  //limpa cookies se houver
+  var cookies = document.cookie;
+  for (var i = 0; i < cookies.split(";").length; ++i)
+  {
+      var myCookie = cookies[i];
+      if (myCookie !== undefined) {
+        var pos = myCookie.indexOf("=");
+        var name = pos > -1 ? myCookie.substr(0, pos) : myCookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";  
+      }
+  }  
 
+  return navigator.serviceWorker.getRegistrations()
+  .then( (registrations) => { 
+    for(let registration of registrations) { 
+      registration.unregister()
+      .then(() => { 
+        return self.clients ? self.clients.matchAll() : null
+      }).then((clients) => { 
+        if (clients) {
+          clients.forEach(client => { 
+            if (client.url && "navigate" in client){ 
+              client.navigate(client.url) 
+            } 
+          })   
+        }
+      }) 
+    }
+  }); 
+}
+
+function resetaCache() {
+  //PROVISORIO - SEMPRE RESET AO ENTRAR
+  let p1 = new Promise((resolve) => {
+    //limpa o cache
+    self.caches.keys().then(keys => { 
+      keys.forEach(key => {
+        self.caches.delete(key)  
+        console.log(key)
+      }) 
+      resolve(true)
+    })
+  })
+  let p2 = new Promise((resolve) => {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for(let registration of registrations) {  
+        registration.unregister();
+      }
+      resolve(true)
+    });  
+  })
+  return Promise.all([p1, p2])
+}

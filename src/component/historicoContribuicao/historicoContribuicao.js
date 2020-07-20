@@ -47,8 +47,19 @@ export default {
             page(`/${sessionStorage.ultimaPagina}`)
         },
         extrato() {
+            //comportamento diferente para IOS -> Safari -> Iphone
+            var windowRef
+            let isIOS = localStorage.isIos==="true"
+            let isMac = localStorage.isMac==="true"
             const extratoShow = (url) => {
-                window.open(url, '_blank');
+                if (isIOS || isMac) {
+                    windowRef.location = url
+                } else {
+                    window.open(url, '_blank');
+                }
+            }
+            if (isIOS || isMac) {
+                windowRef = window.open();
             }
             this.firebaseHelper.downloadStorageFile(`gs://portalmaisfuturo-teste.appspot.com/login/${this.uid}/${this.chave}/extratoParticipante.pdf`, extratoShow)
         }, 

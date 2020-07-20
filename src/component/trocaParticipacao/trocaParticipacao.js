@@ -48,7 +48,7 @@ export default {
                                 }
                                 this.listaChaves.push(objeto)
                             }
-                            this.firebaseHelper.downloadStorageFile(stringURL,avatarStorage)
+                            this.firebaseHelper.downloadStorageFile(stringURL,avatarStorage)                            
                         })
                     }
                 })

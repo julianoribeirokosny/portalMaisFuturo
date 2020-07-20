@@ -1508,12 +1508,12 @@ export default class FirebaseHelper {
     return Object.keys(ret).length > 0 ? ret : null
   }
 
-  solicitaDadosSinqia(chave, dadosCadastro, competencia, uid) {
+  solicitaDadosSinqia(chave, dadosCadastro, competencia, uid, forceRequest) {
     let ref = this.database.ref(`usuarios/${chave}/integracoes/sinqia/api/request`)
     ref.once('value').then((request) => {
       let req = request.val()
-      // só vai atualizar novamente a partir de 5 horas da anterior
-      if (!req || !req.data_request || utils.diffDatasEmHoras(req.data_request, new Date()) > 5) {
+      // só vai atualizar novamente a partir de 5 horas da anterior ou se for outra particpação
+      if (forceRequest || !req || !req.data_request || utils.diffDatasEmHoras(req.data_request, new Date()) > 5) {
         let cpf = dadosCadastro.informacoes_pessoais.cpf.replace('.','').replace('-','').replace('.','')
         let mesCompetencia = Number(competencia.substring(0,2))
         let datacompetencia = utils.dateFormat(new Date(competencia.substring(3,7), mesCompetencia, 0), false, false, true)
@@ -1635,10 +1635,8 @@ export default class FirebaseHelper {
       if (callback) {
         callback(url)
       }
-    }).catch(function(error) {
-      if (callback) {
+    }).catch((error) => {
         callback(null)
-      }      
     })
   }
 

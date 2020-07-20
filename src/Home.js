@@ -73,6 +73,13 @@ export default class Home {
             sessionStorage.dataUltimoLogin = new Date()
         }
         
+        let chaveAnterior = this.chave 
+
+        //caso a seleção da chave tenha falhado, busca a chave principal
+        if (!sessionStorage.chave || sessionStorage.chave === '') {
+            sessionStorage.chave = await this.firebaseHelper.getUsuarioChavePrincipal(this.auth.currentUser.uid)
+        }
+  
         this.chave = sessionStorage.chave
         
         if (this.chave === null || this.chave === '') {
@@ -91,7 +98,7 @@ export default class Home {
         let contratacaoSeg = dadosParticipante.contratacaoSeg
 
         //grava campo solicitação dados da API da Sinqia - atualização em backend asyncrono
-        firebaseHelper.solicitaDadosSinqia(this.chave, dadosParticipante.data.cadastro, data_Home.competencia, this.auth.currentUser.uid)
+        firebaseHelper.solicitaDadosSinqia(this.chave, dadosParticipante.data.cadastro, data_Home.competencia, this.auth.currentUser.uid, chaveAnterior !== this.chave)
 
         if (data_Home === null) {
             //zera a session para tentar carregar em próximas vezes

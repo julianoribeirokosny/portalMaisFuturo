@@ -263,7 +263,7 @@ export default class Auth {
     }
   }
 
-  async validaVersaoApp() {
+  async validaVersaoApp() { 
     //valida se há nova versão do App e limpa o cache  
     console.log('==> localStorage.versao', localStorage.versao)
     let versao = await this.firebaseHelper.getVersao()

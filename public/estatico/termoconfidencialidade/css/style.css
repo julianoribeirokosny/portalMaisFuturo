@@ -17,14 +17,18 @@ p {
 }
 h1{
 	font-family:'Objectivity Medium';
-	margin-top: 15px;
+  margin-top: 15px;
+  font-size: 35px;
+  line-height: 38px;
 }
 h2{
 	padding-top:10px;
 	background-color:#99B2FF;
 	color: #FFF;
 	height:35px;
-	text-align:left;
+  text-align:left;
+  font-size: 35px;
+  padding-top: 35px;
 }
 
 a {
@@ -50,7 +54,8 @@ h6 {
 .painel-branco{
 	background-color:#FFFFFF;
 	text-align:left;
-	font-size:15px;
+  font-size:10px;
+  line-height: 12px;
 }
 
  div.op1 {
@@ -63,7 +68,8 @@ h6 {
 div.op2 {
 	width: 18%;
 	display: inline-block;
-	margin-right: 0vw;
+  margin-right: 0vw;
+  padding-right: 15px;
 	float:right;
 	text-align:right!important;
 }

@@ -1783,7 +1783,7 @@ _dialog_overlay {
 }
 
 .div-contribiucao-dot {
-    width: 10px;
+    min-width: 10px;
     height: 27px;
     display: inline-block;
     margin-right: 2px;
