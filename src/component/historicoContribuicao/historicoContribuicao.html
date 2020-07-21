@@ -23,7 +23,7 @@
          <div class="TableImg"><img v-bind:src="img_check" width="14" height="10" alt=""/></div>
       </template>
       <template v-else>
-         <div class="TableImg" style="cursor: pointer;" @click="emitirBoleto(item)">
+         <div class="TableImg" style="cursor: pointer;" @click="selecionarBoleto(item)">
             <img v-bind:src="img_boleto" width="30" height="20" alt="Boleto"/>            
          </div>
       </template>
@@ -40,12 +40,12 @@
       </div>   
    </div>
 
-   <!-- Boleto Modal -->
+   <!--Boleto Modal-->
    <div id="boletoModal" ref="boletoModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
          <div style="padding: 5px;">
-            <span class="close" @click="closeModal">&times;</span>   
+            <span class="close" @click="closeModal('boletoModal')">&times;</span>   
             <div class="div_titulo_card">
                Segunda via 
                <br>
@@ -62,5 +62,42 @@
          </div>
          <div class="mdl-shadow--2dp div_btn_contratar" @click="copiarCodigoBarras">Copiar código de barras</div>   
       </div>    
-   </div>   
+   </div>
+   
+   <!--Vencimento Modal-->
+   <div id="vencimentoModal" ref="vencimentoModal" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+         <div style="padding: 5px;">
+            <span class="close" @click="closeModal('vencimentoModal')">&times;</span>   
+            <div class="div_titulo_card">
+               Segunda via 
+               <br>
+               de Boleto
+            </div>
+         </div>
+         <br>
+         <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>           
+               <span class="Span_Label_v2">Competência</span><br>
+               <span class="Span_Text_v2">{{ cobranca.dataBase }}</span>
+            </div>
+         </div>         
+         <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>           
+               <span class="Span_Label_v2">Valor R$</span><br>
+               <span class="Span_Text_v2">{{ cobranca.valor }}</span>
+            </div>
+         </div>
+         <br>
+         <div class="mdl-card-container div_vSelect_cadastro div-container">                     
+            <span class="Span_Label_vSelect_v2">Data de vencimento</span><br>
+            <v-select :searchable="false" v-model="vencimento" :options="datasValidade"></v-select>        
+         </div>
+         <br>
+         <div class="mdl-shadow--2dp div_btn_contratar" @click="emitirBoleto" ref="prosseguir" style="pointer-events:none; opacity:0.6;">
+            Prosseguir
+         </div>   
+      </div>    
+   </div>
 </div>    
