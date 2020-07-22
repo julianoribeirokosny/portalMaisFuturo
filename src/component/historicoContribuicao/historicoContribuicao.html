@@ -1,11 +1,11 @@
-<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
+<div name="histcontrib" class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing" style="margin: auto;">
     <!--Historico de Contribuicao-->        
    <div class="mdl-card__supporting-text mdl-card-container div-container gridTitle" style="margin-top: 20px;">
       <div class="mdl-card__supporting-text mdl-card-container div-container div_titulo_card" v-html="titulo"></div>  
       <div class="DivExtratoImg" style="text-align: center;vertical-align: middle;">
          <div style="justify-content: center; align-items: center; text-align: center; " @click="extrato()">
             <img v-bind:src="icon_extrato_contribuicoes" width="60" height="60" style="cursor:pointer;">
-            <span class="TableHeader" style="color:#033166;font-weight: 500; font-size:12px; line-height: 15px;">Download<br>Extrato</span>
+            <span class="TableHeader" style="color:#033166;font-weight: 500; font-size:12px; line-height: 15px;">Download<br>Extrato!</span>
          </div>
          <!--<img class="ExtratoImg" v-bind:src="img_download_historico" alt="download" @click="downloadHistorico"/>            -->
       </div>    
@@ -23,7 +23,7 @@
          <div class="TableImg"><img v-bind:src="img_check" width="14" height="10" alt=""/></div>
       </template>
       <template v-else>
-         <div class="TableImg" style="cursor: pointer;" @click="showModal">
+         <div class="TableImg" style="cursor: pointer;" @click="emitirBoleto(item)">
             <img v-bind:src="img_boleto" width="30" height="20" alt="Boleto"/>            
          </div>
       </template>
@@ -34,14 +34,27 @@
       </div>   
    </div>
 
-   <!-- The Modal -->
-   <div id="myModal" ref="myModal" class="modal" @click="closeModal">
+   <!-- Boleto Modal -->
+   <div id="boletoModal" ref="boletoModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
-         <span class="close" @click="closeModal">&times;</span>
-         <h3 style="margin: 12px 0;">Legal!!!</h3>
-         <p>Você esta acessando nosso novo portal em versão beta.</p>
-         <p>No momento seu boleto não está disponível.</p>
-      </div>   
+         <div style="padding: 5px;">
+            <span class="close" @click="closeModal">&times;</span>   
+            <div class="div_titulo_card">
+               Segunda via 
+               <br>
+               de Boleto
+            </div>
+         </div>
+         <br>
+         <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>           
+               <span class="Span_Label_v2">Código de barras</span><br>
+               <span class="Span_Text_v2">{{ response }}</span>
+               <input type="hidden" id="codigoBarras" :value="response">         
+            </div>
+         </div>
+         <div class="mdl-shadow--2dp div_btn_contratar" @click="copiarCodigoBarras">Copiar código de barras</div>   
+      </div>    
    </div>   
 </div>    

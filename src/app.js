@@ -204,6 +204,7 @@ function montaApp() {
     
     // Load the app.
     $(document).ready(() => {
+      sessionStorage.nomeProjeto = firebaseConfig.result.projectId
       console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall)
       if (localStorage.isMac ==="true" || ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall)) {
         const auth = new Auth();

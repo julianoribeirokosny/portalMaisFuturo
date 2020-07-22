@@ -41,7 +41,8 @@
   "gcm_sender_id": "103953800507",
   "permissions": [
     "https://www.google.com/",
-    "https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/"
+    "https://us-central1-portalmaisfuturo-teste.cloudfunctions.net/",
+    "https://us-central1-portal-mais-futuro.cloudfunctions.net/"
   ]
 }
 

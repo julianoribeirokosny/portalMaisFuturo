@@ -52,6 +52,7 @@ export default class Auth {
     this.confirmVoltarButton = $('.fp-confirm-voltar')
     this.avisoValidacaoButton = $('.fp-aviso-validacao')
     this.confirmDadosButton2 = $('.fp-confirm-dados2')   
+    this.erroSair = $('.fp-erro-sair')
 
     // Configure Firebase UI.
     this.configureFirebaseUi();
@@ -67,6 +68,7 @@ export default class Auth {
       }
     });
     this.signOutButton.click(() => this.firebaseHelper.signOut());
+    this.erroSair.click(() => this.firebaseHelper.signOut())  
     this.deleteAccountButton.click(() => this.deleteAccount());
     this.updateAll.click(() => this.updateAllAccounts());
     this.auth.onAuthStateChanged((user) => this.onAuthStateChanged(user));
@@ -196,7 +198,7 @@ export default class Auth {
           sessionStorage.chave = await this.firebaseHelper.getUsuarioChavePrincipal(user.uid)
       }
       let photoUrl = user.photoURL ? user.photoURL : '/images/silhouette.jpg'
-      let stringURL = `gs://portalmaisfuturo-teste.appspot.com/usuarios/${sessionStorage.chave}/avatar.jpg`
+      let stringURL = `gs://${sessionStorage.nomeProjeto}.appspot.com/usuarios/${sessionStorage.chave}/avatar.jpg`
       const avatarStorage = (url) => {
           photoUrl = url ? url :  photoUrl
           this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(photoUrl)}")`)

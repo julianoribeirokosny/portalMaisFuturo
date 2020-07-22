@@ -34,7 +34,7 @@ export default {
                     if (chaves) {
                         let arrayChaves = Object.entries(chaves)
                         arrayChaves.forEach(item => {
-                            let stringURL = `gs://portalmaisfuturo-teste.appspot.com/usuarios/${item[0]}/avatar.jpg`
+                            let stringURL = `gs://${sessionStorage.nomeProjeto}.appspot.com/usuarios/${item[0]}/avatar.jpg`
                             let fotoParticipante = sessionStorage.nome && sessionStorage.nome !== "" && sessionStorage.nome === item[1].nome ? foto : "../images/silhouette.jpg"
                             const avatarStorage = (url) => {
                                 fotoParticipante = url ? url :  fotoParticipante

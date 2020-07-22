@@ -17,7 +17,6 @@ exports.default = functions.database.ref('login/{uid}/emails/{dataEnvio}')
     }   
 
     let dadosEmail = change.after.val()
-    console.log('====> dadosEmail', dadosEmail)
     if (!dadosEmail.emailDestinatario || !dadosEmail.assunto || (!dadosEmail.corpo && !dadosEmail.corpoHtml)) {
         console.log('#solicitaEnvioEmail - há campos faltando para montagem do email. Nenhum email enviado.')
         return false
@@ -30,9 +29,7 @@ exports.default = functions.database.ref('login/{uid}/emails/{dataEnvio}')
         let fs = require('fs');
         corpoHtml = fs.readFileSync('./html/'+dadosEmail.corpoHtml, 'utf8') 
         corpoHtml = corpoHtml.replace('{{linkWeb}}', dadosEmail.linkWeb)
-        console.log('dadosEmail.nome',dadosEmail.nome)
         corpoHtml = corpoHtml.replace('{{nome}}', dadosEmail.nome)
-        console.log('===> corpoHtml', corpoHtml)
     } else {
         corpoHtml = dadosEmail.corpoHtml
     }
@@ -40,7 +37,7 @@ exports.default = functions.database.ref('login/{uid}/emails/{dataEnvio}')
     return email.enviarEmail(dadosEmail.assunto, dadosEmail.emailDestinatario, dadosEmail.corpo, corpoHtml)
     .then((ret) => {
         if (!ret) {
-            console.log('#solicitaEnvioEmail - erro no envio de email para usuário: '+context.params.uid, '. Veja mensagens anteriores.')
+            console.error('#solicitaEnvioEmail - erro no envio de email para usuário: '+context.params.uid, '. Veja mensagens anteriores.')
         }
         return ret
     }).catch((e) => {

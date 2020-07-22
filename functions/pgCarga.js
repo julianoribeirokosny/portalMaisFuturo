@@ -177,7 +177,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     }
     let capitalMorte, capitalInvalidez
     let valorRendaProjetada, valorReservaProjetada
-    console.log('#pgCarga - iniciando forEach', retDadosPG)
+    console.log('#pgCarga - iniciando forEach')
     retDadosPG.forEach((rowDados) => {
       periodoBase = utils.dateFormat(rowDados.datacomp, false, true, false)
       periodoBase = periodoBase.substring(4,6)+'/'+periodoBase.substring(0,4)
@@ -585,7 +585,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
       //ref = admin.database().ref('usuarios')
       //return ref.remove() 
     //}).then(() => {      
-      console.log('#pgCarga - finalizando carga - salvando usuários: ', JSON.stringify(usuarios))
+      console.log('#pgCarga - finalizando carga - salvando usuários.')
       ref = admin.database().ref(`usuarios`)
       //primeiro salva usuário bloqueados pelo processamento
       ref.update(usuariosBloquear)
@@ -719,7 +719,7 @@ function incluiUsuarioHistContribJSON (usuarios, chave, listaUsuarioContrib, ano
   dataJson = {
     anoMes: anoMes,
     valor: valorTotalContrib,
-    linkBoleto: pago ? '' : 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/usuarios%2F9999-0002%2Fboleto_201902.pdf?alt=media&token=9bc86daf-40c3-4384-96e7-d1c1e4dd6d80',
+    linkBoleto: '', //pago ? '' : 'https://firebasestorage.googleapis.com/v0/b/portalmaisfuturo-teste.appspot.com/o/usuarios%2F9999-0002%2Fboleto_201902.pdf?alt=media&token=9bc86daf-40c3-4384-96e7-d1c1e4dd6d80',
     pago: pago
   }
   let historicoMesJson 
@@ -848,6 +848,7 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
     valorReservaAposentadoria
   ]
 
+  let hoje = false
   for (let linha in aIdades) {
     let dif = aIdades[linha] - difMesesDaAdesaoHoje 
     if (linha > 0) {
@@ -856,7 +857,9 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
-          retListaMeses[linha] = 'Hoje'        
+          console.log('=======> hoje?', hoje)
+          retListaMeses[linha] = !hoje ? 'Hoje' : ''
+          hoje = true
           retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
           if (amplitude==='até hoje') {
             break 
@@ -962,7 +965,6 @@ async function getConnection () {
 
 async function buscaDadosPG(select) {
   return getConnection().then( async (pgConn) => {
-    console.log('#buscaDadosPG - Banco conectado.')
     let result = await pgConn.query(select)
     let ret
     if (!result) {

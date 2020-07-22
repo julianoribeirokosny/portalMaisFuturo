@@ -332,7 +332,8 @@ async function uploadFile(uid, chave, fileName, content) {
         console.log('bucket.upload...', chave+'/'+fileName)
         //const file = bucket.file(chave+'/'+fileName);
         //return file.getSignedUrl({action: 'read',expires: '03-09-2491'})
-        return `gs://portalmaisfuturo-teste.appspot.com/login/${uid}/${chave}/${fileName}`
+        let nomeProjeto = process.env.GCLOUD_PROJECT
+        return `gs://${nomeProjeto}.appspot.com/login/${uid}/${chave}/${fileName}`
     }).catch((e) => {
         console.error(`Erro ao salvar arquivo de ${caminho_temp+'/'+fileName} para ${chave+'/'+fileName}.`,e);        
         return null

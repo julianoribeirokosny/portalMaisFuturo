@@ -326,7 +326,7 @@ export default {
                 this.coberturaTelaMorte = this.valor_to_string_formatado(this.coberturaMorte)
                 this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
-                this.premioInicio = parseInt(this.premioInvalidez) + parseInt(this.premioMorte)      
+                this.premioInicio = dataSimulador.valorAtual      
             }                  
         },
         salvarProfissao() {

@@ -52,9 +52,10 @@ export default {
         toggledisplayIcon() {
             this.displayIcon = true
         },
-        clickPage(link) {
+        clickPage(link, anchor) {
             sessionStorage.ultimaPagina = 'servicos'
-            page(`/${link}`)
+            anchor = anchor ? anchor : ''
+            page(`/${link}#${anchor}`)
         }
     },
 }

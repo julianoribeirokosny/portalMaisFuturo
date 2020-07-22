@@ -13,26 +13,30 @@ const mailTransport = nodemailer.createTransport({
     },
 });*/
 
-const account = 'portalmaisfuturo@gmail.com'; //functions.config().gmail.email;
-const pass = 'maisFuturo90()12!@'; //functions.config().gmail.password;
+const functions = require('firebase-functions');
+
+const config = functions.config().portal
+const user = config.smtp.auth.user
+const pass = config.smtp.auth.pass
+const host = config.smtp.host
+const port = config.smtp.port
+const requireTLS = config.smtp.requiretls
 const mailTransport = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
+    host: host, // email-smtp.us-east-1.amazonaws.com
+    port: port, //587
     secure: false,
-    requireTLS: true,
-    //service: 'gmail',
+    requireTLS: requireTLS,
     auth: {
-        user: account,
-        pass: pass,
+        user: user,
+        pass: pass
     },
 });
-
 
 module.exports =  {
 
     enviarEmail : function (assunto, destinatarios, corpo, corpoHtml) {
         console.log('==> enviando email...')
-        let remetente = 'naoresponda@maisfuturo.com.br'
+        let remetente = 'portalmaisfuturo@previdenciadigital.com.br'
         let email = {
             //from: remetente,
             sender: remetente,
@@ -42,7 +46,6 @@ module.exports =  {
             html: corpoHtml
         };
 
-        console.log('====> email', email)
         return mailTransport.sendMail(email).then((info) => {
             console.log('#email - Mensagem %s enviada para %s: %s', info.messageId, email, info.response);
             return true;

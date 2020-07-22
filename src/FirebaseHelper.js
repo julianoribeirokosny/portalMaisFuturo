@@ -57,6 +57,7 @@ export default class FirebaseHelper {
     this.database = firebase.database();
     this.storage = firebase.storage();
     this.auth = firebase.auth();
+    this.project = firebase.name
 
     // Firebase references that are listened to.
     this.firebaseRefs = [];
@@ -989,7 +990,7 @@ export default class FirebaseHelper {
       */
 
       //grava e-mail a ser enviado
-      let projetoId = 'portalmaisfuturo-teste' //functions.config().projetoid
+      let projetoId =  sessionStorage.nomeProjeto
       let linkWeb = `https://us-central1-${projetoId}.cloudfunctions.net/validaEmailLinkKey?k=${idToken}`
       ref = this.database.ref(`login/${usr.uid}/emails`)
       let jsonEmail = {}
@@ -1078,7 +1079,7 @@ export default class FirebaseHelper {
   
     let p2 = new Promise((resolve) => {
       if (celularBusca !== '') {
-        let ref = this.database.ref('settings/primeiro_login/lista_celular_valido')
+        let ref = this.database.ref('settings/primeiro_login/lista_email_valido') //retirado por LFU lista_celular_valido')
         return ref.orderByChild('celular').equalTo(celularBusca).once('value')
         .then((snapshot) => {
           if (snapshot.val()===null) {
@@ -1133,7 +1134,7 @@ export default class FirebaseHelper {
   }
 
   async getUsuarioListaParticipacoesDados(cpf) {
-    let ref = this.database.ref('settings/primeiro_login/lista_dados_valido')
+    let ref = this.database.ref('settings/primeiro_login/lista_email_valido') //alterado por LFU lista_dados_valido')
     return ref.orderByChild('cpf').equalTo(cpf).once('value')
     .then((snapshot) => {
       if (snapshot.val()===null) {
@@ -1146,7 +1147,7 @@ export default class FirebaseHelper {
         snapshot.forEach((snap) => {
           if (emailCadastro === '') { //pega somente o primeiro
             nome = snap.child('nomeParticipantePrincipal').val()
-            emailCadastro = snap.child('emailCadastro').val()
+            emailCadastro = snap.child('email').val()
           }
           listaChaves[snap.child('chave').val()] = {
             nome: snap.child('nome').val(),
@@ -1290,6 +1291,7 @@ export default class FirebaseHelper {
       let maximoSemSDPSMorte = 0
       let maximoSemDPSInvalidez = 0
       let profissao = false
+      let valorAtual = (usuario.data.valores.contribRisco === undefined) ? 0 : usuario.data.valores.contribRisco
       if(usuario.data.cadastro.informacoes_pessoais.profissao) {
         maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
         maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
@@ -1309,7 +1311,8 @@ export default class FirebaseHelper {
         maximoSemDPSInvalidez = 1000  
         stepMorte = 10
         stepInvalidez = 10
-        profissao = false
+        profissao = false,
+        valorAtual = 0
       } 
 
       let dadosSimuladorSeguro = {
@@ -1325,12 +1328,13 @@ export default class FirebaseHelper {
           stepInvalidez: stepInvalidez,
           fatorMorte: fator_idade_seguro.fator_morte,
           fatorInvalidez: fator_idade_seguro.fator_invalidez,
-          coberturaInvalidez: coberturaInvalidez === 0 ? minimoInvalidez : Number(coberturaInvalidez.toFixed(0)),
-          coberturaMorte: coberturaMorte === 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
+          coberturaInvalidez: coberturaInvalidez , //=== 0 ? minimoInvalidez : Number(coberturaInvalidez.toFixed(0)),
+          coberturaMorte: coberturaMorte , //=== 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
           chave: chave,
           uid: uid,          
           bloqueio: idade >= 15 ? false : true,
-          profissao: profissao
+          profissao: profissao,
+          valorAtual: valorAtual
       }
       return dadosSimuladorSeguro      
   }
@@ -1639,5 +1643,4 @@ export default class FirebaseHelper {
         callback(null)
     })
   }
-
 };
