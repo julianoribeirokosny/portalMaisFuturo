@@ -198,6 +198,7 @@ export default {
             })
         },
         processaDadosContratados(data) {            
+            debugger
             if (data) {
                 this.simulador = false
                 this.rendaSolicitada = true

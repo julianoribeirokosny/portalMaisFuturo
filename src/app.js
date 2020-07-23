@@ -95,8 +95,9 @@ if ('serviceWorker' in navigator) {
         resetaAppInfo().then(() => {
           montaApp()
         })
-      } else {
+      } else if (!sessionStorage.cacheReset || sessionStorage.cacheReset === "") {
         resetaCache().then(() => {
+          sessionStorage.cacheReset = "true"
           montaApp()
         })
       }
