@@ -31,7 +31,7 @@ export default {
             axiosHeaders: {
                 headers :  {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjZjZmMyMzViZDYxMGZhY2FlYzVlYjBhZGU5NTg5ZGE5NTI4MmRlY2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiSnVsaWFubyBLb3NueSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHallldkhHUHJYb3p0MVNERkw3RUQ4LVN1a0xNTFFpVHpDbUlZbm1kUSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9wcmV2aWRlbmNpYWRpZ2l0YWwtZGV2IiwiYXVkIjoicHJldmlkZW5jaWFkaWdpdGFsLWRldiIsImF1dGhfdGltZSI6MTU5NTM1MjYwMCwidXNlcl9pZCI6Im50eVk4NWNRU0tmcElGOWVsNWNSTkVBTlN4aTEiLCJzdWIiOiJudHlZODVjUVNLZnBJRjllbDVjUk5FQU5TeGkxIiwiaWF0IjoxNTk1MzYzNzY1LCJleHAiOjE1OTUzNjczNjUsImVtYWlsIjoianVsaWFub2tvc255QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTA3MDkwMTE0ODc2MjYwMDY3MjY2Il0sImVtYWlsIjpbImp1bGlhbm9rb3NueUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.Sj2Ir7qC_hkzWL2sJWH-kmP6BO5bdqpFd2deR2v5y7m85aBa0_jTnrTOw72_AHKiQLd3yb34HG9PCtbmkfT5C8nR2vxTvTLEq5qulNzLaBbxGDfIf6A7-vSasFDYO6PMIaMmTXPIIBYRb1RIVBPyqa9pJ-mIiHKfSMTeF0Bdc_2AIi5Q5Fq1LibdYML0ywklYOLWeE7bj7iHvFHex0Lkrk9xzuDuuqoHs_Ss-yC0jahN3G7YIB_v6ey9ZFUxGPAbI4YAfmKXVMWcz0CWncp8zi4A7oGpy4XrhDjcu1okWgjnQD4LZCfeiQ1f4fEpWQTy9xLdpc5rBsSpb55sC_yZrw'
+                    'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjZjZmMyMzViZDYxMGZhY2FlYzVlYjBhZGU5NTg5ZGE5NTI4MmRlY2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiSnVsaWFubyBLb3NueSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHallldkhHUHJYb3p0MVNERkw3RUQ4LVN1a0xNTFFpVHpDbUlZbm1kUSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9wcmV2aWRlbmNpYWRpZ2l0YWwtZGV2IiwiYXVkIjoicHJldmlkZW5jaWFkaWdpdGFsLWRldiIsImF1dGhfdGltZSI6MTU5NTQ0NzkwMSwidXNlcl9pZCI6Im50eVk4NWNRU0tmcElGOWVsNWNSTkVBTlN4aTEiLCJzdWIiOiJudHlZODVjUVNLZnBJRjllbDVjUk5FQU5TeGkxIiwiaWF0IjoxNTk1NDUxODk3LCJleHAiOjE1OTU0NTU0OTcsImVtYWlsIjoianVsaWFub2tvc255QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTA3MDkwMTE0ODc2MjYwMDY3MjY2Il0sImVtYWlsIjpbImp1bGlhbm9rb3NueUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.Uigz3inXMjWpox6Eq_wMjURLmDuv3rkmB4b0OK_idV28uoUQ2IaD3Xn8XBP4bvI-MzWQnH5u_-c7-OxDkejWNrKAxugGy2uFZO74gE6-oB64dQ1PzJCMKZnc0nhaD5Zfi7kHhjTN5tluZRR7ACi8jUi1YzdA4C5MUwlEvDXlK2jJZQPEFo4BbrrpfZkAyKSulqvDPTHvvQJAsN7Jbkqsmq3giwj9NgA0K0FSZM2uZbv3aeXsF0i9Pl4uxi6wESn-K9ws3rQg3y3nq4TJ-SdviC8d0IU4uUKKGKPMpNv9NCXv8t94vnrES_TeaQoVJtVAAK0b_g_2XixtWo13ck-kQQ'
                 }
             },
             axiosBody: {
@@ -40,7 +40,36 @@ export default {
             },
             vencimento: null,
             datasValidade: [],
-            response: null,
+            response: {
+                data: {
+                    _embedded:{
+                        charges:[
+                            {
+                                id: '',
+                                code: 0,
+                                reference: '',
+                                dueDate: '',
+                                link: '', 
+                                checkoutUrl: '',
+                                installmentLink: '',
+                                payNumber: '',
+                                amount: 0,
+                                billetDetails: {
+                                    bankAccount: '', 
+                                    ourNumber: '', 
+                                    barcodeNumber: '', 
+                                    portfolio: '', 
+                                },
+                                _links: {
+                                    self: {
+                                        href: ''
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
             urlCobranca: 'https://us-east1-previdenciadigital-dev.cloudfunctions.net/adi/cobranca',
             cobranca: {
                 'descricao': '', 
@@ -126,19 +155,16 @@ export default {
             }
             this.firebaseHelper.downloadStorageFile(`gs://${sessionStorage.nomeProjeto}.appspot.com/login/${this.uid}/${this.chave}/extratoParticipante.pdf`, extratoShow)
         }, 
-        emitirBoleto(item) {
-            this.firebaseHelper.downloadStorageFile(`gs://${sessionStorage.nomeProjeto}.appspot.com/login/${this.uid}/${this.chave}/extratoParticipante.pdf`, extratoShow)
-        },
         selecionarBoleto(item) {
             let usuario = JSON.parse(sessionStorage.participante)
             this.cobranca.descricao = `CONTRIBUIÇÃO ${item.anoMes}`, 
             this.cobranca.chave = item.chave,
             this.cobranca.dataBase = item.anoMes,
-            this.cobranca.origemCobranca = 'Segunda via boleto',
+            this.cobranca.origemCobranca = 'Segunda via',
             this.cobranca.valor = item.valor,
             this.cobranca.vencimento = this.vencimento,
-            this.cobranca.diasAposVencimento = 60, //configuração
-            this.cobranca.tipoCobranca = 'Boleto',
+            this.cobranca.diasAposVencimento = 29, //configuração
+            this.cobranca.tipoCobranca = 'BOLETO',
             this.cobranca.nome = usuario.data.cadastro.informacoes_pessoais.nome,
             this.cobranca.cpf = usuario.data.cadastro.informacoes_pessoais.cpf,
             this.cobranca.email = usuario.data.cadastro.informacoes_pessoais.email,
@@ -157,7 +183,9 @@ export default {
             axios.post(self.urlCobranca, self.cobranca, self.axiosHeaders)
                 .then(response => {
                     if (response) {
-                        self.response = response.data.ref
+                        console.log('responseAPI',response)
+                        self.response = response
+                        console.log('response.Data._embedded.charges',self.response.data._embedded)
                         self.$refs.boletoModal.style.display = "block"
                         base_spinner.style.display = 'none'
                     }                                    
