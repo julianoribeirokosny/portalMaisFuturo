@@ -26,6 +26,7 @@ export default {
     },    
     data: function() {
         return {
+            dps: false,
             stringRequest: '',
             sliderInvalidezmin: 1,
             sliderInvalidezmax: 10,
@@ -472,11 +473,13 @@ export default {
             this.requestDPS(stringRequest)
         },
         requestDPS(string) {   
-            this.$refs.ModalDPS.style.display = "block"         
+            //this.$refs.ModalDPS.style.display = "block"   
+            this.dps = true      
             this.stringRequest = string
         },
-        fecharModalDPS(){
-            this.$refs.ModalDPS.style.display = "none"
+        fecharDPS(){
+            // this.$refs.ModalDPS.style.display = "none"
+            this.dps = false
         }
     },
 }
