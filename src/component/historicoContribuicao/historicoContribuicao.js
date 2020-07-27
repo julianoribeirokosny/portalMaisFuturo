@@ -6,11 +6,16 @@ import historicoContribuicao from './historicoContribuicao.html';
 import './historicoContribuicao.css';
 import FirebaseHelper from '../../FirebaseHelper'
 
+import firebase from "firebase/app";
+import "firebase/functions";   
+const functions = firebase.functions();
+const apiPrevidenciaDigital = functions.httpsCallable('apiPrevidenciaDigital')
+
 const img_boleto = require('../../../public/images/Boleto.png')
 const img_check = require('../../../public/images/Check.png')
 const img_download_historico = require('../../../public/images/Download_historico.png')
 const icon_extrato_contribuicoes = require('../../../public/images/ExtratoContribuicoes-IconS.png')
-const axios = require('axios')
+
 
 export default {
     template: historicoContribuicao, 
@@ -28,16 +33,6 @@ export default {
             img_check: img_check,
             img_download_historico: img_download_historico,
             icon_extrato_contribuicoes: icon_extrato_contribuicoes,
-            axiosHeaders: {
-                headers :  {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjZjZmMyMzViZDYxMGZhY2FlYzVlYjBhZGU5NTg5ZGE5NTI4MmRlY2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiSnVsaWFubyBLb3NueSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHallldkhHUHJYb3p0MVNERkw3RUQ4LVN1a0xNTFFpVHpDbUlZbm1kUSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9wcmV2aWRlbmNpYWRpZ2l0YWwtZGV2IiwiYXVkIjoicHJldmlkZW5jaWFkaWdpdGFsLWRldiIsImF1dGhfdGltZSI6MTU5NTQ0NzkwMSwidXNlcl9pZCI6Im50eVk4NWNRU0tmcElGOWVsNWNSTkVBTlN4aTEiLCJzdWIiOiJudHlZODVjUVNLZnBJRjllbDVjUk5FQU5TeGkxIiwiaWF0IjoxNTk1NDUxODk3LCJleHAiOjE1OTU0NTU0OTcsImVtYWlsIjoianVsaWFub2tvc255QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTA3MDkwMTE0ODc2MjYwMDY3MjY2Il0sImVtYWlsIjpbImp1bGlhbm9rb3NueUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.Uigz3inXMjWpox6Eq_wMjURLmDuv3rkmB4b0OK_idV28uoUQ2IaD3Xn8XBP4bvI-MzWQnH5u_-c7-OxDkejWNrKAxugGy2uFZO74gE6-oB64dQ1PzJCMKZnc0nhaD5Zfi7kHhjTN5tluZRR7ACi8jUi1YzdA4C5MUwlEvDXlK2jJZQPEFo4BbrrpfZkAyKSulqvDPTHvvQJAsN7Jbkqsmq3giwj9NgA0K0FSZM2uZbv3aeXsF0i9Pl4uxi6wESn-K9ws3rQg3y3nq4TJ-SdviC8d0IU4uUKKGKPMpNv9NCXv8t94vnrES_TeaQoVJtVAAK0b_g_2XixtWo13ck-kQQ'
-                }
-            },
-            axiosBody: {
-                'chave': 'asdfasdf',
-                'valor': 123456
-            },
             vencimento: null,
             datasValidade: [],
             response: {
@@ -180,7 +175,22 @@ export default {
             let base_spinner = document.querySelector('#base_spinner')
             base_spinner.style.display = 'flex'
             self.response = null
-            axios.post(self.urlCobranca, self.cobranca, self.axiosHeaders)
+
+            apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => { 
+                if (!response.sucesso) {
+                    console.log('Deu merda:'+response.erro)
+                } else {
+                    console.log('SUCESSO!!!!')
+                    self.response = response
+                    console.log('response._embedded.charges',self.response._embedded)
+                    self.$refs.boletoModal.style.display = "block"
+                    base_spinner.style.display = 'none'
+                }
+            }).catch((error) => {
+                console.log('ERRO!!!!', error)
+            })
+            
+            /*axios.post(self.urlCobranca, self.cobranca, self.axiosHeaders)
                 .then(response => {
                     if (response) {
                         console.log('responseAPI',response)
@@ -193,7 +203,7 @@ export default {
                     console.log('error',error)
                     base_spinner.style.display = 'none'
                 }
-            )       
+            ) */      
             self.vencimento = null             
         },
         closeModal(modal) {

@@ -1,0 +1,31 @@
+<div class="mdl-card_disclaimer" @click="openModal('boletoModal')">
+    <div class="mdl-card-disclaimer-left">
+        <div class='div_disclaimer'>
+            * Os valores apresentados são apenas estimativas e não garantem nenhum direito antecipado. Saiba mais...
+        </div>                                                            
+    </div>                                                            
+    <div class="mdl-card-disclaimer-right">
+        <i class="material-icons icon-button-disclaimer">arrow_forward</i>                                      
+    </div>                                                            
+</div>  
+
+<div id="disclaimerModal" ref="disclaimerModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div style="padding: 5px;">
+            <span class="close" @click="closeModal('boletoModal')">&times;</span>   
+            <div class="div_titulo_card">
+                Transparência 
+                <br>
+                Mais Futuro
+            </div>
+        </div>
+        <br>
+        <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
+            <div>          
+            Os valores apresentados são apenas estimativas e não garantem nenhum direito antecipado. O direito efetivo dependerá dos dados reais na data da efetiva concessão do benefício de aposentadoria ou resgate. O valor projetado do benefício foi calculado com base no saldo atual acrescido das contribuições e rentabilidade do período até a data da aposentadoria ou resgate, de acordo com a opção de renda ou recebimento. O valor do benefício bruto projetado não considera o desconto de eventuais impostos e taxas administrativas. A aceitação do risco estará sujeita à análise por parte da Sociedade Seguradora parceira. O pagamento da renda por invalidez ou pensão por morte está condicionado às regras da Sociedade Seguradora parceira. Consulte o Regulamento deste Plano de Benefícios para informações sobre reajuste de prêmios e/ou capitais segurados.                                         
+            </div>
+        </div>
+        <div class="mdl-shadow--2dp div_btn_contratar">Ok, entendi!</div>   
+    </div>    
+</div>
