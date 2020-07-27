@@ -3,6 +3,7 @@
   "description": "Server-side micro services for Portal Mais Futuro.",
   "dependencies": {
     "@google-cloud/vision": "^0.12.0",
+    "axios": "^0.19.2",
     "bad-words": "^1.6.5",
     "capitalize-sentence": "^0.1.5",
     "child-process-promise": "^2.2.1",

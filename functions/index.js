@@ -43,3 +43,6 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'buscaDadosSinqi
   exports.buscaDadosSinqia = require('./buscaDadosSinqia').default;
 }
 
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'apiPrevidenciaDigital') {
+  exports.apiPrevidenciaDigital = require('./apiPrevidenciaDigital').default;
+}

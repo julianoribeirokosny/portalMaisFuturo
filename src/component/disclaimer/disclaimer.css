@@ -1,0 +1,41 @@
+
+.mdl-card-disclaimer-left {
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 89%;
+}
+
+.mdl-card-disclaimer-right {
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 10%;
+}
+
+.icon-button-disclaimer 
+{
+    color: #003366;
+    border-radius: 20px;
+    border: 1px darkblue solid;
+}
+
+.div_disclaimer {
+    font-family: 'MaisFuturo-Medium';
+    line-height: 10px;
+    font-size: 9px;
+    font-weight: 200;
+    padding-bottom: 0px !important;
+}
+
+.mdl-card_disclaimer {
+    border-radius: 25px;
+    min-height: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 15px;
+}
+

@@ -90,21 +90,26 @@ function mostraTelaInstalacaoIOS() {
 if ('serviceWorker' in navigator) {
   // Use the window load event to keep the page load performant
   $(window).on('load', () => {
-    window.navigator.serviceWorker.register('/workbox-sw.js').then(() => {
-      if (pageReset) { //reseta o App para ser reinstalado!
-        resetaAppInfo().then(() => {
-          montaApp()
-        })
-      } else {
-        resetaCache().then(() => {
-          montaApp()
-        })
-      }
-      
-    })
+    if (pageReset) { //reseta o App para ser reinstalado!
+      resetaAppInfo().then(() => {
+        registraECarrega()
+      })
+    } else if (!sessionStorage.cacheReset || sessionStorage.cacheReset === "") {
+      resetaCache().then(() => {
+        registraECarrega()
+        sessionStorage.cacheReset = "true"
+      })
+    } else {
+      registraECarrega()
+    }
   });
 }
 
+function registraECarrega() {
+  window.navigator.serviceWorker.register('/workbox-sw.js').then(() => {
+    montaApp()      
+  })
+}
 
 function montaApp() {
  
@@ -249,8 +254,7 @@ function resetaAppInfo() {
       }
   }  
 
-  return navigator.serviceWorker.getRegistrations()
-  .then( (registrations) => { 
+  return navigator.serviceWorker.getRegistrations().then( (registrations) => { 
     for(let registration of registrations) { 
       registration.unregister()
       .then(() => { 
@@ -263,9 +267,17 @@ function resetaAppInfo() {
             } 
           })   
         }
+        return true
       }) 
     }
-  }); 
+  }).then(() => {
+    return navigator.serviceWorker.getRegistration().then((registration) => {
+      if(registration){
+        registration.unregister()
+      }
+    });
+  
+  })
 }
 
 function resetaCache() {
