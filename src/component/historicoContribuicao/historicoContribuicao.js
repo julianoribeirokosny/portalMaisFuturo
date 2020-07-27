@@ -177,17 +177,27 @@ export default {
             self.response = null
 
             apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => { 
-                if (!response.sucesso) {
-                    console.log('Deu merda:'+response.erro)
+                if (!response.data.sucesso) {
+                    console.log('Erro ao chamar boletos:'+response.erro)
+                    base_spinner.style.display = 'none'
+                    /* TODO 
+                    1. chamar método de Log de Erros!
+                    2. Chamar tela geral de erros
+                    */
                 } else {
                     console.log('SUCESSO!!!!')
-                    self.response = response
-                    console.log('response._embedded.charges',self.response._embedded)
+                    self.response = JSON.parse(response.data.response)
+                    console.log('response._embedded.charges',self.response._embedded.charges)
                     self.$refs.boletoModal.style.display = "block"
                     base_spinner.style.display = 'none'
                 }
             }).catch((error) => {
                 console.log('ERRO!!!!', error)
+                    /* TODO 
+                    1. chamar método de Log de Erros!
+                    2. Chamar tela geral de erros
+                    */
+
             })
             
             /*axios.post(self.urlCobranca, self.cobranca, self.axiosHeaders)
