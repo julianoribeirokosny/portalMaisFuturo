@@ -33,42 +33,11 @@ export default {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjZjZmMyMzViZDYxMGZhY2FlYzVlYjBhZGU5NTg5ZGE5NTI4MmRlY2QiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiSnVsaWFubyBLb3NueSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHallldkhHUHJYb3p0MVNERkw3RUQ4LVN1a0xNTFFpVHpDbUlZbm1kUSIsImlzcyI6Imh0dHBzOi8vc2VjdXJldG9rZW4uZ29vZ2xlLmNvbS9wcmV2aWRlbmNpYWRpZ2l0YWwtZGV2IiwiYXVkIjoicHJldmlkZW5jaWFkaWdpdGFsLWRldiIsImF1dGhfdGltZSI6MTU5NTQ0NzkwMSwidXNlcl9pZCI6Im50eVk4NWNRU0tmcElGOWVsNWNSTkVBTlN4aTEiLCJzdWIiOiJudHlZODVjUVNLZnBJRjllbDVjUk5FQU5TeGkxIiwiaWF0IjoxNTk1NDUxODk3LCJleHAiOjE1OTU0NTU0OTcsImVtYWlsIjoianVsaWFub2tvc255QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7Imdvb2dsZS5jb20iOlsiMTA3MDkwMTE0ODc2MjYwMDY3MjY2Il0sImVtYWlsIjpbImp1bGlhbm9rb3NueUBnbWFpbC5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJnb29nbGUuY29tIn19.Uigz3inXMjWpox6Eq_wMjURLmDuv3rkmB4b0OK_idV28uoUQ2IaD3Xn8XBP4bvI-MzWQnH5u_-c7-OxDkejWNrKAxugGy2uFZO74gE6-oB64dQ1PzJCMKZnc0nhaD5Zfi7kHhjTN5tluZRR7ACi8jUi1YzdA4C5MUwlEvDXlK2jJZQPEFo4BbrrpfZkAyKSulqvDPTHvvQJAsN7Jbkqsmq3giwj9NgA0K0FSZM2uZbv3aeXsF0i9Pl4uxi6wESn-K9ws3rQg3y3nq4TJ-SdviC8d0IU4uUKKGKPMpNv9NCXv8t94vnrES_TeaQoVJtVAAK0b_g_2XixtWo13ck-kQQ'
                 }
-            },
-            axiosBody: {
-                'chave': 'asdfasdf',
-                'valor': 123456
-            },
+            },            
             vencimento: null,
             datasValidade: [],
             response: {
-                data: {
-                    _embedded:{
-                        charges:[
-                            {
-                                id: '',
-                                code: 0,
-                                reference: '',
-                                dueDate: '',
-                                link: '', 
-                                checkoutUrl: '',
-                                installmentLink: '',
-                                payNumber: '',
-                                amount: 0,
-                                billetDetails: {
-                                    bankAccount: '', 
-                                    ourNumber: '', 
-                                    barcodeNumber: '', 
-                                    portfolio: '', 
-                                },
-                                _links: {
-                                    self: {
-                                        href: ''
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
+                data: []                
             },
             urlCobranca: 'https://us-east1-previdenciadigital-dev.cloudfunctions.net/adi/cobranca',
             cobranca: {
