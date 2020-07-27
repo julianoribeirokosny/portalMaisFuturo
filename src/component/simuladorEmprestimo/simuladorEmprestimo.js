@@ -8,6 +8,7 @@ import './simuladorEmprestimo.css'
 import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
+import disclaimer from '../disclaimer/disclaimer'
 
 const financeiro = require('../../../functions/Financeiro')
 const Enum = require('../../Enum')
@@ -15,7 +16,7 @@ const Enum = require('../../Enum')
 export default {
     template: simuladorEmprestimo,
     components: { 
-        VueSlider, Contratacao, ContratacaoAberta
+        VueSlider, Contratacao, ContratacaoAberta, disclaimer
     },
     props: {
         uid:'',
@@ -23,6 +24,7 @@ export default {
     },    
     data: function() {
         return {   
+            disclaimerMensagem: Enum.disclaimer.EMPRESTIMO,
             firebaseHelper: new FirebaseHelper(),
             titulo: '',
             pre_aprovado: 0,
@@ -163,8 +165,10 @@ export default {
             })
         },
         montarDados(dataSimulador) { 
-            this.pre_aprovado = financeiro.valor_to_string_formatado(dataSimulador.pre_aprovado, 2, false, true)
-            this.saldo_devedor = financeiro.valor_to_string_formatado(dataSimulador.saldo_devedor, 2, false, true)
+            // this.pre_aprovado = financeiro.valor_to_string_formatado(dataSimulador.pre_aprovado, 2, false, true)
+            // this.saldo_devedor = financeiro.valor_to_string_formatado(dataSimulador.saldo_devedor, 2, false, true)
+            this.pre_aprovado = dataSimulador.pre_aprovado
+            this.saldo_devedor = dataSimulador.saldo_devedor
             this.fundo_risco = dataSimulador.fundo_risco
             this.indice_anterior = dataSimulador.indice_anterior
             this.taxa_adm = dataSimulador.taxa_adm
@@ -215,54 +219,54 @@ export default {
                                                 { nome:'&nbsp;', valor:'' },
                                                 { nome:'DEDUÇÕES:', valor:'' }
                                             )
-                let liquido = 0
-                let risco = 0
-                let taxa_adm = 0
+                var liquido = 0
+                var risco = 0
+                var taxa_adm = 0
                 if(this.fundo_risco > 0) {
                     risco = principal * this.fundo_risco / 100
                     taxa_adm = principal * this.taxa_adm / 100
                     this.contratacao.resumo.push(
-                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm.toFixed(2), 2, false, true)}`},
-                                                    {nome:'(c) Fundo de risco:', valor: `R$ ${financeiro.valor_to_string_formatado(risco.toFixed(2), 2, false, true)}`}
+                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm, 2, false, true)}`},
+                                                    {nome:'(c) Fundo de risco:', valor: `R$ ${financeiro.valor_to_string_formatado(risco, 2, false, true)}`}
                                                 )
                     liquido = principal - risco - taxa_adm
                     if(this.saldo_devedor !== 0) {
                         liquido -= this.saldo_devedor
                         this.contratacao.resumo.push(
-                                    { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${this.saldo_devedor}`},
+                                    { nome:'(d) Saldo remanescente anterior:', valor:`R$ ${financeiro.valor_to_string_formatado(this.saldo_devedor, 2, false, true)}`},
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
+                                    { nome:'VALOR FINAL (a - b - c - d):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido, 2, false, true)}`}
                         )
                     } else {
                         this.contratacao.resumo.push(
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
+                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido, 2, false, true)}`}
                         )
                     }                    
                 } else {                    
                     taxa_adm = principal * this.taxa_adm / 100
                     this.contratacao.resumo.push(
-                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm.toFixed(2), 2, false, true)}`},
-                                                )
-                    liquido = principal - taxa_adm
-                    if(this.saldo_devedor !== 0) {
-                        liquido -= this.saldo_devedor
+                                                    {nome:'(b) Taxa Administrativa:', valor: `R$ ${financeiro.valor_to_string_formatado(taxa_adm, 2, false, true)}`},
+                                                )                    
+                    liquido = principal - taxa_adm                    
+                    if(this.saldo_devedor !== 0) {                        
+                        liquido -= this.saldo_devedor                        
                         this.contratacao.resumo.push(
-                                    { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${this.saldo_devedor}`},
+                                    { nome:'(c) Saldo remanescente anterior:', valor:`R$ ${financeiro.valor_to_string_formatado(this.saldo_devedor, 2, false, true)}`},
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2), 2, false, true)}*`}
+                                    { nome:'VALOR FINAL (a - b - c):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido, 2, false, true)}`}
                         )
                     } else {
                         this.contratacao.resumo.push(
                                     { nome:'&nbsp;', valor:' ' },
-                                    { nome:'VALOR FINAL (a - b):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido.toFixed(2))}*`}
+                                    { nome:'VALOR FINAL (a - b):', valor:`R$ ${financeiro.valor_to_string_formatado(liquido, 2, false, true)}`}
                         )
                     }
                 }                                                
                 this.contratacao.msg_inicial = ''
                 this.contratacao.msg_vigencia = ''
                 this.contratacao.msg_novo_valor = ''
-                this.contratacao.observacao = '*Sobre este valor incidirá IOF, calculado na data da assinatura do contrato.'
+                this.contratacao.observacao = 'Gostou da simulação? Clique em Solicitar que um de nossos atendentes entrará em contato.'
                 this.contratacao.valor_novo = parseFloat(principal)
                 this.contratacao.valor_novo_Tela = financeiro.valor_to_string_formatado(principal, 2, false, true)
                 this.contratacao.valor_antigo = parseFloat(this.saldo_devedor.toString().replace(/\./g,''))

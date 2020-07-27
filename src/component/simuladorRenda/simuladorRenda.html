@@ -3,11 +3,19 @@
         <template v-if="!rendaSolicitada">
             <template v-if="simulador">
                 <!--Planos Instituidos-->
-                <div class="div_titulo_card margin-auto" v-if="usr_tipo_plano == 'instituido'">
+                <div class="div_titulo_card margin-auto" v-if="usr_tipo_plano == 'instituido'" style="margin-bottom: 10x;">
                     Defina sua <br>contribuição<br>mensal
-                </div>            
-                <div style="margin-top: 40px;" v-if="usr_tipo_plano == 'instituido'">                    
-                    <div style="float: left; width: 75% !important; height: 320px; margin-top: 40px;">
+                </div> 
+                <!--Plano JMalucelli-->
+                <div class="div_titulo_card margin-auto" v-if="usr_tipo_plano == 'jmalucelli'" style="margin-bottom: 10x;">
+                    Contrate uma<br>contribuição<br>adicional
+                </div>   
+                <div style="display: flex;margin-top: 10px; margin-bottom: 10px;">
+                    <disclaimer :mensagem="disclaimerMensagem"></disclaimer>           
+                </div>
+                <!--Planos Instituidos-->
+                <div style="margin-top: 10x;" v-if="usr_tipo_plano == 'instituido'">                    
+                    <div style="float: left; width: 75% !important; height: 320px; margin-top: 10px;">
                         <p class="p_label_renda">Contribuição Normal</p>                    
                         <p style="margin-bottom: 1px;">
                             <span class='line span_contribuicao_valor'>
@@ -41,12 +49,9 @@
                             </p>
                         </div>                    
                     </div>           
-                </div>
-                <!--Plano JMalucelli-->
-                <div class="div_titulo_card margin-auto" v-if="usr_tipo_plano == 'jmalucelli'">
-                    Contrate uma<br>contribuição<br>adicional
-                </div>
-                <div style="margin-top: 30px;" v-if="usr_tipo_plano == 'jmalucelli'">                    
+                </div>                 
+                <!--Plano JMalucelli-->            
+                <div style="margin-top: 10px;" v-if="usr_tipo_plano == 'jmalucelli'">                    
                     <div style="float: left; width: 75% !important; height: 310px; margin-top: 10px;">
                         <p class="p_label_renda">Contribuição Normal</p>
                         <p style="margin-bottom: 1px;">

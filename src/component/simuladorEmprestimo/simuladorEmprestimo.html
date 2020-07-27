@@ -4,14 +4,17 @@
             <template v-if="simulador">
                 <div class="div_titulo_card margin-auto" v-html="titulo"></div>
                 <div style="margin-top: 30px;">                    
-                    <div v-if="pre_aprovado" class="div_msg_emprestimo__se margin-auto">
+                    <!-- <div v-if="pre_aprovado" class="div_msg_emprestimo__se margin-auto">
                         Limite pré-aprovado: R$ {{ pre_aprovado }}.
                     </div>
                     <div v-if="saldo_devedor" class="div_msg_emprestimo__se margin-auto">
                         Saldo devedor: R$ {{ saldo_devedor }}.
-                    </div>                    
+                    </div>                     -->
+                    <div style="display: flex;margin-top: 10px; margin-bottom: 10px;">
+                        <disclaimer :mensagem="disclaimerMensagem"></disclaimer>           
+                    </div>
                     <p class="p_espaco_50__se"></p>
-                    <p class="p_label__se">Altere o valor do empréstimo</p>
+                    <p class="p_label__se">Digite o valor desejado</p>
                     <div style="margin-left: 20px;margin-right: 20px;display: flex;">                        
                         <input class="input_principal__se" inputmode="numeric" ref="inputprincipal" v-money="money" v-model="principal">                        
                     </div>                  

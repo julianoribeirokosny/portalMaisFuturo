@@ -16,6 +16,7 @@ import emConstrucao from './component/emConstrucao/emConstrucao'
 import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
+import disclaimer from './component/disclaimer/disclaimer'
 import page from 'page';
 import { Erros } from './Erros';
 import { VueMaskDirective } from 'v-mask'
@@ -49,7 +50,7 @@ export default class Home {
         this.chave = null        
     }
 
-    async showHome() {
+    async showHome() {        
         
         let base_spinner = document.querySelector('#base_spinner')
         base_spinner.style.display = 'flex'
@@ -191,7 +192,8 @@ export default class Home {
                         historicoContribuicao,
                         trocaParticipacao,
                         maisAmigos,
-                        minhaContribuicao
+                        minhaContribuicao,
+                        disclaimer
                     },
                     data: {
                         componentKey: 0,
@@ -204,7 +206,8 @@ export default class Home {
                         contratacaoContrib: contratacaoContrib,
                         contratacaoEmp: contratacaoEmp,    
                         contratacaoSeg: contratacaoSeg,
-                        competencia: this.data_Home.competencia
+                        competencia: this.data_Home.competencia,
+                        disclaimerMensagem: Enum.disclaimer.RENDA
                     },
                     created() {
                         sessionStorage.ultimaPagina = 'home'

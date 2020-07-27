@@ -10,6 +10,7 @@ import page from 'page';
 import Contratacao from '../contratacao/contratacao';
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
+import disclaimer from '../disclaimer/disclaimer'
 
 const financeiro = require('../../../functions/Financeiro')
 const Enum = require('../../Enum')
@@ -17,7 +18,7 @@ const Enum = require('../../Enum')
 export default {    
     template: simuladorRenda,
     components: { 
-        VueSlider, vSelect, Contratacao, ContratacaoAberta
+        VueSlider, vSelect, Contratacao, ContratacaoAberta, disclaimer
     },
     props: { 
         uid:'',
@@ -25,6 +26,7 @@ export default {
     },    
     data: function() {
         return {
+            disclaimerMensagem: Enum.disclaimer.RENDA,
             reservaTotalAtual: 0,
             taxa_anual_simulacao: 0,
             contribuicaoPatronal: 0,            

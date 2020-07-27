@@ -9,7 +9,7 @@ import './simuladorSeguro.css'
 import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
-import axios from 'axios'
+import disclaimer from '../disclaimer/disclaimer'
 
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
@@ -18,7 +18,7 @@ const Enum = require('../../Enum')
 export default {    
     template: simuladorSeguro,
     components: { 
-        VueSlider, Contratacao, ContratacaoAberta, vSelect
+        VueSlider, Contratacao, ContratacaoAberta, vSelect, disclaimer
     },
     props: {         
         uid:'',
@@ -26,6 +26,7 @@ export default {
     },    
     data: function() {
         return {
+            disclaimerMensagem: Enum.disclaimer.SEGURO,
             dps: false,
             stringRequest: '',
             sliderInvalidezmin: 1,

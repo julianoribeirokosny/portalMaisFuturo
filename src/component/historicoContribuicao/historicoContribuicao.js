@@ -5,12 +5,11 @@ import page from 'page';
 import historicoContribuicao from './historicoContribuicao.html';
 import './historicoContribuicao.css';
 import FirebaseHelper from '../../FirebaseHelper'
-
 import firebase from "firebase/app";
 import "firebase/functions";   
+
 const functions = firebase.functions();
 const apiPrevidenciaDigital = functions.httpsCallable('apiPrevidenciaDigital')
-
 const img_boleto = require('../../../public/images/Boleto.png')
 const img_check = require('../../../public/images/Check.png')
 const img_download_historico = require('../../../public/images/Download_historico.png')
