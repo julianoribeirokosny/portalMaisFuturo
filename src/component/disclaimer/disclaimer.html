@@ -14,8 +14,8 @@
     </div>
 
     <!--Disclaimer Modal-->
-    <div id="disclaimerModal" ref="disclaimerModal" class="modal" style="z-index: 1000;">
-        <div class="modal-content">
+    <div id="disclaimerModal" ref="disclaimerModal" class="modal-disclamer" style="z-index: 1000;">
+        <div class="modal-disclaimer-content">
             <div style="padding: 10px;">
                 <span class="close" @click="closeModal('disclaimerModal')">&times;</span>   
                 <div class="div_titulo_card">
@@ -25,7 +25,7 @@
                 </div>
             </div>           
             <div class="mdl-card__supporting-text mdl-card-container">
-                <div style="text-align: justify; font-size: 13px;" v-html="mensagem"></div>
+                <div style="text-align: justify; font-size: 12px;" v-html="mensagem"></div>
             </div>
             <div class="mdl-shadow--2dp div_btn_contratar" @click="closeModal('disclaimerModal')">Ok, entendi!</div>   
         </div>    

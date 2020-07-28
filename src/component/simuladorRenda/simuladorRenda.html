@@ -10,9 +10,6 @@
                 <div class="div_titulo_card margin-auto" v-if="usr_tipo_plano == 'jmalucelli'" style="margin-bottom: 10x;">
                     Contrate uma<br>contribuição<br>adicional
                 </div>   
-                <div style="display: flex;margin-top: 10px; margin-bottom: 10px;">
-                    <disclaimer :mensagem="disclaimerMensagem"></disclaimer>           
-                </div>
                 <!--Planos Instituidos-->
                 <div style="margin-top: 10x;" v-if="usr_tipo_plano == 'instituido'">                    
                     <div style="float: left; width: 75% !important; height: 320px; margin-top: 10px;">
@@ -52,7 +49,7 @@
                 </div>                 
                 <!--Plano JMalucelli-->            
                 <div style="margin-top: 10px;" v-if="usr_tipo_plano == 'jmalucelli'">                    
-                    <div style="float: left; width: 75% !important; height: 310px; margin-top: 10px;">
+                    <div style="float: left; width: 75% !important; height: 400px; margin-top: 10px;">
                         <p class="p_label_renda">Contribuição Normal</p>
                         <p style="margin-bottom: 1px;">
                             <span class='line span_valor'>
@@ -91,7 +88,7 @@
                             </p>
                         </div>
                     </div>
-                    <div style="float: right;width: 25% !important;height: 380px;display: flex;justify-content: flex-end;">                
+                    <div style="float: right;width: 25% !important;height:400px;display: flex;justify-content: flex-end; margin-top: 10px;">                
                         <div style="float: left; width: 50% !important;">
                             <p class="p_slider_vertical">
                                 <vue-slider v-model="contribuicao" ref="slider" v-bind="sliderContribuicao" :tooltip-formatter="formatter1" :min="min" :max="max" :interval="interval"></vue-slider>
@@ -114,6 +111,9 @@
                         Voltar
                     </div>
                 </div>
+                <div style="margin-top: 10px; margin-bottom: 10px;">
+                    <disclaimer :mensagem="disclaimerMensagem"></disclaimer>           
+                </div>                                                    
             </template>
             <template v-if="!simulador">            
                 <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao" @recarregarDados="consultaDadosContratados"></contratacao>

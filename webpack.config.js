@@ -119,7 +119,7 @@ module.exports = (env, argv) => {
                     },
                 }
             ]
-        },
+        }, 
         node: {
             console: true,
             fs: 'empty',
@@ -152,7 +152,8 @@ module.exports = (env, argv) => {
                         path.join(__dirname, 'src/component/simuladorEmprestimo/*.js'),
                         path.join(__dirname, 'src/component/simuladorRenda/*.js'),
                         path.join(__dirname, 'src/component/simuladorSeguro/*.js'),
-                        path.join(__dirname, 'src/component/minhaContribuicao/*.js'),                        
+                        path.join(__dirname, 'src/component/minhaContribuicao/*.js'),             
+                        path.join(__dirname, 'src/component/disclaimer/*.js'),                                   
                         path.join(__dirname, 'src/*.js'),
                         path.join(__dirname, 'node_modules/firebaseui/dist/firebaseui.js'),
                         path.join(__dirname, 'node_modules/material-design-lite/material.js'),
@@ -170,7 +171,8 @@ module.exports = (env, argv) => {
                         path.join(__dirname, 'src/component/simuladorEmprestimo/simuladorEmprestimo.html'),
                         path.join(__dirname, 'src/component/simuladorRenda/simuladorRenda.html'),
                         path.join(__dirname, 'src/component/simuladorSeguro/simuladorSeguro.html'),
-                        path.join(__dirname, 'src/component/minhaContribuicao/minhaContribuicao.html')
+                        path.join(__dirname, 'src/component/minhaContribuicao/minhaContribuicao.html'),
+                        path.join(__dirname, 'src/component/disclaimer/disclaimer.html')
                     ]),
                 }),
             ],

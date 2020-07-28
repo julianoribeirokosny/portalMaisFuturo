@@ -2432,7 +2432,8 @@ p.p_valor_simulado__se {
 
 .div_btn_contratar {
     height: 40px;
-    margin: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
     cursor: pointer;
     background-color: rgb(12, 123, 198);
     color: #FFFFFF;
@@ -2452,7 +2453,8 @@ p.p_valor_simulado__se {
 
 .div_btn_voltar {
     height: 40px;
-    margin: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;    
     cursor: pointer;
     background-color: rgb(150, 151, 151);
     color: #FFFFFF;
@@ -2461,7 +2463,6 @@ p.p_valor_simulado__se {
     align-items: center;
     justify-content: center;
     border-radius: 25px;
-    margin-top: 30px;
 }
 
 .div_btn_voltar:hover {

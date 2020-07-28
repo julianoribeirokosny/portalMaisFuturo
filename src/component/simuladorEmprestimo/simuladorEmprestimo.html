@@ -10,11 +10,8 @@
                     <div v-if="saldo_devedor" class="div_msg_emprestimo__se margin-auto">
                         Saldo devedor: R$ {{ saldo_devedor }}.
                     </div>                     -->
-                    <div style="display: flex;margin-top: 10px; margin-bottom: 10px;">
-                        <disclaimer :mensagem="disclaimerMensagem"></disclaimer>           
-                    </div>
                     <p class="p_espaco_50__se"></p>
-                    <p class="p_label__se">Digite o valor desejado</p>
+                    <p class="p_label__se">Digite o valor desejado:</p>
                     <div style="margin-left: 20px;margin-right: 20px;display: flex;">                        
                         <input class="input_principal__se" inputmode="numeric" ref="inputprincipal" v-money="money" v-model="principal">                        
                     </div>                  
@@ -35,6 +32,7 @@
                         Voltar
                     </div>   
                 </div>
+                <disclaimer :mensagem="disclaimerMensagem"></disclaimer>           
             </template>
             <template v-if="!simulador">            
                 <contratacao v-bind:dados="contratacao" @cancelar="cancelarContratacao" @recarregarDados="consultaDadosContratados"></contratacao>
