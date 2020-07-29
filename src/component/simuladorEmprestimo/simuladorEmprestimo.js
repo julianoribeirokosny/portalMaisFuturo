@@ -159,14 +159,12 @@ export default {
                 this.dadosEmprestimoSolicitado.chave = this.chave                
             }
         },        
-        consultaDados() {    
+        consultaDados() {               
             this.firebaseHelper.getDadosSimuladorEmprestimo(this.chave, this.uid).then((ret) => {
-                this.montarDados(ret)
+                 this.montarDados(ret)
             })
         },
         montarDados(dataSimulador) { 
-            // this.pre_aprovado = financeiro.valor_to_string_formatado(dataSimulador.pre_aprovado, 2, false, true)
-            // this.saldo_devedor = financeiro.valor_to_string_formatado(dataSimulador.saldo_devedor, 2, false, true)
             this.pre_aprovado = dataSimulador.pre_aprovado
             this.saldo_devedor = dataSimulador.saldo_devedor
             this.fundo_risco = dataSimulador.fundo_risco
@@ -180,10 +178,7 @@ export default {
             this.str_minimo = financeiro.valor_to_string_formatado(this.minimo, 2, false, true)
             this.principal = (this.maximo / 2).toFixed(0)
         },             
-        calcularParcela(principal){    
-            //console.log('principal',principal)
-            //this.principal = this.principal.replace('R$','')
-            //let principal = parseFloat(this.principal.toString().replace(/\./g,''))
+        calcularParcela(principal){            
             if (principal > this.maximo) {
                 this.valido_maximo = false
                 this.valido_minimo = true
@@ -197,10 +192,7 @@ export default {
                 this.valido_minimo = true                
                 this.parcela = financeiro.valor_to_string_formatado(financeiro.pgto(principal, this.taxa_mensal, this.quantidade), 2, false, true)
             }
-        },        
-        // alteraPrincipal(){
-        //     this.calcularParcela();
-        // },        
+        },
         selectAll() {
             this.$refs.inputprincipal.select();
         },

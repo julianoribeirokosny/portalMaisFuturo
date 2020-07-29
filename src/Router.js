@@ -147,7 +147,7 @@ export default class Router {
       divavatar.style.display = 'none'
     }
 
-    //console.log('PAGE_ID =====> ',pageId)
+    console.log('PAGE_ID =====> ',pageId)
     this.pagesElements.each((index, element) => {
       //console.log('ELEMENT.ID =====> ',element.id)
       if (element.id === 'page-' + pageId) {  
@@ -159,12 +159,25 @@ export default class Router {
         $('#'+element.id).hide()
       }
     });
+
+    var footerhome = document.querySelector('#home_rodape')
+    var footer = document.querySelector('#rodape')
+    if (pageId == 'home') {
+      footerhome.style.display = 'block' 
+      footer.style.display = 'none'
+    } else {
+      footerhome.style.display = 'none'
+      footer.style.display = 'block'
+    }
     
     MaterialUtils.closeDrawer();
     // Scroll to top.
     let pagina = document.querySelector(`#divFixedHeader`)
-    pagina.scrollTop = 0
-    //Router.scrollToTop();
+    if (pageId == 'historico-contribuicao') {
+      pagina.scrollTop = 300
+    } else {
+      pagina.scrollTop = 0
+    }    
   }
 
   /**
