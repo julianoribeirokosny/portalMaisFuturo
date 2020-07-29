@@ -101,13 +101,13 @@ export default class Auth {
 
   configureFirebaseUi() {
     // Confgiure and add the FirebaseUI Widget
-    let signInFlow = 'popup';
+    let signInFlow = 'redirect';
     // For iOS full screen apps we use the redirect auth mode.
-    console.log(`'standalone' in window.navigator `, 'standalone' in window.navigator)
+    /*console.log(`'standalone' in window.navigator `, 'standalone' in window.navigator)
     if (('standalone' in window.navigator)
         && window.navigator.standalone) {
       signInFlow = 'redirect';
-    }
+    }*/
 
     // FirebaseUI config.
     //firebase.auth.GoogleAuthProvider.PROVIDER_ID,
