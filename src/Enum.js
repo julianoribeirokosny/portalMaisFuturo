@@ -22,6 +22,10 @@ export const disclaimer = {
     SEGURO: '<p>1. Os valores apresentados são apenas estimativas e não garantem nenhum direito ao participante. O direito efetivo à cobertura contratada dependerá das disposições do contrato celebrado junto à Sociedade Seguradora contratada quando da ocorrência de sinistro e concessão.</p><p>2. A aceitação do risco estará sujeita à análise por parte da Sociedade Seguradora parceira, bem como, o pagamento da renda por invalidez ou pensão por morte está condicionado às regras da Sociedade Seguradora parceira.</p><p><b>Consulte o Regulamento do seu Plano de Benefícios para informações sobre reajuste de prêmios e/ou capitais segurados.</p>'
 }
 
+export const limite = {
+    EMPRESTIMO: 469000
+}
+
 export default class Enum {
     
 }

@@ -11,6 +11,7 @@ import page from 'page';
 
 const utils = require('../functions/utilsFunctions')
 const financeiro = require('../functions/Financeiro')
+const Enum = require('./Enum')
 
 /**
  * Handles all Firebase interactions.
@@ -1216,9 +1217,9 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorRenda(chave, uid) {
-    let usuario = JSON.parse(sessionStorage.participante)
+      let usuario = JSON.parse(sessionStorage.participante)
       if (!usuario || usuario === null) {
-        usuario = await this.getParticipante(chave)    
+          usuario = await this.getParticipante(chave)    
       }
       let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
       let minimoContribuicao = usuario.data.valores.contribParticipante    
@@ -1245,25 +1246,31 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorEmprestimo(chave, uid) {
-    let usuario = JSON.parse(sessionStorage.participante)
-    if (!usuario || usuario === null) {
-      usuario = await this.getParticipante(chave)    
-    }
-    let simuladorEmprestimoSettings = await this.getSimuladorEmprestimoSettings(usuario.home.usr_plano)
-
-    let dadosSimuladorEmprestimo = {
-      titulo: "Simulador </br>de Empréstimo",                
-      taxa_adm: simuladorEmprestimoSettings.taxa_adm, 
-      fundo_risco: simuladorEmprestimoSettings.fundo_risco, 
-      taxa_mensal: simuladorEmprestimoSettings.taxa_mensal,
-      indice_anterior: simuladorEmprestimoSettings.indice_anterior,               
-      pre_aprovado: 20000.00,
-      saldo_devedor: 2000.00,
-      chave: chave,
-      uid: uid,
-      emprestimoSolicitado: ''
-    }
-    return dadosSimuladorEmprestimo
+      let usuario = JSON.parse(sessionStorage.participante)
+      if (!usuario || usuario === null) {
+        usuario = await this.getParticipante(chave)    
+      }      
+      var limite = usuario.home.usr_saldo_reserva.lista_valores_reserva[0]
+      var teto = Enum.limite.EMPRESTIMO
+      if (usuario.home.usr_plano == 'ACPrev') {
+        limite += usuario.home.usr_saldo_reserva.lista_valores_reserva[1] 
+      }
+      limite = (limite * 0.8) >= teto ? teto : (limite * 0.8)
+      console.log('limite',limite)
+      let simuladorEmprestimoSettings = await this.getSimuladorEmprestimoSettings(usuario.home.usr_plano)
+      let dadosSimuladorEmprestimo = {
+          titulo: "Simulador </br>de Empréstimo",                
+          taxa_adm: simuladorEmprestimoSettings.taxa_adm, 
+          fundo_risco: simuladorEmprestimoSettings.fundo_risco, 
+          taxa_mensal: simuladorEmprestimoSettings.taxa_mensal,
+          indice_anterior: simuladorEmprestimoSettings.indice_anterior,               
+          pre_aprovado: limite,
+          saldo_devedor: 0,
+          chave: chave,
+          uid: uid,
+          emprestimoSolicitado: ''
+      }
+      return dadosSimuladorEmprestimo
   }
 
   async getDadosSimuladorSeguro(chave, uid) {
