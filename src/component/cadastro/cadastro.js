@@ -29,9 +29,10 @@ export default {
         uid: '',
         competencia: ''
     },
-    data: function() {
+    data: function() {        
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
         return {  
+            errors:[],
             signedInUserAvatar:'',          
             avatar: foto ? foto : "../images/silhouette-edit.jpg",
             firebaseHelper: new FirebaseHelper(),
@@ -127,6 +128,37 @@ export default {
         }
     },
     methods: {
+        checkForm(){
+            this.errors = []
+            if (!this.cadastro.informacoes_pessoais.estado_civil) {
+                this.errors.push('Estado civil é obrigatório!')
+            }
+            if (!this.email) {
+                this.errors.push('E-mail é obrigatório!')
+            }
+            if (!this.cadastro.informacoes_pessoais.celular) {
+                this.errors.push('Celular é obrigatório!')
+            }
+            if (!this.profissao) {
+                this.errors.push('Profissão é obrigatório!')
+            }
+            if (!this.cep) {
+                this.errors.push('CEP é obrigatório!')
+            }
+            if (!this.cadastro.endereco.numero) {
+                this.errors.push('Número é obrigatório!')
+            }
+            if (this.cadastro.informacoes_pessoais.estado_civil && 
+                this.email &&
+                this.cadastro.informacoes_pessoais.celular && 
+                this.profissao &&
+                this.cep && 
+                this.cadastro.endereco.numero ) {
+                    this.salvar()
+            }
+
+            
+        },
         getProfissoes() {
             return this.firebaseHelper.getProfissoes()
                 .then(ret => {

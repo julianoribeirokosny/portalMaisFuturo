@@ -104,7 +104,7 @@
 }
 
 .Div_Button_Salvar {
-    background-color: #1a6bb6;
+    background-color: #1e70dc;
     height: 40px;
     border-radius: 20px;
     margin-top: 30px;
@@ -139,6 +139,14 @@
     color: #174b8f !important;
     margin-top: 10px;
     text-align: center;
+}
+
+.msg-error {
+    padding-top: 10px;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #ca1919 !important;
+    margin-top: 10px;    
 }
 
 .Span_Button_v2 {
