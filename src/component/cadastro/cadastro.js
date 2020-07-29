@@ -104,23 +104,7 @@ export default {
             if (val.length === 10) {
                 this.getEndereco(val)
             }
-        },
-        email(newVal, oldVal) {
-            if (oldVal && newVal.length >= 6) {
-                var teste = this.isEmailValid(newVal)
-                if (teste) {
-                    this.classValid.hasvalid = true
-                    this.classValid.hasinvalid = false
-                    this.$refs.salvar.style.pointerEvents = 'visible'
-                    this.$refs.salvar.style.opacity = 1
-                } else {
-                    this.classValid.hasvalid = false
-                    this.classValid.hasinvalid = true
-                    this.$refs.salvar.style.pointerEvents = 'none'
-                    this.$refs.salvar.style.opacity = 0.6
-                }
-            }
-        },
+        },        
         finalizado(val) {
             if (val) {
                 this.intervaloMSG()
@@ -134,7 +118,10 @@ export default {
                 this.errors.push('Estado civil é obrigatório!')
             }
             if (!this.email) {
-                this.errors.push('E-mail é obrigatório!')
+                this.errors.push('E-mail alternativo é obrigatório!')
+            }
+            if (!this.isEmailValid(this.email)) {
+                this.errors.push('E-mail alternativo invalido!')
             }
             if (!this.cadastro.informacoes_pessoais.celular) {
                 this.errors.push('Celular é obrigatório!')
@@ -150,14 +137,13 @@ export default {
             }
             if (this.cadastro.informacoes_pessoais.estado_civil && 
                 this.email &&
+                this.isEmailValid(this.email) &&
                 this.cadastro.informacoes_pessoais.celular && 
                 this.profissao &&
                 this.cep && 
                 this.cadastro.endereco.numero ) {
                     this.salvar()
-            }
-
-            
+            }            
         },
         getProfissoes() {
             return this.firebaseHelper.getProfissoes()
@@ -206,7 +192,7 @@ export default {
         voltar() {
             page('/home')
         },
-        salvar() {
+        salvar() {            
             let profissao = this.listaProfissoes.filter(p => {
                 if (p[0] === this.profissao) {
                     return Object.entries(p)
@@ -221,9 +207,10 @@ export default {
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
                 if (cadastro) {
                     this.$root.$emit('nova::Profissao')
+                    this.firebaseHelper.getParticipante(this.chave_usuario).then((ret) => {
+                        sessionStorage.participante = JSON.stringify(ret)
+                    })
                     this.finalizado = true
-
-
                 } else {
                     this.finalizado = false
                     this.error_banco = true
