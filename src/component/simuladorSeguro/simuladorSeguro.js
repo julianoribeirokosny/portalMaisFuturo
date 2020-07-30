@@ -208,6 +208,7 @@ export default {
     },
     mounted(){
         this.$root.$on('nova::Profissao', () => {
+            sessionStorage.dadosSimuladorSeguro = ""
             this.consultaDados()
             this.closeModal()            
         })  
@@ -382,6 +383,7 @@ export default {
                             }
                         )
                     } else {
+                        this.profissao = profissao 
                         this.closeModal()
                     }
                 }
