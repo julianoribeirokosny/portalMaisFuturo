@@ -56,6 +56,7 @@ export default {
             },
             profissoes: [],
             listaProfissoes: [],
+            profissaoInicial: '',
             profissao: '',
             optionsCropper: {
                 aspectRatio: 1,
@@ -99,7 +100,7 @@ export default {
             this.$refs.ModalAvatar.style.display = "none"
         }        
     },    
-    watch: {          
+    watch: {
         cep(val) {
             if (val.length === 10) {
                 this.getEndereco(val)
@@ -169,9 +170,10 @@ export default {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
                     this.email = this.cadastro.informacoes_pessoais.email
-                    this.profissao = ''
+                    //this.profissao = ''
                     if (this.cadastro.informacoes_pessoais.profissao) {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
+                        this.profissaoInicial = this.profissao
                     }
                 })
             } else {
@@ -179,9 +181,10 @@ export default {
                 this.cadastro = cad
                 this.cep = this.cadastro.endereco.cep
                 this.email = this.cadastro.informacoes_pessoais.email
-                this.profissao = ''
+                //this.profissao = ''
                 if (this.cadastro.informacoes_pessoais.profissao) {
                     this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
+                    this.profissaoInicial = this.profissao
                 }
             }
             this.firebaseHelper.getUsuario(this.uid)
@@ -205,7 +208,9 @@ export default {
                 }
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
-                sessionStorage.dadosSimuladorSeguro = ""
+                if (this.profissao !== this.profissaoInicial) {
+                    sessionStorage.dadosSimuladorSeguro = ""
+                }
                 if (cadastro) {
                     this.$root.$emit('nova::Profissao')
                     this.firebaseHelper.getParticipante(this.chave_usuario).then((ret) => {
