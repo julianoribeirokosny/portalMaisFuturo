@@ -192,7 +192,7 @@ export default {
         voltar() {
             page('/home')
         },
-        salvar() {            
+        salvar() {  
             let profissao = this.listaProfissoes.filter(p => {
                 if (p[0] === this.profissao) {
                     return Object.entries(p)
@@ -205,6 +205,7 @@ export default {
                 }
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
+                sessionStorage.dadosSimuladorSeguro = ""
                 if (cadastro) {
                     this.$root.$emit('nova::Profissao')
                     this.firebaseHelper.getParticipante(this.chave_usuario).then((ret) => {
