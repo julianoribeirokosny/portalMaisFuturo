@@ -1,12 +1,13 @@
 'use strict';
 
 import vSelect from 'vue-select'
-import page from 'page';
-import historicoContribuicao from './historicoContribuicao.html';
-import './historicoContribuicao.css';
+import page from 'page'
+import historicoContribuicao from './historicoContribuicao.html'
+import './historicoContribuicao.css'
 import FirebaseHelper from '../../FirebaseHelper'
-import firebase from "firebase/app";
-import "firebase/functions";   
+import firebase from "firebase/app"
+import "firebase/functions"
+import { Erros } from '../../Erros'
 
 const functions = firebase.functions();
 const apiPrevidenciaDigital = functions.httpsCallable('apiPrevidenciaDigital')
@@ -23,6 +24,8 @@ export default {
     },   
     data: function() {
         return { 
+            boleto: null,
+            participante:'',
             chave:'',
             historico: '',
             firebaseHelper: new FirebaseHelper(),     
@@ -35,7 +38,8 @@ export default {
             vencimento: null,
             datasValidade: [],
             response: {
-                data: []                
+                numeroDePagamento:'',
+                link:''          
             },
             urlCobranca: 'https://us-east1-previdenciadigital-dev.cloudfunctions.net/adi/cobranca',
             cobranca: {
@@ -57,6 +61,7 @@ export default {
     created(){
         this.chave = sessionStorage.chave
         this.uid = sessionStorage.uid
+        this.participante = JSON.parse(sessionStorage.participante)        
         this.gerarDatasValidade()
         this.getHistoricoContribuicao()
     },
@@ -73,17 +78,17 @@ export default {
         }
     },
     methods: {
-        gerarDatasValidade(){
-            var today = new Date()     
+        gerarDatasValidade() {
             var date =  new Date()
             for (var i = 0; i < 10; i++) {
-                date.setDate(today.getDate()+i);
+                if (i != 0) {                    
+                    date = new Date(date.getTime()+1000*60*60*24)                
+                }
                 var dd = date.getDate()
                 var mm = date.getMonth() + 1        
                 var yyyy = date.getFullYear()
                 if (dd < 10) { 
-                    dd = '0' + dd
-                } 
+                    dd = '0' + dd                } 
                 if (mm < 10) { 
                     mm = '0' + mm
                 } 
@@ -100,7 +105,7 @@ export default {
                 })    
             } else {
                 this.historico = JSON.parse(sessionStorage.historicoContribuicao)
-            }
+            }            
         },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
@@ -122,8 +127,14 @@ export default {
             }
             this.firebaseHelper.downloadStorageFile(`gs://${sessionStorage.nomeProjeto}.appspot.com/login/${this.uid}/${this.chave}/extratoParticipante.pdf`, extratoShow)
         }, 
-        selecionarBoleto(item) {
-            let usuario = JSON.parse(sessionStorage.participante)
+        selecionarBoleto(item) {            
+            if (this.participante.transacoes && this.participante.transacoes.boleto) {
+                let dataBase = item.anoMes.replace('/','')
+                let names = Object.getOwnPropertyNames(this.participante.transacoes.boleto).sort()                
+                if (names) {
+                    this.boleto = this.participante.transacoes.boleto[dataBase]                    
+                }            
+            }
             this.cobranca.descricao = `CONTRIBUIÇÃO ${item.anoMes}`, 
             this.cobranca.chave = item.chave,
             this.cobranca.dataBase = item.anoMes,
@@ -132,67 +143,57 @@ export default {
             this.cobranca.vencimento = this.vencimento,
             this.cobranca.diasAposVencimento = 29, //configuração
             this.cobranca.tipoCobranca = 'BOLETO',
-            this.cobranca.nome = usuario.data.cadastro.informacoes_pessoais.nome,
-            this.cobranca.cpf = usuario.data.cadastro.informacoes_pessoais.cpf,
-            this.cobranca.email = usuario.data.cadastro.informacoes_pessoais.email,
+            this.cobranca.nome = this.participante.data.cadastro.informacoes_pessoais.nome,
+            this.cobranca.cpf = this.participante.data.cadastro.informacoes_pessoais.cpf,
+            this.cobranca.email = this.participante.data.cadastro.informacoes_pessoais.email,
             this.cobranca.notificar = true //configuração            
             this.$refs.vencimentoModal.style.display = "block"
         },
         emitirBoleto() {
+            var base_spinner = document.querySelector('#base_spinner')
             var self = this
             self.cobranca.vencimento = self.vencimento 
-            self.cobranca.valor = parseFloat(self.cobranca.valor.replace(',','.'))
-            console.log('self.cobranca', self.cobranca)         
+            self.cobranca.valor = parseFloat(self.cobranca.valor.replace(',','.'))                  
             self.$refs.vencimentoModal.style.display = "none"
-            let base_spinner = document.querySelector('#base_spinner')
-            base_spinner.style.display = 'flex'
-            self.response = null
-
-            apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => { 
+            base_spinner.style.display = 'flex'            
+            apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => {                                 
                 if (!response.data.sucesso) {
-                    console.log('Erro ao chamar boletos:'+response.erro)
+                    Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',response.erro)
                     base_spinner.style.display = 'none'
-                    /* TODO 
-                    1. chamar método de Log de Erros!
-                    2. Chamar tela geral de erros
-                    */
-                } else {
-                    console.log('SUCESSO!!!!')
-                    self.response = JSON.parse(response.data.response)
-                    console.log('response._embedded.charges',self.response._embedded.charges)
+                    return page('/erro')                    
+                } else {                    
+                    self.response = JSON.parse(response.data.response)                    
+                    this.salvarNovoBoleto()
                     self.$refs.boletoModal.style.display = "block"
-                    base_spinner.style.display = 'none'
                 }
+                base_spinner.style.display = 'none'
             }).catch((error) => {
-                console.log('ERRO!!!!', error)
-                    /* TODO 
-                    1. chamar método de Log de Erros!
-                    2. Chamar tela geral de erros
-                    */
-
+                Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',error)
+                base_spinner.style.display = 'none'
+                return page('/erro')
             })
-            
-            /*axios.post(self.urlCobranca, self.cobranca, self.axiosHeaders)
-                .then(response => {
-                    if (response) {
-                        console.log('responseAPI',response)
-                        self.response = response
-                        console.log('response.Data._embedded.charges',self.response.data._embedded)
-                        self.$refs.boletoModal.style.display = "block"
-                        base_spinner.style.display = 'none'
-                    }                                    
-                }).catch(error => {
-                    console.log('error',error)
-                    base_spinner.style.display = 'none'
-                }
-            ) */      
             self.vencimento = null             
+        },
+        salvarNovoBoleto() {
+            var self = this
+            var boleto = new Object()
+            var dataBase = self.cobranca.dataBase.replace('/','')
+            boleto[dataBase] = {
+                                    link: self.response.link,
+                                    numeroDePagamento: self.response.numeroDePagamento,
+                                    vencimento: self.cobranca.vencimento
+                                 }
+            self.firebaseHelper.salvarNovoBoleto(self.chave, boleto)
+            self.firebaseHelper.getParticipante(self.chave).then((ret) => {
+                sessionStorage.participante = JSON.stringify(ret)                   
+                self.participante = ret
+            })
         },
         closeModal(modal) {
             this.$refs[modal].style.display = "none";
         },
-        copiarCodigoBarras() {
-            let codigoBarras = document.querySelector('#codigoBarras')
+        copiarCodigoBarras(id) {
+            let codigoBarras = document.querySelector(`#${id}`)
             codigoBarras.setAttribute('type', 'text')    
             codigoBarras.select()            
             document.execCommand('copy');

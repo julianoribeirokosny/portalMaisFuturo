@@ -1199,8 +1199,8 @@ export default class FirebaseHelper {
     })    
   }
 
-  async getHistoricoContribuicao(chave) {
-      let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
+  async getHistoricoContribuicao(chave) {      
+      var ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
       return ref.once('value').then((data) => {    
           if (data.val()) {
               let historico = []              
@@ -1255,8 +1255,7 @@ export default class FirebaseHelper {
       if (usuario.home.usr_plano == 'ACPrev') {
         limite += usuario.home.usr_saldo_reserva.lista_valores_reserva[1] 
       }
-      limite = (limite * 0.8) >= teto ? teto : (limite * 0.8)
-      console.log('limite',limite)
+      limite = (limite * 0.8) >= teto ? teto : (limite * 0.8)      
       let simuladorEmprestimoSettings = await this.getSimuladorEmprestimoSettings(usuario.home.usr_plano)
       let dadosSimuladorEmprestimo = {
           titulo: "Simulador </br>de Empréstimo",                
@@ -1420,6 +1419,15 @@ export default class FirebaseHelper {
       catch (e) {
           return false
       }
+  }
+
+  salvarNovoBoleto(chave, boleto) {
+    try{
+      let ref = this.database.ref(`usuarios/${chave}/transacoes/boleto/`)
+      ref.update(boleto)
+    } catch (e) {
+      return false
+    }
   }
 
   cancelarContratacao(chave, id, tipo) {

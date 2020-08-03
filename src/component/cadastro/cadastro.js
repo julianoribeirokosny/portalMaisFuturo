@@ -209,6 +209,7 @@ export default {
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
                 if (this.profissao !== this.profissaoInicial) {
+                    this.profissaoInicial = this.profissao
                     sessionStorage.dadosSimuladorSeguro = ""
                 }
                 if (cadastro) {

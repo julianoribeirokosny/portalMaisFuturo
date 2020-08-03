@@ -147,7 +147,7 @@ export default class Router {
       divavatar.style.display = 'none'
     }
 
-    console.log('PAGE_ID =====> ',pageId)
+    //console.log('PAGE_ID =====> ',pageId)
     this.pagesElements.each((index, element) => {
       //console.log('ELEMENT.ID =====> ',element.id)
       if (element.id === 'page-' + pageId) {  
