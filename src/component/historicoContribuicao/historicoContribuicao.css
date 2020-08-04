@@ -223,3 +223,7 @@
     text-decoration: none;
     cursor: pointer;
   }
+  p.link {
+    text-align: center;
+    font-size: 16px;
+  }

@@ -302,7 +302,7 @@ export default {
                 }
             }
         },
-        montarDados(dataSimulador) {
+        montarDados(dataSimulador) {            
             if(!dataSimulador.profissao) {
                 this.getProfissaoParticipante(this.chave)
             } else {

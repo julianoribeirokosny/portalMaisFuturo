@@ -10,8 +10,7 @@ import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { TheMask } from 'vue-the-mask'
-
-import {Utils} from '../../Utils';
+import {Utils} from '../../Utils'
 import $ from 'jquery'
 
 const img_editar = require('../../../public/images/Editar.png')
@@ -56,6 +55,7 @@ export default {
             },
             profissoes: [],
             listaProfissoes: [],
+            profissaoInicial: '',
             profissao: '',
             optionsCropper: {
                 aspectRatio: 1,
@@ -99,7 +99,7 @@ export default {
             this.$refs.ModalAvatar.style.display = "none"
         }        
     },    
-    watch: {          
+    watch: {
         cep(val) {
             if (val.length === 10) {
                 this.getEndereco(val)
@@ -168,20 +168,20 @@ export default {
                 .then(cad => {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
-                    this.email = this.cadastro.informacoes_pessoais.email
-                    this.profissao = ''
+                    this.email = this.cadastro.informacoes_pessoais.email                    
                     if (this.cadastro.informacoes_pessoais.profissao) {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
+                        this.profissaoInicial = this.profissao
                     }
                 })
             } else {
                 let cad = JSON.parse(sessionStorage.participante).data.cadastro
                 this.cadastro = cad
                 this.cep = this.cadastro.endereco.cep
-                this.email = this.cadastro.informacoes_pessoais.email
-                this.profissao = ''
+                this.email = this.cadastro.informacoes_pessoais.email                
                 if (this.cadastro.informacoes_pessoais.profissao) {
                     this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
+                    this.profissaoInicial = this.profissao
                 }
             }
             this.firebaseHelper.getUsuario(this.uid)
@@ -192,7 +192,7 @@ export default {
         voltar() {
             page('/home')
         },
-        salvar() {            
+        salvar() {  
             let profissao = this.listaProfissoes.filter(p => {
                 if (p[0] === this.profissao) {
                     return Object.entries(p)
@@ -205,6 +205,10 @@ export default {
                 }
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
+                if (this.profissao !== this.profissaoInicial) {
+                    this.profissaoInicial = this.profissao
+                    sessionStorage.dadosSimuladorSeguro = ""
+                }
                 if (cadastro) {
                     this.$root.$emit('nova::Profissao')
                     this.firebaseHelper.getParticipante(this.chave_usuario).then((ret) => {
@@ -248,7 +252,7 @@ export default {
         cropperCustomBtnSave() {
             let btnSalvar = $('.ankaCropper__saveButton')[0]
             btnSalvar.innerHTML = 'Salvar'         
-            //console.log('cropperCustomBtnSave',btnSalvar)
+            
         },
         cropperPreview(imageSource) {
             //console.log('cropperPreview',imageSource)
