@@ -115,7 +115,7 @@
 }
 
 .Div_Button_Salvar:hover {
-    background-color: #165fa3;
+    background-color: #2f7adb;
 }
 
 .Div_Button_Voltar {
@@ -145,7 +145,7 @@
     padding-top: 10px;
     font-size: 16px !important;
     font-weight: 800 !important;
-    color: #ca1919 !important;
+    color: #ca1919e5 !important;
     margin-top: 10px;    
 }
 

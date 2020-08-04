@@ -10,8 +10,7 @@ import page from 'page'
 import FirebaseHelper from '../../FirebaseHelper'
 import cep from 'cep-promise'
 import { TheMask } from 'vue-the-mask'
-
-import {Utils} from '../../Utils';
+import {Utils} from '../../Utils'
 import $ from 'jquery'
 
 const img_editar = require('../../../public/images/Editar.png')
@@ -169,8 +168,7 @@ export default {
                 .then(cad => {
                     this.cadastro = cad
                     this.cep = this.cadastro.endereco.cep
-                    this.email = this.cadastro.informacoes_pessoais.email
-                    //this.profissao = ''
+                    this.email = this.cadastro.informacoes_pessoais.email                    
                     if (this.cadastro.informacoes_pessoais.profissao) {
                         this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
                         this.profissaoInicial = this.profissao
@@ -180,8 +178,7 @@ export default {
                 let cad = JSON.parse(sessionStorage.participante).data.cadastro
                 this.cadastro = cad
                 this.cep = this.cadastro.endereco.cep
-                this.email = this.cadastro.informacoes_pessoais.email
-                //this.profissao = ''
+                this.email = this.cadastro.informacoes_pessoais.email                
                 if (this.cadastro.informacoes_pessoais.profissao) {
                     this.profissao = this.cadastro.informacoes_pessoais.profissao.nome
                     this.profissaoInicial = this.profissao
@@ -255,7 +252,7 @@ export default {
         cropperCustomBtnSave() {
             let btnSalvar = $('.ankaCropper__saveButton')[0]
             btnSalvar.innerHTML = 'Salvar'         
-            //console.log('cropperCustomBtnSave',btnSalvar)
+            
         },
         cropperPreview(imageSource) {
             //console.log('cropperPreview',imageSource)
