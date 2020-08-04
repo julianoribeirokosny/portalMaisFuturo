@@ -74,7 +74,7 @@ export default {
             sliderInvalidez: {
                 silent: true,
                 dotSize: 14,
-                height: 380,
+                height: 360,
                 with: 15,
                 direction: 'btt',
                 contained: false,
@@ -129,7 +129,7 @@ export default {
             sliderMorte: {
                 silent: true,
                 dotSize: 14,
-                height: 380,
+                height: 360,
                 with: 15,
                 direction: 'btt',
                 contained: false,
@@ -194,6 +194,8 @@ export default {
                 finalizacao_msg_novo_valor:'',
                 chave:'',
                 uid:'',
+                matricula: '',
+                plano: '',
                 label_button:'',
                 tipo: ''
             },
@@ -268,7 +270,7 @@ export default {
                 this.dadosSeguroSolicitado.tipo = 'Seguro'
                 this.dadosSeguroSolicitado.titulo = 'Consulta </br>contratação em </br>aberto'
                 this.dadosSeguroSolicitado.dados = data
-                this.dadosSeguroSolicitado.chave = this.chave     
+                this.dadosSeguroSolicitado.chave = this.chave  
             }
         },
         carregarDados() {
@@ -330,6 +332,8 @@ export default {
                 this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
                 this.premioInicio = dataSimulador.valorAtual      
+                this.contratacao.matricula = dataSimulador.matricula
+                this.contratacao.plano = dataSimulador.plano    
             }                  
         },
         salvarProfissao() {
@@ -444,7 +448,7 @@ export default {
             this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
             this.contratacao.chave = this.chave
             this.contratacao.uid =  this.uid
-            this.contratacao.label_button = 'Confirma novo valor'
+            this.contratacao.label_button = 'Confirmar novo valor'
             this.contratacao.tipo = 'Seguro'
             this.contratacao.detalhes = {
                 premio_total_solicitado: this.premioTelaTotal,

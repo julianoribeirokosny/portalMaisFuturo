@@ -545,7 +545,7 @@
                             <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
                                 <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
                                     <span v-if="contratacaoContrib === false" class="span-minicard-text">{{ home.contribuicao.acao.descricao }} </span>&nbsp;                            
-                                    <span v-if="contratacaoContrib === true" class="span-minicard-text">Acompanhe aqui sua contratação de renda</span>&nbsp;
+                                    <span v-if="contratacaoContrib === true" class="span-minicard-text">Acompanhe aqui seu pedido de alteração da contribuição</span>&nbsp;
                                     <i class="material-icons icon-button-minicard">arrow_forward</i>
                                 </div>
                             </div>  
@@ -665,6 +665,11 @@
                 <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
                     <a></a>
                     <troca-participacao v-bind:uid="uid" v-bind:competencia="home.competencia" :key="componentKey"></troca-participacao>
+                </section>
+                <!--Troca Participação-->
+                <section id="page-outras-solicitacoes" class="mdl-grid fp-content" style="display: none;">
+                    <a></a>
+                    <outras-solicitacoes v-bind:uid="uid" v-bind:competencia="home.competencia" :key="componentKey"></outras-solicitacoes>
                 </section>
                 <!--Mais Amigos-->
                 <section id="page-mais-amigos" class="mdl-grid fp-content" style="display: none;">

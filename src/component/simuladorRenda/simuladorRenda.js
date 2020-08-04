@@ -52,6 +52,8 @@ export default {
                 finalizacao_msg_novo_valor:'',
                 chave:'',
                 uid:'',
+                matricula: '',
+                plano: '',
                 label_button:'',
                 tipo: 'Contribuição mensal'
             },
@@ -200,7 +202,6 @@ export default {
             })
         },
         processaDadosContratados(data) {            
-            debugger
             if (data) {
                 this.simulador = false
                 this.rendaSolicitada = true
@@ -234,6 +235,8 @@ export default {
             this.rendaMensalTela = financeiro.valor_to_string_formatado(dataSimulador.rendaMensalFutura, 2, false, true)
             this.contribuicaoFixaTela = financeiro.valor_to_string_formatado(dataSimulador.contribuicaoFixa, 2, false, true)
             this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((dataSimulador.minimoContribuicao + dataSimulador.contribuicaoFixa).toFixed(2), 2, false, true)
+            this.contratacao.matricula = dataSimulador.matricula
+            this.contratacao.plano = dataSimulador.plano
         },         
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)

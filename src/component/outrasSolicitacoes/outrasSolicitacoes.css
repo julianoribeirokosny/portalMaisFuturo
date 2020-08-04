@@ -1,0 +1,3 @@
+[class*=FieldTypeDueDate] .pp-input, [class*=FieldTypeDueDate] .input-group, [class*=FieldTypeDate] .pp-input, [class*=FieldTypeDate] .input-group {
+    width: 255px !important;
+}

@@ -20,7 +20,7 @@ export default {
     },
     props: {
         uid:'',
-        chave:''  
+        chave:''        
     },    
     data: function() {
         return {   
@@ -120,6 +120,8 @@ export default {
                 finalizacao_msg_novo_valor:'',
                 chave:'',
                 uid:'',
+                matricula: '',
+                plano: '',
                 label_button:'',
                 resumo: [],
             },
@@ -177,6 +179,8 @@ export default {
             this.minimo = dataSimulador.saldo_devedor
             this.str_minimo = financeiro.valor_to_string_formatado(this.minimo, 2, false, true)
             this.principal = (this.maximo / 2).toFixed(0)
+            this.contratacao.matricula = dataSimulador.matricula
+            this.contratacao.plano = dataSimulador.plano
         },             
         calcularParcela(principal){            
             if (principal > this.maximo) {
@@ -263,7 +267,7 @@ export default {
                 this.contratacao.valor_novo_Tela = financeiro.valor_to_string_formatado(principal, 2, false, true)
                 this.contratacao.valor_antigo = parseFloat(this.saldo_devedor.toString().replace(/\./g,''))
                 this.contratacao.titulo_finalizacao = 'Solicitação </br> de empréstimo </br>encaminhada'
-                this.contratacao.finalizacao_msg = 'Em breve entraremos em contato para assinatura do contrato.'
+                this.contratacao.finalizacao_msg = 'Legal! </br></br>Nosso time de consultores esta avaliando a solicitação e em breve entrará em contato para as tratativas necessárias e maiores informações sobre o empréstimo e os limites estabelecidos.'
                 this.contratacao.finalizacao_msg_novo_valor = 'Valor bruto simulado de R$ '
                 this.contratacao.chave = this.chave
                 this.contratacao.uid = this.uid

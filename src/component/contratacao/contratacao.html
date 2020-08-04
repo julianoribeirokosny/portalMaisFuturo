@@ -28,7 +28,7 @@
                 {{ dados.observacao }}
                 </p>    
             </div>
-            <div v-if="error_banco" style="margin-top: 30px;color: brown;">
+            <div v-if="errorBanco" style="margin-top: 30px;color: brown;">
                 <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
             </div>        
             <div style="margin-top: 30px;">
@@ -40,6 +40,10 @@
                 </div>    
             </div>
         </div>
+        <div class="msg-erro" v-if="erroContratacao">
+            <span>Ops!</span>
+            <p><br><br>Ocorreu um erro na efetivação de sua solicitação.<br><br>Tente novamente mais tarde e se o erro persistir, entre em contato conosco através do e-mail contato@maisfuturo.com.br </p>
+        </div>        
     </template>
     <template v-if="finalizado">
         <div class="mdl-card__supporting-text mdl-card-container div_margem_card">

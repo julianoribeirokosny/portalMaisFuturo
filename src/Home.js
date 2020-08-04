@@ -17,6 +17,7 @@ import historicoContribuicao from './component/historicoContribuicao/historicoCo
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
 import disclaimer from './component/disclaimer/disclaimer'
+import outrasSolicitacoes from './component/outrasSolicitacoes/outrasSolicitacoes'
 import page from 'page';
 import { Erros } from './Erros';
 import { VueMaskDirective } from 'v-mask'
@@ -193,7 +194,8 @@ export default class Home {
                         trocaParticipacao,
                         maisAmigos,
                         minhaContribuicao,
-                        disclaimer
+                        disclaimer,
+                        outrasSolicitacoes
                     },
                     data: {
                         componentKey: 0,
@@ -350,7 +352,7 @@ export default class Home {
                 let contratacaoEmp = retPromises[3]
                 let contratacaoSeg = retPromises[4]
                 this.data_Home = this.montaStringHome(home, part, segmentoUsuario)
-                
+                this.participante.data.cadastro.dados_plano.plano
                 //console.log('this.data_Home', this.data_Home)
                 return {
                     data: this.participante.data,

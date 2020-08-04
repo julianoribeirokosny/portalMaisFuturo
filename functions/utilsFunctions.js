@@ -2,7 +2,9 @@
 
 module.exports =  {
 
-    dateFormat : function (x, completo, soNumeros, dd_mm_yyyy) {
+    dateFormat : function (x, completo, soNumeros, dd_mm_yyyy, padraoUTC) {
+
+        padraoUTC = padraoUTC ? padraoUTC : false
 
         if (!(x instanceof Date)) { //se String e não date... converte
             let dateParts = x.split('/')
@@ -45,8 +47,8 @@ module.exports =  {
             } else {
                 ret = y + '-' + m + '-' + d 
             }
-            if (completo) {
-                ret += ' ' + ho + ':' + mi + ':' + se
+            if (completo || padraoUTC) {
+                ret += (padraoUTC ? 'T' : ' ') + ho + ':' + mi + ':' + se
             }  
         }
 

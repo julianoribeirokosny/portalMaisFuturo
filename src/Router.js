@@ -106,6 +106,9 @@ export default class Router {
     page('/servicos', () => {
       this.displayPage('servicos')
     });
+    page('/outras-solicitacoes', () => {
+      this.displayPage('outras-solicitacoes')
+    });    
     page('/em-construcao', () => {
       this.displayPage('em-construcao')
     });

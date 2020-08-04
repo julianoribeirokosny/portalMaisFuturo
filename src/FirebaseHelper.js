@@ -1240,6 +1240,8 @@ export default class FirebaseHelper {
           idadeBeneficio: simuladorRendaSettings.idade_beneficio,        
           chave: chave,
           uid: uid,
+          matricula: usuario.data.cadastro.dados_plano.matricula,
+          plano: usuario.data.cadastro.dados_plano.plano,
           stepEntrada: usuario.home.usr_contribuicao.acao.qtd_steps_entrada
       }    
       return dadosSimuladorRenda
@@ -1268,6 +1270,8 @@ export default class FirebaseHelper {
           saldo_devedor: 0,
           chave: chave,
           uid: uid,
+          matricula: usuario.data.cadastro.dados_plano.matricula,
+          plano: usuario.data.cadastro.dados_plano.plano,
           emprestimoSolicitado: ''
       }
       return dadosSimuladorEmprestimo
@@ -1338,7 +1342,9 @@ export default class FirebaseHelper {
           coberturaInvalidez: coberturaInvalidez , //=== 0 ? minimoInvalidez : Number(coberturaInvalidez.toFixed(0)),
           coberturaMorte: coberturaMorte , //=== 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
           chave: chave,
-          uid: uid,          
+          uid: uid,        
+          matricula: usuario.data.cadastro.dados_plano.matricula,
+          plano: usuario.data.cadastro.dados_plano.plano,
           bloqueio: idade >= 15 ? false : true,
           profissao: profissao,
           valorAtual: valorAtual
