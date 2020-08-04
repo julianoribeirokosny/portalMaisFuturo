@@ -173,24 +173,28 @@
             Dados do<br /> plano
         </div>
     </div>
+    <!-- Plano -->
     <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Plano</span><br>
             <span class="Span_Text_v2">{{cadastro.dados_plano.plano}}</span>
         </div>
     </div>
+    <!-- Matrícula -->
     <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Matrícula</span><br>
             <span class="Span_Text_v2">{{cadastro.dados_plano.matricula}}</span>
         </div>
     </div>
+    <!-- Adesão -->
     <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Data de Adesão</span><br>
             <span class="Span_Text_v2">{{cadastro.dados_plano.data_adesao}}</span>
         </div>
     </div>
+    <!-- Perfil de investimento -->
     <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Perfil de Investimento</span><br>
@@ -204,18 +208,21 @@
             Dados<br /> bancários
         </div>
     </div>
+    <!-- Banco -->
     <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Banco</span><br>
             <span class="Span_Text_v2">{{cadastro.dados_bancarios.banco}}</span>                
         </div>
     </div>
+    <!-- Agência -->
     <div class="border-bottom mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Agência</span><br>
             <span class="Span_Text_v2">{{cadastro.dados_bancarios.agencia}}</span>                
         </div>
     </div>
+    <!-- Conta -->
     <div class="mdl-card__supporting-text mdl-card-container div-container div-formulario">
         <div>
             <span class="Span_Label_v2">Conta Corrente com DV</span><br>
@@ -238,7 +245,6 @@
 
     <div class="mdl-card__supporting-text mdl-card-container div-container">
         <div class="mdl-shadow--2dp Div_Button_Salvar" ref="salvar" @click="checkForm">
-            <!-- <input class="Span_Button_v2" type="submit" value="Salvar" style="padding: 0px; border-bottom: 0px;"> -->
             <span class="Span_Button_v2">Salvar</span>
         </div>
     </div>
@@ -248,6 +254,7 @@
             <span class="Span_Button_v2">Voltar</span>
         </div>
     </div>
+
     <!-- Modal content -->
     <div id="ModalAvatar" ref="ModalAvatar" class="modal">
         <div class="modal-content" style="height: auto">
