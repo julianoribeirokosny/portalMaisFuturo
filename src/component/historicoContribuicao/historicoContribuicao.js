@@ -150,12 +150,14 @@ export default {
             this.$refs.vencimentoModal.style.display = "block"
         },
         emitirBoleto() {
+            
             var base_spinner = document.querySelector('#base_spinner')
             var self = this
             self.cobranca.vencimento = self.vencimento 
             self.cobranca.valor = parseFloat(self.cobranca.valor.replace(',','.'))                  
             self.$refs.vencimentoModal.style.display = "none"
-            base_spinner.style.display = 'flex'            
+            base_spinner.style.display = 'flex' 
+            //console.log('self.cobranca',self.cobranca)
             apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => {                                 
                 if (!response.data.sucesso) {
                     Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',response.erro)

@@ -14,6 +14,8 @@ import disclaimer from '../disclaimer/disclaimer'
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
 const Enum = require('../../Enum')
+const functions = firebase.functions();
+const apiMAG = functions.httpsCallable('apiMAG')
 
 export default {    
     template: simuladorSeguro,
@@ -203,7 +205,24 @@ export default {
             cadastro: {profissao: null}
         }
     },
-    created(){        
+    created(){ 
+        apiMAG({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => {    
+            console.log('response',response)                             
+            // if (!response.data.sucesso) {
+            //     Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',response.erro)
+            //     base_spinner.style.display = 'none'
+            //     return page('/erro')                    
+            // } else {                    
+            //     self.response = JSON.parse(response.data.response)                    
+            //     this.salvarNovoBoleto()
+            //     self.$refs.boletoModal.style.display = "block"
+            // }
+            // base_spinner.style.display = 'none'
+        }).catch((error) => {
+            Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',error)
+            //base_spinner.style.display = 'none'
+            return page('/erro')
+        })       
         this.consultaDadosContratados()        
     },
     mounted(){
