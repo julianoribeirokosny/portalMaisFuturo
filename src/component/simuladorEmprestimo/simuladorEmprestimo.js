@@ -141,7 +141,7 @@ export default {
     },  
     methods: {      
         consultaDadosContratados() {            
-            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.EMPRESTIMO, Enum.statusContratacao.SOLICITADO).then((data) => {
+            this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.EMPRESTIMO, Enum.statusContratacao.SOLICITADO).then((data) => {
                 if(data){
                     this.processaDadosContratados(data)                
                 } else {   

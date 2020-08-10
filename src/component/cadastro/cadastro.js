@@ -14,6 +14,7 @@ import {Utils} from '../../Utils'
 import $ from 'jquery'
 
 const img_editar = require('../../../public/images/Editar.png')
+const { tiposSolicitacaoPipefy } = require('../../Enum')
 
 export default {
     template: cadastro,
@@ -36,6 +37,7 @@ export default {
             avatar: foto ? foto : "../images/silhouette-edit.jpg",
             firebaseHelper: new FirebaseHelper(),
             cadastro: null,
+            cadastroAntes: null,
             cep: null,
             email: null,
             emailPrincipal: '',
@@ -167,6 +169,7 @@ export default {
                 this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then(cad => {
                     this.cadastro = cad
+                    this.cadastroAntes = cad //para comparar depois as alterações realizadas
                     this.cep = this.cadastro.endereco.cep
                     this.email = this.cadastro.informacoes_pessoais.email                    
                     if (this.cadastro.informacoes_pessoais.profissao) {
@@ -199,6 +202,60 @@ export default {
                 }
             })
             if (profissao.length > 0) {
+
+                //identifica alterações do cadastro
+                let aAlteracoes = []
+                for (let key in this.cadastro) {
+                    aAlteracoes.push(compareJSON(this.cadastro[key], this.cadastroAntes[key]))
+                }
+                
+                console.log('====> alteracoes', aAlteracoes)
+                /*logTransacao
+                let dadosCard = {
+                    tipoSolicitacao: tiposSolicitacaoPipefy.cadastro,
+                    chave: this.chave_usuario,
+                    dadosAnteriores: financeiro.valor_to_string_formatado(this.dados.valor_antigo, 2, true, true),
+                    dadosNovos: financeiro.valor_to_string_formatado(this.dados.valor_novo, 2, true, true),
+                    matricula: this.dados.matricula,
+                    plano: this.dados.plano
+                }
+    
+                base_spinner.style.display = 'flex'
+                //primeiro grava card no Pipefy
+                apiPipefy({acao: 'criarCard', body: dadosCard}).then((ret) => { 
+                    if (!ret.data.sucesso) {
+                        this.erroContratacao = true
+                        base_spinner.style.display = 'none'
+
+                    } else {
+                        console.log('SUCESSO!!!!')
+                        let response = ret.data.response
+                        objeto_contratacao[dateFormat] = {
+                            uid: this.dados.uid,
+                            tipo: this.dados.tipo,
+                            valor_anterior: this.dados.valor_antigo,
+                            valor_solicitado: this.dados.valor_novo,
+                            status: statusContratacao.SOLICITADO,
+                            detalhes: detalhes,
+                            pipeId: ret.data.pipeId,
+                            cardId: response.data.createCard.card.id
+                        }
+    
+                        var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)
+                        if(contratacao) {
+                            this.finalizado = true
+                        } else if(!contratacao) {
+                            this.finalizado = false
+                            this.errorBanco = true
+                        }          
+                        base_spinner.style.display = 'none'                      
+                        return true
+                    }  
+                }).catch((e) => {
+                    this.erroContratacao = true
+                    base_spinner.style.display = 'none'
+                })              */                        
+    
                 this.cadastro.informacoes_pessoais.profissao = {
                     nome: profissao[0][0],
                     seguro: profissao[0][1]

@@ -13,6 +13,7 @@ import FirebaseHelper from '../../FirebaseHelper'
 import disclaimer from '../disclaimer/disclaimer'
 
 const financeiro = require('../../../functions/Financeiro')
+const utils = require('../../../functions/utilsFunctions')
 const Enum = require('../../Enum')
 
 export default {    
@@ -109,7 +110,7 @@ export default {
             sliderContribuicao: {
                 silent: true,
                 dotSize: 14,
-                height: 360,
+                height: 320,
                 with: 15,
                 direction: 'btt',                
                 contained: false,
@@ -191,9 +192,18 @@ export default {
     },
     methods: {
         consultaDadosContratados() {
-            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.RENDA, Enum.statusContratacao.SOLICITADO).then((data) => {
+            this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.RENDA).then((data) => {
                 if(data){
-                    this.processaDadosContratados(data)                
+                    let dataHoje = utils.dateFormat(new Date(), false, false, false, false, false)
+                    let contratacao = data[Object.keys(data)[0]]
+                    if (contratacao.status === Enum.statusContratacao.SOLICITADO ||
+                        (contratacao.status === Enum.statusContratacao.EFETIVADA && contratacao.iniVigencia > dataHoje)) {
+                        this.processaDadosContratados(data)
+                    } else {
+                        this.simulador = true
+                        this.rendaSolicitada = false
+                        this.consultaDados()    
+                    }
                 } else {   
                     this.simulador = true
                     this.rendaSolicitada = false

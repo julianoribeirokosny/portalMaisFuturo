@@ -83,10 +83,9 @@ function montaQuery(data, config, usuario) {
     const queries = {
         criarCard: 'mutation{ createCard( input: { pipe_id: {{pipeId}} fields_attributes: [ {field_id: "tipo_solicita_o", field_value: ["{{tipoSolicitacao}}"]} {field_id: "matr_cula", field_value: "{{matricula}}"} {field_id: "cpf", field_value: "{{cpf}}"} {field_id: "e_mail_solicitante", field_value: "{{email}}"} {field_id: "plano", field_value: "{{plano}}"} {field_id: "dados_anteriores", field_value: "{{dadosAnteriores}}"} {field_id: "dados_atualizados", field_value: "{{dadosNovos}}"} {field_id: "origem", field_value: ["Portal"]} {field_id: "chave", field_value: "{{chave}}"} ] }) { card { id title }}}',
         consultarCard: '{ card(id: {{cardId}}) { title assignees { id } comments { text } comments_count current_phase { name } done due_date fields { name value } labels { name } phases_history { phase { name } firstTimeIn lastTimeOut } url } }',
-        cancelarCard: 'mutation { updateCardField( input: { card_id: {{cardId}} field_id: "analisado" new_value: "Cancelado a pedido do Participante" } ) { card { id } } moveCardToPhase( input: { card_id: {{cardId}} destination_phase_id: {{cancelamentoId}} } ) { card { id current_phase{ name } } } }'    
+        cancelarCard: 'mutation { n1: updateCardField( input: { card_id: {{cardId}} field_id: "analisado" new_value: "Cancelado a pedido do Participante" } ) {success} n2: updateCardField( input: { card_id: {{cardId}} field_id: "realizado_lan_amento_sistema_sinqia" new_value: "Não" } ) {success}  n3: moveCardToPhase( input: { card_id: {{cardId}} destination_phase_id: {{cancelamentoId}} } ) { card { id current_phase{ name } } } }'    
     }
-
-    console.log('===> queries', queries)
+//        cancelarCard: 'mutation { updateCardField( input: { card_id: {{cardId}} field_id: "analisado" new_value: "Cancelado a pedido do Participante" } ) { card { id } } updateCardField( input: { card_id: {{cardId}} field_id: "realizado_lan_amento_sistema_sinqia" new_value: "Não" } ) { card { id } }  moveCardToPhase( input: { card_id: {{cardId}} destination_phase_id: {{cancelamentoId}} } ) { card { id current_phase{ name } } } }'
     
     data.body['pipeId'] = config.pipeid
     data.body['cancelamentoId'] = config.cancelamentoid
@@ -105,7 +104,6 @@ function montaQuery(data, config, usuario) {
             query = query.replace(repKey, data.body[key]) //troca o conteudo das chaves
         }
     });
-    console.log('===> query', query)
     return query
 
 }

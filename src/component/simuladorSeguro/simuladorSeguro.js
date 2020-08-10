@@ -253,7 +253,7 @@ export default {
     },
     methods: {
         consultaDadosContratados() {            
-            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((data) => {                
+            this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((data) => {                
                 if (data) {
                     this.processaDadosContratados(data)                
                 } else {  
@@ -461,14 +461,14 @@ export default {
         },
         preencherDPS(){
             let usuario = JSON.parse(sessionStorage.participante)
-            let nome = usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toLowerCase()
-            let sexo = usuario.data.cadastro.informacoes_pessoais.sexo.toLowerCase()
+            let nome = usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toUpperCase()
+            let sexo = usuario.data.cadastro.informacoes_pessoais.sexo.toUpperCase()
             let nasc = usuario.data.cadastro.informacoes_pessoais.nascimento.replace('/','-').replace('/','-')
             let cpf = usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-','')
             let contr = (parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)).toFixed(2)
             let email = usuario.data.cadastro.informacoes_pessoais.email.replace('@','%40')
             let fone = usuario.data.cadastro.informacoes_pessoais.celular.replace(/ /gi,'').replace(/\+/gi,'').replace(/-/gi,'').replace('(','').replace(')','')
-            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toLowerCase()
+            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toUpperCase()
             let teto = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
             //let idade_apos = '' //se não informada é o maior entre 60 ou a idade atual +10}
             let premio_morte = this.premioMorte.replace('.','%2c')
@@ -482,8 +482,12 @@ export default {
         },
         requestDPS(string) {   
             //this.$refs.ModalDPS.style.display = "block"   
+            base_spinner.style.display = 'flex'
             this.dps = true      
             this.stringRequest = string
+            setTimeout(function() {
+                base_spinner.style.display = 'none'
+            }, 8000)
         },
         fecharDPS(){
             // this.$refs.ModalDPS.style.display = "none"

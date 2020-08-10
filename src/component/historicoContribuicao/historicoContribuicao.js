@@ -146,7 +146,7 @@ export default {
             this.cobranca.nome = this.participante.data.cadastro.informacoes_pessoais.nome,
             this.cobranca.cpf = this.participante.data.cadastro.informacoes_pessoais.cpf,
             this.cobranca.email = this.participante.data.cadastro.informacoes_pessoais.email,
-            this.cobranca.notificar = true //configuração            
+            this.cobranca.notificar = false //configuração            
             this.$refs.vencimentoModal.style.display = "block"
         },
         emitirBoleto() {

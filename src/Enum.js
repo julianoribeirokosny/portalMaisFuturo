@@ -7,7 +7,8 @@ export const contratacao = {
 }
 
 export const statusContratacao = {
-    SOLICITADO: 'solicitado'
+    SOLICITADO: 'Solicitado',
+    EFETIVADA: 'Efetivada'
 }
 
 export const perfilInvestimento = {

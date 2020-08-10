@@ -10,7 +10,7 @@ import "firebase/functions";
 const functions = firebase.functions()
 const apiPipefy = functions.httpsCallable('apiPipefy')
 const utils = require('../../../functions/utilsFunctions')
-const { tiposSolicitacaoPipefy } = require('../../Enum')
+const { tiposSolicitacaoPipefy, statusContratacao } = require('../../Enum')
 const financeiro = require('../../../functions/Financeiro')
 
 export default {    
@@ -92,7 +92,7 @@ export default {
                         tipo: this.dados.tipo,
                         valor_anterior: this.dados.valor_antigo,
                         valor_solicitado: this.dados.valor_novo,
-                        status: 'solicitado',
+                        status: statusContratacao.SOLICITADO,
                         detalhes: detalhes,
                         pipeId: ret.data.pipeId,
                         cardId: response.data.createCard.card.id

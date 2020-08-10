@@ -1,6 +1,6 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <template v-if="!finalizado">
-        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="mdl-card__supporting-text mdl-card-container">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;">
             </div>
             <div style="margin-top: 30px;">
@@ -50,9 +50,13 @@
                 </div>
             </div>
         </div>
+        <div class="msg-erro" v-if="erroCancelamento">
+            <span>Ops!</span>
+            <p><br><br>Ocorreu um erro na efetivação de sua solicitação.<br><br>Tente novamente mais tarde e se o erro persistir, entre em contato conosco através do e-mail contato@maisfuturo.com.br </p>
+        </div>            
     </template>
     <template v-if="finalizado">
-        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="mdl-card__supporting-text mdl-card-container">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;">
             </div>        
             <div style="margin-top: 40px;">

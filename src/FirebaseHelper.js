@@ -1427,6 +1427,20 @@ export default class FirebaseHelper {
       }
   }
 
+  logTransacao(chave, origem, objetoJson) {
+    try {
+        let ref = this.database.ref(`usuarios/${chave}/transacoes/${origem}/`)          
+        let log = {}
+        let dataAgora = utils.dateFormat(new Date(), true, true, false, false, false)
+        log[dataAgora] = objetoJson
+        ref.update(log)
+        return true
+    }
+    catch (e) {
+        return false
+    }
+  }
+
   salvarNovoBoleto(chave, boleto) {
     try{
       let ref = this.database.ref(`usuarios/${chave}/transacoes/boleto/`)
@@ -1439,7 +1453,7 @@ export default class FirebaseHelper {
   cancelarContratacao(chave, id, tipo) {
       try{
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
-          ref.update({status:'cancelado pelo usuário'})
+          ref.update({status:'Cancelado pelo usuário'})
           if(tipo && tipo === 'Contribuição mensal') {
               ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
               ref.update({vigente:true})
@@ -1451,6 +1465,12 @@ export default class FirebaseHelper {
       catch (e) {
           return false
       }
+  }
+
+  atualizaContratacao(chave, id, objJson) {
+    let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
+    ref.update(objJson)
+
   }
 
   salvarCadastro(chave, chave_interna, cadastro) {
@@ -1516,20 +1536,20 @@ export default class FirebaseHelper {
     })
   }
 
-  async getContratacaoEmAberto(chave, tipo, status) {
-    let ref = this.database.ref(`usuarios/${chave}`)
+  async getContratacao(chave, tipo, status) {
+    let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes`)
     let snapshot = await ref.once('value')
     let ret = {}
-    if (snapshot.val() !== null && snapshot.hasChild('transacoes/contratacoes')) {
-      let data = ''
-      snapshot.child('transacoes/contratacoes').forEach((snap) => {        
-        let contratacao = snap.val()
-        if (snap.key > data && contratacao.tipo === tipo && contratacao.status === status) {
-          ret[snap.key] = snap.val()
-        }
+    let data = ''
+    snapshot.forEach((snap) => {        
+      let contratacao = snap.val()
+      if (snap.key > data && contratacao.tipo === tipo && (!status || contratacao.status === status)) {
+        //apaga o anterior para garantir somente retornar o último/mais vigente
+        delete ret[data]
+        ret[snap.key] = snap.val()
         data = snap.key
-      })  
-    }
+      }
+    })  
     return Object.keys(ret).length > 0 ? ret : null
   }
 
