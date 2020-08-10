@@ -12,7 +12,7 @@
                 </div>   
                 <!--Planos Instituidos-->
                 <div style="margin-top: 10x;" v-if="usr_tipo_plano == 'instituido'">                    
-                    <div style="float: left; width: 75% !important; height: 320px; margin-top: 10px;">
+                    <div style="float: left; width: 75% !important; height: 360px; margin-top: 10px;">
                         <p class="p_label_renda">Contribuição Normal</p>                    
                         <p style="margin-bottom: 1px;">
                             <span class='line span_contribuicao_valor'>
@@ -39,7 +39,7 @@
                             </p>
                         </div>
                     </div>
-                    <div style="float: right;width: 25% !important;height: 350px;display: flex;justify-content: flex-end;">                
+                    <div style="float: right;width: 25% !important;height: 310px;display: flex;justify-content: flex-end;">                
                         <div style="float: left; width: 50% !important;">
                             <p class="p_slider_vertical">
                                 <vue-slider v-model="contribuicao" ref="slider" v-bind="sliderContribuicao" :tooltip-formatter="formatter1" :min="min" :max="max" :interval="interval"></vue-slider>

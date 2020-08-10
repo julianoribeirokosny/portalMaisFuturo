@@ -7,7 +7,8 @@ export const contratacao = {
 }
 
 export const statusContratacao = {
-    SOLICITADO: 'solicitado'
+    SOLICITADO: 'Solicitado',
+    EFETIVADA: 'Efetivada'
 }
 
 export const perfilInvestimento = {
@@ -25,6 +26,17 @@ export const disclaimer = {
 export const limite = {
     EMPRESTIMO: 469000
 }
+
+export const tiposSolicitacaoPipefy = {
+    "Seguro": "Contratação de Risco",
+    "Seguro - Cancelamento": "Cancelamento de Risco",
+    "Contribuição mensal": "Alteração de Contribuição",
+    //renda1: "Suspensão de Contribuição",
+    cadastro: "Alteração de Cadastro",
+    boleto: "Segunda-via de Boletos",
+    "Empréstimo": "Solicitação de Empréstimo"
+}
+
 
 export default class Enum {
     

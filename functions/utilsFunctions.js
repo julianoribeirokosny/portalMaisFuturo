@@ -2,7 +2,11 @@
 
 module.exports =  {
 
-    dateFormat : function (x, completo, soNumeros, dd_mm_yyyy) {
+    dateFormat : function (x, completo, soNumeros, dd_mm_yyyy, padraoUTC, origemPadraoEN) {
+
+        padraoUTC = padraoUTC ? padraoUTC : false
+
+        origemPadraoEN = origemPadraoEN ? origemPadraoEN : false //se data está no padrão Americano (MM/DD/YYYY) ajusta
 
         if (!(x instanceof Date)) { //se String e não date... converte
             let dateParts = x.split('/')
@@ -14,9 +18,17 @@ module.exports =  {
             }
             //se AAAA-MM-DD
             if (Number(dateParts[0]) > Number(dateParts[2])) {
-                x = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]))
+                if (origemPadraoEN) { 
+                    x = new Date(Number(dateParts[0]), Number(dateParts[2]) - 1, Number(dateParts[1]))
+                } else {
+                    x = new Date(Number(dateParts[0]), Number(dateParts[1]) - 1, Number(dateParts[2]))
+                }
             } else {
-                x = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]))
+                if (origemPadraoEN) {                
+                    x = new Date(Number(dateParts[2]), Number(dateParts[0]) - 1, Number(dateParts[1]))
+                } else {
+                    x = new Date(Number(dateParts[2]), Number(dateParts[1]) - 1, Number(dateParts[0]))
+                }
             }
         }
 
@@ -45,8 +57,8 @@ module.exports =  {
             } else {
                 ret = y + '-' + m + '-' + d 
             }
-            if (completo) {
-                ret += ' ' + ho + ':' + mi + ':' + se
+            if (completo || padraoUTC) {
+                ret += (padraoUTC ? 'T' : ' ') + ho + ':' + mi + ':' + se
             }  
         }
 
@@ -136,5 +148,15 @@ module.exports =  {
             
         }
         return data
-    }
+    },
+    compareJSON (obj1, obj2) {
+        var ret = {};
+        for(var i in obj2) {
+            if(!obj1.hasOwnProperty(i) || JSON.stringify(obj2[i]) !== JSON.stringify(obj1[i])) {
+            console.log("*** compareJSON ",obj1.hasOwnProperty(i), obj2[i], obj1[i]);
+            ret[i] = obj2[i];
+            }
+        }
+        return ret;
+    }      
 }

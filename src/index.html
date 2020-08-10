@@ -20,8 +20,8 @@
     <link rel="preconnect" href="https://lh8.googleusercontent.com">
     <link rel="preconnect" href="https://lh9.googleusercontent.com">
 
-    <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth__pt_br.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.css" />
+    <script src="https://www.gstatic.com/firebasejs/ui/4.5.2/firebase-ui-auth__pt_br.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.2/firebase-ui-auth.css" />
 
     <!-- Disable tap highlight on IE -->
     <meta name="msapplication-tap-highlight" content="no">
@@ -242,7 +242,7 @@
         <div style="margin: 5px 0 50px 0;">
             <img src="../public/images/Component 54 ÔÇô 2.png" alt="Mais Futuro Logo">
         </div>
-        <div class="fp-caption" style="max-width: 500px;">Seja bem-vindo!</div>
+        <div class="fp-caption" style="max-width: 500px;">Bem-vindo ao seu futuro!</div>
         <div id="firebaseui-auth-container"></div>
     </section>
     <!-- Acesso via Browser-->
@@ -545,7 +545,7 @@
                             <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
                                 <div class="mdl-shadow--1dp mdl-card_acao" v-bind:style="home.contribuicao.acao.card_background" style="cursor: pointer;" @click.prevent="simuladorRenda('simulador-renda','home')">
                                     <span v-if="contratacaoContrib === false" class="span-minicard-text">{{ home.contribuicao.acao.descricao }} </span>&nbsp;                            
-                                    <span v-if="contratacaoContrib === true" class="span-minicard-text">Acompanhe aqui sua contratação de renda</span>&nbsp;
+                                    <span v-if="contratacaoContrib === true" class="span-minicard-text">Acompanhe aqui seu pedido de alteração da contribuição</span>&nbsp;
                                     <i class="material-icons icon-button-minicard">arrow_forward</i>
                                 </div>
                             </div>  
@@ -665,6 +665,11 @@
                 <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
                     <a></a>
                     <troca-participacao v-bind:uid="uid" v-bind:competencia="home.competencia" :key="componentKey"></troca-participacao>
+                </section>
+                <!--Troca Participação-->
+                <section id="page-outras-solicitacoes" class="mdl-grid fp-content" style="display: none;">
+                    <a></a>
+                    <outras-solicitacoes v-bind:uid="uid" v-bind:competencia="home.competencia" :key="componentKey"></outras-solicitacoes>
                 </section>
                 <!--Mais Amigos-->
                 <section id="page-mais-amigos" class="mdl-grid fp-content" style="display: none;">

@@ -2,3 +2,27 @@
     display: grid;
     grid-template-columns: 65% 35%;
 }
+
+.msg-erro {
+    padding-top: 10px;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: darkred !important;
+    margin-top: 10px;    
+    text-align: left;
+    border: thin solid darkred;
+    border-radius: 15px;
+    padding: 10px !important;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    margin: 10px;
+    background-color: white;
+    opacity: 90%;
+}
+
+.msg-erro p {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: darkred !important;
+}

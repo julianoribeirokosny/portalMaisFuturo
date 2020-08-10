@@ -7,6 +7,10 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'pgCarga') {
   exports.pgCarga = require('./pgCarga').default;
 }
 
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'previdenciaDigitalCarga') {
+  exports.previdenciaDigitalCarga = require('./previdenciaDigitalCarga').default;
+}
+
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'pgCargaHistContrib') {
   exports.pgCargaHistContrib = require('./pgCargaHistContrib').default;
 } 

@@ -63,6 +63,7 @@
 }
 .p_slider_vertical {
     margin: 5px;
+    padding-top: 28px;
 }
 
 .span_premio_valor {
@@ -94,6 +95,7 @@ span#text-bottom {
 .vue-slider-dot {
     z-index: 1 !important;
 }
+
 
 @media screen and (max-width: 425px) {
     .span_cobertura_valor2 {

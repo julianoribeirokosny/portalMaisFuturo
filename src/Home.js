@@ -17,11 +17,13 @@ import historicoContribuicao from './component/historicoContribuicao/historicoCo
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
 import disclaimer from './component/disclaimer/disclaimer'
+import outrasSolicitacoes from './component/outrasSolicitacoes/outrasSolicitacoes'
 import page from 'page';
 import { Erros } from './Erros';
 import { VueMaskDirective } from 'v-mask'
 
 const financeiro = require('../functions/Financeiro')
+const utils = require('../functions/utilsFunctions')
 const Enum = require('../src/Enum')
 
 // register directive v-money and component <money>
@@ -193,7 +195,8 @@ export default class Home {
                         trocaParticipacao,
                         maisAmigos,
                         minhaContribuicao,
-                        disclaimer
+                        disclaimer,
+                        outrasSolicitacoes
                     },
                     data: {
                         componentKey: 0,
@@ -277,10 +280,6 @@ export default class Home {
 
     }
 
-    isFloat(n) {
-        return n != "" && !isNaN(n) && Math.round(n) != n;
-    }
-
     async dadosHome(chave) {
 
         let p0 = this.firebaseHelper.getHome().then((data) => {
@@ -312,29 +311,10 @@ export default class Home {
             }
         })
 
-        let p2 = this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.RENDA, Enum.statusContratacao.SOLICITADO).then((contratacao) => {
-            if(contratacao) {
-                return true
-            } else {
-                return false
-            }
-        })
-
-        let p3 = this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.EMPRESTIMO, Enum.statusContratacao.SOLICITADO).then((contratacao) => {
-            if(contratacao) {
-                return true
-            } else {
-                return false
-            }
-        })
-        
-        let p4 = this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((contratacao) => {
-            if(contratacao) {
-                return true
-            } else {
-                return false
-            }
-        })
+        //validação de contratos em aberto
+        let p2 = this.validaSeContratoAberto(Enum.contratacao.RENDA)
+        let p3 = this.validaSeContratoAberto(Enum.contratacao.EMPRESTIMO)
+        let p4 = this.validaSeContratoAberto(Enum.contratacao.SEGURO)
 
         return Promise.all([p0, p1, p2, p3, p4]).then(async(retPromises) => {
 
@@ -350,7 +330,7 @@ export default class Home {
                 let contratacaoEmp = retPromises[3]
                 let contratacaoSeg = retPromises[4]
                 this.data_Home = this.montaStringHome(home, part, segmentoUsuario)
-                
+                this.participante.data.cadastro.dados_plano.plano
                 //console.log('this.data_Home', this.data_Home)
                 return {
                     data: this.participante.data,
@@ -448,5 +428,22 @@ export default class Home {
         }
         
         return retHome     
+    }
+
+    validaSeContratoAberto(tipoContratacao) {
+        let dataHoje = utils.dateFormat(new Date(), false, false, false, false, false)
+        return this.firebaseHelper.getContratacao(this.chave, tipoContratacao).then((contratacao) => {
+            if(contratacao) {
+                contratacao = contratacao[Object.keys(contratacao)[0]]
+                if (contratacao.status === Enum.statusContratacao.EFETIVADA) {
+                    return contratacao.iniVigencia > dataHoje
+                } else {
+                    return contratacao.status === Enum.statusContratacao.SOLICITADO
+                }
+            } else {
+                return false
+            }
+        })
+       
     }
 }

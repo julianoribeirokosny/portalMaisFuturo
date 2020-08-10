@@ -13,6 +13,7 @@ import FirebaseHelper from '../../FirebaseHelper'
 import disclaimer from '../disclaimer/disclaimer'
 
 const financeiro = require('../../../functions/Financeiro')
+const utils = require('../../../functions/utilsFunctions')
 const Enum = require('../../Enum')
 
 export default {    
@@ -52,6 +53,8 @@ export default {
                 finalizacao_msg_novo_valor:'',
                 chave:'',
                 uid:'',
+                matricula: '',
+                plano: '',
                 label_button:'',
                 tipo: 'Contribuição mensal'
             },
@@ -107,7 +110,7 @@ export default {
             sliderContribuicao: {
                 silent: true,
                 dotSize: 14,
-                height: 360,
+                height: 320,
                 with: 15,
                 direction: 'btt',                
                 contained: false,
@@ -189,9 +192,18 @@ export default {
     },
     methods: {
         consultaDadosContratados() {
-            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.RENDA, Enum.statusContratacao.SOLICITADO).then((data) => {
+            this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.RENDA).then((data) => {
                 if(data){
-                    this.processaDadosContratados(data)                
+                    let dataHoje = utils.dateFormat(new Date(), false, false, false, false, false)
+                    let contratacao = data[Object.keys(data)[0]]
+                    if (contratacao.status === Enum.statusContratacao.SOLICITADO ||
+                        (contratacao.status === Enum.statusContratacao.EFETIVADA && contratacao.iniVigencia > dataHoje)) {
+                        this.processaDadosContratados(data)
+                    } else {
+                        this.simulador = true
+                        this.rendaSolicitada = false
+                        this.consultaDados()    
+                    }
                 } else {   
                     this.simulador = true
                     this.rendaSolicitada = false
@@ -200,7 +212,6 @@ export default {
             })
         },
         processaDadosContratados(data) {            
-            debugger
             if (data) {
                 this.simulador = false
                 this.rendaSolicitada = true
@@ -234,6 +245,8 @@ export default {
             this.rendaMensalTela = financeiro.valor_to_string_formatado(dataSimulador.rendaMensalFutura, 2, false, true)
             this.contribuicaoFixaTela = financeiro.valor_to_string_formatado(dataSimulador.contribuicaoFixa, 2, false, true)
             this.contribuicaoTotalTela = financeiro.valor_to_string_formatado((dataSimulador.minimoContribuicao + dataSimulador.contribuicaoFixa).toFixed(2), 2, false, true)
+            this.contratacao.matricula = dataSimulador.matricula
+            this.contratacao.plano = dataSimulador.plano
         },         
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)

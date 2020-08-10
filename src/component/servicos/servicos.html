@@ -38,9 +38,13 @@
                 <span class="IconsText__serv" @click="clickPage('simulador-seguro')">simulador de riscos</span>
             </div>
             <div class="TableIcons__serv">
+                <img v-bind:src="icon_historico_servicos" width="120" height="120" style="cursor:pointer;" @click="clickPage('outras-solicitacoes')"><br>
+                <span class="IconsText__serv" @click="clickPage('outras-solicitacoes')">Outras Solicitações</span>
+            </div>
+            <!--div class="TableIcons__serv">
                 <img v-bind:src="icon_historico_servicos" width="120" height="120" style="cursor:pointer;" @click="clickPage('em-construcao')"><br>
                 <span class="IconsText__serv" @click="clickPage('em-construcao')">histórico de serviços</span>
-            </div>
+            </div-->
             <div class="TableIcons__serv"></div>
         </div>
     </template>            
@@ -94,6 +98,13 @@
             <div style="display:flex; align-items: center; margin-left: 5px;">
                 <span class="ListIconsText__serv" @click="clickPage('simulador-seguro')">simulador de seguro de renda</span>
             </div>
+            <div class="TableIconsList__serv">
+                <img v-bind:src="icon_historico_servicos" width="55" height="55" style="cursor:pointer;" @click="clickPage('outras-solicitacoes')">
+            </div>
+            <div style="display:flex; align-items: center; margin-left: 5px;">
+                <span class="ListIconsText__serv" @click="clickPage('outras-solicitacoes')">Outras solicitações</span>
+            </div>
+
             <!--div class="TableIconsList__serv">
                 <img v-bind:src="icon_historico_servicos" width="55" height="55" style="cursor:pointer;" @click="clickPage('em-construcao')">
             </div>

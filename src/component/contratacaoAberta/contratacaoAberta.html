@@ -1,6 +1,6 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <template v-if="!finalizado">
-        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="mdl-card__supporting-text mdl-card-container">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;">
             </div>
             <div style="margin-top: 30px;">
@@ -35,6 +35,9 @@
                     </span>
                 </p>
             </div>
+            <div id="msg-vigencia" v-if="(efetivada || cancelada)" class="msg-vigencia" >
+                <p>{{ msg_vigencia }}</p>
+            </div>
             <div v-if="error_banco" style="margin-top: 20px;color: brown; font-size: 14px;">
                 <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
             </div>
@@ -42,14 +45,18 @@
                 <div class="mdl-shadow--2dp div_btn_contratar"  @click="retornar" style="margin-top: 30px;">
                     Retornar
                 </div>  
-                <div class="mdl-shadow--2dp div_btn_voltar"  @click="cancelarContratacao">
+                <div id="cancelar-contratacao" class="mdl-shadow--2dp div_btn_voltar" v-if="(!lancada && !efetivada && !cancelada)" @click="cancelarContratacao" style="background-color: darkred;">
                     Cancelar Contratação
                 </div>
             </div>
         </div>
+        <div class="msg-erro" v-if="erroCancelamento">
+            <span>Ops!</span>
+            <p><br><br>Ocorreu um erro na efetivação de sua solicitação.<br><br>Tente novamente mais tarde e se o erro persistir, entre em contato conosco através do e-mail contato@maisfuturo.com.br </p>
+        </div>            
     </template>
     <template v-if="finalizado">
-        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="mdl-card__supporting-text mdl-card-container">
             <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;">
             </div>        
             <div style="margin-top: 40px;">

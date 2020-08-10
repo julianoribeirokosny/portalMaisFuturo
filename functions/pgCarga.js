@@ -57,6 +57,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let usuarios = {} //lista de usuários que serão atualizados na base
   let usuariosBloquear = {} //lista de usuários que não foram carregados
   let usrAnterior
+  let usrPrevidenciaDigital = []
   //listas de parametros de cod contribuição 
   let listaContribSaldo, listaContribSaldo13, listaContribSaldoPartPlanoPatroc, listaContribSeguro, listaContribSaida, listaContribPortabilidade, listaContribExtraordinaria, listaContribSaldoPartEmpresa
   let listaSituacoesValidas //lista de situações de plano válidas para carga no portal
@@ -572,7 +573,7 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
     }
     
     //insere registros de testes
-    usuarios = insereRegistroTestesHome(usuarios, '9999-0001', 'Leandro')
+    //usuarios = insereRegistroTestesHome(usuarios, '9999-0001', 'Leandro')
     //usuarios = insereRegistroTestesHome(usuarios, '9999-0002', 'Juliano')
 
     //salva dados anteriores dos usuários em usuariosHistorico

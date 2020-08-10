@@ -76,7 +76,7 @@ export default {
             sliderInvalidez: {
                 silent: true,
                 dotSize: 14,
-                height: 380,
+                height: 360,
                 with: 15,
                 direction: 'btt',
                 contained: false,
@@ -131,7 +131,7 @@ export default {
             sliderMorte: {
                 silent: true,
                 dotSize: 14,
-                height: 380,
+                height: 360,
                 with: 15,
                 direction: 'btt',
                 contained: false,
@@ -196,6 +196,8 @@ export default {
                 finalizacao_msg_novo_valor:'',
                 chave:'',
                 uid:'',
+                matricula: '',
+                plano: '',
                 label_button:'',
                 tipo: ''
             },
@@ -227,6 +229,7 @@ export default {
     },
     mounted(){
         this.$root.$on('nova::Profissao', () => {
+            sessionStorage.dadosSimuladorSeguro = ""
             this.consultaDados()
             this.closeModal()            
         })  
@@ -269,7 +272,7 @@ export default {
     },
     methods: {
         consultaDadosContratados() {            
-            this.firebaseHelper.getContratacaoEmAberto(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((data) => {                
+            this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.SEGURO, Enum.statusContratacao.SOLICITADO).then((data) => {                
                 if (data) {
                     this.processaDadosContratados(data)                
                 } else {  
@@ -286,7 +289,7 @@ export default {
                 this.dadosSeguroSolicitado.tipo = 'Seguro'
                 this.dadosSeguroSolicitado.titulo = 'Consulta </br>contratação em </br>aberto'
                 this.dadosSeguroSolicitado.dados = data
-                this.dadosSeguroSolicitado.chave = this.chave     
+                this.dadosSeguroSolicitado.chave = this.chave  
             }
         },
         carregarDados() {
@@ -348,6 +351,8 @@ export default {
                 this.premioTelaMorte = this.valor_to_string_formatado(this.premioMorte)
                 this.calculaTotal()
                 this.premioInicio = dataSimulador.valorAtual      
+                this.contratacao.matricula = dataSimulador.matricula
+                this.contratacao.plano = dataSimulador.plano    
             }                  
         },
         salvarProfissao() {
@@ -401,6 +406,7 @@ export default {
                             }
                         )
                     } else {
+                        this.profissao = profissao 
                         this.closeModal()
                     }
                 }
@@ -461,7 +467,7 @@ export default {
             this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
             this.contratacao.chave = this.chave
             this.contratacao.uid =  this.uid
-            this.contratacao.label_button = 'Confirma novo valor'
+            this.contratacao.label_button = 'Confirmar novo valor'
             this.contratacao.tipo = 'Seguro'
             this.contratacao.detalhes = {
                 premio_total_solicitado: this.premioTelaTotal,
@@ -474,14 +480,14 @@ export default {
         },
         preencherDPS(){
             let usuario = JSON.parse(sessionStorage.participante)
-            let nome = usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toLowerCase()
-            let sexo = usuario.data.cadastro.informacoes_pessoais.sexo.toLowerCase()
+            let nome = usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toUpperCase()
+            let sexo = usuario.data.cadastro.informacoes_pessoais.sexo.toUpperCase()
             let nasc = usuario.data.cadastro.informacoes_pessoais.nascimento.replace('/','-').replace('/','-')
             let cpf = usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-','')
             let contr = (parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)).toFixed(2)
             let email = usuario.data.cadastro.informacoes_pessoais.email.replace('@','%40')
             let fone = usuario.data.cadastro.informacoes_pessoais.celular.replace(/ /gi,'').replace(/\+/gi,'').replace(/-/gi,'').replace('(','').replace(')','')
-            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toLowerCase()
+            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toUpperCase()
             let teto = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
             //let idade_apos = '' //se não informada é o maior entre 60 ou a idade atual +10}
             let premio_morte = this.premioMorte.replace('.','%2c')
@@ -495,8 +501,12 @@ export default {
         },
         requestDPS(string) {   
             //this.$refs.ModalDPS.style.display = "block"   
+            base_spinner.style.display = 'flex'
             this.dps = true      
             this.stringRequest = string
+            setTimeout(function() {
+                base_spinner.style.display = 'none'
+            }, 8000)
         },
         fecharDPS(){
             // this.$refs.ModalDPS.style.display = "none"
