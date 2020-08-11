@@ -10,6 +10,7 @@ import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
 import disclaimer from '../disclaimer/disclaimer'
+//import { Erros } from '../../Erros'
 
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
@@ -208,8 +209,31 @@ export default {
         }
     },
     created(){ 
-        apiMAG({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => {    
-            console.log('response',response)                             
+        //debugger
+        // var body = {
+        //     simulacoes:[{
+        //         proponente: {
+        //             tipoRelacaoSeguradoId: 1,
+        //             nome: 'CENARIO TESTE 1',
+        //             cpf: '24011549061',
+        //             dataNascimento: '1980-10-20',
+        //             profissaoCbo: '2410-05',
+        //             renda: 5000,
+        //             sexoId: 1,
+        //             uf: 'MA',
+        //             declaracaoIRId: 1
+        //         },
+        //         periodicidadeCobrancaId: 30,
+        //         prazoCerto: 30,
+        //         prazoPagamentoAntecipado: 10,
+        //         prazoDecrescimo: 10
+        //     }]
+        // }
+        // apiMAG({url:'/apiseguradora/v2/simulacao?cnpj=11321351000110&codigoModeloProposta=YZ', 
+        //         body: body,
+        //         metodo: 'POST'}
+        //         ).then((response) => {    
+        //     console.log('response',response)                             
             // if (!response.data.sucesso) {
             //     Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',response.erro)
             //     base_spinner.style.display = 'none'
@@ -220,11 +244,11 @@ export default {
             //     self.$refs.boletoModal.style.display = "block"
             // }
             // base_spinner.style.display = 'none'
-        }).catch((error) => {
-            Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',error)
+        //}).catch((error) => {
+            //Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',error)
             //base_spinner.style.display = 'none'
-            return page('/erro')
-        })       
+            //return page('/erro')
+        // })       
         this.consultaDadosContratados()        
     },
     mounted(){
