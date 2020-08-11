@@ -39,7 +39,9 @@ export default {
             msg_vigencia: "",
             cancelada: false,
             lancada: false,
-            erroCancelamento: false
+            erroCancelamento: false,
+            resumo: null,
+            mostraDetalhe: false
         }
     },       
     created() {
@@ -74,6 +76,9 @@ export default {
                 }
                 if(this.contratacao.valor_solicitado) {
                     this.valor_atual = financeiro.valor_to_string_formatado(this.contratacao.valor_solicitado.toFixed(2), 2, false, true)
+                }
+                if (this.contratacao.resumo) {
+                    this.resumo = this.contratacao.resumo
                 }
 
                 if (this.contratacao !== 'Efetivada') {
@@ -139,6 +144,9 @@ export default {
                 this.$emit('recarregarDados')          
             }  
             page(`/${sessionStorage.ultimaPagina}`)
+        },
+        detalheContratacao() {
+            this.mostraDetalhe = !this.mostraDetalhe //inverte
         },
         cancelarContratacao() {       
             this.erroCancelamento = false

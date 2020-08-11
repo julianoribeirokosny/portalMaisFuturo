@@ -2,6 +2,7 @@
 
 export const contratacao = {
     RENDA: 'Contribuição mensal',
+    RENDA_2: 'Contribuição adicional mensal',
     SEGURO: 'Seguro',
     EMPRESTIMO: 'Empréstimo'
 }
@@ -31,6 +32,7 @@ export const tiposSolicitacaoPipefy = {
     "Seguro": "Contratação de Risco",
     "Seguro - Cancelamento": "Cancelamento de Risco",
     "Contribuição mensal": "Alteração de Contribuição",
+    "Contribuição adicional mensal": "Alteração de Contribuição",
     //renda1: "Suspensão de Contribuição",
     cadastro: "Alteração de Cadastro",
     boleto: "Segunda-via de Boletos",

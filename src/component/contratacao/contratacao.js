@@ -17,20 +17,6 @@ export default {
     template: contratacao,
     props: { 
         dados: {            
-            /*type: Object,
-            default: () => { 
-                return {
-                    titulo: 'Adesão',
-                    titulo_finalizacao: 'Parabéns!!!',
-                    msg_inicial: '',
-                    msg_vigencia: '',
-                    msg_novo_valor: '',
-                    valor_novo: 0,
-                    valor_antigo: 0,
-                    detalhes: null,
-                    uid:''
-                }
-            }*/
         }
     },    
     data: function() {
@@ -95,7 +81,8 @@ export default {
                         status: statusContratacao.SOLICITADO,
                         detalhes: detalhes,
                         pipeId: ret.data.pipeId,
-                        cardId: response.data.createCard.card.id
+                        cardId: response.data.createCard.card.id,
+                        resumo: this.dados.resumo ? this.dados.resumo : null
                     }
 
                     var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)

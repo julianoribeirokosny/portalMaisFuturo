@@ -26,3 +26,8 @@
     font-weight: 400 !important;
     color: darkred !important;
 }
+
+.resumo {
+    font-size: 13px !important;
+    line-height: 15px !important;
+}

@@ -1414,7 +1414,7 @@ export default class FirebaseHelper {
           let objeto = contratacao[id]
           let tipo = objeto.tipo
           console.log('Contratacao Tipo ====> ',tipo)
-          if(tipo == 'Contribuição mensal') {
+          if(tipo === 'Contribuição mensal' || tipo === 'Contribuição adicional mensal') {
             ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
             ref.update({vigente:false})
             ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)
@@ -1454,7 +1454,7 @@ export default class FirebaseHelper {
       try{
           let ref = this.database.ref(`usuarios/${chave}/transacoes/contratacoes/${id}/`)          
           ref.update({status:'Cancelado pelo usuário'})
-          if(tipo && tipo === 'Contribuição mensal') {
+          if(tipo && (tipo === 'Contribuição mensal' || tipo === 'Contribuição adicional mensal')) {
               ref = this.database.ref(`usuarios/${chave}/home/usr_projeto_vida/acao/`)          
               ref.update({vigente:true})
               ref = this.database.ref(`usuarios/${chave}/home/usr_contribuicao/acao/`)

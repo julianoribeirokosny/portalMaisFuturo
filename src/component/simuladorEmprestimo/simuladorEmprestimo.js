@@ -267,7 +267,7 @@ export default {
                 this.contratacao.valor_novo_Tela = financeiro.valor_to_string_formatado(principal, 2, false, true)
                 this.contratacao.valor_antigo = parseFloat(this.saldo_devedor.toString().replace(/\./g,''))
                 this.contratacao.titulo_finalizacao = 'Solicitação </br> de empréstimo </br>encaminhada'
-                this.contratacao.finalizacao_msg = 'Legal! </br></br>Nosso time de consultores esta avaliando a solicitação e em breve entrará em contato para as tratativas necessárias e maiores informações sobre o empréstimo e os limites estabelecidos.'
+                this.contratacao.finalizacao_msg = 'Nosso time de consultores avaliará a solicitação e em breve entrará em contato para as tratativas e maiores informações sobre o empréstimo e os limites estabelecidos.'
                 this.contratacao.finalizacao_msg_novo_valor = 'Valor bruto simulado de R$ '
                 this.contratacao.chave = this.chave
                 this.contratacao.uid = this.uid

@@ -56,7 +56,7 @@ export default {
                 matricula: '',
                 plano: '',
                 label_button:'',
-                tipo: 'Contribuição mensal'
+                tipo: ''
             },
             lidades: [{ label: '45 anos', value: 45 },{ label: '46 anos', value: 46 },{ label: '47 anos', value: 47 },
                       { label: '48 anos', value: 48 },{ label: '49 anos', value: 49 },{ label: '50 anos', value: 50 },
@@ -191,25 +191,27 @@ export default {
         }
     },
     methods: {
-        consultaDadosContratados() {
-            this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.RENDA).then((data) => {
-                if(data){
-                    let dataHoje = utils.dateFormat(new Date(), false, false, false, false, false)
-                    let contratacao = data[Object.keys(data)[0]]
-                    if (contratacao.status === Enum.statusContratacao.SOLICITADO ||
-                        (contratacao.status === Enum.statusContratacao.EFETIVADA && contratacao.iniVigencia > dataHoje)) {
-                        this.processaDadosContratados(data)
-                    } else {
-                        this.simulador = true
-                        this.rendaSolicitada = false
-                        this.consultaDados()    
-                    }
-                } else {   
+        async consultaDadosContratados() {
+            let dataHoje = utils.dateFormat(new Date(), false, false, false, false, false)
+            let data = await this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.RENDA)
+            if (!data) {
+                data = await this.firebaseHelper.getContratacao(this.chave, Enum.contratacao.RENDA_2)
+            }
+            if(data){
+                let contratacao = data[Object.keys(data)[0]]
+                if (contratacao.status === Enum.statusContratacao.SOLICITADO ||
+                    (contratacao.status === Enum.statusContratacao.EFETIVADA && contratacao.iniVigencia > dataHoje)) {
+                    this.processaDadosContratados(data)
+                } else {
                     this.simulador = true
                     this.rendaSolicitada = false
-                    this.consultaDados()
-                } 
-            })
+                    this.consultaDados()    
+                }
+            } else {   
+                this.simulador = true
+                this.rendaSolicitada = false
+                this.consultaDados()
+            } 
         },
         processaDadosContratados(data) {            
             if (data) {
@@ -232,6 +234,7 @@ export default {
             this.contribuicaoFixa = dataSimulador.contribuicaoFixa
             this.contribuicaoPatronal = dataSimulador.contribuicaoPatronal
             this.usr_tipo_plano = dataSimulador.usr_tipo_plano
+            this.tipo = (this.usr_tipo_plano === 'jmalucelli') ? 'Contribuição adicional mensal' : 'Contribuição mensal'
             this.usr_dtnasc = dataSimulador.usr_dtnasc
             this.minimoContribuicao = dataSimulador.minimoContribuicao
             this.min = dataSimulador.minimoContribuicao
@@ -270,21 +273,23 @@ export default {
             month[10] = "Nov"
             month[11] = "Dez"
             var n = month[d.getMonth() + 1]
+            let instituido = this.usr_tipo_plano !== 'jmalucelli'
             this.contratacao.titulo = 'Confirme a </br> alteração da </br>sua contribuição'
-            this.contratacao.msg_inicial = 'Você está alterando o valor da sua contribuição mensal.'
-            this.contratacao.msg_vigencia = `A sua nova contribuição mensal estará vigente a partir do mês de ${n}/${d.getFullYear()}.`
-            this.contratacao.msg_novo_valor = `O valor da sua nova contribuição mensal é de R$ ${this.contribuicaoTela}.`
+            this.contratacao.msg_inicial = `Você está alterando o valor da sua contribuição ${instituido ? '' : 'adicional'} mensal. `
+            this.contratacao.msg_vigencia = `Este novo valor estará vigente a partir da próxima competência de cobrança disponível.`
+            this.contratacao.msg_novo_valor = `O valor da sua nova contribuição ${instituido ? '' : 'adicional'} mensal será de R$ ${this.contribuicaoTela}.`
             this.contratacao.valor_novo = this.contribuicao
             this.contratacao.valor_novo_Tela = ''
             this.contratacao.valor_antigo = this.minimoContribuicao
             this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Sua contribuição </br> foi alterada'
-            this.contratacao.finalizacao_msg = `O novo valor da sua contribuição é R$ ${this.contribuicaoTela}`
+            this.contratacao.finalizacao_msg = `O novo valor da sua contribuição ${instituido ? '' : 'adicional'} será de R$ ${this.contribuicaoTela}`
             if(this.usr_tipo_plano === 'jmalucelli') {
-                this.contratacao.finalizacao_msg_novo_valor = `Sua nova contribuição total é R$ ${this.contribuicaoTotalTela}.`
+                this.contratacao.finalizacao_msg_novo_valor = `O valor total de suas contribuições à previdência será de R$ ${this.contribuicaoTotalTela}.`
             }
             this.contratacao.chave = this.chave
             this.contratacao.uid =  this.uid
             this.contratacao.label_button = 'Confirmar novo valor'
+            this.contratacao.tipo = this.tipo
             this.simulador = false
         },
         calculaReservaFutura() {
