@@ -1,6 +1,6 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
     <template v-if="!bloqueio">
-        <template v-if="!dps">
+        <!-- <template v-if="!dps"> -->
             <template v-if="!seguroSolicitado">
                 <template v-if="simulador">
                     <div class="mdl-card__supporting-text mdl-card-container div_margem_card" style="width: 95%; margin-bottom: 10px;">
@@ -82,16 +82,16 @@
                         </div>
                     </div>
                     <div class="mdl-card__supporting-text mdl-card-container">
-                        <template v-if="novaCoberturaInvalidez > maximoSemDpsInvalidez || novaCoberturaMorte > maximoSemDpsMorte">
+                        <!-- <template v-if="novaCoberturaInvalidez > maximoSemDpsInvalidez || novaCoberturaMorte > maximoSemDpsMorte">
                             <div class="mdl-shadow--2dp div_btn_contratar" @click="preencherDPS">
                                 Contratar
                             </div>
                         </template>
-                        <template v-else>
+                        <template v-else> -->
                             <div class="mdl-shadow--2dp div_btn_contratar" @click="contratar">
                                 Contratar
                             </div>
-                        </template>
+                        <!-- </template> -->
                         <div class="mdl-shadow--2dp div_btn_voltar" @click="voltar">
                             Voltar
                         </div>
@@ -105,7 +105,7 @@
             <template v-else>
                 <contratacao-aberta v-bind:dados="dadosSeguroSolicitado" @recarregarDados="consultaDadosContratados"></contratacao-aberta>
             </template>            
-        </template>
+        <!-- </template>
         <template v-else>
             <div class="div_titulo_card mdl-card__supporting-text mdl-card-container " style="width: 95%; margin-bottom: 10px; margin-top: 15px;">
                 Confirmar Dados
@@ -113,10 +113,7 @@
             <div style="display: flex; justify-content: center; width: 100%;" v-if="stringRequest !== ''">
                 <iframe :src="stringRequest" width="100%" height="500px" frameborder="0"></iframe>
             </div>
-            <!--div class="mdl-card__supporting-text" style="margin:20px; display:block;">
-                <div class="div_button_cancelar" @click="fecharDPS()">voltar</div>
-            </div-->
-        </template>
+        </template> -->
     </template>
     <!-- The Modals -->
     <div id="ModalProfissao" ref="ModalProfissao" class="modal">

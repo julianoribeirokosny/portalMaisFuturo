@@ -28,10 +28,8 @@ export default {
         chave:''
     },    
     data: function() {
-        return {
+        return {            
             disclaimerMensagem: Enum.disclaimer.SEGURO,
-            dps: false,
-            stringRequest: '',
             sliderInvalidezmin: 1,
             sliderInvalidezmax: 10,
             sliderInvalidezinterval: 1,
@@ -516,49 +514,11 @@ export default {
                 { nome:'PRÊMIOS', valor:'' },
                 { nome:'Prêmio Seguro de Renda | Morte:', valor: pMorte },
                 { nome:'Prêmio Seguro de Renda | Invalidez:', valor: pInvalid }
-                )
-            this.simulador = false    
-
+            )
             if (this.novaCoberturaInvalidez > this.maximoSemDpsInvalidez || this.novaCoberturaMorte > this.maximoSemDpsMorte) {
-                preencherDPS()
-                //*********
-                //INCLUIR AQUI A CHAMADA PARA contratacao.confirmar
-                //
-            }      
-        },
-        preencherDPS(){
-            let usuario = JSON.parse(sessionStorage.participante)
-            let nome = usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toUpperCase()
-            let sexo = usuario.data.cadastro.informacoes_pessoais.sexo.toUpperCase()
-            let nasc = usuario.data.cadastro.informacoes_pessoais.nascimento.replace('/','-').replace('/','-')
-            let cpf = usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-','')
-            let contr = (parseFloat(this.premioInvalidez) + parseFloat(this.premioMorte)).toFixed(2)
-            let email = usuario.data.cadastro.informacoes_pessoais.email.replace('@','%40')
-            let fone = usuario.data.cadastro.informacoes_pessoais.celular.replace(/ /gi,'').replace(/\+/gi,'').replace(/-/gi,'').replace('(','').replace(')','')
-            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toUpperCase()
-            let teto = usuario.data.cadastro.informacoes_pessoais.profissao.seguro
-            //let idade_apos = '' //se não informada é o maior entre 60 ou a idade atual +10}
-            let premio_morte = this.premioMorte.replace('.','%2c')
-            let premio_inva = this.premioInvalidez.replace('.','%2c') 
-            let cob_morte = this.novaCoberturaMorte
-            let cob_invalidez = this.novaCoberturaInvalidez
-            let profissao = usuario.data.cadastro.informacoes_pessoais.profissao.nome.replace(/ /gi,'+').toLowerCase()           
-            let stringRequest = `https://previdenciadigital.com.br/contratar-portal/?nome=${nome}&sexo=${sexo}&nasc=${nasc}&cpf=${cpf}&contr=${contr}&email=${email}&fone=${fone}&estadocivil=${estadocivil}&teto=${teto}&premio_morte=${premio_morte}&premio_inva=${premio_inva}&cob_morte=${cob_morte}&cob_invalidez=${cob_invalidez}&prof=${profissao}`
-            this.requestDPS(stringRequest)
-
-            base_spinner.style.display = 'none'                      
-    
-        },
-        requestDPS(string) {   
-            base_spinner.style.display = 'flex'
-            this.dps = true      
-            this.stringRequest = string
-            setTimeout(function() {
-                base_spinner.style.display = 'none'
-            }, 8000)
-        },
-        fecharDPS(){
-            this.dps = false
-        }
+                this.contratacao.dps = true                
+            }     
+            this.simulador = false
+        }        
     },
 }
