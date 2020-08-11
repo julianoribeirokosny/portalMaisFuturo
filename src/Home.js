@@ -119,165 +119,161 @@ export default class Home {
             return page('/erro')
         }
 
-        return Promise.all([]).then((retPromises) => {
-
-            Vue.component('grafico-reserva', {
-                extends: VueCharts.Doughnut,
-                mounted() {
-                    this.renderChart({
-                        labels: data_Home.saldo_reserva.grafico.labels,
-                        datasets: [{
-                            data: data_Home.saldo_reserva.grafico.data,
-                            backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
-                            borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
-                            borderColor: data_Home.saldo_reserva.grafico.borderColor,
-                        }]
-                    }, {
-                        cutoutPercentage: 88,
-                        legend: false,
-                        tooltips: false,
-                    });
-                }
-            })
-
-            Vue.component('projeto-vida', {
-                extends: VueCharts.Line,
-                mounted() {
-                    var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
-                    gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
-                    gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
-                    gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
-                    data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
-
-                    this.renderChart({
-                        labels: data_Home.projeto_vida.grafico.labels,
-                        datasets: data_Home.projeto_vida.grafico.datasets
-                    }, {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        legend: false,
-                        tooltips: false,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    callback: function(value) {
-                                        return value / 1000 + ' k';
-                                    }
-                                }
-                            }]
-                        }
-                    })
-                }
-            })            
-
-            Vue.config.errorHandler = function(err, vm, info) {
-                console.error(`Error: ${err.toString()}\nInfo: ${info}`);
-                Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
-                page('/erro')
+        Vue.component('grafico-reserva', {
+            extends: VueCharts.Doughnut,
+            mounted() {
+                this.renderChart({
+                    labels: data_Home.saldo_reserva.grafico.labels,
+                    datasets: [{
+                        data: data_Home.saldo_reserva.grafico.data,
+                        backgroundColor: data_Home.saldo_reserva.grafico.backgroundColor,
+                        borderWidth: data_Home.saldo_reserva.grafico.borderWidth,
+                        borderColor: data_Home.saldo_reserva.grafico.borderColor,
+                    }]
+                }, {
+                    cutoutPercentage: 88,
+                    legend: false,
+                    tooltips: false,
+                });
             }
-
-            let auth = this.auth.currentUser.uid
-            
-            if (!this.vueObj) {
-                this.vueObj = new Vue({
-                    renderError(h, err) {
-                        location.reload()
-                    },
-                    components: {
-                        simuladorEmprestimo,
-                        rentabilidade,
-                        simuladorSeguro,
-                        simuladorRenda,                        
-                        cadastro,
-                        servicos,
-                        emConstrucao,
-                        historicoContribuicao,
-                        trocaParticipacao,
-                        maisAmigos,
-                        minhaContribuicao,
-                        disclaimer,
-                        outrasSolicitacoes
-                    },
-                    data: {
-                        componentKey: 0,
-                        home: this.data_Home,
-                        toggle: false,
-                        chave: this.chave,
-                        url_foto: sessionStorage.url_foto,
-                        uid: this.auth.currentUser.uid,
-                        background: this.data_Home.mais_amigos.background,
-                        contratacaoContrib: contratacaoContrib,
-                        contratacaoEmp: contratacaoEmp,    
-                        contratacaoSeg: contratacaoSeg,
-                        competencia: this.data_Home.competencia,
-                        disclaimerMensagem: Enum.disclaimer.RENDA
-                    },
-                    created() {
-                        sessionStorage.ultimaPagina = 'home'
-                    },                    
-                    methods: {
-                        formatMoeda(value, incluiCifrao){
-                            if (value === 0) {
-                                return '(não contratado)'
-                            } else if (value && value !== 0) {
-                                let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
-                                return val
-                            }
-                        },
-                        maisamigos() {
-                            page('/mais-amigos')
-                        },
-                        forceRerender() {
-                            this.componentKey += 1;
-                        },
-                        error() {
-                            base_spinner.style.display = 'none'
-                            page('/erro')
-                        },
-                        toggleCategory() {
-                            this.toggle = !this.toggle;
-                        },
-                        removerCampanha: function(campanha) {
-                            campanha.ativo = false
-                            firebaseHelper.removerCampanha(this.chave, campanha.nome)
-                        },
-                        contratarCampanha(link) {
-                            sessionStorage.ultimaPagina = 'home'
-                            page(`/${link}`)
-                        },
-                        simuladorSeguro(link) {
-                            sessionStorage.ultimaPagina = 'home'
-                            page(`/${link}`)
-                        },
-                        simuladorRenda(link, origem) {
-                            sessionStorage.ultimaPagina = origem
-                            page(`/${link}`)
-                        }
-                    },
-                    errorCaptured(err, component, details) {
-                        base_spinner.style.display = 'none'
-                        Erros.registraErro(err, 'vuejs', 'showHome', JSON.stringify(err))
-                        return page('/erro')
-                    }
-                })
-                this.vueObj.$mount('#app');
-            } else {
-                this.vueObj.home = this.data_Home                
-                this.vueObj.contratacaoContrib = contratacaoContrib
-                this.vueObj.contratacaoEmp = contratacaoEmp    
-                this.vueObj.contratacaoSeg = contratacaoSeg
-                this.vueObj.chave = this.chave
-                this.vueObj.url_foto = sessionStorage.url_foto
-                this.vueObj.uid = this.auth.currentUser.uid
-                this.vueObj.competencia = this.data_Home.competencia                
-                this.vueObj.$forceUpdate()
-                this.vueObj.forceRerender()
-            }
-            setTimeout(function() {
-                base_spinner.style.display = 'none'
-            }, 20)
         })
 
+        Vue.component('projeto-vida', {
+            extends: VueCharts.Line,
+            mounted() {
+                var gradient = this.$refs.canvas.getContext("2d").createLinearGradient(0, 0, 0, 450);
+                gradient.addColorStop(0, "rgba(3, 49, 102, 0.9)");
+                gradient.addColorStop(0.5, "rgba(3, 49, 102, 0.9)");
+                gradient.addColorStop(1, "rgba(255, 255, 255, 0.1)");
+                data_Home.projeto_vida.grafico.datasets[3].backgroundColor = gradient;
+
+                this.renderChart({
+                    labels: data_Home.projeto_vida.grafico.labels,
+                    datasets: data_Home.projeto_vida.grafico.datasets
+                }, {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: false,
+                    tooltips: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                callback: function(value) {
+                                    return value / 1000 + ' k';
+                                }
+                            }
+                        }]
+                    }
+                })
+            }
+        })            
+
+        Vue.config.errorHandler = function(err, vm, info) {
+            console.error(`Error: ${err.toString()}\nInfo: ${info}`);
+            Erros.registraErro(auth, 'Vuejs Error', 'showHome', JSON.stringify(err))
+            page('/erro')
+        }
+
+        let auth = this.auth.currentUser.uid
+        
+        if (!this.vueObj) {
+            this.vueObj = new Vue({
+                renderError(h, err) {
+                    location.reload()
+                },
+                components: {
+                    simuladorEmprestimo,
+                    rentabilidade,
+                    simuladorSeguro,
+                    simuladorRenda,                        
+                    cadastro,
+                    servicos,
+                    emConstrucao,
+                    historicoContribuicao,
+                    trocaParticipacao,
+                    maisAmigos,
+                    minhaContribuicao,
+                    disclaimer,
+                    outrasSolicitacoes
+                },
+                data: {
+                    componentKey: 0,
+                    home: this.data_Home,
+                    toggle: false,
+                    chave: this.chave,
+                    url_foto: sessionStorage.url_foto,
+                    uid: this.auth.currentUser.uid,
+                    background: this.data_Home.mais_amigos.background,
+                    contratacaoContrib: contratacaoContrib,
+                    contratacaoEmp: contratacaoEmp,    
+                    contratacaoSeg: contratacaoSeg,
+                    competencia: this.data_Home.competencia,
+                    disclaimerMensagem: Enum.disclaimer.RENDA
+                },
+                created() {
+                    sessionStorage.ultimaPagina = 'home'
+                },                    
+                methods: {
+                    formatMoeda(value, incluiCifrao){
+                        if (value === 0) {
+                            return '(não contratado)'
+                        } else if (value && value !== 0) {
+                            let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
+                            return val
+                        }
+                    },
+                    maisamigos() {
+                        page('/mais-amigos')
+                    },
+                    forceRerender() {
+                        this.componentKey += 1;
+                    },
+                    error() {
+                        base_spinner.style.display = 'none'
+                        page('/erro')
+                    },
+                    toggleCategory() {
+                        this.toggle = !this.toggle;
+                    },
+                    removerCampanha: function(campanha) {
+                        campanha.ativo = false
+                        firebaseHelper.removerCampanha(this.chave, campanha.nome)
+                    },
+                    contratarCampanha(link) {
+                        sessionStorage.ultimaPagina = 'home'
+                        page(`/${link}`)
+                    },
+                    simuladorSeguro(link) {
+                        sessionStorage.ultimaPagina = 'home'
+                        page(`/${link}`)
+                    },
+                    simuladorRenda(link, origem) {
+                        sessionStorage.ultimaPagina = origem
+                        page(`/${link}`)
+                    }
+                },
+                errorCaptured(err, component, details) {
+                    base_spinner.style.display = 'none'
+                    Erros.registraErro(err, 'vuejs', 'showHome', JSON.stringify(err))
+                    return page('/erro')
+                }
+            })
+            this.vueObj.$mount('#app');
+        } else {
+            this.vueObj.home = this.data_Home                
+            this.vueObj.contratacaoContrib = contratacaoContrib
+            this.vueObj.contratacaoEmp = contratacaoEmp    
+            this.vueObj.contratacaoSeg = contratacaoSeg
+            this.vueObj.chave = this.chave
+            this.vueObj.url_foto = sessionStorage.url_foto
+            this.vueObj.uid = this.auth.currentUser.uid
+            this.vueObj.competencia = this.data_Home.competencia                
+            this.vueObj.$forceUpdate()
+            this.vueObj.forceRerender()
+        }
+        setTimeout(function() {
+            base_spinner.style.display = 'none'
+        }, 20)
     }
 
     async dadosHome(chave) {

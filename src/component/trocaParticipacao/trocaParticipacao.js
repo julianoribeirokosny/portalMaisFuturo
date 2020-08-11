@@ -55,13 +55,15 @@ export default {
                 })
         },
         selecionarNovaChave(novaChave) {
-            sessionStorage.chave = novaChave.chave
-            sessionStorage.participante = ''
-            sessionStorage.dadosSimuladorSeguro = ''
-            sessionStorage.historicoContribuicao = ''
-            var signedInUserContainer = $('.fp-signed-in-user-container');
-            this.signedInUserAvatar = $('.fp-avatar', signedInUserContainer);
-            this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(novaChave.foto) || '../../images/silhouette.jpg'}")`)
+            if (novaChave.chave !== sessionStorage.chave) {
+                sessionStorage.chave = novaChave.chave
+                sessionStorage.participante = ''
+                sessionStorage.dadosSimuladorSeguro = ''
+                sessionStorage.historicoContribuicao = ''
+                var signedInUserContainer = $('.fp-signed-in-user-container');
+                this.signedInUserAvatar = $('.fp-avatar', signedInUserContainer);
+                this.signedInUserAvatar.css('background-image', `url("${Utils.addSizeToGoogleProfilePic(novaChave.foto) || '../../images/silhouette.jpg'}")`)    
+            }
             page('/home')
         },
         showModal(chave) {

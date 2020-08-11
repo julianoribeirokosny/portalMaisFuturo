@@ -155,6 +155,7 @@ module.exports = (env, argv) => {
                         path.join(__dirname, 'src/component/minhaContribuicao/*.js'),             
                         path.join(__dirname, 'src/component/disclaimer/*.js'),                                   
                         path.join(__dirname, 'src/component/outrasSolicitacoes/*.js'),         
+                        path.join(__dirname, 'src/component/trocaParticipacao/*.js'), 
                         path.join(__dirname, 'src/*.js'),
                         path.join(__dirname, 'node_modules/firebaseui/dist/firebaseui.js'),
                         path.join(__dirname, 'node_modules/material-design-lite/material.js'),
@@ -174,7 +175,8 @@ module.exports = (env, argv) => {
                         path.join(__dirname, 'src/component/simuladorSeguro/simuladorSeguro.html'),
                         path.join(__dirname, 'src/component/minhaContribuicao/minhaContribuicao.html'),
                         path.join(__dirname, 'src/component/disclaimer/disclaimer.html'),
-                        path.join(__dirname, 'src/component/outrasSolicitacoes/outasSolicitacoes.html')
+                        path.join(__dirname, 'src/component/trocaParticipacao/trocaParticipacao.html'),
+                        path.join(__dirname, 'src/component/outrasSolicitacoes/outrasSolicitacoes.html')
                     ]),
                 }),
             ],

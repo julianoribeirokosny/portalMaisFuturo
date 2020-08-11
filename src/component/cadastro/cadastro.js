@@ -15,6 +15,7 @@ import $ from 'jquery'
 
 const img_editar = require('../../../public/images/Editar.png')
 const { tiposSolicitacaoPipefy } = require('../../Enum')
+const utilsFunctions = require('../../../functions/utilsFunctions')
 
 export default {
     template: cadastro,
@@ -206,7 +207,7 @@ export default {
                 //identifica alterações do cadastro
                 let aAlteracoes = []
                 for (let key in this.cadastro) {
-                    aAlteracoes.push(compareJSON(this.cadastro[key], this.cadastroAntes[key]))
+                    aAlteracoes.push(utilsFunctions.compareJSON(this.cadastro[key], this.cadastroAntes[key]))
                 }
                 
                 console.log('====> alteracoes', aAlteracoes)

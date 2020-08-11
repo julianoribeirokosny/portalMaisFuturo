@@ -227,3 +227,15 @@
     text-align: center;
     font-size: 16px;
   }
+
+  .vs__dropdown-menu {
+      max-height: 120px !important;
+  }
+
+  .div_vSelect_contrib {
+    border: silver solid 1px;
+    border-radius: 20px;
+    padding-left: 15px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
