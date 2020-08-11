@@ -197,7 +197,8 @@ export default {
                 matricula: '',
                 plano: '',
                 label_button:'',
-                tipo: ''
+                tipo: '',
+                resumo: []                
             },
             profissao: null,
             profissoes: [],
@@ -306,6 +307,7 @@ export default {
             if(!dataSimulador.profissao) {
                 this.getProfissaoParticipante(this.chave)
             } else {
+                console.log('===================> dataSimulador', dataSimulador)
                 this.fatorInvalidez = dataSimulador.fatorInvalidez
                 this.fatorMorte = dataSimulador.fatorMorte
                 this.titulo = dataSimulador.titulo
@@ -438,26 +440,48 @@ export default {
             var n = month[d.getMonth() + 1]
             this.contratacao.titulo = 'Confirme a </br> alteração do </br>seu seguro'
             this.contratacao.msg_inicial = 'Você está alterando o valor do seu seguro.'
-            this.contratacao.msg_vigencia = `A sua nova cobertura estará vigente a partir do mês de ${n}/${d.getFullYear()}.`
-            this.contratacao.msg_novo_valor = `O valor do seu novo prêmio mensal é R$ ${this.premioTelaTotal}.`
+            this.contratacao.msg_vigencia = `A sua nova cobertura estará vigente a partir da próxima competência disponível.`
+            this.contratacao.msg_novo_valor = `O valor do seu novo prêmio mensal será de R$ ${this.premioTelaTotal}.`
             this.contratacao.valor_novo = parseFloat(this.premioTelaTotal)
             this.contratacao.valor_novo_Tela = this.premioTelaTotal
             this.contratacao.valor_antigo = this.premioInicio
             this.contratacao.titulo_finalizacao = 'Parabéns!!! </br> Seu prêmio </br> foi alterado'
             this.contratacao.finalizacao_msg = 'Prêmio mensal alterado com sucesso.'
-            this.contratacao.finalizacao_msg_novo_valor = 'Você receberá o boleto com o novo valor de R$'
+            this.contratacao.finalizacao_msg_novo_valor = 'O valor total do seu novo prêmio mensal será de R$'
             this.contratacao.chave = this.chave
             this.contratacao.uid =  this.uid
             this.contratacao.label_button = 'Confirmar novo valor'
             this.contratacao.tipo = 'Seguro'
             this.contratacao.detalhes = {
-                premio_total_solicitado: this.premioTelaTotal,
+                premio_total_solicitado: this.premioInvalidez + this.premioMorte,
                 premio_invalidez_solicitado: this.premioInvalidez,
                 premio_morte_solicitado: this.premioMorte,                
                 cobertura_invalidez_solicitado: this.novaCoberturaInvalidez,
                 cobertura_morte_solicitado: this.novaCoberturaMorte
             }
-            this.simulador = false            
+            let pMorte = financeiro.valor_to_string_formatado(this.premioMorte, 2, true, true)
+            let pInvalid = financeiro.valor_to_string_formatado(this.premioInvalidez, 2, true, true)
+            let cMorte = financeiro.valor_to_string_formatado(this.novaCoberturaMorte, 2, true, true)
+            let cInvalid = financeiro.valor_to_string_formatado(this.novaCoberturaInvalidez, 2, true, true)            
+
+            this.contratacao.resumo = []
+            this.contratacao.resumo.push(
+                { nome:'CAPITAL SEGURADO', valor:'' },
+                { nome:'Cobertura | Morte:', valor: cMorte },
+                { nome:'Cobertura | Invalidez:', valor: cInvalid },
+                { nome:'&nbsp;', valor:'' },
+                { nome:'PRÊMIOS', valor:'' },
+                { nome:'Prêmio Seguro de Renda | Morte:', valor: pMorte },
+                { nome:'Prêmio Seguro de Renda | Invalidez:', valor: pInvalid }
+                )
+            this.simulador = false    
+
+            if (this.novaCoberturaInvalidez > this.maximoSemDpsInvalidez || this.novaCoberturaMorte > this.maximoSemDpsMorte) {
+                preencherDPS()
+                //*********
+                //INCLUIR AQUI A CHAMADA PARA contratacao.confirmar
+                //
+            }      
         },
         preencherDPS(){
             let usuario = JSON.parse(sessionStorage.participante)
@@ -477,11 +501,12 @@ export default {
             let cob_invalidez = this.novaCoberturaInvalidez
             let profissao = usuario.data.cadastro.informacoes_pessoais.profissao.nome.replace(/ /gi,'+').toLowerCase()           
             let stringRequest = `https://previdenciadigital.com.br/contratar-portal/?nome=${nome}&sexo=${sexo}&nasc=${nasc}&cpf=${cpf}&contr=${contr}&email=${email}&fone=${fone}&estadocivil=${estadocivil}&teto=${teto}&premio_morte=${premio_morte}&premio_inva=${premio_inva}&cob_morte=${cob_morte}&cob_invalidez=${cob_invalidez}&prof=${profissao}`
-            console.log('link',stringRequest )
             this.requestDPS(stringRequest)
+
+            base_spinner.style.display = 'none'                      
+    
         },
         requestDPS(string) {   
-            //this.$refs.ModalDPS.style.display = "block"   
             base_spinner.style.display = 'flex'
             this.dps = true      
             this.stringRequest = string
@@ -490,7 +515,6 @@ export default {
             }, 8000)
         },
         fecharDPS(){
-            // this.$refs.ModalDPS.style.display = "none"
             this.dps = false
         }
     },

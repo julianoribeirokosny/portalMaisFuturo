@@ -315,8 +315,9 @@ export default class Home {
         let p2 = this.validaSeContratoAberto(Enum.contratacao.RENDA)
         let p3 = this.validaSeContratoAberto(Enum.contratacao.EMPRESTIMO)
         let p4 = this.validaSeContratoAberto(Enum.contratacao.SEGURO)
+        let p5 = this.validaSeContratoAberto(Enum.contratacao.RENDA_2)
 
-        return Promise.all([p0, p1, p2, p3, p4]).then(async(retPromises) => {
+        return Promise.all([p0, p1, p2, p3, p4, p5]).then(async(retPromises) => {
 
             if (!retPromises[0] || !retPromises[1] || retPromises[1] === null) {
                 return null
@@ -326,7 +327,7 @@ export default class Home {
                 this.participante = retPromises[1]
                 let part = this.participante.home
                 let segmentoUsuario = await this.firebaseHelper.getSegmento(part.segmento)
-                let contratacaoContrib = retPromises[2]
+                let contratacaoContrib = retPromises[5] ? retPromises[5] : retPromises[2] 
                 let contratacaoEmp = retPromises[3]
                 let contratacaoSeg = retPromises[4]
                 this.data_Home = this.montaStringHome(home, part, segmentoUsuario)
