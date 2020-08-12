@@ -61,9 +61,9 @@ async function connectToken() {
 
 async function newToken() {
     const configMAG = {
-        client_id = '06b6e659-e395-4c27-aa98-e6faaca50c07',
-        client_secret = 'jWV93z7PaCU9iRZW',
-        urlstg = 'https://apis-stg.mag.com.br'
+        client_id: '06b6e659-e395-4c27-aa98-e6faaca50c07',
+        client_secret: 'jWV93z7PaCU9iRZW',
+        urlstg: 'https://apis-stg.mag.com.br'
     }
     let header = {
         'Content-Type': 'application/x-www-form-urlencoded'

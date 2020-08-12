@@ -228,7 +228,8 @@ export default {
                 prazoDecrescimo: 10
             }]
         }
-        apiMAG({url:'/apiseguradora/v2/simulacao?cnpj=11321351000110&codigoModeloProposta=YZ', 
+
+        apiMAG({idApi: 'simulacao', 
                 body: body,
                 metodo: 'POST'}
         ).then((response) => {    
