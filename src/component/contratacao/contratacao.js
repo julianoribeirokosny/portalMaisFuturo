@@ -15,19 +15,23 @@ const financeiro = require('../../../functions/Financeiro')
 
 export default {    
     template: contratacao,
-    props: { 
+    props: {
         dados: {            
-        }
+        },
     },    
     data: function() {
         return {
             firebaseHelper: new FirebaseHelper(),            
             finalizado: false,
             errorBanco: false,
-            erroContratacao: false
+            erroContratacao: false,
+            dps: false,
+            stringRequest: '',
         }
-    },  
-    watch: {          
+    },   
+    mounted(){
+    },   
+    watch: {
         erroContratacao(val) {
             if (val) {
                 this.intervaloMSG()
@@ -92,6 +96,10 @@ export default {
                         this.finalizado = false
                         this.errorBanco = true
                     }          
+                    if (this.dados.dps) {
+                        this.dps = true
+                        this.preencherDPS()
+                    }
                     base_spinner.style.display = 'none'                      
                     return true
                 }  
@@ -111,6 +119,33 @@ export default {
                 this.errorBanco = false
                 this.erroContratacao = false
             }, 10000);
+        },
+        preencherDPS(){
+            let usuario = JSON.parse(sessionStorage.participante)
+            let nome =        usuario.data.cadastro.informacoes_pessoais.nome.replace(/ /gi,'+').toUpperCase()
+            let sexo =        usuario.data.cadastro.informacoes_pessoais.sexo.toUpperCase()
+            let nasc =        usuario.data.cadastro.informacoes_pessoais.nascimento.replace('/','-').replace('/','-')
+            let cpf =         usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-','')
+            let email =       usuario.data.cadastro.informacoes_pessoais.email.replace('@','%40')
+            let fone =        usuario.data.cadastro.informacoes_pessoais.celular.replace(/ /gi,'').replace(/\+/gi,'').replace(/-/gi,'').replace('(','').replace(')','')
+            let estadocivil = usuario.data.cadastro.informacoes_pessoais.estado_civil.toUpperCase()
+            let teto =        usuario.data.cadastro.informacoes_pessoais.profissao.seguro
+            let profissao =   usuario.data.cadastro.informacoes_pessoais.profissao.nome.replace(/ /gi,'+').toLowerCase()           
+            let cob_morte =   this.dados.detalhes.cobertura_morte_solicitado
+            let cob_invalidez = this.dados.detalhes.cobertura_invalidez_solicitado
+            let contr = (parseFloat(this.dados.detalhes.premio_total_solicitado)).toFixed(2)
+            let premio_morte = this.dados.detalhes.premio_morte_solicitado.replace('.','%2c')
+            let premio_inva = this.dados.detalhes.premio_invalidez_solicitado.replace('.','%2c') 
+            let stringRequest = `https://previdenciadigital.com.br/contratar-portal/?nome=${nome}&sexo=${sexo}&nasc=${nasc}&cpf=${cpf}&contr=${contr}&email=${email}&fone=${fone}&estadocivil=${estadocivil}&teto=${teto}&premio_morte=${premio_morte}&premio_inva=${premio_inva}&cob_morte=${cob_morte}&cob_invalidez=${cob_invalidez}&prof=${profissao}`
+            this.requestDPS(stringRequest)
+            base_spinner.style.display = 'none'
+        },
+        requestDPS(string) {   
+            base_spinner.style.display = 'flex'                 
+            this.stringRequest = string
+            setTimeout(function() {
+                base_spinner.style.display = 'none'
+            }, 8000)
         }
     }
 }

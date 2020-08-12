@@ -1288,67 +1288,84 @@ export default class FirebaseHelper {
       }
 
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
-      let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
-      let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano)      
-      let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
-      let minimoMorte = usuario.home.usr_coberturas.acao.valor_morte_entrada//Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, coberturaMorte).toFixed(0))
-      let maximoMorte = 0//maximoSemSDPSMorte      
-      let coberturaInvalidez = (usuario.data.valores.coberturaInvalidez === undefined || usuario.data.valores.coberturaInvalidez === 0) ? 0 : usuario.data.valores.coberturaInvalidez
-      let minimoInvalidez = usuario.home.usr_coberturas.acao.valor_invalidez_entrada //Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez).toFixed(0))
-      let maximoInval = 0//maximoSemDPSInvalidez      
-      let stepMorte = simuladorSeguroSettings.step_morte
-      let stepInvalidez = simuladorSeguroSettings.step_invalidez      
-      let maximoSemSDPSMorte = 0
-      let maximoSemDPSInvalidez = 0
-      let profissao = false
-      let valorAtual = (usuario.data.valores.contribRisco === undefined) ? 0 : usuario.data.valores.contribRisco
-      if(usuario.data.cadastro.informacoes_pessoais.profissao) {
-        maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
-        maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
-        //maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
-        //maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
-        maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
-        maximoSemDPSInvalidez = Number(this.calculaMaximoSemDPSSeguro(maximoInval, coberturaInvalidez, simuladorSeguroSettings.regra_dps).toFixed(0))  
-        profissao = true
-      } else {
-        coberturaMorte = 100
-        coberturaInvalidez = 100
-        maximoMorte = 1000
-        maximoInval = 1000
-        minimoMorte = 100
-        minimoInvalidez = 100
-        maximoSemSDPSMorte = 1000
-        maximoSemDPSInvalidez = 1000  
-        stepMorte = 10
-        stepInvalidez = 10
-        profissao = false,
-        valorAtual = 0
-      } 
+      let p0 = new Promise((resolve) => {
+        return resolve(this.getFatorSimuladorSeguro(idade))
+      })
+      let p1 = new Promise((resolve) => {
+        return resolve(this.getSimuladorSeguroSettings(usuario.home.usr_plano))
+      })
+      //let p2 = new Promise((resolve) => {
+      //  return resolve(<<Chamada MAG>>)
+      //})
+      return Promise.all([p0, p1 /*, p2*/]).then((retPromises) => {
+        //let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
+        //let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano) 
+        let fator_idade_seguro = retPromises[0]
+        let simuladorSeguroSettings = retPromises[1]
+        
+        //let retMagQqrCoisa = retPromises[2]
 
-      let dadosSimuladorSeguro = {
-          titulo: 'Simulador de</br>Seguro de Renda',
-          tipo: 'Seguro',
-          minimoMorte: minimoMorte,
-          maximoSemDpsMorte: maximoSemSDPSMorte === 0 ? minimoMorte : maximoSemSDPSMorte,
-          maximoMorte: maximoMorte === undefined ? 0 : maximoMorte,
-          stepMorte: stepMorte,
-          minimoInvalidez: minimoInvalidez,
-          maximoSemDpsInvalidez: maximoSemDPSInvalidez === 0 ? minimoInvalidez : maximoSemDPSInvalidez,
-          maximoInvalidez: maximoInval  === undefined ? 0 : maximoInval,
-          stepInvalidez: stepInvalidez,
-          fatorMorte: fator_idade_seguro.fator_morte,
-          fatorInvalidez: fator_idade_seguro.fator_invalidez,
-          coberturaInvalidez: coberturaInvalidez , //=== 0 ? minimoInvalidez : Number(coberturaInvalidez.toFixed(0)),
-          coberturaMorte: coberturaMorte , //=== 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
-          chave: chave,
-          uid: uid,        
-          matricula: usuario.data.cadastro.dados_plano.matricula,
-          plano: usuario.data.cadastro.dados_plano.plano,
-          bloqueio: idade >= 15 ? false : true,
-          profissao: profissao,
-          valorAtual: valorAtual
-      }
-      return dadosSimuladorSeguro      
+
+        let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
+        let minimoMorte = usuario.home.usr_coberturas.acao.valor_morte_entrada//Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, coberturaMorte).toFixed(0))
+        let maximoMorte = 0//maximoSemSDPSMorte      
+        let coberturaInvalidez = (usuario.data.valores.coberturaInvalidez === undefined || usuario.data.valores.coberturaInvalidez === 0) ? 0 : usuario.data.valores.coberturaInvalidez
+        let minimoInvalidez = usuario.home.usr_coberturas.acao.valor_invalidez_entrada //Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez).toFixed(0))
+        let maximoInval = 0//maximoSemDPSInvalidez      
+        let stepMorte = simuladorSeguroSettings.step_morte
+        let stepInvalidez = simuladorSeguroSettings.step_invalidez      
+        let maximoSemSDPSMorte = 0
+        let maximoSemDPSInvalidez = 0
+        let profissao = false
+        let valorAtual = (usuario.data.valores.contribRisco === undefined) ? 0 : usuario.data.valores.contribRisco
+        if(usuario.data.cadastro.informacoes_pessoais.profissao) {
+          maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
+          maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
+          //maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
+          //maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
+          maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
+          maximoSemDPSInvalidez = Number(this.calculaMaximoSemDPSSeguro(maximoInval, coberturaInvalidez, simuladorSeguroSettings.regra_dps).toFixed(0))  
+          profissao = true
+        } else {
+          coberturaMorte = 100
+          coberturaInvalidez = 100
+          maximoMorte = 1000
+          maximoInval = 1000
+          minimoMorte = 100
+          minimoInvalidez = 100
+          maximoSemSDPSMorte = 1000
+          maximoSemDPSInvalidez = 1000  
+          stepMorte = 10
+          stepInvalidez = 10
+          profissao = false,
+          valorAtual = 0
+        } 
+  
+        let dadosSimuladorSeguro = {
+            titulo: 'Simulador de</br>Seguro de Renda',
+            tipo: 'Seguro',
+            minimoMorte: minimoMorte,
+            maximoSemDpsMorte: maximoSemSDPSMorte === 0 ? minimoMorte : maximoSemSDPSMorte,
+            maximoMorte: maximoMorte === undefined ? 0 : maximoMorte,
+            stepMorte: stepMorte,
+            minimoInvalidez: minimoInvalidez,
+            maximoSemDpsInvalidez: maximoSemDPSInvalidez === 0 ? minimoInvalidez : maximoSemDPSInvalidez,
+            maximoInvalidez: maximoInval  === undefined ? 0 : maximoInval,
+            stepInvalidez: stepInvalidez,
+            fatorMorte: fator_idade_seguro.fator_morte,
+            fatorInvalidez: fator_idade_seguro.fator_invalidez,
+            coberturaInvalidez: coberturaInvalidez , //=== 0 ? minimoInvalidez : Number(coberturaInvalidez.toFixed(0)),
+            coberturaMorte: coberturaMorte , //=== 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
+            chave: chave,
+            uid: uid,        
+            matricula: usuario.data.cadastro.dados_plano.matricula,
+            plano: usuario.data.cadastro.dados_plano.plano,
+            bloqueio: idade >= 15 ? false : true,
+            profissao: profissao,
+            valorAtual: valorAtual
+        }
+        return dadosSimuladorSeguro        
+      })
   }
 
   calculaMinimoSeguro(setting, contratado) {      

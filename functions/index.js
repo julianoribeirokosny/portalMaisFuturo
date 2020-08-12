@@ -54,3 +54,7 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'apiPrevidenciaD
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'apiPipefy') {
   exports.apiPipefy = require('./apiPipefy').default;
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'apiMAG') {
+  exports.apiMAG = require('./apiMAG').default;
+}

@@ -150,13 +150,14 @@ export default {
             this.$refs.vencimentoModal.style.display = "block"
         },
         emitirBoleto() {
+            
             var base_spinner = document.querySelector('#base_spinner')
             var self = this
             self.cobranca.vencimento = self.vencimento 
             self.cobranca.valor = parseFloat(self.cobranca.valor.replace('.','').replace(',','.'))                  
             self.$refs.vencimentoModal.style.display = "none"
-            base_spinner.style.display = 'flex'         
-            console.log('====> self.cobranca', self.cobranca)   
+            base_spinner.style.display = 'flex' 
+            //console.log('self.cobranca',self.cobranca)
             apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => {                                 
                 console.log('=====> response', response)
                 if (!response.data.sucesso) {

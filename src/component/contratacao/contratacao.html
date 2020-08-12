@@ -1,56 +1,66 @@
-<div>
-    <template v-if="!finalizado">
-        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-            <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;"></div>
-            <div v-if='dados.msg_inicial' style="margin-top: 30px;">
-                {{ dados.msg_inicial }}
-            </div>
-            <div class="grid_contratacao" v-if="dados.resumo" style="margin-top: 30px;">
-                <template v-for="item in dados.resumo">   
-                    <div class='resumo' v-html="item.nome"></div>
-                    <div class='resumo' v-html="item.valor"></div>                                                   
-                </template>
-            </div>            
-            <div v-if="dados.msg_vigencia" style="margin-top: 30px;">
-                {{ dados.msg_vigencia }}
-            </div>
-            <div v-if="dados.msg_novo_valor" style="margin-top: 30px;">
-                {{ dados.msg_novo_valor }}
-            </div>
-            <div v-if="dados.observacao" style="margin-top: 20px;">
-                {{ dados.observacao }}
-            </div>
-            <div v-if="errorBanco" style="margin-top: 30px;color: brown;">
-                <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
-            </div>        
-            <div style="margin-top: 30px;">
-                <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar" ref="btn_contratar">
-                    {{ dados.label_button }}
-                </div>  
-                <div class="mdl-shadow--2dp div_btn_voltar"  @click.prevent="cancelar">
-                    Cancelar
-                </div>    
-            </div>
+<div style="width: 100%">
+    <template v-if="dps">
+        <div class="div_titulo_card mdl-card__supporting-text mdl-card-container " style="width: 95%; margin-bottom: 10px; margin-top: 15px;">
+            Confirmar Dados
         </div>
-        <div class="msg-erro" v-if="erroContratacao">
-            <span>Ops!</span>
-            <p><br><br>Ocorreu um erro na efetivação de sua solicitação.<br><br>Tente novamente mais tarde e se o erro persistir, entre em contato conosco através do e-mail contato@maisfuturo.com.br </p>
-        </div>        
+        <div style="display: flex; justify-content: center; width: 100%;" v-if="stringRequest !== ''">
+            <iframe :src="stringRequest" width="100%" height="500px" frameborder="0"></iframe>
+        </div>
     </template>
-    <template v-if="finalizado">
-        <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
-            <div class="div_titulo_card margin-auto" v-html="dados.titulo_finalizacao" style="margin-top: 30px;"></div>
-            <div style="margin-top: 40px;" v-if="dados.finalizacao_msg">
-                {{ dados.finalizacao_msg}}
-            </div>    
-            <div style="margin-top: 40px;" v-if="dados.finalizacao_msg_novo_valor">
-                {{ dados.finalizacao_msg_novo_valor }} {{ dados.valor_novo_Tela }}
-            </div>         
-            <div style="margin-top: 40px;">
-                <div class="mdl-shadow--2dp div_btn_contratar"  @click="retornar" style="margin-top: 40px;">
-                    Retornar
+    <template v-else>
+        <template v-if="!finalizado">
+            <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                <div class="div_titulo_card margin-auto" v-html="dados.titulo" style="margin-top: 20px;"></div>
+                <div v-if='dados.msg_inicial' style="margin-top: 30px;">
+                    {{ dados.msg_inicial }}
                 </div>
-            </div>   
-        </div>
+                <div class="grid_contratacao" v-if="dados.resumo" style="margin-top: 30px;">
+                    <template v-for="item in dados.resumo">   
+                        <div class='resumo' v-html="item.nome"></div>
+                        <div class='resumo' v-html="item.valor"></div>                                                   
+                    </template>
+                </div>            
+                <div v-if="dados.msg_vigencia" style="margin-top: 30px;">
+                    {{ dados.msg_vigencia }}
+                </div>
+                <div v-if="dados.msg_novo_valor" style="margin-top: 30px;">
+                    {{ dados.msg_novo_valor }}
+                </div>
+                <div v-if="dados.observacao" style="margin-top: 20px;">
+                    {{ dados.observacao }}
+                </div>
+                <div v-if="errorBanco" style="margin-top: 30px;color: brown;">
+                    <p>Ops, algum problema ocorreu e sua solicitação não foi gravada. Tente novamente mais tarde!</p>            
+                </div>        
+                <div style="margin-top: 30px;">
+                    <div class="mdl-shadow--2dp div_btn_contratar"  @click.prevent="confirmar" ref="btn_contratar">
+                        {{ dados.label_button }}
+                    </div>  
+                    <div class="mdl-shadow--2dp div_btn_voltar"  @click.prevent="cancelar">
+                        Cancelar
+                    </div>    
+                </div>
+            </div>
+            <div class="msg-erro" v-if="erroContratacao">
+                <span>Ops!</span>
+                <p><br><br>Ocorreu um erro na efetivação de sua solicitação.<br><br>Tente novamente mais tarde e se o erro persistir, entre em contato conosco através do e-mail contato@maisfuturo.com.br </p>
+            </div>        
+        </template>
+        <template v-if="finalizado">
+            <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+                <div class="div_titulo_card margin-auto" v-html="dados.titulo_finalizacao" style="margin-top: 30px;"></div>
+                <div style="margin-top: 40px;" v-if="dados.finalizacao_msg">
+                    {{ dados.finalizacao_msg}}
+                </div>    
+                <div style="margin-top: 40px;" v-if="dados.finalizacao_msg_novo_valor">
+                    {{ dados.finalizacao_msg_novo_valor }} {{ dados.valor_novo_Tela }}
+                </div>         
+                <div style="margin-top: 40px;">
+                    <div class="mdl-shadow--2dp div_btn_contratar"  @click="retornar" style="margin-top: 40px;">
+                        Retornar
+                    </div>
+                </div>   
+            </div>
+        </template>
     </template>
 </div>
