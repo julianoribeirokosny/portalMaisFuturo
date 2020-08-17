@@ -4,6 +4,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
+import 'firebase/functions';
 import latinize from 'latinize';
 import $ from 'jquery';
 import {Erros} from './Erros';
@@ -12,6 +13,9 @@ import page from 'page';
 const utils = require('../functions/utilsFunctions')
 const financeiro = require('../functions/Financeiro')
 const Enum = require('./Enum')
+//const functions = firebase.functions()
+//const apiMAG = functions.httpsCallable('apiMAG')
+
 
 /**
  * Handles all Firebase interactions.
@@ -59,6 +63,8 @@ export default class FirebaseHelper {
     this.storage = firebase.storage();
     this.auth = firebase.auth();
     this.project = firebase.name
+    this.functions = firebase.functions();
+    this.apiMAG = this.functions.httpsCallable('apiMAG')
 
     // Firebase references that are listened to.
     this.firebaseRefs = [];
@@ -1217,9 +1223,12 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorRenda(chave, uid) {
-      let usuario = JSON.parse(sessionStorage.participante)
-      if (!usuario || usuario === null) {
+      let usuario
+      if (sessionStorage.participante) {
+          usuario = JSON.parse(sessionStorage.participante)
+      } else {
           usuario = await this.getParticipante(chave)    
+          sessionStorage.participante = JSON.stringify(usuario) 
       }
       let simuladorRendaSettings = await this.getSimuladorRendaSettings(usuario.home.usr_plano)
       let minimoContribuicao = usuario.data.valores.contribParticipante    
@@ -1248,10 +1257,13 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorEmprestimo(chave, uid) {
-      let usuario = JSON.parse(sessionStorage.participante)
-      if (!usuario || usuario === null) {
-        usuario = await this.getParticipante(chave)    
-      }      
+      let usuario
+      if (sessionStorage.participante) {
+          usuario = JSON.parse(sessionStorage.participante)
+      } else {
+          usuario = await this.getParticipante(chave)    
+          sessionStorage.participante = JSON.stringify(usuario) 
+      }     
       var limite = usuario.home.usr_saldo_reserva.lista_valores_reserva[0]
       var teto = Enum.limite.EMPRESTIMO
       if (usuario.home.usr_plano == 'ACPrev') {
@@ -1277,16 +1289,13 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorSeguro(chave, uid) {
-      let usuario
-      if (!sessionStorage.participante || sessionStorage.participante === '') {
-        usuario = await this.getParticipante(chave)    
+      let usuario     
+      if (sessionStorage.participante) {
+          usuario = JSON.parse(sessionStorage.participante)
       } else {
-        usuario = JSON.parse(sessionStorage.participante)
-        if (!usuario || usuario === null) {
           usuario = await this.getParticipante(chave)    
-        }
+          sessionStorage.participante = JSON.stringify(usuario) 
       }
-
       let idade = utils.idade_hoje(new Date(usuario.data.cadastro.informacoes_pessoais.nascimento.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3")))
       let p0 = new Promise((resolve) => {
         return resolve(this.getFatorSimuladorSeguro(idade))
@@ -1294,17 +1303,17 @@ export default class FirebaseHelper {
       let p1 = new Promise((resolve) => {
         return resolve(this.getSimuladorSeguroSettings(usuario.home.usr_plano))
       })
-      //let p2 = new Promise((resolve) => {
-      //  return resolve(<<Chamada MAG>>)
-      //})
+      // let p2 = new Promise((resolve) => {
+      //   return resolve(this.getParamtrosSimuladorMAG(usuario))
+      // })
       return Promise.all([p0, p1 /*, p2*/]).then((retPromises) => {
         //let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
         //let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano) 
         let fator_idade_seguro = retPromises[0]
-        let simuladorSeguroSettings = retPromises[1]
-        
-        //let retMagQqrCoisa = retPromises[2]
+        let simuladorSeguroSettings = retPromises[1]        
+        //let parametrosSimuladorMAG = retPromises[2]
 
+        //console.log('parametrosSimuladorMAG ======>',parametrosSimuladorMAG)
 
         let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
         let minimoMorte = usuario.home.usr_coberturas.acao.valor_morte_entrada//Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, coberturaMorte).toFixed(0))
@@ -1319,8 +1328,8 @@ export default class FirebaseHelper {
         let profissao = false
         let valorAtual = (usuario.data.valores.contribRisco === undefined) ? 0 : usuario.data.valores.contribRisco
         if(usuario.data.cadastro.informacoes_pessoais.profissao) {
-          maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
-          maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.seguro.toFixed(0))
+          maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.teto.toFixed(0))
+          maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.teto.toFixed(0))
           //maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
           //maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
           maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
@@ -1366,6 +1375,53 @@ export default class FirebaseHelper {
         }
         return dadosSimuladorSeguro        
       })
+  }
+
+  getParamtrosSimuladorMAG(usuario) {
+      console.log('usuario ====>',usuario)  
+      let nascimentoArray = usuario.data.cadastro.informacoes_pessoais.nascimento.split('/')
+      let nascimento = `${nascimentoArray[2]}-${nascimentoArray[1]}-${nascimentoArray[0]}`
+      let body = new Object()
+      if(usuario.data.cadastro.informacoes_pessoais.profissao.cbo) {
+          body = {
+              simulacoes:[{
+                  proponente: {
+                      tipoRelacaoSeguradoId: 1,
+                      nome: usuario.data.cadastro.informacoes_pessoais.nome,
+                      cpf: usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-',''),  //sem digito
+                      dataNascimento: nascimento,
+                      profissaoCbo: usuario.data.cadastro.informacoes_pessoais.profissao.cbo,
+                      //renda: 5000,
+                      sexoId: usuario.data.cadastro.informacoes_pessoais.sexo === "Masculino" ? 1 : 2, //Masculino 1;Feminino 2
+                      uf: usuario.data.cadastro.endereco.uf,
+                      declaracaoIRId: 1
+                  },
+                  periodicidadeCobrancaId: 30,
+                  prazoCerto: 30,
+                  prazoPagamentoAntecipado: 10,
+                  prazoDecrescimo: 10
+              }]
+          }
+        console.log('body',body)
+        let data =  {
+                        idApi: 'simulacao', 
+                        body: body,
+                        metodo: 'POST'
+                    }
+        return this.apiMAG(data).then((response) => {
+            if (!response.data.sucesso) {  
+                Erros.registraErro(sessionStorage.uid, 'serviços', 'simulador Seguro', 'Consulta da apiMAG não retornou dados validos')                      
+                return null
+            } else {                    
+                return JSON.parse(response.data.response)
+            }        
+        }).catch((error) => {
+            Erros.registraErro(sessionStorage.uid, 'serviços', 'simulador Seguro', error)        
+            return null
+        })
+      } else {
+        return null
+      }
   }
 
   calculaMinimoSeguro(setting, contratado) {      
@@ -1621,7 +1677,7 @@ export default class FirebaseHelper {
   }
 
   getProfissoes() {
-    let ref = this.database.ref(`settings/simulador_seguro/teto_cobertura_profissao`)
+    let ref = this.database.ref(`settings/simulador_seguro/profissoes`)
     return ref.once('value').then((data) => {
       if (data.val()) {
         return data.val()

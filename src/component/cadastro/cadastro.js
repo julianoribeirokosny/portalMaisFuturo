@@ -33,6 +33,9 @@ export default {
     data: function() {        
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
         return {  
+            profissoes: [],            
+            profissaoInicial: '',
+            profissao: '',            
             errors:[],
             signedInUserAvatar:'',          
             avatar: foto ? foto : "../images/silhouette-edit.jpg",
@@ -55,11 +58,7 @@ export default {
             classValid: {
                 'hasvalid': false,
                 'hasinvalid': false
-            },
-            profissoes: [],
-            listaProfissoes: [],
-            profissaoInicial: '',
-            profissao: '',
+            },            
             optionsCropper: {
                 aspectRatio: 1,
                 closeOnSave: true,
@@ -94,7 +93,8 @@ export default {
     },
     created() {        
         this.getParticipante()
-        this.getProfissoes()
+        this.getProfissoes()       
+        //console.log('this.profissoes',this.profissoes)
         this.$root.$on('atualizaProfissao', (valor) => {
             this.profissao = valor
         })
@@ -147,15 +147,16 @@ export default {
                 this.cadastro.endereco.numero ) {
                     this.salvar()
             }            
-        },
+        },        
         getProfissoes() {
             return this.firebaseHelper.getProfissoes()
-                .then(ret => {
-                    this.listaProfissoes = Object.entries(ret)
-                    this.listaProfissoes.forEach(prof => {
-                        this.profissoes.push(prof[0])
+            .then(ret => {
+                if (ret) {                    
+                    ret.forEach(prof => {
+                         this.profissoes.push({nome: prof.nome, cbo: prof.cbo, teto: prof.teto})
                     })
-                })
+                }                
+            })
         },
         isEmailValid(email) {
             return this.reg.test(email)
@@ -196,21 +197,9 @@ export default {
         voltar() {
             page('/home')
         },
-        salvar() {  
-            let profissao = this.listaProfissoes.filter(p => {
-                if (p[0] === this.profissao) {
-                    return Object.entries(p)
-                }
-            })
-            if (profissao.length > 0) {
-
-                //identifica alterações do cadastro
-                let aAlteracoes = []
-                for (let key in this.cadastro) {
-                    aAlteracoes.push(utilsFunctions.compareJSON(this.cadastro[key], this.cadastroAntes[key]))
-                }
-                
-                console.log('====> alteracoes', aAlteracoes)
+        salvar() {
+            if (this.profissao) {
+                base_spinner.style.display = 'flex'
                 /*logTransacao
                 let dadosCard = {
                     tipoSolicitacao: tiposSolicitacaoPipefy.cadastro,
@@ -219,9 +208,7 @@ export default {
                     dadosNovos: financeiro.valor_to_string_formatado(this.dados.valor_novo, 2, true, true),
                     matricula: this.dados.matricula,
                     plano: this.dados.plano
-                }
-    
-                base_spinner.style.display = 'flex'
+                }    
                 //primeiro grava card no Pipefy
                 apiPipefy({acao: 'criarCard', body: dadosCard}).then((ret) => { 
                     if (!ret.data.sucesso) {
@@ -255,12 +242,8 @@ export default {
                 }).catch((e) => {
                     this.erroContratacao = true
                     base_spinner.style.display = 'none'
-                })              */                        
-    
-                this.cadastro.informacoes_pessoais.profissao = {
-                    nome: profissao[0][0],
-                    seguro: profissao[0][1]
-                }
+                })             */
+                this.cadastro.informacoes_pessoais.profissao = this.profissao
                 this.cadastro.informacoes_pessoais.email = this.email
                 var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
                 if (this.profissao !== this.profissaoInicial) {
@@ -277,6 +260,7 @@ export default {
                     this.finalizado = false
                     this.error_banco = true
                 }
+                base_spinner.style.display = 'none'
             } else {
                 this.finalizado = false
                 this.error_banco = true
