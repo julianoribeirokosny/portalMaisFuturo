@@ -1,46 +1,8 @@
-// Returns true if the uploaded file is an image and its size is below the given number of MB.
-function isImageBelowMaxSize(maxSizeMB) {
-  return request.resource.size < maxSizeMB * 1024 * 1024
-      && request.resource.contentType.matches('image/.*');
-}
-
-// Returns true if the user that initiated the request is an admin.
-function isAdmin() {
-  return request.auth.token != null && request.auth.token.admin == true;
-}
-
-// Returns true if the user authenticated
-function isAuth() {
-  return request.auth.uid != null && request.auth.uid != '';
-}
-
-// Returns true if the resource is being deleted.
-function isResourceBeingDeleted() {
-  return request.resource == null;
-}
-
-// Returns true if the user is the owner of the file.
-function isOwner(uid) {
-  return request.auth.uid == uid;
-}
-
+rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
-    match /login/{userId}/{chave}/{fileName} {
-      allow read: if isOwner(userId);
-      allow write: if (isAdmin() || isOwner(userId)) && isImageBelowMaxSize(2); //&& (isResourceBeingDeleted() || isImageBelowMaxSize(1));
-    }
-		match /usuarios/{chave}/avatar.jpg {
-      allow read;
-      allow write: if isAuth() && isImageBelowMaxSize(2);
-    }    
-		match /{userId}/thumb/{postId}/{fileName} {
-      allow read;
-      allow write: if isAdmin() || isOwner(userId) && (isResourceBeingDeleted() || isImageBelowMaxSize(1));
-    }
-    match /{userId}/full/{postId}/{fileName} {
-      allow read;
-      allow write: if isAdmin() || isOwner(userId) && (isResourceBeingDeleted() || isImageBelowMaxSize(5));
+    match /{allPaths=**} {
+      allow read, write: if request.auth!=null;
     }
   }
 }

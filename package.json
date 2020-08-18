@@ -1,12 +1,12 @@
 {
   "scripts": {
-    "clean": "rimraf ./public/js ./public/css ./public/fonts ./public/workbox ./public/workbox-sw.js ./public/index.html ./src/firebase-config.json ./public/firebase-messaging-sw.js ./public/firebase-messaging-sw.js.map",
+    "clean": "rimraf ./public/js ./public/css ./public/fonts ./public/workbox ./public/workbox-sw.js ./public/index.html ./public/firebase-messaging-sw.js ./public/firebase-messaging-sw.js.map",
     "build": "npm run clean && npm run createfirebaseconf && npm install && webpack -p && echo 'Done. Deploy Success.'",
-    "deploy-functions": "firebase deploy --only functions:apiMAG",    
-    "deploy-hosting": "firebase deploy --only hosting",  
+    "deploy-functions": "firebase deploy --only functions:apiMAG",
+    "deploy-hosting": "firebase deploy --only hosting",
     "serve-wds": "npm run clean && npm run createfirebaseconf && webpack-dev-server -d --inline",
     "serve": "npm run clean && npm run createfirebaseconf && concurrently \"firebase serve --only hosting\" \"webpack -d --watch\"",
-    "createfirebaseconf": "firebase setup:web --json > ./src/firebase-config.json"
+    "createfirebaseconf": "firebase apps:sdkconfig --json > ./src/firebase-config.json"
   },
   "devDependencies": {
     "ajv": "^5.5.2",
@@ -21,7 +21,6 @@
     "cssnano": "^4.0.0-rc.2",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
-    "firebase-tools": "^7.13.0",
     "glob-all": "^3.1.0",
     "html-critical-webpack-plugin": "^2.1.0",
     "html-loader": "^0.5.5",

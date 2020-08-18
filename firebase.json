@@ -1,6 +1,9 @@
 {
   "functions": {
-    "predeploy": "" 
+    "predeploy": [
+      "npm --prefix \"$RESOURCE_DIR\" run lint"
+    ],
+    "source": "functions"
   },
   "database": {
     "rules": "database-rules.json"
@@ -8,37 +11,12 @@
   "storage": {
     "rules": "storage.rules"
   },
-  "hosting": [
-    {
-    "target": "portal",
-    "predeploy": "npm run build",
+  "hosting": {
     "public": "public",
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }],
-    "headers": [
-      {
-      "source" : "**/*.@(png|js|css|woff2)",
-      "headers" : [{
-        "key" : "Cache-Control",
-        "value" : "max-age=31536000"
-      }]
-    },
-    {
-      "source" : "workbox-sw.js",
-      "headers" : [{
-        "key" : "Cache-Control",
-        "value" : "max-age=0, no-cache, no-store, must-revalidate"
-      }]
-    }]
-  },
-  {
-    "target": "termos",
-    "public": "public/estatico",
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }]
-  }]
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
 }
