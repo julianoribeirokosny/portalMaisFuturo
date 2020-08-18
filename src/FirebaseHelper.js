@@ -1444,6 +1444,39 @@ export default class FirebaseHelper {
       }
   }
 
+  atualizaBoletosPagos(chave, boletos) {
+    let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao`)
+    //busca as contribuiçoes não pagas
+    return ref.orderByChild('pago').equalTo(false).once('value').then((snapshot) => {
+      if (!snapshot) {
+        return true
+      }
+      let aPromises = []
+      snapshot.forEach((snapshotContrib) => {
+        let contrib = snapshotContrib.val()
+        let idBoleto = null
+        idBoleto = boletos.filter((bol) => {
+          if (bol.dataBase === contrib.anoMes) {
+            return contrib.key
+          }
+        })
+        if (idBoleto) {
+          let refAux = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/${idBoleto}`)
+          aPromises.push(new Promise((resolve) => {
+            refAux.update({pago: true}).then(()=> {
+              resolve(true)
+            })
+          }))
+        }
+      })
+      if (aPromises.length >= 0) {
+        return aPromises.all()
+      } else {
+        return true
+      }
+    })
+  }
+
   logTransacao(chave, origem, objetoJson) {
     try {
         let ref = this.database.ref(`usuarios/${chave}/transacoes/${origem}/`)          

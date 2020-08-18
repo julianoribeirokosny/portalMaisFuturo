@@ -166,11 +166,12 @@ export default {
             }, 5000);
         },
         getParticipante() {
+            this.cadastroAntes = null
             if (!sessionStorage.participante || sessionStorage.participante === '') {
                 this.firebaseHelper.getParticipante(this.chave_usuario, 'data/cadastro')
                 .then(cad => {
                     this.cadastro = cad
-                    this.cadastroAntes = cad //para comparar depois as alterações realizadas
+                    this.cadastroAntes = cad //para comparar depois as alterações realizadas                    
                     this.cep = this.cadastro.endereco.cep
                     this.email = this.cadastro.informacoes_pessoais.email                    
                     if (this.cadastro.informacoes_pessoais.profissao) {
@@ -179,8 +180,8 @@ export default {
                     }
                 })
             } else {
-                let cad = JSON.parse(sessionStorage.participante).data.cadastro
-                this.cadastro = cad
+                this.cadastro = JSON.parse(sessionStorage.participante).data.cadastro
+                this.cadastroAntes = JSON.parse(sessionStorage.participante).data.cadastro
                 this.cep = this.cadastro.endereco.cep
                 this.email = this.cadastro.informacoes_pessoais.email                
                 if (this.cadastro.informacoes_pessoais.profissao) {
@@ -203,10 +204,13 @@ export default {
                 }
             })
             if (profissao.length > 0) {
-
+                console.log('====> this.cadastro', this.cadastro)
+                console.log('====> this.cadastroAntes', this.cadastroAntes)
                 //identifica alterações do cadastro
                 let aAlteracoes = []
                 for (let key in this.cadastro) {
+                    console.log('====> [key]', key)
+                    console.log('====> this.cadastro[key]', this.cadastro[key])
                     aAlteracoes.push(utilsFunctions.compareJSON(this.cadastro[key], this.cadastroAntes[key]))
                 }
                 

@@ -60,9 +60,8 @@ export default class Home {
         this.auth = firebase.auth();
 
         if (!this.auth.currentUser) {
-            Erros.registraErro('sem_uid', 'auth', 'showHome', 'currentUser === undefined')
             base_spinner.style.display = 'none'
-            return page('/erro')
+            return null
         }
 
         sessionStorage.uid = this.auth.currentUser.uid

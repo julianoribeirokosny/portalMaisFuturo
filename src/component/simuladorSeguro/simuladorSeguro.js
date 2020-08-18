@@ -10,7 +10,7 @@ import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
 import disclaimer from '../disclaimer/disclaimer'
-//import { Erros } from '../../Erros'
+import { Erros } from '../../Erros'
 
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
@@ -208,7 +208,6 @@ export default {
         }
     },
     created(){ 
-        debugger
         var body = {
             simulacoes:[{
                 proponente: {
@@ -228,24 +227,23 @@ export default {
                 prazoDecrescimo: 10
             }]
         }
-
         apiMAG({idApi: 'simulacao', 
                 body: body,
                 metodo: 'POST'}
         ).then((response) => {    
             console.log('response',response)                             
             if (!response.data.sucesso) {
-                Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',response.erro)
+                Erros.registraErro(this.uid, 'apiMAG', 'simuladorSeguro', 'A api requisitada não retornou nenhum dados.')
                 base_spinner.style.display = 'none'
                 return page('/erro')                    
             } else {                    
                 self.response = JSON.parse(response.data.response)                    
-                this.salvarNovoBoleto()
-                self.$refs.boletoModal.style.display = "block"
+                //this.salvarNovoBoleto()
+                //self.$refs.boletoModal.style.display = "block"
             }
             base_spinner.style.display = 'none'
         }).catch((error) => {
-            Erros.registraErro('Erro ao chamar boletos:', 'serviços', 'historicoContribuição',error)
+            Erros.registraErro(this.uid, 'apiMAG', 'simuladorSeguro', response.erro)
             base_spinner.style.display = 'none'
             return page('/erro')
         })       

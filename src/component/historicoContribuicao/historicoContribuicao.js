@@ -63,7 +63,9 @@ export default {
         this.uid = sessionStorage.uid
         this.participante = JSON.parse(sessionStorage.participante)        
         this.gerarDatasValidade()
-        this.getHistoricoContribuicao()
+        this.getBoletosPagos().then(() => {
+            this.getHistoricoContribuicao()
+        })
     },
     watch: {   
         vencimento(newVal){
@@ -106,6 +108,26 @@ export default {
             } else {
                 this.historico = JSON.parse(sessionStorage.historicoContribuicao)
             }            
+        },
+        getBoletosPagos() {
+            if (!sessionStorage.historicoContribuicao || sessionStorage.historicoContribuicao === '') {
+                let body = {
+                    chave: this.chave
+                }
+                return apiPrevidenciaDigital({idApi: 'consultaboletoparticipante', body: body, metodo: 'POST'}).then((response) => {                                 
+                    console.log('=====> response', response)
+                    debugger
+                    if (!response.data.sucesso) {
+                        Erros.registraErro(this.uid, 'consulta_boleto_participante', 'historicoContribuicao', response.erro)
+                        base_spinner.style.display = 'none'
+                        return page('/erro')                    
+                    }
+                    return this.firebaseHelper.atualizaBoletosPagos(this.chave, JSON.parse(response.data.response))
+                }).catch((error) => {
+                    Erros.registraErro(this.uid, 'consulta_boleto_participante', 'historicoContribuicao', error.name + ' - ' +error.message)
+                    return page('/erro')
+                })    
+            }
         },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)

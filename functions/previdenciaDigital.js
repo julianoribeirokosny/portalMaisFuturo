@@ -8,6 +8,9 @@ module.exports =  {
         }
     
         let config = functions.config().portal.integracoes.previdenciadigital
+
+        console.log('====> config', config)
+        console.log('====> config', config)
     
         //primeiro: request para google api rest auth
         return autenticaGoogle(config, admin).then((ret) => {
