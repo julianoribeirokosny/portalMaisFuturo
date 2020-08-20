@@ -203,13 +203,13 @@ function montaApp() {
     (localStorage.isPwaInstalled === "false" && localStorage.standaloneDetected === "false" && pageInstall)) {
   
       // Configure Firebase.
-    firebase.initializeApp(firebaseConfig.result);
+    firebase.initializeApp(firebaseConfig.result.sdkConfig);
     // Make firebase reachable through the console.
     window.firebase = firebase;
     
     // Load the app.
     $(document).ready(() => {
-      sessionStorage.nomeProjeto = firebaseConfig.result.projectId
+      sessionStorage.nomeProjeto = firebaseConfig.result.sdkConfig.projectId
       console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall)
       if (localStorage.isMac ==="true" || ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall)) {
         const auth = new Auth();
