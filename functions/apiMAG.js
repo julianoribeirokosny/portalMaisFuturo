@@ -14,8 +14,10 @@ const configMAG = {
 }
 
 try {
-  admin.initializeApp();
-} catch (e) {}
+    admin.initializeApp();
+} catch (e) { 
+    console.error('Erro ao inicializar o firebase', e) 
+}
 
 const runtimeOpts = {
   timeoutSeconds: 60,
@@ -56,7 +58,7 @@ async function connectToken() {
         if (data.val()) {            
             let ret = data.val()
             let dateNow = utils.dateFormat(new Date(), true, false, false, true)            
-            if (ret.data_validade < dateNow) {                
+            if (ret.data_validade > dateNow) {                
                 return newToken()
             } else {                
                 return ret.valor
@@ -89,7 +91,7 @@ async function newToken() {
         retToken = JSON.parse(token)
         let ref = admin.database().ref(`usuarios/shared/apiMAG/accessToken`)
         var dateNow =  new Date()
-        return ref.update({valor: retToken, data_validade: new Date(dateNow.getTime()+1000*60*60*24)})
+        return ref.update({valor: retToken, data_validade: new Date(dateNow.getTime()+1000*60*59*24)})
     }).then(() => {        
         return retToken
     }).catch((e) => {  
