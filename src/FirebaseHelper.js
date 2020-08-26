@@ -13,9 +13,6 @@ import page from 'page';
 const utils = require('../functions/utilsFunctions')
 const financeiro = require('../functions/Financeiro')
 const Enum = require('./Enum')
-//const functions = firebase.functions()
-//const apiMAG = functions.httpsCallable('apiMAG')
-
 
 /**
  * Handles all Firebase interactions.
@@ -1288,6 +1285,47 @@ export default class FirebaseHelper {
       return dadosSimuladorEmprestimo
   }
 
+  async getQuestionarioDPS() {      
+      let apiMAG = new Promise((resolve) => {
+          return resolve(this.getQuestionarioDPSapiMAG())
+      })
+      return Promise.all([apiMAG]).then((retPromise) => {
+          let questionarios = retPromise[0].Valor.questionarios
+          debugger
+          if (questionarios) {
+              let questionario = new Object()
+              questionarios.forEach((dps) => {
+                  if(dps.id === 158) {
+                    questionario = dps.perguntas[0].perguntas
+                  }
+              })
+              return questionario
+          } else {
+            return null
+          }
+      })
+  }
+
+  getQuestionarioDPSapiMAG() {
+      let data = {
+          idApi: 'questionario',
+          body: '1',
+          metodo: 'GET'
+      }
+      return this.apiMAG(data)
+      .then((response) => {
+          if (!response.data.sucesso) {
+              Erros.registraErro(sessionStorage.uid, 'serviços', 'questionario Seguro', 'Consulta da apiMAG não retornou dados validos')
+              return null
+          } else {
+              return JSON.parse(response.data.response)
+          }        
+      }).catch((error) => {
+          Erros.registraErro(sessionStorage.uid, 'serviços', 'questionario Seguro', error)
+          return null
+      })
+  }
+
   async getDadosSimuladorSeguro(chave, uid) {
     
       let usuario     
@@ -1313,26 +1351,60 @@ export default class FirebaseHelper {
         let fator_idade_seguro = retPromises[0]
         let simuladorSeguroSettings = retPromises[1]        
         let parametrosSimuladorMAG = retPromises[2]
-
-        console.log('parametrosSimuladorMAG ======>',parametrosSimuladorMAG)
-
+        let ticketMinimo = 0
+        let paramMAG_Invalidez = new Object()
+        let paramMAG_Morte = new Object()        
+        //console.log('parametrosSimuladorMAG ======>',parametrosSimuladorMAG)
+        if (parametrosSimuladorMAG) {
+            ticketMinimo = parametrosSimuladorMAG.Valor.simulacoes[0].ticketMinimo
+            parametrosSimuladorMAG.Valor.simulacoes[0].produtos.forEach((produto) => {
+                if (produto.idProduto === 1784) {
+                    let resumo_produto = {
+                        descricao: produto.descricao,                  
+                        idProduto: produto.idProduto,
+                        capitalBase: produto.coberturas[0].capitalBase,
+                        limite: produto.coberturas[0].limite,
+                        premioBase: produto.coberturas[0].premioBase
+                    }
+                    paramMAG_Invalidez = resumo_produto
+                }
+                if (produto.idProduto === 780) {
+                    let resumo_produto = {
+                        descricao: produto.descricao,                  
+                        idProduto: produto.idProduto,
+                        capitalBase: produto.coberturas[0].capitalBase,
+                        limite: produto.coberturas[0].limite,
+                        premioBase: produto.coberturas[0].premioBase
+                    }
+                    paramMAG_Morte = resumo_produto
+                }
+            })
+        }
+        console.log('ticketMinimo', ticketMinimo)
+        
+        console.log('paramMAG_Morte', paramMAG_Morte)
         let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
-        let minimoMorte = usuario.home.usr_coberturas.acao.valor_morte_entrada//Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, coberturaMorte).toFixed(0))
-        let maximoMorte = 0//maximoSemSDPSMorte      
-        let coberturaInvalidez = (usuario.data.valores.coberturaInvalidez === undefined || usuario.data.valores.coberturaInvalidez === 0) ? 0 : usuario.data.valores.coberturaInvalidez
-        let minimoInvalidez = usuario.home.usr_coberturas.acao.valor_invalidez_entrada //Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_invalidez, usuario.data.valores.coberturaInvalidez).toFixed(0))
-        let maximoInval = 0//maximoSemDPSInvalidez      
+        let minimoMorte = usuario.home.usr_coberturas.acao.valor_morte_entrada
+        let maximoMorte = paramMAG_Morte.limite ? paramMAG_Morte.limite : 0 
         let stepMorte = simuladorSeguroSettings.step_morte
-        let stepInvalidez = simuladorSeguroSettings.step_invalidez      
         let maximoSemSDPSMorte = 0
+        
+        console.log('paramMAG_Invalidez', paramMAG_Invalidez)
+        let coberturaInvalidez = (usuario.data.valores.coberturaInvalidez === undefined || usuario.data.valores.coberturaInvalidez === 0) ? 0 : usuario.data.valores.coberturaInvalidez
+        let minimoInvalidez = usuario.home.usr_coberturas.acao.valor_invalidez_entrada 
+        let maximoInval = paramMAG_Invalidez.limite ? paramMAG_Invalidez.limite : 0 
+        let stepInvalidez = simuladorSeguroSettings.step_invalidez      
         let maximoSemDPSInvalidez = 0
+        
         let profissao = false
         let valorAtual = (usuario.data.valores.contribRisco === undefined) ? 0 : usuario.data.valores.contribRisco
         if(usuario.data.cadastro.informacoes_pessoais.profissao) {
-          maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.teto.toFixed(0))
-          maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.teto.toFixed(0))
-          //maximoMorte = minimoMorte + (stepMorte * (Number(((maximoMorte - minimoMorte) / stepMorte).toFixed(0)) -1 ))
-          //maximoInval = minimoInvalidez + (stepInvalidez * ( Number(((maximoInval - minimoInvalidez) / stepInvalidez).toFixed(0)) -1 ))
+          if (maximoMorte === 0) {
+            maximoMorte = Number(usuario.data.cadastro.informacoes_pessoais.profissao.teto.toFixed(0))
+          }
+          if (maximoInval === 0) {
+            maximoInval = Number(usuario.data.cadastro.informacoes_pessoais.profissao.teto.toFixed(0))          
+          }          
           maximoSemSDPSMorte = Number(this.calculaMaximoSemDPSSeguro(maximoMorte, coberturaMorte, simuladorSeguroSettings.regra_dps).toFixed(0))
           maximoSemDPSInvalidez = Number(this.calculaMaximoSemDPSSeguro(maximoInval, coberturaInvalidez, simuladorSeguroSettings.regra_dps).toFixed(0))  
           profissao = true
@@ -1354,32 +1426,62 @@ export default class FirebaseHelper {
         let dadosSimuladorSeguro = {
             titulo: 'Simulador de</br>Seguro de Renda',
             tipo: 'Seguro',
-            minimoMorte: minimoMorte,
-            maximoSemDpsMorte: maximoSemSDPSMorte === 0 ? minimoMorte : maximoSemSDPSMorte,
-            maximoMorte: maximoMorte === undefined ? 0 : maximoMorte,
-            stepMorte: stepMorte,
-            minimoInvalidez: minimoInvalidez,
-            maximoSemDpsInvalidez: maximoSemDPSInvalidez === 0 ? minimoInvalidez : maximoSemDPSInvalidez,
-            maximoInvalidez: maximoInval  === undefined ? 0 : maximoInval,
-            stepInvalidez: stepInvalidez,
-            fatorMorte: fator_idade_seguro.fator_morte,
-            fatorInvalidez: fator_idade_seguro.fator_invalidez,
-            coberturaInvalidez: coberturaInvalidez , //=== 0 ? minimoInvalidez : Number(coberturaInvalidez.toFixed(0)),
-            coberturaMorte: coberturaMorte , //=== 0 ? minimoMorte : Number(coberturaMorte.toFixed(0)),
             chave: chave,
             uid: uid,        
             matricula: usuario.data.cadastro.dados_plano.matricula,
             plano: usuario.data.cadastro.dados_plano.plano,
             bloqueio: idade >= 15 ? false : true,
             profissao: profissao,
-            valorAtual: valorAtual
+            valorAtual: valorAtual,
+
+            minimoMorte: minimoMorte,
+            maximoSemDpsMorte: maximoSemSDPSMorte === 0 ? minimoMorte : maximoSemSDPSMorte,
+            maximoMorte: maximoMorte === undefined ? 0 : maximoMorte,
+            stepMorte: paramMAG_Morte.capitalBase ? paramMAG_Morte.capitalBase : stepMorte,
+            fatorMorte: paramMAG_Morte.premioBase ? paramMAG_Morte.premioBase : fator_idade_seguro.fator_morte,
+            coberturaMorte: coberturaMorte,
+            
+            minimoInvalidez: minimoInvalidez,
+            maximoSemDpsInvalidez: maximoSemDPSInvalidez === 0 ? minimoInvalidez : maximoSemDPSInvalidez,
+            maximoInvalidez: maximoInval  === undefined ? 0 : maximoInval,
+            stepInvalidez: paramMAG_Invalidez.capitalBase ? paramMAG_Invalidez.capitalBase : stepInvalidez,
+            fatorInvalidez: paramMAG_Invalidez.premioBase ? paramMAG_Invalidez.premioBase : fator_idade_seguro.fator_invalidez,
+            coberturaInvalidez: coberturaInvalidez,
         }
         return dadosSimuladorSeguro        
       })
   }
 
+  postPropostaSeguro() {
+      let body =  {
+                      simulacoes:{                  
+                          periodicidadeCobrancaId: 30,
+                          prazoCerto: 30,
+                          prazoPagamentoAntecipado: 10,
+                          prazoDecrescimo: 10
+                      }
+                  }
+      let data =  {
+          idApi: 'proposta',
+          body: body,
+          metodo: 'POST'
+      }
+      return this.apiMAG(data)
+      .then((response) => {
+          if (!response.data.sucesso) {
+              Erros.registraErro(sessionStorage.uid, 'serviços', 'proposta Seguro', 'Não foi possível encaminar a proposta para apiMAG')
+              return null
+          } else {
+              return JSON.parse(response.data.response)
+          }        
+      }).catch((error) => {
+          Erros.registraErro(sessionStorage.uid, 'serviços', 'proposta Seguro', error)
+          return null
+      })
+  }
+
   getParamtrosSimuladorMAG(usuario) {
-      console.log('usuario ====>',usuario)  
+      //console.log('usuario ====>',usuario)  
       let nascimentoArray = usuario.data.cadastro.informacoes_pessoais.nascimento.split('/')
       let nascimento = `${nascimentoArray[2]}-${nascimentoArray[1]}-${nascimentoArray[0]}`
       let body = new Object()
@@ -1391,8 +1493,7 @@ export default class FirebaseHelper {
                       nome: usuario.data.cadastro.informacoes_pessoais.nome,
                       cpf: usuario.data.cadastro.informacoes_pessoais.cpf.replace('.','').replace('.','').replace('-',''),  //sem digito
                       dataNascimento: nascimento,
-                      profissaoCbo: usuario.data.cadastro.informacoes_pessoais.profissao.cbo,
-                      //renda: 5000,
+                      profissaoCbo: usuario.data.cadastro.informacoes_pessoais.profissao.cbo,                      
                       sexoId: usuario.data.cadastro.informacoes_pessoais.sexo === "Masculino" ? 1 : 2, //Masculino 1;Feminino 2
                       uf: usuario.data.cadastro.endereco.uf,
                       declaracaoIRId: 1

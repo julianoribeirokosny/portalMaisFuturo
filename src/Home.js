@@ -175,7 +175,7 @@ export default class Home {
         }
 
         let auth = this.auth.currentUser.uid
-        
+
         if (!this.vueObj) {
             this.vueObj = new Vue({
                 renderError(h, err) {
