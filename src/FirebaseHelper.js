@@ -1602,6 +1602,49 @@ export default class FirebaseHelper {
       }
   }
 
+  atualizaBoletosPagos(chave, boletos) {
+    let ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao`)
+    //busca as contribuiçoes não pagas
+    return ref.orderByChild('pago').equalTo(false).once('value').then((snapshot) => {
+      console.log('====> snapshot.val()', snapshot.val())
+      if (!snapshot.val()) {
+        return true
+      }
+      let aPromises = []
+      snapshot.forEach((snapshotContrib) => {
+        let contrib = snapshotContrib.val()
+        let key = snapshotContrib.key
+        let boleto = boletos.filter((bol) => {
+          return bol.dataBase === contrib.anoMes
+        })
+        if (boleto.length > 0) {
+          let ultimoBoleto = boleto[boleto.length - 1] //pega somente o último é o que vale.. os outros estarão cancelados
+          if (ultimoBoleto.status==="PAGO" || ultimoBoleto.status==="BAIXA MANUAL") {
+            let refAux = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/${key}`)
+            aPromises.push(new Promise((resolve) => {
+              refAux.update({pago: true}).then(()=> {
+                resolve(true)
+              })
+            }))  
+          } else {
+            let refAux = this.database.ref(`usuarios/${chave}/transacoes/boleto/${contrib.anoMes.replace('/','')}`) ///${key}`)
+            aPromises.push(new Promise((resolve) => {
+              //se o último boleto vigente da competência foi cancelado, exclui ...
+              refAux.update({}).then(()=> {
+                resolve(true)
+              })
+            }))  
+          }
+        }
+      })
+      if (aPromises.length >= 0) {
+        return Promise.all(aPromises)
+      } else {
+        return true
+      }
+    })
+  }
+
   logTransacao(chave, origem, objetoJson) {
     try {
         let ref = this.database.ref(`usuarios/${chave}/transacoes/${origem}/`)          

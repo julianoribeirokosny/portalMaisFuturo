@@ -18,6 +18,7 @@ import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
 import disclaimer from './component/disclaimer/disclaimer'
 import outrasSolicitacoes from './component/outrasSolicitacoes/outrasSolicitacoes'
+import emprestimo from './component/emprestimo/emprestimo'
 import page from 'page';
 import { Erros } from './Erros';
 import { VueMaskDirective } from 'v-mask'
@@ -60,9 +61,8 @@ export default class Home {
         this.auth = firebase.auth();
 
         if (!this.auth.currentUser) {
-            Erros.registraErro('sem_uid', 'auth', 'showHome', 'currentUser === undefined')
             base_spinner.style.display = 'none'
-            return page('/erro')
+            return null
         }
 
         sessionStorage.uid = this.auth.currentUser.uid
@@ -194,7 +194,8 @@ export default class Home {
                     maisAmigos,
                     minhaContribuicao,
                     disclaimer,
-                    outrasSolicitacoes
+                    outrasSolicitacoes,
+                    emprestimo
                 },
                 data: {
                     componentKey: 0,
@@ -250,7 +251,7 @@ export default class Home {
                     simuladorRenda(link, origem) {
                         sessionStorage.ultimaPagina = origem
                         page(`/${link}`)
-                    }
+                    },
                 },
                 errorCaptured(err, component, details) {
                     base_spinner.style.display = 'none'

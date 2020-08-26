@@ -27,7 +27,7 @@ const runtimeOpts = {
   memory: '1GB'
 }
 
-exports.default = functions.https.onCall((data, context) => {    
+exports.default = functions.runWith(runtimeOpts).https.onCall((data, context) => {    
     console.log('#apiMAG - iniciando!!!!')
     if (!context.auth) return {status: 'error', code: 401, message: 'Not signed in'}
     if (!data.body) return {sucesso: false, response: null, erro: 'Objeto body inexistente' }

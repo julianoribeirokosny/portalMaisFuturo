@@ -1,29 +1,29 @@
 {
-  "name": "Mais Futuro",
-  "short_name": "Mais Futuro",
+  "name": "Mais Futuro (Hmg)",
+  "short_name": "Mais Futuro (Hmg)",
   "icons": [
     {
-      "src": "/images/manifest-icon-120.png",
+      "src": "/images/manifest-icon-120-hmg.png",
       "sizes": "120x120",
       "type": "image/png"
     },    
     {
-      "src": "/images/manifest-icon-128.png",
+      "src": "/images/manifest-icon-128-hmg.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "/images/manifest-icon-144.png",
+      "src": "/images/manifest-icon-144-hmg.png",
       "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "/images/manifest-icon-180.png",
+      "src": "/images/manifest-icon-180-hmg.png",
       "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "/images/manifest-icon-192.png",
+      "src": "/images/manifest-icon-192-hmg.png",
       "sizes": "192x192",
       "type": "image/png"
     },

@@ -26,7 +26,6 @@ export default class Router {
 
     // Carrega metodos gerais dos JS.
     const loadComponents = import(/* webpackPrefetch: true */ './async-loaded-components');
-    
     const loadUser = async (userId) => (await loadComponents).userPage.loadUser(userId);
     const showHome = async () => (await loadComponents).home.showHome();
     const verificaPrimeiroLogin = async () => (await loadComponents).primeiroLogin.verificaPrimeiroLogin();
@@ -199,6 +198,19 @@ export default class Router {
     let path = window.location.pathname;
     if (path === '') {
       path = '/';
+    } else if (sessionStorage.isReloading === "true" && path !== '/signout') {
+      sessionStorage.isReloading = "false"
+      path = '/Home'
+    } else if (path === '/signout') {
+      //sessionStorage.clear()
+      sessionStorage.partipante = ""
+      sessionStorage.historicoContribuicao = ""
+      sessionStorage.dadosSimuladorSeguro = ""
+      sessionStorage.isReloading = ""
+      sessionStorage.uid = ""
+      sessionStorage.chave = ""
+      sessionStorage.plano = ""
+      sessionStorage.perfil_investimento = ""
     }
     page(path);
   }

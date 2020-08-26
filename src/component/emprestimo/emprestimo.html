@@ -1,0 +1,42 @@
+<div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+        <div class="mdl-card__supporting-text div_titulo_card">
+            Meu<br /> Empréstimo
+        </div>
+            
+        <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing margin_auto">
+            <div class="mdl-card__supporting-text grid-layout-emprestimo">
+                <div style="position: relative;">
+                    <grafico-emprestimo class="canvas_grafico_doughnut grafico-emprestimo" :dados="dadosEmprestimo.grafico"></grafico-emprestimo>
+                    <div class="info-center">
+                        Total Pago<br />
+                        <span>{{ dadosEmprestimo.grafico.data }}%</span>
+                    </div>
+                </div>
+                <div class="card-values-emprestimo">
+                   <div class="mdl-shadow--2dp card-emprestimo-value">
+                       <template v-for="item in dadosEmprestimo.tabela">
+                            <div class="value-emp">
+                                <p class="title">{{ item.name }}</p>
+                                <p>R$<span :style="item.color">{{ formatMoeda(item.value, false) }}</span></p>
+                            </div>
+                        </template>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
+        <div class="mdl-shadow--1dp mdl-card_acao emprestimo" style="cursor: pointer; padding: 10px; background-image: linear-gradient(-90deg, rgb(19, 108, 181), rgb(3, 49, 102));" @click="redirectSimuladorEmprestimo()">
+            <!-- <span class="span-minicard-text">
+                <i class="material-icons" style="color:#136ab3; font-size: 30px;">attach_money</i>
+            </span> -->
+            <span class="span-minicard-text">
+                Há uma oportunidade especial disponível para você.
+                Você tem {{ formatMoeda(dadosEmprestimo.disponivel, true) }} pré aprovado para empréstimo consciente.
+            </span>&nbsp;                            
+            
+            <i class="material-icons icon-button-minicard">arrow_forward</i>
+        </div>
+    </div>
+</div>

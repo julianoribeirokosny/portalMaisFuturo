@@ -202,15 +202,13 @@ export default class PrimeiroLogin {
             //let divNaoReconhece = $('#div-nao-reconhece-email')
             let msgPart1 = $('#msg-participante1')
             let msgPart2 = $('#msg-participante2')
-            //let msgPart3 = $('#msg-participante3')
+            btnReenviaVerificacao.click(() => {
+                this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro, "")
+            })    
             if (emailCadastro === emailAlternativo) {
                 msgPart1.text(`Identificamos que o e-mail ${emailAlternativo} informado já consta em nossa base da dados.`)
-                msgPart2.texto(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para este e-mail.`)
-                msgPart3.text(`_`)            
+                msgPart2.text(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para este e-mail.`)
             } else {
-                btnReenviaVerificacao.click(() => {
-                    this.firebaseHelper.enviarEmailLinkValidacao('proprio', emailCadastro, "")
-                })    
                 msgPart2.text(`Para a segurança de suas informações, enviamos um link de confirmação de acesso para seu e-mail cadastrado: ${emailCadastro}`)                
                 if (emailAlternativo !== '') {
                     msgPart1.text(`Nenhum dos e-mails informados (${this.auth.currentUser.email} e ${emailAlternativo}) foram identificados em nossa base de dados.`)

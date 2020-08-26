@@ -168,7 +168,6 @@ export default class Auth {
     if (this._waitForAuthPromiseResolver.state() !== 'pending' || user) {
       this.validaVersaoApp().then((ok) => {
         if (ok) {    
-          console.log('===> Reloading Page!')
           Router.reloadPage();
         } else {
           Erros.registraErro(this.auth.currentUser.uid, 'appUpdate', 'redirectHomeIfSignedIn', 'Não foi possível verificar versão do App')
@@ -177,6 +176,8 @@ export default class Auth {
       })
       //return
     }
+
+    this.validaReload()
 
     const div_install = document.querySelector('#div-install');
     if (localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") {
@@ -300,5 +301,11 @@ export default class Auth {
     }
   }
 
-
+  validaReload() {
+    if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
+      sessionStorage.isReloading = "true"
+    } else {
+      sessionStorage.isReloading = "false"
+    }
+  }
 };

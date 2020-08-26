@@ -150,11 +150,11 @@ module.exports =  {
         return data
     },
     compareJSON (obj1, obj2) {
-        var ret = {};
+        var ret = [];
         for(var i in obj2) {
             if(!obj1.hasOwnProperty(i) || JSON.stringify(obj2[i]) !== JSON.stringify(obj1[i])) {
             console.log("*** compareJSON ",obj1.hasOwnProperty(i), obj2[i], obj1[i]);
-            ret[i] = obj2[i];
+            ret[i] = [obj2[i], obj1[i]];
             }
         }
         return ret;
