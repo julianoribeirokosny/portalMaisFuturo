@@ -4,8 +4,10 @@ const admin = require('firebase-admin');
 const previdenciaDigital = require('./previdenciaDigital.js')
 
 try {
-  admin.initializeApp();
-} catch (e) {}
+    admin.initializeApp();
+} catch (e) { 
+    console.error('Erro ao inicializar o firebase', e) 
+}
 
 const runtimeOpts = {
   timeoutSeconds: 60,

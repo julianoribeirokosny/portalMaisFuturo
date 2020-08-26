@@ -1289,6 +1289,7 @@ export default class FirebaseHelper {
   }
 
   async getDadosSimuladorSeguro(chave, uid) {
+    
       let usuario     
       if (sessionStorage.participante) {
           usuario = JSON.parse(sessionStorage.participante)
@@ -1303,17 +1304,17 @@ export default class FirebaseHelper {
       let p1 = new Promise((resolve) => {
         return resolve(this.getSimuladorSeguroSettings(usuario.home.usr_plano))
       })
-      // let p2 = new Promise((resolve) => {
-      //   return resolve(this.getParamtrosSimuladorMAG(usuario))
-      // })
-      return Promise.all([p0, p1 /*, p2*/]).then((retPromises) => {
+      let p2 = new Promise((resolve) => {
+          return resolve(this.getParamtrosSimuladorMAG(usuario))
+      })
+      return Promise.all([p0, p1, p2]).then((retPromises) => {
         //let fator_idade_seguro = await this.getFatorSimuladorSeguro(idade)      
         //let simuladorSeguroSettings = await this.getSimuladorSeguroSettings(usuario.home.usr_plano) 
         let fator_idade_seguro = retPromises[0]
         let simuladorSeguroSettings = retPromises[1]        
-        //let parametrosSimuladorMAG = retPromises[2]
+        let parametrosSimuladorMAG = retPromises[2]
 
-        //console.log('parametrosSimuladorMAG ======>',parametrosSimuladorMAG)
+        console.log('parametrosSimuladorMAG ======>',parametrosSimuladorMAG)
 
         let coberturaMorte = (usuario.data.valores.coberturaMorte === undefined || usuario.data.valores.coberturaMorte === 0) ? 0 : usuario.data.valores.coberturaMorte
         let minimoMorte = usuario.home.usr_coberturas.acao.valor_morte_entrada//Number(this.calculaMinimoSeguro(simuladorSeguroSettings.minimo_morte, coberturaMorte).toFixed(0))

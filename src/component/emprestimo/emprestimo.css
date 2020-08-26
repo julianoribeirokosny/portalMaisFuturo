@@ -1,0 +1,88 @@
+.minicard-mini-text{
+    font-size: 14px;
+    color: #73a8d3;
+}
+
+.value-emp:first-child{
+    border-bottom: 1px solid #ccc;
+}
+
+.value-emp{
+    padding: 10px;
+}
+
+.card-emprestimo-value{
+    padding: 10px;
+    border-radius: 30px;
+}
+
+.value-emp .title{
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.value-emp p span{
+    font-size: 24px;
+    font-weight: 800;
+    margin-left: 5px;
+    vertical-align: top;
+    line-height: 20px;
+}
+
+.value-emp p{
+    margin-top: 5px;
+}
+
+.info-center{
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    line-height: 25px;
+    width: 100%;
+    text-align: center;
+}
+
+.info-center span{
+    font-size: 40px;
+    font-weight: 600;
+    color: rgb(53, 53, 53);
+    padding-left: 10px;
+}
+
+.card-values-emprestimo{
+    width: 100%;
+    margin: auto;
+}
+
+.grid-layout-emprestimo{
+    width: 100%;
+}
+
+.grafico-emprestimo{
+    width: 100%;
+}
+
+@media screen and (min-width: 479px){
+    .grid-layout-emprestimo{
+        display: grid;
+        grid-template-columns: 45% 45%;   
+        column-gap: 10%;
+    }
+}
+
+@media screen and (max-width: 479px){
+    .grafico-emprestimo{
+        width: 75%;
+        margin: auto;
+    }
+    .value-emp p{
+        text-align: right;
+    }
+    .value-emp .title{
+        text-align: left;
+    }
+    
+    .value-emp{
+        padding: 20px;
+    }
+}

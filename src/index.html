@@ -554,7 +554,12 @@
                                 </div>
                             </div>  
                         </div>
-                    </template>                   
+                    </template>  
+                    
+                    <!-- Emprestimos -->
+                    <template>
+                        <emprestimo :key="componentKey" :uid="uid" :chave="chave"></emprestimo>
+                    </template>
 
                     <!--Mais Amigos-->
                     <template v-if="home.mais_amigos.vigente">
