@@ -20,7 +20,7 @@ import 'firebase/messaging';
 import firebaseConfig from './firebase-config.json';
 
 // Configure Firebase.
-firebase.initializeApp(firebaseConfig.result);
+firebase.initializeApp(firebaseConfig.result.sdkConfig);
 
 // Load Firebase messaging
 firebase.messaging();

@@ -58,3 +58,7 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'apiPipefy') {
 if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'apiMAG') {
   exports.apiMAG = require('./apiMAG').default;
 }
+
+if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'scheduleStatusBoleto') {
+  exports.scheduleStatusBoleto = require('./scheduleStatusBoleto').default;
+}

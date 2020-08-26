@@ -39,7 +39,6 @@ export const tiposSolicitacaoPipefy = {
     "Empréstimo": "Solicitação de Empréstimo"
 }
 
-
 export default class Enum {
     
 }

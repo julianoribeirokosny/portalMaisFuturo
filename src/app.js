@@ -29,13 +29,11 @@ const checkIfIsIos = () => {
   const userAgent = window.navigator.userAgent.toLowerCase();
   console.log('userAgent: ', userAgent)
   return /iphone|ipad|ipod/.test(userAgent);
-  //return true
 }
 const checkIfIsMac = () => {
     const userAgent = window.navigator.userAgent.toLowerCase();
     console.log('userAgent: ', userAgent)
     return /macintosh/.test(userAgent);
-    //return true
 }
 const checkIfIsSamsungBrowser = () => {
     const userAgent = window.navigator.userAgent.toLowerCase();
@@ -94,7 +92,7 @@ if ('serviceWorker' in navigator) {
       resetaAppInfo().then(() => {
         registraECarrega()
       })
-    } else if (!sessionStorage.cacheReset || sessionStorage.cacheReset === "") {
+    } else if (!sessionStorage.cacheReset || sessionStorage.cacheReset==="false" || sessionStorage.cacheReset === "") {
       resetaCache().then(() => {
         registraECarrega()
         sessionStorage.cacheReset = "true"
@@ -106,6 +104,7 @@ if ('serviceWorker' in navigator) {
 }
 
 function registraECarrega() {
+  validaAmbienteManifesto()
   window.navigator.serviceWorker.register('/workbox-sw.js').then(() => {
     montaApp()      
   })
@@ -203,13 +202,13 @@ function montaApp() {
     (localStorage.isPwaInstalled === "false" && localStorage.standaloneDetected === "false" && pageInstall)) {
   
       // Configure Firebase.
-    firebase.initializeApp(firebaseConfig.result);
+    firebase.initializeApp(firebaseConfig.result.sdkConfig);
     // Make firebase reachable through the console.
     window.firebase = firebase;
     
     // Load the app.
     $(document).ready(() => {
-      sessionStorage.nomeProjeto = firebaseConfig.result.projectId
+      sessionStorage.nomeProjeto = firebaseConfig.result.sdkConfig.projectId
       console.log('==> ready:', localStorage.isPwaInstalled, localStorage.standaloneDetected, pageInstall)
       if (localStorage.isMac ==="true" || ((localStorage.isPwaInstalled === "true" || localStorage.standaloneDetected === "true") && !pageInstall)) {
         const auth = new Auth();
@@ -301,4 +300,18 @@ function resetaCache() {
     });  
   })
   return Promise.all([p1, p2])
+}
+
+function validaAmbienteManifesto() {
+  let a = document.getElementById('manifest-link'); //or grab it by tagname etc
+  let project = firebaseConfig.result.sdkConfig.projectId
+  if (project.indexOf('-dev') >= 0 || project.indexOf('-teste') >= 0) {
+    a.href = 'manifest-dev.json'
+  } else if (project.indexOf('-hmg') >= 0 || project.indexOf('-hom') >= 0) {
+    a.href = 'manifest-hmg.json'
+  } else {
+    //mantém manifesto padrão
+    console.log('=> Produção')
+  }
+
 }

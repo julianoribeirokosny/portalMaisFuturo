@@ -13,6 +13,8 @@ import { TheMask } from 'vue-the-mask'
 import {Utils} from '../../Utils'
 import $ from 'jquery'
 
+const functions = firebase.functions()
+const apiPipefy = functions.httpsCallable('apiPipefy')
 const img_editar = require('../../../public/images/Editar.png')
 const { tiposSolicitacaoPipefy } = require('../../Enum')
 const utilsFunctions = require('../../../functions/utilsFunctions')
@@ -33,6 +35,9 @@ export default {
     data: function() {        
         let foto = $('.fp-avatar').css('background-image').replace('url("','').replace('")','')
         return {  
+            profissoes: [],            
+            profissaoInicial: '',
+            profissao: '',            
             errors:[],
             signedInUserAvatar:'',          
             avatar: foto ? foto : "../images/silhouette-edit.jpg",
@@ -55,11 +60,7 @@ export default {
             classValid: {
                 'hasvalid': false,
                 'hasinvalid': false
-            },
-            profissoes: [],
-            listaProfissoes: [],
-            profissaoInicial: '',
-            profissao: '',
+            },            
             optionsCropper: {
                 aspectRatio: 1,
                 closeOnSave: true,
@@ -94,7 +95,8 @@ export default {
     },
     created() {        
         this.getParticipante()
-        this.getProfissoes()
+        this.getProfissoes()       
+        //console.log('this.profissoes',this.profissoes)
         this.$root.$on('atualizaProfissao', (valor) => {
             this.profissao = valor
         })
@@ -147,15 +149,16 @@ export default {
                 this.cadastro.endereco.numero ) {
                     this.salvar()
             }            
-        },
+        },        
         getProfissoes() {
             return this.firebaseHelper.getProfissoes()
-                .then(ret => {
-                    this.listaProfissoes = Object.entries(ret)
-                    this.listaProfissoes.forEach(prof => {
-                        this.profissoes.push(prof[0])
+            .then(ret => {
+                if (ret) {                    
+                    ret.forEach(prof => {
+                         this.profissoes.push({nome: prof.nome, cbo: prof.cbo, teto: prof.teto})
                     })
-                })
+                }                
+            })
         },
         isEmailValid(email) {
             return this.reg.test(email)
@@ -197,35 +200,35 @@ export default {
         voltar() {
             page('/home')
         },
-        salvar() {  
-            let profissao = this.listaProfissoes.filter(p => {
-                if (p[0] === this.profissao) {
-                    return Object.entries(p)
-                }
-            })
-            if (profissao.length > 0) {
-                console.log('====> this.cadastro', this.cadastro)
-                console.log('====> this.cadastroAntes', this.cadastroAntes)
-                //identifica alterações do cadastro
-                let aAlteracoes = []
+        salvar() {
+            if (this.profissao) {
+                base_spinner.style.display = 'flex'
+                                //identifica alterações do cadastro
+                let aAntes = []
+                let aDepois = []
                 for (let key in this.cadastro) {
                     console.log('====> [key]', key)
                     console.log('====> this.cadastro[key]', this.cadastro[key])
-                    aAlteracoes.push(utilsFunctions.compareJSON(this.cadastro[key], this.cadastroAntes[key]))
-                }
-                
-                console.log('====> alteracoes', aAlteracoes)
-                /*logTransacao
+                    let comp = utilsFunctions.compareJSON(this.cadastro[key], this.cadastroAntes[key])
+                    if (Object.keys(comp).length > 0) {
+                        Object.keys(comp).forEach((item) => {
+                            aAntes.push(`${key} ==> ${item}: ${comp[item][0]}\n`)    
+                            aDepois.push(`${key} ==> ${item}: ${comp[item][1]}\n`)    
+                        })
+                    }
+                }               
+
+                console.log('============> aAntes', aAntes)
+                console.log('============> aDepois', aDepois)
+
                 let dadosCard = {
                     tipoSolicitacao: tiposSolicitacaoPipefy.cadastro,
                     chave: this.chave_usuario,
-                    dadosAnteriores: financeiro.valor_to_string_formatado(this.dados.valor_antigo, 2, true, true),
-                    dadosNovos: financeiro.valor_to_string_formatado(this.dados.valor_novo, 2, true, true),
-                    matricula: this.dados.matricula,
-                    plano: this.dados.plano
-                }
-    
-                base_spinner.style.display = 'flex'
+                    dadosAnteriores: aAntes.toString(),
+                    dadosNovos: aDepois.toString(),
+                    matricula: this.cadastro.dados_plano.matricula,
+                    plano: this.cadastro.dados_plano.plano
+                }    
                 //primeiro grava card no Pipefy
                 apiPipefy({acao: 'criarCard', body: dadosCard}).then((ret) => { 
                     if (!ret.data.sucesso) {
@@ -233,54 +236,29 @@ export default {
                         base_spinner.style.display = 'none'
 
                     } else {
-                        console.log('SUCESSO!!!!')
-                        let response = ret.data.response
-                        objeto_contratacao[dateFormat] = {
-                            uid: this.dados.uid,
-                            tipo: this.dados.tipo,
-                            valor_anterior: this.dados.valor_antigo,
-                            valor_solicitado: this.dados.valor_novo,
-                            status: statusContratacao.SOLICITADO,
-                            detalhes: detalhes,
-                            pipeId: ret.data.pipeId,
-                            cardId: response.data.createCard.card.id
+                        this.cadastro.informacoes_pessoais.profissao = this.profissao
+                        this.cadastro.informacoes_pessoais.email = this.email
+                        var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
+                        if (this.profissao !== this.profissaoInicial) {
+                            this.profissaoInicial = this.profissao
+                            sessionStorage.dadosSimuladorSeguro = ""
                         }
-    
-                        var contratacao = this.firebaseHelper.contratarNovoValor(objeto_contratacao, this.dados.chave)
-                        if(contratacao) {
+                        if (cadastro) {
+                            this.$root.$emit('nova::Profissao')
+                            this.firebaseHelper.getParticipante(this.chave_usuario).then((ret) => {
+                                sessionStorage.participante = JSON.stringify(ret)
+                            })
                             this.finalizado = true
-                        } else if(!contratacao) {
+                        } else {
                             this.finalizado = false
-                            this.errorBanco = true
-                        }          
-                        base_spinner.style.display = 'none'                      
-                        return true
+                            this.error_banco = true
+                        }
+                        base_spinner.style.display = 'none'
                     }  
                 }).catch((e) => {
                     this.erroContratacao = true
                     base_spinner.style.display = 'none'
-                })              */                        
-    
-                this.cadastro.informacoes_pessoais.profissao = {
-                    nome: profissao[0][0],
-                    seguro: profissao[0][1]
-                }
-                this.cadastro.informacoes_pessoais.email = this.email
-                var cadastro = this.firebaseHelper.salvarCadastro(this.chave_usuario, 'data/cadastro', this.cadastro)
-                if (this.profissao !== this.profissaoInicial) {
-                    this.profissaoInicial = this.profissao
-                    sessionStorage.dadosSimuladorSeguro = ""
-                }
-                if (cadastro) {
-                    this.$root.$emit('nova::Profissao')
-                    this.firebaseHelper.getParticipante(this.chave_usuario).then((ret) => {
-                        sessionStorage.participante = JSON.stringify(ret)
-                    })
-                    this.finalizado = true
-                } else {
-                    this.finalizado = false
-                    this.error_banco = true
-                }
+                })
             } else {
                 this.finalizado = false
                 this.error_banco = true

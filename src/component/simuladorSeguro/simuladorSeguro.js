@@ -15,8 +15,6 @@ import { Erros } from '../../Erros'
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
 const Enum = require('../../Enum')
-const functions = firebase.functions();
-const apiMAG = functions.httpsCallable('apiMAG')
 
 export default {    
     template: simuladorSeguro,
@@ -208,7 +206,7 @@ export default {
         }
     },
     created(){ 
-        var body = {
+        /*var body = {
             simulacoes:[{
                 proponente: {
                     tipoRelacaoSeguradoId: 1,
@@ -246,7 +244,7 @@ export default {
             Erros.registraErro(this.uid, 'apiMAG', 'simuladorSeguro', response.erro)
             base_spinner.style.display = 'none'
             return page('/erro')
-        })       
+        })      */ 
         this.consultaDadosContratados()        
     },
     mounted(){
@@ -316,7 +314,7 @@ export default {
         },
         carregarDados() {
             this.consultaDados()
-            this.closeModal()      
+           // this.closeModal()      
         },
         consultaDados() {            
             if (!sessionStorage.dadosSimuladorSeguro || sessionStorage.dadosSimuladorSeguro === '') {
@@ -379,26 +377,20 @@ export default {
             }                  
         },
         salvarProfissao() {
-            let profissao = this.listaProfissoes.filter(p => {
-                if (p[0] === this.profissao)
-                    return Object.entries(p)
+            if (this.profissao) {
+                this.cadastro.profissao = this.profissao
+                var cadastro = this.firebaseHelper.salvarCadastro(this.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
+                if(cadastro) {
+                    this.$root.$emit('atualizaProfissao',this.cadastro.profissao.nome)
+                    this.sliderInvalidez.max = this.profissao.teto
+                    this.sliderMorte.max = this.profissao.teto
+                    //limpa as váriaveis de session para recarregar com dados atualizados
+                    sessionStorage.dadosSimuladorSeguro = ''
+                    sessionStorage.participante = ''
+                    this.closeModal()
+                    this.consultaDados()
                 }
-            )
-            this.cadastro.profissao =  {
-                nome: profissao[0][0],
-                seguro: profissao[0][1]
-            }
-            var cadastro = this.firebaseHelper.salvarCadastro(this.chave, 'data/cadastro/informacoes_pessoais', this.cadastro)
-            if(cadastro) {
-                this.$root.$emit('atualizaProfissao',this.cadastro.profissao.nome)
-                this.sliderInvalidez.max = profissao[0][1]
-                this.sliderMorte.max = profissao[0][1]
-                //limpa as váriaveis de session para recarregar com dados atualizados
-                sessionStorage.dadosSimuladorSeguro = ''
-                sessionStorage.participante = ''
-                this.closeModal()
-                this.consultaDados()
-            }
+            }            
         },
         showModal() {
             if (this.$refs.ModalProfissao) {
@@ -410,7 +402,7 @@ export default {
                 this.$refs.ModalProfissao.style.display = "none"
             }
         },
-        getProfissaoParticipante(chave){
+        getProfissaoParticipante(chave){            
             return this.firebaseHelper.getProfissaoParticipante(chave)
                 .then(profissao => {
                     if (!profissao) {
@@ -422,10 +414,11 @@ export default {
                         this.showModal()
                         return this.firebaseHelper.getProfissoes()
                             .then(ret => {
-                                this.listaProfissoes = Object.entries(ret) 
-                                this.listaProfissoes.forEach(prof => {
-                                    this.profissoes.push(prof[0])
-                                })
+                                if (ret) {                    
+                                    ret.forEach(prof => {
+                                         this.profissoes.push({nome: prof.nome, cbo: prof.cbo, teto: prof.teto})
+                                    })
+                                }
                             }
                         )
                     } else {

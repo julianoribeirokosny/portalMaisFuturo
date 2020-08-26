@@ -121,12 +121,13 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
 })
 
 async function getConnection () {
+  let config = functions.config().portal.carga.sinqia
   const pgConfig = {
     max: 1,
-    user: "postgres",
-    password: "maisFuturo90()12!@",
-    database: "Sinqia",
-    host: "/cloudsql/portal-mais-futuro:southamerica-east1:maisfuturobd"
+    user: config.user,
+    password: config.password,
+    database: config.database,
+    host: config.host
   };
   return new pg.Pool(pgConfig);
 }

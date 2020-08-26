@@ -198,8 +198,19 @@ export default class Router {
     let path = window.location.pathname;
     if (path === '') {
       path = '/';
-    } else if (sessionStorage.isReloading === "true") {
+    } else if (sessionStorage.isReloading === "true" && path !== '/signout') {
+      sessionStorage.isReloading = "false"
       path = '/Home'
+    } else if (path === '/signout') {
+      //sessionStorage.clear()
+      sessionStorage.partipante = ""
+      sessionStorage.historicoContribuicao = ""
+      sessionStorage.dadosSimuladorSeguro = ""
+      sessionStorage.isReloading = ""
+      sessionStorage.uid = ""
+      sessionStorage.chave = ""
+      sessionStorage.plano = ""
+      sessionStorage.perfil_investimento = ""
     }
     page(path);
   }

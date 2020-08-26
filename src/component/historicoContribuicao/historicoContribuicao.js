@@ -54,14 +54,16 @@ export default {
                 'nome': '',
                 'cpf': '',
                 'email': '',
-                'notificar': true 
+                'notificar': true,
+                'numeroDeParcelas': 1
             }
         }
     },        
     created(){
         this.chave = sessionStorage.chave
         this.uid = sessionStorage.uid
-        this.participante = JSON.parse(sessionStorage.participante)        
+        this.participante = JSON.parse(sessionStorage.participante)    
+        console.log('********* this.participante', this.participante)    
         this.gerarDatasValidade()
         this.getBoletosPagos().then(() => {
             this.getHistoricoContribuicao()
@@ -109,10 +111,16 @@ export default {
                 this.historico = JSON.parse(sessionStorage.historicoContribuicao)
             }            
         },
-        getBoletosPagos() {
+        async getBoletosPagos() {
             if (!sessionStorage.historicoContribuicao || sessionStorage.historicoContribuicao === '') {
                 let body = {
-                    chave: this.chave
+                    chave: this.chave,
+                    status: {
+                        pago: true,
+                        cancelado: true,
+                        baixaManual: true,
+                        aguardandoPagamento: false                        
+                    }
                 }
                 return apiPrevidenciaDigital({idApi: 'consultaboletoparticipante', body: body, metodo: 'POST'}).then((response) => {                                 
                     console.log('=====> response', response)
@@ -122,12 +130,18 @@ export default {
                         base_spinner.style.display = 'none'
                         return page('/erro')                    
                     }
-                    return this.firebaseHelper.atualizaBoletosPagos(this.chave, JSON.parse(response.data.response))
+                    if (response.data.length > 0) {
+                        let boletos = JSON.parse(response.data.response)
+                        return this.firebaseHelper.atualizaBoletosPagos(this.chave, JSON.parse(response.data.response))
+                    } else {
+                        return true
+                    }
                 }).catch((error) => {
                     Erros.registraErro(this.uid, 'consulta_boleto_participante', 'historicoContribuicao', error.name + ' - ' +error.message)
                     return page('/erro')
                 })    
             }
+            return 
         },
         voltar() {
             page(`/${sessionStorage.ultimaPagina}`)
@@ -168,7 +182,8 @@ export default {
             this.cobranca.nome = this.participante.data.cadastro.informacoes_pessoais.nome,
             this.cobranca.cpf = this.participante.data.cadastro.informacoes_pessoais.cpf,
             this.cobranca.email = this.participante.data.cadastro.informacoes_pessoais.email,
-            this.cobranca.notificar = false //configuração            
+            this.cobranca.notificar = false //configuração         
+            this.cobranca.numeroDeParcelas = 1 
             this.$refs.vencimentoModal.style.display = "block"
         },
         emitirBoleto() {
@@ -187,7 +202,7 @@ export default {
                     base_spinner.style.display = 'none'
                     return page('/erro')                    
                 } else {                    
-                    self.response = JSON.parse(response.data.response)                    
+                    self.response = JSON.parse(response.data.response)[0]                
                     this.salvarNovoBoleto()
                     self.$refs.boletoModal.style.display = "block"
                 }
@@ -206,7 +221,9 @@ export default {
             boleto[dataBase] = {
                                     link: self.response.link,
                                     numeroDePagamento: self.response.numeroDePagamento,
-                                    vencimento: self.cobranca.vencimento
+                                    vencimento: self.cobranca.vencimento,
+                                    codJuno: self.response.codJuno,
+                                    id: self.response.id
                                  }
             self.firebaseHelper.salvarNovoBoleto(self.chave, boleto)
             self.firebaseHelper.getParticipante(self.chave).then((ret) => {
@@ -227,3 +244,7 @@ export default {
         }
     },
 }
+
+
+
+
