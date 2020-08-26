@@ -27,6 +27,7 @@ var stepRenda
 var stepInvalidez
 var stepMorte
 var configCardAcao
+var projectId = process.env.GCLOUD_PROJECT
 
 exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{plano}/data_base_carga').onWrite(
   async (change, context) => {
@@ -629,12 +630,12 @@ function incluiUsuarioJSON(usuarios, chave, usr, listaItensContribuicaoChave, li
   usuarios[chave].home = {
     usr_vigente: true,
     usr_competencia: usr.competencia,
-    usr_apelido: usr.apelido,
-    usr_matricula: usr.matricula,
-    usr_nome: usr.nome,
+    usr_apelido: mascararDados(usr.apelido, 'string'), 
+    usr_matricula: mascararDados(usr.matricula, 'numero-string'),
+    usr_nome: mascararDados(usr.nome, 'string'),
     usr_plano: usr.plano,
     usr_tipo_plano: usr.tipoPlano,
-    usr_dtnasc: usr.nasc,
+    usr_dtnasc: mascararDados(usr.nasc, 'data-string'),
     usr_dtadesao: usr.dataadesao,
     usr_situacao_plano: usr.sitPart,
     segmento: validaSegmento(chave),
@@ -754,9 +755,9 @@ function incluiUsuarioHistContribJSON (usuarios, chave, listaUsuarioContrib, ano
 function incluiUsuarioCadastroJSON(usuarios, chave, usr) {
   let cadastro = {
     dados_bancarios: {
-      banco: usr.banco ? usr.banco : '',
-      agencia: usr.agencia ? usr.agencia : '',
-      conta: usr.conta ? usr.conta : ''
+      banco: usr.banco ? mascararDados(usr.banco, 'banco') : '',
+      agencia: usr.agencia ? mascararDados(usr.agencia, 'agencia') : '',
+      conta: usr.conta ? mascararDados(usr.conta, 'conta') : ''
     },
     dados_plano: {
       data_adesao: usr.dataadesao,
@@ -765,23 +766,23 @@ function incluiUsuarioCadastroJSON(usuarios, chave, usr) {
       plano: usr.plano
     },
     endereco: {
-      logradouro: usr.logradouro, 
-      complemento: usr.complemento ? usr.complemento : '', 
-      numero: usr.numero ? usr.numero : '', 
+      logradouro: mascararDados(usr.logradouro, 'string'), 
+      complemento: usr.complemento ? mascararDados(usr.complemento, 'string') : '', 
+      numero: usr.numero ? mascararDados(usr.numero, 'string') : '', 
       bairro: usr.bairro ? usr.bairro : '', 
       cidade: usr.cidade ? usr.cidade : '', 
       uf: usr.uf ? usr.uf : '', 
       cep: usr.cep ? usr.cep : ''
     },
     informacoes_pessoais: {
-      fone_fixo: usr.telefone ? usr.telefone : '', 
-      celular: usr.celular ? usr.celular : '', 
-      email: usr.email ? usr.email : '',	 
-      cpf: usr.cpf ? usr.cpf : '',
+      fone_fixo: usr.telefone ? mascararDados(usr.telefone, 'fone') : '', 
+      celular: usr.celular ? mascararDados(usr.celular, 'fone') : '', 
+      email: usr.email ? mascararDados(usr.email, 'email') : '',	 
+      cpf: usr.cpf ? mascararDados(usr.cpf, 'cpf') : '',
       estado_civil: usr.estadocivil ? usr.estadocivil : '',
       sexo: usr.sexo ? usr.sexo : '',
-      nome: usr.nome ? usr.nome : '',
-      nascimento: usr.nasc ? usr.nasc : ''
+      nome: usr.nome ? mascararDados(usr.nome, 'string') : '',
+      nascimento: usr.nasc ? mascararDados(usr.nasc, 'data-string') : ''
     }
   }
 
@@ -858,7 +859,6 @@ function calculaGraficoReserva(valorHoje, listaUsuarioContrib, dataNasc, dataAde
         retListaMeses[linha] = ''        
       } else {
         if (dif <= crescPorFaixas) { //posiciona o valor do mês atual
-          console.log('=======> hoje?', hoje)
           retListaMeses[linha] = !hoje ? 'Hoje' : ''
           hoje = true
           retDataset[linha] = aDistribuicaoValores[linha] * aDistribCurvaGrafico[linha]
@@ -954,12 +954,13 @@ function calculaCoberturaPotencial(listaItensCoberturas) {
 }
 
 async function getConnection () {
+  let config = functions.config().portal.carga.sinqia
   const pgConfig = {
     max: 1,
-    user: "postgres",
-    password: "maisFuturo90()12!@",
-    database: "Sinqia",
-    host: "/cloudsql/portal-mais-futuro:southamerica-east1:maisfuturobd"
+    user: config.user,
+    password: config.password,
+    database: config.database,
+    host: config.host
   };
   return new pg.Pool(pgConfig);
 }
@@ -1249,4 +1250,50 @@ function calculaIdadeApos(dataNasc, dataAdesao, idade) {
   }
 
   return idadeApos
+}
+
+function mascararDados(info, tipo) {
+  let ret = info
+  console.log('======> RET', ret, info, tipo)
+  //mascara em DSV e HMG
+  if (projectId.indexOf('-hmg') > 0 || projectId.indexOf('-hom') > 0 || projectId.indexOf('-dev') > 0 || projectId.indexOf('-teste') > 0) {
+    if (tipo === 'data') {
+      ret = new Date(info.getFullYear(), 1, 1)
+    } else if (tipo === 'data-string') {
+      ret = '01/01/'+info.slice(-4)
+    } else if (tipo==="string") {
+      ret = info.shuffle()
+    } else if (tipo==="numero") {
+      ret = Number(info.toString().shuffle())
+    } else if (tipo==="numero-string") {
+      ret = Number(info.shuffle())
+    } else if (tipo==="email") {
+      ret = 'previdenciadigital@maisfuturo.com.br'
+    } else if (tipo==="cpf") {
+      ret = '999.999.999-99'
+    } else if (tipo==="fone") {
+      ret = '(41) 9-9999-9999'
+    } else if (tipo==="banco") {
+      ret = '237 - BRADESCO'
+    } else if (tipo==="conta") {
+      ret = '99999 - 9'
+    } else if (tipo==="agencia") {
+      ret = '9999'
+    }  
+  }
+  console.log('======> ret final', ret)
+  return ret
+}
+
+String.prototype.shuffle = function () {
+  var a = this.split(""),
+      n = a.length;
+
+  for(var i = n - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+  }
+  return a.join("");
 }

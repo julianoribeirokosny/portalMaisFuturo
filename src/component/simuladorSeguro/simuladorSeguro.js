@@ -10,7 +10,7 @@ import Contratacao from '../contratacao/contratacao'
 import ContratacaoAberta from '../contratacaoAberta/contratacaoAberta'
 import FirebaseHelper from '../../FirebaseHelper'
 import disclaimer from '../disclaimer/disclaimer'
-//import { Erros } from '../../Erros'
+import { Erros } from '../../Erros'
 
 const img_editar = require('../../../public/images/Editar.png')
 const financeiro = require('../../../functions/Financeiro')
