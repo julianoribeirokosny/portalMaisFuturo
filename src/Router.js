@@ -114,6 +114,9 @@ export default class Router {
     });
     page('/historico-contribuicao', () => {
       this.displayPage('historico-contribuicao')
+    });  
+    page('/historico-emprestimo', () => {
+      this.displayPage('historico-emprestimo')
     });    
     page('/mais-amigos', () => {
       this.displayPage('mais-amigos')
@@ -176,7 +179,7 @@ export default class Router {
     MaterialUtils.closeDrawer();
     // Scroll to top.
     let pagina = document.querySelector(`#divFixedHeader`)
-    if (pageId == 'historico-contribuicao') {
+    if (pageId == 'historico-contribuicao' || pageId == 'historico-emprestimo') {
       pagina.scrollTop = 300
     } else {
       pagina.scrollTop = 0

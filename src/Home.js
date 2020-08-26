@@ -13,12 +13,12 @@ import simuladorRenda from './component/simuladorRenda/simuladorRenda'
 import cadastro from './component/cadastro/cadastro'
 import servicos from './component/servicos/servicos'
 import emConstrucao from './component/emConstrucao/emConstrucao'
-import historicoContribuicao from './component/historicoContribuicao/historicoContribuicao'
 import trocaParticipacao from './component/trocaParticipacao/trocaParticipacao'
 import maisAmigos from './component/maisAmigos/maisAmigos'
 import disclaimer from './component/disclaimer/disclaimer'
 import outrasSolicitacoes from './component/outrasSolicitacoes/outrasSolicitacoes'
 import emprestimo from './component/emprestimo/emprestimo'
+import historicoPagamento from './component/historicoPagamento/historicoPagamento'
 import page from 'page';
 import { Erros } from './Erros';
 import { VueMaskDirective } from 'v-mask'
@@ -190,13 +190,13 @@ export default class Home {
                     cadastro,
                     servicos,
                     emConstrucao,
-                    historicoContribuicao,
                     trocaParticipacao,
                     maisAmigos,
                     minhaContribuicao,
                     disclaimer,
                     outrasSolicitacoes,
-                    emprestimo
+                    emprestimo,
+                    historicoPagamento
                 },
                 data: {
                     componentKey: 0,

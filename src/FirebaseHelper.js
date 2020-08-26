@@ -1205,8 +1205,8 @@ export default class FirebaseHelper {
     })    
   }
 
-  async getHistoricoContribuicao(chave) {      
-      var ref = this.database.ref(`usuarios/${chave}/data/valores/historicoContribuicao/`)    
+  async getHistoricoPayment(chave, name_storage) {
+      var ref = this.database.ref(`usuarios/${chave}/data/valores/${name_storage}/`)    
       return ref.once('value').then((data) => {    
           if (data.val()) {
               let historico = []              
