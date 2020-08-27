@@ -66,8 +66,8 @@ exports.default = functions.runWith(runtimeOpts).pubsub.schedule('every 12 hours
                     console.log('===> naoPagos', naoPagos)
                     naoPagos.forEach((item) => {
                         let boleto = boletos.filter((bol) => {
-                            return bol.dataBase === listaContribuicoes[naoPagos].anoMes && 
-                                bol.valor === listaContribuicoes[naoPagos].valor
+                            return bol.dataBase === listaContribuicoes[item].anoMes && 
+                                bol.valor === listaContribuicoes[item].valor
                         })    
                         console.log('===> boleto', boleto)
                         boleto = boleto.sort((a,b) => {

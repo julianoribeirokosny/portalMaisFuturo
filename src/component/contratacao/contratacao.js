@@ -138,7 +138,6 @@ export default {
             let premio_inva = this.dados.detalhes.premio_invalidez_solicitado.replace('.','%2c') 
             let stringRequest = `https://previdenciadigital.com.br/contratar-portal/?nome=${nome}&sexo=${sexo}&nasc=${nasc}&cpf=${cpf}&contr=${contr}&email=${email}&fone=${fone}&estadocivil=${estadocivil}&teto=${teto}&premio_morte=${premio_morte}&premio_inva=${premio_inva}&cob_morte=${cob_morte}&cob_invalidez=${cob_invalidez}&prof=${profissao}`
             this.requestDPS(stringRequest)
-            base_spinner.style.display = 'none'
         },
         requestDPS(string) {   
             base_spinner.style.display = 'flex'                 

@@ -58,7 +58,6 @@ exports.default = functions.runWith(runtimeOpts).database.ref('settings/carga/{p
   let usuarios = {} //lista de usuários que serão atualizados na base
   let usuariosBloquear = {} //lista de usuários que não foram carregados
   let usrAnterior
-  let usrPrevidenciaDigital = []
   //listas de parametros de cod contribuição 
   let listaContribSaldo, listaContribSaldo13, listaContribSaldoPartPlanoPatroc, listaContribSeguro, listaContribSaida, listaContribPortabilidade, listaContribExtraordinaria, listaContribSaldoPartEmpresa
   let listaSituacoesValidas //lista de situações de plano válidas para carga no portal
@@ -766,10 +765,10 @@ function incluiUsuarioCadastroJSON(usuarios, chave, usr) {
       plano: usr.plano
     },
     endereco: {
-      logradouro: mascararDados(usr.logradouro, 'string'), 
+      logradouro: mascararDados(usr.logradouro, 'logradouro'), 
       complemento: usr.complemento ? mascararDados(usr.complemento, 'string') : '', 
       numero: usr.numero ? mascararDados(usr.numero, 'string') : '', 
-      bairro: usr.bairro ? usr.bairro : '', 
+      bairro: usr.bairro ? mascararDados(usr.bairro, 'bairro') : '', 
       cidade: usr.cidade ? usr.cidade : '', 
       uf: usr.uf ? usr.uf : '', 
       cep: usr.cep ? usr.cep : ''
@@ -1254,7 +1253,6 @@ function calculaIdadeApos(dataNasc, dataAdesao, idade) {
 
 function mascararDados(info, tipo) {
   let ret = info
-  console.log('======> RET', ret, info, tipo)
   //mascara em DSV e HMG
   if (projectId.indexOf('-hmg') > 0 || projectId.indexOf('-hom') > 0 || projectId.indexOf('-dev') > 0 || projectId.indexOf('-teste') > 0) {
     if (tipo === 'data') {
@@ -1267,10 +1265,16 @@ function mascararDados(info, tipo) {
       ret = Number(info.toString().shuffle())
     } else if (tipo==="numero-string") {
       ret = Number(info.shuffle())
+    } else if (tipo==="logradouro") {
+      ret = 'Av. Sete de Setembro'
+    } else if (tipo==="bairro") {
+      ret = 'Batel'
+    } else if (tipo==="cep") {
+      ret = '80240-000'
     } else if (tipo==="email") {
       ret = 'previdenciadigital@maisfuturo.com.br'
     } else if (tipo==="cpf") {
-      ret = '999.999.999-99'
+      ret = '522.691.210-23'
     } else if (tipo==="fone") {
       ret = '(41) 9-9999-9999'
     } else if (tipo==="banco") {
@@ -1281,7 +1285,6 @@ function mascararDados(info, tipo) {
       ret = '9999'
     }  
   }
-  console.log('======> ret final', ret)
   return ret
 }
 

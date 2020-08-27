@@ -1224,7 +1224,7 @@ export default class FirebaseHelper {
 
   async getDadosSimuladorRenda(chave, uid) {
       let usuario
-      if (sessionStorage.participante) {
+      if (sessionStorage.participante && sessionStorage.participante !== "") {
           usuario = JSON.parse(sessionStorage.participante)
       } else {
           usuario = await this.getParticipante(chave)    
@@ -1258,7 +1258,7 @@ export default class FirebaseHelper {
 
   async getDadosSimuladorEmprestimo(chave, uid) {
       let usuario
-      if (sessionStorage.participante) {
+      if (sessionStorage.participante && sessionStorage.participante !== "") {
           usuario = JSON.parse(sessionStorage.participante)
       } else {
           usuario = await this.getParticipante(chave)    
@@ -1291,7 +1291,7 @@ export default class FirebaseHelper {
   async getDadosSimuladorSeguro(chave, uid) {
     
       let usuario     
-      if (sessionStorage.participante) {
+      if (sessionStorage.participante && sessionStorage.participante !== "") {
           usuario = JSON.parse(sessionStorage.participante)
       } else {
           usuario = await this.getParticipante(chave)    
@@ -1383,7 +1383,7 @@ export default class FirebaseHelper {
       let nascimentoArray = usuario.data.cadastro.informacoes_pessoais.nascimento.split('/')
       let nascimento = `${nascimentoArray[2]}-${nascimentoArray[1]}-${nascimentoArray[0]}`
       let body = new Object()
-      if(usuario.data.cadastro.informacoes_pessoais.profissao.cbo) {
+      if(usuario.data.cadastro.informacoes_pessoais.profissao && usuario.data.cadastro.informacoes_pessoais.profissao.cbo) {
           body = {
               simulacoes:[{
                   proponente: {
