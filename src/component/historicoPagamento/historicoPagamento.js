@@ -2,8 +2,8 @@
 
 import vSelect from 'vue-select'
 import page from 'page'
-import historicoContribuicao from './historicoContribuicao.html'
-import './historicoContribuicao.css'
+import historicoPagamento from './historicoPagamento.html'
+import './historicoPagamento.css'
 import FirebaseHelper from '../../FirebaseHelper'
 import firebase from "firebase/app"
 import "firebase/functions"
@@ -18,10 +18,16 @@ const icon_extrato_contribuicoes = require('../../../public/images/ExtratoContri
 
 
 export default {
-    template: historicoContribuicao, 
+    template: historicoPagamento, 
     components: {
         vSelect
-    },   
+    }, 
+    props: {
+        title: '',
+        link_payment: '',
+        description_prop: '',
+        name_storage: ''
+    },  
     data: function() {
         return { 
             boleto: null,
@@ -29,7 +35,7 @@ export default {
             chave:'',
             historico: '',
             firebaseHelper: new FirebaseHelper(),     
-            titulo: 'Histórico de<br/>contribuição',
+            titulo: this.title,
             showDialog: false,
             img_boleto: img_boleto,
             img_check: img_check,
@@ -41,7 +47,7 @@ export default {
                 numeroDePagamento:'',
                 link:''          
             },
-            urlCobranca: 'https://us-east1-previdenciadigital-dev.cloudfunctions.net/adi/cobranca',
+            urlCobranca: this.link_payment,
             cobranca: {
                 'descricao': '', 
                 'chave': '',
@@ -66,8 +72,9 @@ export default {
         console.log('********* this.participante', this.participante)    
         this.gerarDatasValidade()
         this.getBoletosPagos().then(() => {
-            this.getHistoricoContribuicao()
+            this.getHistoricoPayment()
         })
+
     },
     watch: {   
         vencimento(newVal){
@@ -99,16 +106,16 @@ export default {
                 this.datasValidade.push(`${dd}/${mm}/${yyyy}`)                
             }
         },
-        getHistoricoContribuicao () {
-            if (!sessionStorage.historicoContribuicao || sessionStorage.historicoContribuicao === '') {
-                this.firebaseHelper.getHistoricoContribuicao(this.chave).then((data) => {
+        getHistoricoPayment () {
+            if (!sessionStorage.getItem(this.name_storage) || sessionStorage.getItem(this.name_storage) === '') {
+                this.firebaseHelper.getHistoricoPayment(this.chave, this.name_storage).then((data) => {
                     if (data) {
-                        sessionStorage.historicoContribuicao = JSON.stringify(data)
+                        sessionStorage.setItem(this.name_storage, JSON.stringify(data))
                         this.historico = data
                     }
                 })    
             } else {
-                this.historico = JSON.parse(sessionStorage.historicoContribuicao)
+                this.historico = JSON.parse(sessionStorage.getItem(this.name_storage))
             }            
         },
         async getBoletosPagos() {
@@ -171,7 +178,7 @@ export default {
                     this.boleto = this.participante.transacoes.boleto[dataBase]                    
                 }            
             }
-            this.cobranca.descricao = `CONTRIBUIÇÃO ${item.anoMes}`, 
+            this.cobranca.descricao = `${this.description_prop} ${item.anoMes}`, 
             this.cobranca.chave = item.chave,
             this.cobranca.dataBase = item.anoMes,
             this.cobranca.origemCobranca = 'Segunda via',
@@ -198,7 +205,7 @@ export default {
             apiPrevidenciaDigital({idApi: 'boleto', body: self.cobranca, metodo: 'POST'}).then((response) => {                                 
                 console.log('=====> response', response)
                 if (!response.data.sucesso) {
-                    Erros.registraErro(this.uid, 'Erro Boleto', 'historicoContribuição', response.erro)
+                    Erros.registraErro(this.uid, 'Erro Boleto', this.name_storage, response.erro)
                     base_spinner.style.display = 'none'
                     return page('/erro')                    
                 } else {                    
@@ -208,7 +215,7 @@ export default {
                 }
                 base_spinner.style.display = 'none'
             }).catch((error) => {
-                Erros.registraErro(this.uid , 'Erro Boleto', 'historicoContribuição', error.name + ' - ' +error.message)
+                Erros.registraErro(this.uid , 'Erro Boleto', this.name_storage, error.name + ' - ' +error.message)
                 base_spinner.style.display = 'none'
                 return page('/erro')
             })

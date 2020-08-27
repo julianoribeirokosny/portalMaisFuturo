@@ -1,5 +1,5 @@
 <div class="mdl-cell mdl-cell--12-col mdl-cell--8-col-tablet mdl-cell--8-col-desktop mdl-grid mdl-grid--no-spacing margin_auto">
-    <div class="mdl-card__supporting-text mdl-card-container div_margem_card">
+    <div class="mdl-card__supporting-text mdl-card-container div_margem_card" v-if="dadosEmprestimo.active_emprestimo">
         <div class="mdl-card__supporting-text div_titulo_card">
             Meu<br /> Empréstimo
         </div>
@@ -26,11 +26,13 @@
             </div>
         </div>
     </div>
-    <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;">                                  
-        <div class="mdl-shadow--1dp mdl-card_acao emprestimo" style="cursor: pointer; padding: 10px; background-image: linear-gradient(-90deg, rgb(19, 108, 181), rgb(3, 49, 102));" @click="redirectSimuladorEmprestimo()">
-            <!-- <span class="span-minicard-text">
-                <i class="material-icons" style="color:#136ab3; font-size: 30px;">attach_money</i>
-            </span> -->
+    <div class="mdl-card__supporting-text margin_auto mdl-card-container" style="margin-top: 20px;" v-if="btn_acao">                                  
+        <div 
+        class="mdl-shadow--1dp mdl-card_acao emprestimo" 
+        style="cursor: pointer; padding: 10px; background-image: linear-gradient(-90deg, rgb(19, 108, 181), rgb(3, 49, 102));" 
+        @click="redirectSimuladorEmprestimo()"
+        v-if="!dadosEmprestimo.active_emprestimo"
+        >
             <span class="span-minicard-text">
                 Há uma oportunidade especial disponível para você.
                 Você tem {{ formatMoeda(dadosEmprestimo.disponivel, true) }} pré aprovado para empréstimo consciente.
@@ -38,5 +40,19 @@
             
             <i class="material-icons icon-button-minicard">arrow_forward</i>
         </div>
+
+        <div 
+        class="mdl-shadow--1dp mdl-card_acao emprestimo" 
+        style="cursor: pointer; padding: 10px; background-image: linear-gradient(-90deg, rgb(19, 108, 181), rgb(3, 49, 102));" 
+        @click="clickPage('historico-emprestimo')"
+        v-else
+        >
+            <span class="span-minicard-text">
+                Veja seu histórico de emprestimos
+            </span>&nbsp;                            
+            
+            <i class="material-icons icon-button-minicard">arrow_forward</i>
+        </div>
+
     </div>
 </div>

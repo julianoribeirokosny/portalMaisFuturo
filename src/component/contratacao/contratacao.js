@@ -47,6 +47,13 @@ export default {
         cancelar(){
             this.$emit('cancelar', true)
         },
+        confirmar_dps() {           
+            this.firebaseHelper.getQuestionarioDPS().then((data) => {
+                if(data) {
+                    console.log('questionario ========>', data)
+                }
+            })
+        },
         confirmar(){
             let objeto_contratacao = new Object()     
             let dateFormat = utils.dateFormat(new Date(), true, true, false)

@@ -239,3 +239,7 @@
     margin-top: 10px;
     margin-bottom: 5px;
 }
+
+#vencimentoModal .modal-content{
+    margin-top: 5%
+}

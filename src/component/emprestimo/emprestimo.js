@@ -13,8 +13,7 @@ export default {
         GraficoEmprestimo
     },
     props: {
-       chave: '',
-       uid: '',
+        btn_acao: true,
     },
     data: function() {
         return {
@@ -22,6 +21,8 @@ export default {
         }
     },
     created(){
+        this.chave = sessionStorage.chave
+        this.uid = sessionStorage.uid
         this.getEmprestimo()
     },
     mounted() {
@@ -33,6 +34,7 @@ export default {
     methods: {
         getEmprestimo(){
             this.dadosEmprestimo = {
+                active_emprestimo: true,
                 grafico:{
                     data: 75
                 },
@@ -61,6 +63,11 @@ export default {
                 let val = financeiro.valor_to_string_formatado(value, 2, incluiCifrao, true)
                 return val
             }
+        },
+        clickPage(link, anchor) {
+            sessionStorage.ultimaPagina = 'home'
+            anchor = anchor ? anchor : ''
+            page(`/${link}#${anchor}`)
         }
     },
 }

@@ -558,7 +558,7 @@
                     
                     <!-- Emprestimos -->
                     <template>
-                        <emprestimo :key="componentKey" :uid="uid" :chave="chave"></emprestimo>
+                        <emprestimo :key="componentKey" :btn_acao="true"></emprestimo>
                     </template>
 
                     <!--Mais Amigos-->
@@ -668,7 +668,24 @@
                     <a></a>
                     <!--Minha Contribuição-->
                     <minha-contribuicao :contribuicao="home.contribuicao"></minha-contribuicao>
-                    <historico-contribuicao :key="componentKey"></historico-contribuicao>
+                    <historico-pagamento 
+                        :key="componentKey"
+                        title="Histórico de contribuição"
+                        link_payment="https://us-east1-previdenciadigital-dev.cloudfunctions.net/adi/cobranca"
+                        description_prop="CONTRIBUIÇÃO"
+                        name_storage="historicoContribuicao"
+                    ></historico-pagamento>
+                </section>
+                <!--Histórico de Emprestimo-->
+                <section id="page-historico-emprestimo" class="mdl-grid fp-content" style="display: none;">
+                    <a></a>
+                    <emprestimo :key="componentKey" :btn_acao="false" ></emprestimo>
+                    <historico-pagamento 
+                        title="Histórico de emprestimo" 
+                        link_payment="https://us-east1-previdenciadigital-dev.cloudfunctions.net/adi/cobranca"
+                        description_prop="EMPRÉSTIMO"
+                        name_storage="historicoEmprestimo"
+                    ></historico-pagamento>
                 </section>
                 <!--Troca Participação-->
                 <section id="page-troca-chave" class="mdl-grid fp-content" style="display: none;">
